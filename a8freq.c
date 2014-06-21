@@ -3,6 +3,7 @@
  *
  * Author : C.D.Luminate
  * 	cdluminate AT gmail DOT com
+ * 	started at 2014/05/18
  *
  * https://github.com/CDLuminate/a8freq
  * 
