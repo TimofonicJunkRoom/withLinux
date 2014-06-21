@@ -1,12 +1,14 @@
 # a8freq : a(lphabets) freqency.
 This is just a set of *very simple and small linux tools*.  
+New features are being added.  
 
 [a8freq.c] Simply show freqency of alphabets in file.  
-[a8lu.c  ] Convert alphabets between upper and lower case.  
+[a8lu.c] Convert alphabets between upper and lower case.  
+  
 For their Usage, look up the c file.  
   
 ### The purpose
-According to some Theories, it can crack certain type of *classic codes* with it if you want.  
+According to some Theories, it can crack certain type of *classic codes*.  
 
 see http://en.wikipedia.org/wiki/Cryptology  
 see http://en.wikipedia.org/wiki/Substitution_cipher  
@@ -18,7 +20,7 @@ $ a8freq a8freq.c
 ```
 will give this output:
 ```
-A        92	 5.73208723% 
+A 	 92	 5.73208723% 
 B	 27	 1.68224299% 
 C	 83	 5.17133956% 
 D	 55	 3.42679128% 
@@ -46,6 +48,3 @@ Y	 7	 0.43613707%
 Z	 4	 0.24922118% 
 ALL 1605 alphabets.
 ```
-  
----
-
