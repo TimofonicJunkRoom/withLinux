@@ -16,9 +16,10 @@
 void Usage (char *prog_name)
 {
 	fprintf (stderr, "\
-Usage : %s [-r] [FILE]\n\
+Usage : %s [-hr] [FILE]\n\
 Convert alphabets between upper and lower case\n\
 If FILE not specified, stdin will be used.\n\
+       -h    print this help message.\n\
        -r    reverse converting, upper to lower.\n",
        		 prog_name);
 }
@@ -35,8 +36,12 @@ main (int argc, char *argv[])
 	register int buf = 0;
 	revflag = 0;
 
-	while ((opt = getopt (argc, argv, "r")) != -1) {
+	while ((opt = getopt (argc, argv, "hr")) != -1) {
 		switch (opt) {
+			case 'h':
+				Usage (argv[0]);
+				exit (EXIT_SUCCESS);
+				break;
 			case 'r':
 				revflag = 1;
 				break;
