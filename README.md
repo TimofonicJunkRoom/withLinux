@@ -13,6 +13,8 @@ According to some Theories, it can crack certain type of *classic codes*.
 
 see http://en.wikipedia.org/wiki/Cryptology  
 see http://en.wikipedia.org/wiki/Substitution_cipher  
+
+
 ---
 ### Example of utility 
 
