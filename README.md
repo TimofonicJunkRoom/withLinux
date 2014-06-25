@@ -1,22 +1,28 @@
 # a8freq : a(lphabets) freqency.
-This is just a set of *very simple and small linux tools*.  
+Simple linux c tools, for generating and cracking a certain type of substitution cipher.  
+This is just a set of very simple and small linux tools.  
+  
 New features are being added.  
-
-[a8freq.c] Simply show freqency of alphabets in file.  
-[a8lu.c] Convert alphabets between upper and lower case.  
-[a8shift.c] Shift alphabets by (+/-)N positions. 
+This is free software, at the same time the author account it as a part of learning C and playing.  
+  
+[a8freq.c]() Simply show freqency of alphabets in file.  
+[a8lu.c]() Convert alphabets between upper and lower case.  
+[a8shift.c]() Shift alphabets by (+/-)N positions. 
+[a8swap.c]() (upcoming) swap pairs of alphabets in file. 
   
 For their Usage, look up the c file, and there is function "Usage ()" in each .c file.  
   
 ### The purpose
-According to some Theories, it can crack certain type of *classic codes*.  
+According to some Theories, certain types of classic codes, such as substitution cipher, can be cracked via alphabet freqency analyze.  
 
 see http://en.wikipedia.org/wiki/Cryptology  
 see http://en.wikipedia.org/wiki/Substitution_cipher  
 
-
+Have fun play with it ! :-)  
+  
+  
 ---
-### Example of utility 
+### Examples
 
 #### Generate Substitution cipher
 There is an rough and wild way that works:  

@@ -6,7 +6,7 @@
  * 	started at 2014/05/18
  *
  * https://github.com/CDLuminate/a8freq
- * 
+ * LICENCE : MIT
  */
 
 #include <stdio.h>
@@ -20,7 +20,7 @@ Usage : %s [-hs] [FILE]\n\
 Show the alphabets' freqency in file.\n\
 If FILE is not specified, stdin would be used.\n\
   -h    Print this help message\n\
-  -p	(not implemented)set decimal places in output\n\
+  -p	set decimal places in output\n\
   -s    Use another output format\n",
   		 prog_name);
 }
@@ -32,15 +32,19 @@ int freq_print_s (int, unsigned long, double, int); /* print for script */
 
 /* counter[0] is the summary from counter[1] to counter[26]
  * counter[1] is counter of 'a'&&'A'  ...   counter[26] 'z'&&'Z'
+ * 
+ * On arch of amd64, unsigned long is enough for normal use.
  */
 unsigned long counter[27];
 
 int
 main (int argc, char **argv)
 {
+	/* choose printer for human, default */
 	printer = freq_print_h;
 
 	int opt = 0;
+	int places = 8;
 	register char buf = 0;
 
 	/* if user doesn't specify the input FILE,
@@ -53,15 +57,24 @@ main (int argc, char **argv)
 	/* read the options, if user specifies a FILE, read it,
 	 * 	or read from stdin
 	 */
-	while ((opt = getopt(argc, argv, "hs")) != -1) {
+	while ((opt = getopt(argc, argv, "hp:s")) != -1) {
 		switch (opt) {
 			case 'h':
+				/* help */
 				Usage (argv[0]);
 				exit (EXIT_SUCCESS);
 				break;
+			case 'p':
+				/* decimal places to print */
+				places = atoi (optarg);
+				break;
 			case 's':
+				/* printer for script */
 				printer = freq_print_s;
 			default:
+				/* out of exception */
+				Usage (argv[0]);
+				exit (EXIT_FAILURE);
 				break;
 		}
 	}
@@ -76,11 +89,12 @@ main (int argc, char **argv)
 	}
 
 
-	/* handle stream */
+	/* handle stream, core part */
 	while ( (buf = fgetc (in_file)) != EOF && !feof(in_file)) {
-		/* this is a feature supported by gcc 
-		 *	uncomment block above if you don't use gcc
-		 *
+		/* case 'a' ... 'z', this is a feature supported by gcc.
+		 * 	look up gcc doc.
+		 * Consider rewrite this block using if...else...
+		 * 	if your compiler is not gcc.
 		 */
 		switch (buf) {
 			case 'a' ... 'z':
@@ -96,11 +110,11 @@ main (int argc, char **argv)
 		}
 	}
 
-	/* calculate and show the result */
+	/* show the result */
 	int j;
 	for (j=1; j < 27; j++) {
 		printer ('A'-1+j, counter[j],
-			 (double)counter[j]/counter[0],8);
+			 (double)counter[j]/counter[0], places);
 	}
 
 	printf ("ALL %ld alphabets.\n", counter[0]);
@@ -142,5 +156,3 @@ freq_print_s (/* alphabet */
 		 place, freq, cc, c);
 	return 0;
 }
-
-

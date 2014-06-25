@@ -6,6 +6,7 @@
  * 	< CDLuminate AT gmail DOT com >
  * 
  * https://github.com/CDLuminate/a8freq
+ * LICENCE : MIT
  */
 
 #include <unistd.h>
@@ -31,14 +32,19 @@ main (int argc, char **argv)
 {
 	/* buffer */
 	register int buf;
+
+	/* */
 	int offset = 0;
 
 	/* the default input file should be stdin,
 	 *	if FILE is not specified.
 	 */
 	FILE *in_file = stdin;
+
+	/* FIXME : how to append action to file itself ? */
 	FILE *out_file = stdout;
 
+	/* int opt is used by getopt() */
 	int opt;
 	while ((opt = getopt (argc, argv, "ho:f:")) != -1) {
 		switch (opt) {
@@ -52,6 +58,7 @@ main (int argc, char **argv)
 				offset = atoi (optarg);
 				break;
 			default: 
+				/* out of exception */
 				Usage (argv[0]);
 				exit (EXIT_FAILURE);
 				break;
@@ -92,5 +99,3 @@ main (int argc, char **argv)
 	fclose (out_file);
 	return 0;
 }
-
-

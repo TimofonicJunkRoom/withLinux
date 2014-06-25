@@ -7,6 +7,7 @@
  *	started at 02 / 06 /2014
  *
  * https://github.com/CDLuminate/a8freq
+ * LICENCE : MIT
  */
 
 #include <unistd.h>
@@ -31,23 +32,31 @@ main (int argc, char *argv[])
 	FILE *in_file = stdin;
 	FILE *out_file = stdout;
 
-	/* defalut is lower -> upper, revflag is reverse_flag */
-	int opt, revflag;
+	/* defalut is lower to upper, revflag is reverse_flag */
+	int revflag = 0;
+
+	/* used by getopt() */
+	int opt;
+
+	/* buffer */
 	register int buf = 0;
-	revflag = 0;
 
 	while ((opt = getopt (argc, argv, "hr")) != -1) {
 		switch (opt) {
 			case 'h':
+				/* help */
 				Usage (argv[0]);
 				exit (EXIT_SUCCESS);
 				break;
 			case 'r':
+				/* reverse, namely upper to lower */
 				revflag = 1;
 				break;
 			default:
+				/* out of exception */
 				Usage (argv[0]);
 				exit (EXIT_FAILURE);
+				break;
 		}
 	}
 
@@ -59,6 +68,7 @@ main (int argc, char *argv[])
 		}
 	}
 
+	/* change case, the core part */
 	while ( (buf = fgetc (in_file)) != EOF && !feof(in_file)) {
 		/* change case according to revflag */
 		switch (buf) {
