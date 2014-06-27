@@ -1,30 +1,31 @@
 # a8freq : a(lphabets) freqency.
-Simple linux c tools, for generating and cracking a certain type of substitution cipher.  
-This is just a set of very simple and small linux tools.  
+
+(A set of) Simple linux c tools, for generating and cracking a certain type of substitution cipher.   
   
-New features are being added.  
-This is free software, at the same time the author account it as a part of learning C and playing.  
+[Substitution cipher is very easy to be cracked.](http://en.wikipedia.org/wiki/Substitution_cipher)   
+According to some Theories, certain types of classic codes, such as substitution cipher, can be cracked via alphabet freqency analyze, see reference below.  
   
-[a8freq.c]() Simply show freqency of alphabets in file.  
-[a8lu.c]() Convert alphabets between upper and lower case.  
-[a8shift.c]() Shift alphabets by (+/-)N positions. 
-[a8swap.c]() (upcoming) swap pairs of alphabets in file. 
+New tools, functions, features are being added.     
+   
+[a8freq.c](https://github.com/CDLuminate/a8freq/blob/master/a8freq.c) Simply show freqency of alphabets in file.   
+[a8lu.c](https://github.com/CDLuminate/a8freq/blob/master/a8lu.c) Convert alphabets between upper and lower case.   
+[a8shift.c](https://github.com/CDLuminate/a8freq/blob/master/a8shift.c) Shift alphabets by (+/-)N positions.  
+[a8swap.c](https://github.com/CDLuminate/a8freq) (upcoming) swap pairs of alphabets in file.  
   
 For their Usage, look up the c file, and there is function "Usage ()" in each .c file.  
   
-### The purpose
-According to some Theories, certain types of classic codes, such as substitution cipher, can be cracked via alphabet freqency analyze.  
+### a8freq :: reference
 
 see http://en.wikipedia.org/wiki/Cryptology  
 see http://en.wikipedia.org/wiki/Substitution_cipher  
 
-Have fun play with it ! :-)  
+Have fun playing with it ! :-)  
   
   
 ---
 ### Examples
 
-#### Generate Substitution cipher
+#### Examples :: Generate Substitution cipher
 There is an rough and wild way that works:  
 ```
 $ ORIGIN='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
@@ -33,18 +34,16 @@ $ SUBSTI='BCDEFGHIJKLMNOPQRSTUVWXYZAbcdefghijklmnopqrstuvwxyza'
   
 $ cat FILE | tr -s $ORIGIN $SUBSTI
 ```
-If you want to simply shift them by (int)N positions, use [a8shift.c]
+If you want to simply shift them by (int)N positions, use [a8shift.c](https://github.com/CDLuminate/a8freq/blob/master/a8shift.c).  
 ```
-$ a8shift -o 1
-# will get same result as above
+$ cat FILE | ./a8shift -o 1
+# same result as above
 ```
 
-#### a8freq
+#### Examples :: a8freq
 ```
 $ a8freq a8freq.c
-```
-will give this output:
-```
+# read from file "a8freq.c"
 A 	 92		 5.73208723% 
 B	 27		 1.68224299% 
 C	 83		 5.17133956% 
@@ -73,3 +72,33 @@ Y	 7		 0.43613707%
 Z	 4		 0.24922118% 
 ALL 1605 alphabets.
 ```
+
+#### Expamples :: a8lu
+```
+$ a8lu
+# lower to upper, read from stdin.
+ab cd EF  <- stdin
+AB CD EF  <- stdout
+
+$ a8lu -r
+# upper to lower, read from stdin.
+AB CD ef  <- stdin
+ab cd ef  <- stdout
+```
+
+#### Examples :: a8shift
+```
+$ a8shift -o 2
+# go right by 2 positions.
+ab yz  <- stdin
+cd ab  <- stdout
+
+$ a8shift -o -2
+# go left by 2 positions.
+ab yz  <- stdin
+yz wx  <- stdout
+```
+
+
+### Licence
+The MIT licence.  
