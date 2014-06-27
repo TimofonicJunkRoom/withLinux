@@ -18,7 +18,10 @@ void Usage (char *prog_name)
 	fprintf (stderr, "\
 Usage : %s [-hs] [FILE]\n\
 Show the alphabets' freqency in file.\n\
+Char of max_freq will be highlighted in red.\n\
+     of min_freq will be highlighted in green.\n\
 If FILE is not specified, stdin would be used.\n\
+Options :\n\
   -h    Print this help message\n\
   -p	set decimal places in output\n\
   -s    Use another output format\n",
@@ -26,9 +29,9 @@ If FILE is not specified, stdin would be used.\n\
 }
 
 /* chooser for a format to print freq. */
-int (*printer)(int, unsigned long, double, int);
-int freq_print_h (int, unsigned long, double, int); /* print for human */
-int freq_print_s (int, unsigned long, double, int); /* print for script */
+int (*printer)(FILE *,int, unsigned long, double, int);
+int freq_print_h (FILE *,int, unsigned long, double, int); /* print for human */
+int freq_print_s (FILE *,int, unsigned long, double, int); /* print for script */
 
 /* counter[0] is the summary from counter[1] to counter[26]
  * counter[1] is counter of 'a'&&'A'  ...   counter[26] 'z'&&'Z'
@@ -36,6 +39,9 @@ int freq_print_s (int, unsigned long, double, int); /* print for script */
  * On arch of amd64, unsigned long is enough for normal use.
  */
 unsigned long counter[27];
+/* for finding witch line to highlight in the part of output */
+unsigned long counter_max;
+unsigned long counter_min;
 
 int
 main (int argc, char **argv)
@@ -43,15 +49,20 @@ main (int argc, char **argv)
 	/* choose printer for human, default */
 	printer = freq_print_h;
 
+	/* used by getopt () */
 	int opt = 0;
+
+	/* decimal places, set it using -p */
 	int places = 8;
+
+	/* buffer, with register anyway */
 	register char buf = 0;
 
 	/* if user doesn't specify the input FILE,
 	 * 	use stdin as default.
 	 */
 	FILE *in_file = stdin;
-	//FILE *out_file = stdout;
+	FILE *out_file = stdout;
 	
 	
 	/* read the options, if user specifies a FILE, read it,
@@ -110,13 +121,47 @@ main (int argc, char **argv)
 		}
 	}
 
-	/* show the result */
-	int j;
+	/* find out the counter_max */
+	int j; /* j used just in for */
+	/* give counter_min a value to ensure it is not 0 at the end */
+	counter_min = counter[1];
+	/* scan counter[] for max and min, counter[0] is ALL so passed */
 	for (j=1; j < 27; j++) {
-		printer ('A'-1+j, counter[j],
-			 (double)counter[j]/counter[0], places);
+		if (counter[j] >= counter_max) {
+			counter_max = counter[j];
+		}
+		if (counter[j] <= counter_min) {
+			counter_min = counter[j];
+		}
 	}
 
+	/* next, print it out, and highlight the max */
+	for (j=1; j < 27; j++) {
+		if (counter[j] == counter_max) {
+			/* MAX, red */
+			fputs ("\033[31m", out_file);
+			printer (out_file, 'A'-1+j, counter[j],
+				 (double)counter[j]/counter[0], places
+				);
+			fputs ("\033[m", out_file);
+			/* end dye */
+		} else if (counter[j] == counter_min) {
+			/* MIN, green */
+			fputs ("\033[32m", out_file);
+			printer (out_file, 'A'-1+j, counter[j],
+				 (double)counter[j]/counter[0], places
+				);
+			fputs ("\033[m", out_file);
+			/* end dye */
+		} else {
+			/* no dye */
+			printer (out_file, 'A'-1+j, counter[j],
+				 (double)counter[j]/counter[0], places
+				);
+		}
+	}
+
+	/* dump the counter for ALL */
 	printf ("ALL %ld alphabets.\n", counter[0]);
 	
 	fclose (in_file);
@@ -125,7 +170,8 @@ main (int argc, char **argv)
 
 /* human format print */
 int
-freq_print_h (/* alphabet */
+freq_print_h (FILE *out_file,
+	      /* alphabet */
 	      int c,
 	      /* its counter */
 	      unsigned long cc,
@@ -134,7 +180,7 @@ freq_print_h (/* alphabet */
 	      /* decimal places */
 	      int place)
 {
-	fprintf (stdout,
+	fprintf (out_file,
 		 "%c\t %ld\t %.*lf%% \n",
 		 c, cc, place, freq*100.0);
 	return 0;
@@ -142,7 +188,8 @@ freq_print_h (/* alphabet */
 
 /* conviniet format for sorting and script. */
 int
-freq_print_s (/* alphabet */
+freq_print_s (FILE *out_file,
+	      /* alphabet */
 	      int c,
 	      /* its counter */
 	      unsigned long cc,
@@ -151,7 +198,7 @@ freq_print_s (/* alphabet */
 	      /* decimal places */
 	      int place)
 {
-	fprintf (stdout,
+	fprintf (out_file,
 		 "%.*lf\t %ld\t %c \n",
 		 place, freq, cc, c);
 	return 0;
