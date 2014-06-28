@@ -127,42 +127,38 @@ main (int argc, char **argv)
 	counter_min = counter[1];
 	/* scan counter[] for max and min, counter[0] is ALL so passed */
 	for (j=1; j < 27; j++) {
-		if (counter[j] >= counter_max) {
+		if (counter[j] > counter_max) {
 			counter_max = counter[j];
 		}
-		if (counter[j] <= counter_min) {
+		if (counter[j] < counter_min) {
 			counter_min = counter[j];
 		}
 	}
 
 	/* next, print it out, and highlight the max */
 	for (j=1; j < 27; j++) {
+		/* dye */
 		if (counter[j] == counter_max) {
 			/* MAX, red */
 			fputs ("\033[31m", out_file);
-			printer (out_file, 'A'-1+j, counter[j],
-				 (double)counter[j]/counter[0], places
-				);
-			fputs ("\033[m", out_file);
-			/* end dye */
 		} else if (counter[j] == counter_min) {
 			/* MIN, green */
 			fputs ("\033[32m", out_file);
-			printer (out_file, 'A'-1+j, counter[j],
-				 (double)counter[j]/counter[0], places
-				);
-			fputs ("\033[m", out_file);
-			/* end dye */
 		} else {
 			/* no dye */
-			printer (out_file, 'A'-1+j, counter[j],
+		}
+
+		/* print info */
+		printer (out_file, 'A'-1+j, counter[j],
 				 (double)counter[j]/counter[0], places
 				);
-		}
+
+		/* color recover */
+		fputs ("\033[m", out_file);
 	}
 
 	/* dump the counter for ALL */
-	printf ("ALL %ld alphabets.\n", counter[0]);
+	printf ("ALL \033[34m%ld\033[m alphabets.\n", counter[0]);
 	
 	fclose (in_file);
 	return 0;
