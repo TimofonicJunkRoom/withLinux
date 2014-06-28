@@ -82,6 +82,7 @@ main (int argc, char **argv)
 			case 's':
 				/* printer for script */
 				printer = freq_print_s;
+				break;
 			default:
 				/* out of exception */
 				Usage (argv[0]);
@@ -161,6 +162,7 @@ main (int argc, char **argv)
 	printf ("ALL \033[34m%ld\033[m alphabets.\n", counter[0]);
 	
 	fclose (in_file);
+	fclose (out_file);
 	return 0;
 }
 

@@ -7,10 +7,11 @@ According to some Theories, certain types of classic codes, such as substitution
   
 New tools, functions, features are being added.     
    
-[a8freq.c](https://github.com/CDLuminate/a8freq/blob/master/a8freq.c) Simply show freqency of alphabets in file.   
-[a8lu.c](https://github.com/CDLuminate/a8freq/blob/master/a8lu.c) Convert alphabets between upper and lower case.   
-[a8shift.c](https://github.com/CDLuminate/a8freq/blob/master/a8shift.c) Shift alphabets by (+/-)N positions.  
-[a8swap.c](https://github.com/CDLuminate/a8freq) (upcoming) swap pairs of alphabets in file.  
+[a8freq.c](https://github.com/CDLuminate/a8freq/blob/master/a8freq.c)   Simply show freqency of alphabets in file.   
+[a8lu.c](https://github.com/CDLuminate/a8freq/blob/master/a8lu.c)     Convert alphabets between upper and lower case.   
+[a8shift.c](https://github.com/CDLuminate/a8freq/blob/master/a8shift.c)  Shift alphabets by (+/-)N positions.  
+[a8swap.c](https://github.com/CDLuminate/a8freq)   (upcoming) swap pairs of alphabets in file.  
+[decode.sh](https://github.com/CDLuminate/a8freq/blob/master/decode.sh)  Decode a file using a freqency source file.  
   
 For their Usage, look up the c file, and there is function "Usage ()" in each .c file.  
   
@@ -42,13 +43,13 @@ $ cat FILE | ./a8shift -o 1
 
 #### Examples :: a8freq
 ```
-$ a8freq a8freq.c
+$ ./a8freq a8freq.c
 # read from file "a8freq.c"
 A 	 92		 5.73208723% 
 B	 27		 1.68224299% 
 C	 83		 5.17133956% 
 D	 55		 3.42679128% 
-E	 172		 10.71651090% 
+E	 172		 10.71651090%   <- line highlighted in red.
 F	 81		 5.04672897%  
 G	 34		 2.11838006% 
 H	 42		 2.61682243% 
@@ -69,18 +70,18 @@ V	 8		 0.49844237%
 W	 8		 0.49844237% 
 X	 4		 0.24922118% 
 Y	 7		 0.43613707% 
-Z	 4		 0.24922118% 
+Z	 4		 0.24922118%   <- line highlighted in green. 
 ALL 1605 alphabets.
 ```
 
 #### Expamples :: a8lu
 ```
-$ a8lu
+$ ./a8lu
 # lower to upper, read from stdin.
 ab cd EF  <- stdin
 AB CD EF  <- stdout
 
-$ a8lu -r
+$ ./a8lu -r
 # upper to lower, read from stdin.
 AB CD ef  <- stdin
 ab cd ef  <- stdout
@@ -88,17 +89,23 @@ ab cd ef  <- stdout
 
 #### Examples :: a8shift
 ```
-$ a8shift -o 2
+$ ./a8shift -o 2
 # go right by 2 positions.
 ab yz  <- stdin
 cd ab  <- stdout
 
-$ a8shift -o -2
+$ ./a8shift -o -2
 # go left by 2 positions.
 ab yz  <- stdin
 yz wx  <- stdout
 ```
 
+#### Examples :: decode.sh
+```
+$ ./decode.sh <SOURCE_FILE> <CODE_FILE>
+# SOUECE_FILE is the source of freqency
+# CODE_FILE is, namely file to crack.
+```
 
 ### Licence
 The MIT licence.  
