@@ -33,15 +33,18 @@ int (*printer)(FILE *,int, unsigned long, double, int);
 int freq_print_h (FILE *,int, unsigned long, double, int); /* print for human */
 int freq_print_s (FILE *,int, unsigned long, double, int); /* print for script */
 
-/* counter[0] is the summary from counter[1] to counter[26]
- * counter[1] is counter of 'a'&&'A'  ...   counter[26] 'z'&&'Z'
- * 
- * On arch of amd64, unsigned long is enough for normal use.
- */
-unsigned long counter[27];
+/* counter[N] where N copes ascii
+ * On arch of amd64, unsigned long is enough for normal use. */
+/* TODO : try to add more features */
+unsigned long counter[256];
 /* for finding witch line to highlight in the part of output */
 unsigned long counter_max;
 unsigned long counter_min;
+/* counter for all alphabet */
+unsigned long counter_alpha;
+/* total, the first to leak */
+unsigned long counter_total;
+
 
 int
 main (int argc, char **argv)
@@ -59,15 +62,13 @@ main (int argc, char **argv)
 	register char buf = 0;
 
 	/* if user doesn't specify the input FILE,
-	 * 	use stdin as default.
-	 */
+	 * 	use stdin as default.  */
 	FILE *in_file = stdin;
 	FILE *out_file = stdout;
 	
 	
 	/* read the options, if user specifies a FILE, read it,
-	 * 	or read from stdin
-	 */
+	 * 	or read from stdin */
 	while ((opt = getopt(argc, argv, "hp:s")) != -1) {
 		switch (opt) {
 			case 'h':
@@ -107,42 +108,51 @@ main (int argc, char **argv)
 		 * 	look up gcc doc.
 		 * Consider rewrite this block using if...else...
 		 * 	if your compiler is not gcc.
-		 */
-		switch (buf) {
+		 */ switch (buf) {
 			case 'a' ... 'z':
-				counter[0]++;
-				counter[1+(buf-'a')]++;
+				counter[(int)buf]++;
+				counter_alpha++;
+				counter_total++;
 				break;
 			case 'A' ... 'Z':
-				counter[0]++;
-				counter[1+(buf-'A')]++;
+				counter[(int)buf]++;
+				counter_alpha++;
+				counter_total++;
 				break;
 			default:
+				counter_total++;
 				break;
 		}
 	}
 
 	/* find out the counter_max */
+
 	int j; /* j used just in for */
-	/* give counter_min a value to ensure it is not 0 at the end */
-	counter_min = counter[1];
-	/* scan counter[] for max and min, counter[0] is ALL so passed */
-	for (j=1; j < 27; j++) {
-		if (counter[j] > counter_max) {
-			counter_max = counter[j];
+	unsigned long tmp;
+	for (j=0; j < 26; j++) {
+		/* search max */
+		tmp = counter['a'+j] + counter['A'+j];
+		if ( tmp > counter_max) {
+			counter_max = tmp;
 		}
-		if (counter[j] < counter_min) {
-			counter_min = counter[j];
+	}
+	for (j=0; j < 26; j++) {
+		/* search min */
+		counter_min = counter_max;
+		tmp = counter['a'+j] + counter['A'+j];
+		if (counter_min > tmp) {
+			counter_min = tmp;
 		}
 	}
 
 	/* next, print it out, and highlight the max */
-	for (j=1; j < 27; j++) {
+	for (j=0; j < 26; j++) {
+		tmp = counter['a'+j] + counter['A'+j];
 		/* dye */
-		if (counter[j] == counter_max) {
+		if (tmp == counter_max) {
 			/* MAX, red */
 			fputs ("\033[31m", out_file);
-		} else if (counter[j] == counter_min) {
+		} else if (tmp == counter_min) {
 			/* MIN, green */
 			fputs ("\033[32m", out_file);
 		} else {
@@ -150,8 +160,8 @@ main (int argc, char **argv)
 		}
 
 		/* print info */
-		printer (out_file, 'A'-1+j, counter[j],
-				 (double)counter[j]/counter[0], places
+		printer (out_file, 'A'+j, tmp,
+				 (double)tmp/counter_alpha, places
 				);
 
 		/* color recover */
@@ -159,7 +169,7 @@ main (int argc, char **argv)
 	}
 
 	/* dump the counter for ALL */
-	printf ("ALL \033[34m%ld\033[m alphabets.\n", counter[0]);
+	printf ("ALL \033[34m%ld\033[m alphabets.\n", counter_alpha);
 	
 	fclose (in_file);
 	fclose (out_file);
