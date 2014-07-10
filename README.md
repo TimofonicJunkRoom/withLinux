@@ -7,11 +7,17 @@ According to some Theories, certain types of classic codes, such as substitution
   
 New tools, functions, features are being added.     
    
-[a8freq.c](https://github.com/CDLuminate/a8freq/blob/master/a8freq.c)   Simply show freqency of alphabets in file.   
-[a8lu.c](https://github.com/CDLuminate/a8freq/blob/master/a8lu.c)     Convert alphabets between upper and lower case.   
-[a8shift.c](https://github.com/CDLuminate/a8freq/blob/master/a8shift.c)  Shift alphabets by (+/-)N positions.  
-[a8swap.c](https://github.com/CDLuminate/a8freq)   (upcoming) swap pairs of alphabets in file.  
-[decode.sh](https://github.com/CDLuminate/a8freq/blob/master/decode.sh)  Decode a file using a freqency source file.  
+[a8freq.c](https://github.com/CDLuminate/a8freq/blob/master/a8freq.c)   
+Simply show freqency of alphabets in file.   
+Specifying chars to count is supported now (lower, upper, number).  
+[a8lu.c](https://github.com/CDLuminate/a8freq/blob/master/a8lu.c)     
+Convert alphabets between upper and lower case.   
+[a8shift.c](https://github.com/CDLuminate/a8freq/blob/master/a8shift.c)  
+Shift alphabets by (+/-)N positions in alphabet list.  
+[a8swap.c](https://github.com/CDLuminate/a8freq)   
+(upcoming) swap pairs of alphabets in file.  
+[decode.sh](https://github.com/CDLuminate/a8freq/blob/master/decode.sh)  
+Decode a file using a freqency source file.  
   
 For their Usage, look up the c file, and there is function "Usage ()" in each .c file.  
   

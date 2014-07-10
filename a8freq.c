@@ -19,7 +19,7 @@
 void Usage (char *prog_name)
 {
 	fprintf (stderr, "\
-Usage : %s [-hp:slu] [FILE]\n\
+Usage : %s [-hp:slnu] [FILE]\n\
 Show the alphabets' freqency in file.\n\
 Char of max_freq will be highlighted in red.\n\
      of min_freq will be highlighted in green.\n\
@@ -31,7 +31,8 @@ Options :\n\
   -p	set decimal places in output\n\
   -s    Use another output format\n\
   -l    Custom count the lower\n\
-  -u    Custom count the upper\n",
+  -u    Custom count the upper\n\
+  -n    Custom count the number\n",
   		 prog_name);
 }
 
@@ -119,7 +120,7 @@ main (int argc, char **argv)
 	
 	/* read the options, if user specifies a FILE, read it,
 	 * 	or read from stdin */
-	while ((opt = getopt(argc, argv, "hlp:su")) != -1) {
+	while ((opt = getopt(argc, argv, "hlp:sun")) != -1) {
 		switch (opt) {
 			case 'h':
 				/* help */
@@ -137,20 +138,17 @@ main (int argc, char **argv)
 			case 'l':
 				/* set flag_lower */
 				flag_alpha = 0;
-				
 				flag_lower = 1;
-				for (looper = 'a'; looper <= 'z'; looper++) {
-					if_count[looper] = flag_lower;
-				}
 				break;
 			case 'u':
 				/* set flag_upper */
 				flag_alpha = 0;
-
 				flag_upper = 1;
-				for (looper = 'A'; looper <= 'Z'; looper++) {
-					if_count[looper] = flag_upper;
-				}
+				break;
+			case 'n':
+				/* set flag_number */
+				flag_alpha = 0;
+				flag_number = 1;
 				break;
 			default:
 				/* out of exception */
@@ -159,7 +157,7 @@ main (int argc, char **argv)
 				break;
 		}
 	}
-	/* if flag_alpha was removed, set if_count */
+	/* if flag_alpha was cleared, set if_count */
 	if (!flag_alpha) {
 		if_count_flush (if_count);
 		for (looper = 0; looper < 256; looper++) {
@@ -169,6 +167,9 @@ main (int argc, char **argv)
 					break;
 				case 'a' ... 'z':
 					if (flag_lower) if_count[looper] = 1;
+					break;
+				case '0' ... '9':
+					if (flag_number) if_count[looper] = 1;
 					break;
 				default:
 					break;
