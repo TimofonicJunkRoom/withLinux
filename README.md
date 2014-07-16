@@ -7,16 +7,14 @@ According to some Theories, certain types of classic codes, such as substitution
   
 New tools, functions, features are being added.     
    
-[a8freq.c](https://github.com/CDLuminate/a8freq/blob/master/a8freq.c)   
+[a8freq.c](./a8freq.c)   
 Simply show freqency of alphabets in file.   
 Specifying chars to count is supported now (lower, upper, number).  
-[a8lu.c](https://github.com/CDLuminate/a8freq/blob/master/a8lu.c)     
+[a8lu.c](./a8lu.c)     
 Convert alphabets between upper and lower case.   
-[a8shift.c](https://github.com/CDLuminate/a8freq/blob/master/a8shift.c)  
+[a8shift.c](./a8shift.c)  
 Shift alphabets by (+/-)N positions in alphabet list.  
-[a8swap.c](https://github.com/CDLuminate/a8freq)   
-(upcoming) swap pairs of alphabets in file.  
-[decode.sh](https://github.com/CDLuminate/a8freq/blob/master/decode.sh)  
+[decode.sh](./decode.sh)  
 Decode a file using a freqency source file.  
   
 For their Usage, look up the c file, and there is function "Usage ()" in each .c file.  
@@ -41,11 +39,21 @@ $ SUBSTI='BCDEFGHIJKLMNOPQRSTUVWXYZAbcdefghijklmnopqrstuvwxyza'
   
 $ cat FILE | tr -s $ORIGIN $SUBSTI
 ```
-If you want to simply shift them by (int)N positions, use [a8shift.c](https://github.com/CDLuminate/a8freq/blob/master/a8shift.c).  
+If you want to simply shift them by (int)N positions, use [a8shift.c](./a8shift.c).  
 ```
 $ cat FILE | ./a8shift -o 1
 # same result as above
 ```
+
+#### Examples :: swap characters
+The gnu's tr is enough to this purpose.  
+```
+$ tr -s 'ORIGIN_LIST' 'TARGET_LIST'
+```
+For example, $ tr -s 'abc' 'xyz'  
+abcdefxyz		<- from stdin  
+xyzdefxyz		<- processed by tr  
+  
 
 #### Examples :: a8freq
 ```
