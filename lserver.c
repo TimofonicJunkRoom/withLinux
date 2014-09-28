@@ -1,4 +1,4 @@
-/* ser.c
+/* lserver.c
 
    Learning Socket Programming.
    this is the server end, it listens on 127.0.0.1:2333,
