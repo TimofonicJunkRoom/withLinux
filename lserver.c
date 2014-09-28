@@ -24,6 +24,11 @@
 #define BACKLOG 3
 #define BANNER "BANNER! From the Server\n"
 
+int Err(const char name[]) {
+	perror (name);
+	exit (EXIT_FAILURE);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -41,8 +46,7 @@ main (int argc, char **argv)
 	sock_fd = socket(AF_INET, SOCK_STREAM,
 		getprotobyname("tcp")->p_proto);
 	if (sock_fd == -1) {
-		perror ("socket");
-		exit (EXIT_FAILURE);
+		Err ("socket");
 	}
 	if (debug) fprintf (stderr, "[%ld] Socket created.\n", time(&t_sec));
 
@@ -57,15 +61,13 @@ main (int argc, char **argv)
 	if (bind(sock_fd, (struct sockaddr *)&serv_addr,
 		sizeof(struct sockaddr)) == -1)
 	{
-		perror ("bind");
-		exit (EXIT_FAILURE);
+		Err ("bind");
 	}
 	if (debug) fprintf (stderr, "[%ld] Bind success.\n", time(&t_sec));
 
 	/* Listen */
 	if (listen(sock_fd, BACKLOG) == -1) {
-		perror ("listen");
-		exit (EXIT_FAILURE);
+		Err ("listen");
 	}
 	if (debug) fprintf (stderr, "[%ld] Listen.\n", time(&t_sec));
 
@@ -77,8 +79,7 @@ main (int argc, char **argv)
 		   */
 		new_fd = accept (sock_fd, (struct sockaddr *)&clie_addr, &addrlen);
 		if (new_fd == -1) {
-			perror ("accept");
-			exit (EXIT_FAILURE);
+			Err ("accept");
 		}
 		if (debug) fprintf (stderr, "[%ld] Accept\n", time(&t_sec));
 		fprintf (stderr, "[%ld] Get Connection from %s : %d\n",
@@ -86,8 +87,7 @@ main (int argc, char **argv)
 			inet_ntoa(clie_addr.sin_addr),
 			clie_addr.sin_port);
 		if (write(new_fd, BANNER, sizeof(BANNER)) == -1) {
-			perror ("write");
-			exit (EXIT_FAILURE);
+			Err ("write");
 		}
 		if (debug) fprintf (stderr, "[%ld] Banner sent, close\n", time(&t_sec));
 		/* close the connection */
