@@ -91,3 +91,18 @@ Close (int fd)
 	}
 	return _lclose;
 }
+
+//int connect(int sockfd, const struct sockaddr *addr,
+//                   socklen_t addrlen);
+int
+Connect (int sockfd, const struct sockaddr *addr,
+	 socklen_t addrlen)
+{
+	int _lconn;
+	_lconn = connect (sockfd, addr, addrlen);
+	if (_lconn == -1) {
+		perror ("connect");
+		exit (EXIT_FAILURE);
+	}
+	return _lconn;
+}

@@ -36,6 +36,9 @@ main (int argc, char **argv)
 			write (connfd,
 			       BANNER,
 			       sizeof(BANNER));
+			write (connfd,
+			       BANNER,
+			       sizeof(BANNER));
 			exit (0);
 		}
 		Close (connfd);
