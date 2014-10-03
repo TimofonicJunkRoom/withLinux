@@ -28,7 +28,7 @@ int Err (const char name[]) {
 int
 main (int argc, char **argv)
 {
-	int debug = 1;
+//	int debug = 1;
 
 	int sock_fd;
 	char buffer[BUFFER_SIZE];
