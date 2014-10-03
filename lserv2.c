@@ -36,7 +36,7 @@ main (int argc, char **argv)
 	/* create socket */
 	listenfd = Socket(AF_INET,
 			  SOCK_STREAM, 0);
-	if (debug) printf ("- initialized socket\n");
+	if (debug) printf ("* initialized socket\n");
 
 	/* fill in sockaddr */
 	serv_addr.sin_family = AF_INET;
@@ -47,10 +47,10 @@ main (int argc, char **argv)
 
 	Bind (listenfd, (struct sockaddr *)&serv_addr,
 	      sizeof(serv_addr));
-	if (debug) printf ("- bind sucess\n");
+	if (debug) printf ("* bind sucess\n");
 
 	Listen (listenfd, 5);
-	if (debug) printf ("- listenning on %s:%d ...\n",
+	if (debug) printf ("* listenning on %s:%d ...\n",
 		saddr , ntohs(serv_addr.sin_port));	
 
 	while (1) {
@@ -95,10 +95,10 @@ do_serv (FILE *fp, int connfd)
 		/* read instruction from client,
 		   and feed back the instruction */
 		if ( read(connfd, inst, 1023) > 0) {
-			fprintf (stdout, "%s:%d -> %s: INST %s",
+			fprintf (stdout, "- %s:%d -> %s: INST %s",
 				 raddr, rport,
 				 "Server" , inst);
-			snprintf (feed, 1023, "%s:%d : RECV %s",
+			snprintf (feed, 1023, "- %s:%d : RECV %s",
 				  saddr, sport, inst);
 			write (connfd, feed, strlen(feed));
 		}
