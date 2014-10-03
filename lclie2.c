@@ -2,6 +2,8 @@
 
 #define RPORT 2333
 
+int str_clie (FILE *, int);
+
 int
 main (int argc, char **argv)
 {
@@ -40,6 +42,22 @@ main (int argc, char **argv)
 		printf ("from server : %s\n", buffer);
 		bzero (buffer, 1024);
 	}*/
+	str_clie (stdin, sockfd);
 
 	return 0;
 }
+
+int
+str_clie (FILE *fp, int sockfd)
+{
+	char sendline[1024], recvline[1024];
+	bzero (sendline, 1024);
+	bzero (recvline, 1024);
+
+	while (fgets(sendline, 1023, fp) != NULL) {
+		write (sockfd, sendline, strlen(sendline));
+		fputs (recvline, stdout);
+	}
+	return 0;
+}
+
