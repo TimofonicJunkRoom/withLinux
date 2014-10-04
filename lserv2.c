@@ -2,7 +2,7 @@
 
 #define PORT 2333
 #define BANNER "Sort_of_Server2 :: Please input your instructions.\n"
-#define BYE_MSG "From Server : BYE\n"
+#define BYE_MSG "From Server : BYE\n\0\0"
 #define HTML "<html>It works!</html>\n"
 
 /* debug flag */
@@ -159,6 +159,11 @@ do_serv (FILE *fp, int connfd)
 			/* readn = 0, the normal case */
 			usleep (100);
 			wcounter += 100;
+			if (wcounter >= 10*1000) {
+				printf ("timeout\n");
+				Close (connfd);
+				exit (EXIT_FAILURE);
+			}
 			continue;
 		}
 		/* after basic read and write done, the instruction

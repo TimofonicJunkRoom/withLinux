@@ -6,11 +6,15 @@
 char buffer[1024];
 
 int do_clie (FILE *, int);
+void do_sigint (int sig);
 
+
+int	sockfd;
+
+/* main */
 int
 main (int argc, char **argv)
 {
-	int	sockfd;
 	struct sockaddr_in serv_addr;
 
 	bzero (buffer, 1024);
@@ -44,6 +48,7 @@ main (int argc, char **argv)
 		printf ("from server : %s\n", buffer);
 		bzero (buffer, 1024);
 	}*/
+	(void) signal (SIGINT, do_sigint);
 	do_clie (stdin, sockfd);
 
 	return 0;
@@ -55,17 +60,34 @@ do_clie (FILE *fp, int sockfd)
 	char sendline[1024];
 	bzero (sendline, 1024);
 
-	int i = 0;
+	int readn = 0;
 	while (1) {
-		while ( read(sockfd, buffer, 1024) > 0) {
-			for (; i<1024; i++) {
-				putchar (buffer[i]);
-			}
-			bzero (buffer, 1024);
-		}
-		fgets(sendline, 1023, fp);
+		readn = read(sockfd, buffer, 1023);
+		printf ("%s", buffer);
+		bzero (buffer, 1024);
+		//readn = read(sockfd, buffer, 1023);
+		//printf ("%s", buffer);
+		//bzero (buffer, 1024);
+			
+
+		fgets (sendline, 1023, stdin);
 		write (sockfd, sendline, strlen(sendline));
+		bzero (sendline, 1024);
+
+		if (!strncmp(sendline, "quit", 4)) {
+			Close (sockfd);
+			printf ("quit\n");
+			exit (EXIT_SUCCESS);
+		}
 	}
+	Close (sockfd);
 	return 0;
 }
 
+void do_sigint (int sig)
+{
+	printf ("quit\n");
+	write (sockfd, "QUIT", 5);
+	Close (sockfd);
+	exit (EXIT_SUCCESS);
+}
