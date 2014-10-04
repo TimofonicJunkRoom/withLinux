@@ -2,7 +2,10 @@
 
 #define RPORT 2333
 
-int str_clie (FILE *, int);
+/* buffer, read from server */
+char buffer[1024];
+
+int do_clie (FILE *, int);
 
 int
 main (int argc, char **argv)
@@ -10,7 +13,6 @@ main (int argc, char **argv)
 	int	sockfd;
 	struct sockaddr_in serv_addr;
 
-	char buffer[1024];
 	bzero (buffer, 1024);
 
 	/* test arg */
@@ -31,8 +33,8 @@ main (int argc, char **argv)
 	Connect (sockfd, (struct sockaddr *)&serv_addr,
 		 sizeof(serv_addr));
 
-	read (sockfd, buffer, 1024);
-	printf ("from server : %s\n", buffer);
+	//read (sockfd, buffer, 1024);
+	//printf ("from server : %s\n", buffer);
 	//bzero (buffer, 1024);
 	//read (sockfd, buffer, 2014);
 	//printf ("from server : %s\n", buffer);
@@ -42,21 +44,27 @@ main (int argc, char **argv)
 		printf ("from server : %s\n", buffer);
 		bzero (buffer, 1024);
 	}*/
-	str_clie (stdin, sockfd);
+	do_clie (stdin, sockfd);
 
 	return 0;
 }
 
 int
-str_clie (FILE *fp, int sockfd)
+do_clie (FILE *fp, int sockfd)
 {
-	char sendline[1024], recvline[1024];
+	char sendline[1024];
 	bzero (sendline, 1024);
-	bzero (recvline, 1024);
 
-	while (fgets(sendline, 1023, fp) != NULL) {
+	int i = 0;
+	while (1) {
+		while ( read(sockfd, buffer, 1024) > 0) {
+			for (; i<1024; i++) {
+				putchar (buffer[i]);
+			}
+			bzero (buffer, 1024);
+		}
+		fgets(sendline, 1023, fp);
 		write (sockfd, sendline, strlen(sendline));
-		fputs (recvline, stdout);
 	}
 	return 0;
 }

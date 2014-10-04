@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <signal.h>
+
 //int socket(int domain, int type, int protocol);
 int
 Socket (int domain, int type, int protocol)

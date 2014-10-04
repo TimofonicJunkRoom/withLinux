@@ -26,6 +26,8 @@ unsigned short sport = 0;	//server port
 int do_serv (FILE *fp, int connfd);
 /* parse instruction from client */
 int inst_parse (const char *src, char *argv0, char *argv1);
+/* */
+void do_sigint (int sig);
 
 /* --- main --- */	
 int
@@ -59,6 +61,7 @@ main (int argc, char **argv)
 		saddr , ntohs(serv_addr.sin_port));	
 
 	/* standalone : wait and accept clients */
+	(void) signal(SIGINT, do_sigint);
 	while (1) {
 		cli_len = sizeof(clie_addr);
 		/* if no client connects the server, 
@@ -102,6 +105,7 @@ main (int argc, char **argv)
 		Close (connfd);
 	}
 
+	Close (listenfd);
 	return 0;
 }
 
@@ -147,6 +151,7 @@ do_serv (FILE *fp, int connfd)
 			snprintf (feed, 1023, "- %s:%d : RECV %s",
 				  saddr, sport, inst);
 			write (connfd, feed, strlen(feed));
+			wcounter = 0;
 		} else if (readn < 0) {
 			perror ("read");
 			exit (EXIT_FAILURE);
@@ -154,11 +159,6 @@ do_serv (FILE *fp, int connfd)
 			/* readn = 0, the normal case */
 			usleep (100);
 			wcounter += 100;
-			if (wcounter > 1000*20) {
-				printf ("* client timeout\n");
-				Close (connfd);
-				exit (EXIT_FAILURE);
-			}
 			continue;
 		}
 		/* after basic read and write done, the instruction
@@ -174,8 +174,6 @@ do_serv (FILE *fp, int connfd)
 			/* close connfd and exit */
 			Close (connfd);
 			exit (EXIT_SUCCESS);
-
-			break;
 		}
 		/* other instructions */
 		inst_parse (inst, argv0, argv1);
@@ -236,3 +234,11 @@ inst_parse (const char *src, char *argv0, char *argv1)
 	if (debug) printf ("+ argv0 [%s], argv1 [%s]\n", argv0, argv1);
 	return 0;
 }
+
+/* when catched SIGINT */
+void do_sigint (int sig)
+{
+	printf ("\n* Catch SIGINT, exit.\n");
+	exit (EXIT_SUCCESS);
+}
+
