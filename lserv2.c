@@ -7,6 +7,10 @@
 
    C.D.Luminate <cdluminate@163.com>
    2014/10/{03,04} */
+/* TODO : some times I behaves strangely,
+   e.g. if I type PASS pass first, then USER user,
+   	the auth process will not go, but some former version
+	of me will do. */
 
 /* lsock.h */
 #include "lsock.h"

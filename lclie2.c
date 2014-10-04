@@ -1,3 +1,8 @@
+/* the client of lserv2.c
+   C.D.Luminate <cdluminate@163.com>
+   2014/10/{03,04} */
+// TODO : add comment
+
 #include "lsock.h"
 
 #define RPORT 2333
@@ -37,17 +42,6 @@ main (int argc, char **argv)
 	Connect (sockfd, (struct sockaddr *)&serv_addr,
 		 sizeof(serv_addr));
 
-	//read (sockfd, buffer, 1024);
-	//printf ("from server : %s\n", buffer);
-	//bzero (buffer, 1024);
-	//read (sockfd, buffer, 2014);
-	//printf ("from server : %s\n", buffer);
-
-	/*long n = 0;
-	while ( (n = read(sockfd, buffer, 1024-1)) != 0) {
-		printf ("from server : %s\n", buffer);
-		bzero (buffer, 1024);
-	}*/
 	(void) signal (SIGINT, do_sigint);
 	do_clie (stdin, sockfd);
 
@@ -60,16 +54,11 @@ do_clie (FILE *fp, int sockfd)
 	char sendline[1024];
 	bzero (sendline, 1024);
 
-	//int readn = 0;
 	while (1) {
 		read(sockfd, buffer, 1023);
 		printf ("%s", buffer);
 		bzero (buffer, 1024);
-		//readn = read(sockfd, buffer, 1023);
-		//printf ("%s", buffer);
-		//bzero (buffer, 1024);
 			
-
 		if ( fgets(sendline, 1023, stdin) != NULL) {
 			write (sockfd, sendline, strlen(sendline));
 		} else {
