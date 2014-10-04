@@ -16,10 +16,10 @@ struct sockaddr_in clie_addr;
 struct sockaddr_in serv_addr;
 
 /* remote and server information */
-char raddr[128];
-unsigned short rport = 0;
-char saddr[128];
-unsigned short sport = 0;
+char raddr[128];		//remote addr 
+unsigned short rport = 0;	//remote port
+char saddr[128];		//server addr
+unsigned short sport = 0;	//server port
 
 /* service things */
 int do_serv (FILE *fp, int connfd);
@@ -42,38 +42,61 @@ main (int argc, char **argv)
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(PORT);
+	/* fill server ipv4 addr and port info */
 	inet_ntop (AF_INET, &serv_addr.sin_addr, saddr, sizeof(serv_addr));
 	sport = ntohs (serv_addr.sin_port);
 
+	/* bind */
 	Bind (listenfd, (struct sockaddr *)&serv_addr,
 	      sizeof(serv_addr));
 	if (debug) printf ("* bind sucess\n");
-
+	
+	/* listen */
 	Listen (listenfd, 5);
 	if (debug) printf ("* listenning on %s:%d ...\n",
 		saddr , ntohs(serv_addr.sin_port));	
 
+	/* standalone : wait and accept clients */
 	while (1) {
 		cli_len = sizeof(clie_addr);
+		/* if no client connects the server, 
+		   the function will block server */
 		connfd = Accept(listenfd,
 				(struct sockaddr *)&clie_addr,
 				&cli_len);
-		/* get client info */
+		/* get client addr and port info */
 		inet_ntop (AF_INET, &clie_addr.sin_addr.s_addr, raddr,
 			sizeof(clie_addr));
 		rport = ntohs(clie_addr.sin_port);
 
-		/* fork a server */
+		/* fork the server client,
+		   the parent process closes connfd and listen to other
+		   clients, the child process do service matter and exit*/
 		if ( (c_pid = Fork()) == 0) {
+			/* c_pid in parent process will not be 0,
+			   so it will not step in here.
+			   c_pid in child process will be 0 or -1(error),
+			   so code here tells child what to do */
+			/* listen mode off */
 			Close (listenfd);
+			/* write welcome message back */
 			write (connfd, BANNER,
 			       sizeof(BANNER));
+			/* start do_serv loop, until instruction
+			   'quit' is recieved */
 			do_serv (stdin, connfd); 
+			/* had recieved the 'quit' instruction, do_serv
+			   loop was broke. then write the BYE_BYE message */
 			write (connfd,
 			       BYE_MSG, sizeof(BYE_MSG));
+
+			/* close connfd and exit */
 			Close (connfd);
-			exit (0);
+			exit (EXIT_SUCCESS);
 		}
+		/* parent process will not step into the if () code block,
+		   so parent should just close connfd, and let the child
+		   do_serv */
 		Close (connfd);
 	}
 
@@ -92,12 +115,15 @@ do_serv (FILE *fp, int connfd)
 
 	/* do serv loop */
 	while (1) {
-		/* read instruction from client,
-		   and feed back the instruction */
+		/* if read instruction from client success ,
+		   print instruction and write feed back */
 		if ( read(connfd, inst, 1023) > 0) {
+			/* print conn info */
 			fprintf (stdout, "- %s:%d -> %s: INST %s",
 				 raddr, rport,
 				 "Server" , inst);
+			/* print the feed back in buffer,
+			   then write to connfd */
 			snprintf (feed, 1023, "- %s:%d : RECV %s",
 				  saddr, sport, inst);
 			write (connfd, feed, strlen(feed));
