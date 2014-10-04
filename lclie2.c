@@ -16,6 +16,7 @@ int
 main (int argc, char **argv)
 {
 	struct sockaddr_in serv_addr;
+	bzero (&serv_addr, sizeof(serv_addr));
 
 	bzero (buffer, 1024);
 
@@ -28,7 +29,6 @@ main (int argc, char **argv)
 	sockfd = Socket (AF_INET, SOCK_STREAM, 0);
 
 	/* fill sockaddr_in */
-	bzero (&serv_addr, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(RPORT);
 	inet_pton(AF_INET, argv[1], &serv_addr.sin_addr);
@@ -60,9 +60,9 @@ do_clie (FILE *fp, int sockfd)
 	char sendline[1024];
 	bzero (sendline, 1024);
 
-	int readn = 0;
+	//int readn = 0;
 	while (1) {
-		readn = read(sockfd, buffer, 1023);
+		read(sockfd, buffer, 1023);
 		printf ("%s", buffer);
 		bzero (buffer, 1024);
 		//readn = read(sockfd, buffer, 1023);
@@ -70,8 +70,13 @@ do_clie (FILE *fp, int sockfd)
 		//bzero (buffer, 1024);
 			
 
-		fgets (sendline, 1023, stdin);
-		write (sockfd, sendline, strlen(sendline));
+		if ( fgets(sendline, 1023, stdin) != NULL) {
+			write (sockfd, sendline, strlen(sendline));
+		} else {
+			printf ("EOF : exit\n");
+			Close (sockfd);
+			exit (EXIT_SUCCESS);
+		}
 		bzero (sendline, 1024);
 
 		if (!strncmp(sendline, "quit", 4)) {
