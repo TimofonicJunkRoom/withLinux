@@ -107,7 +107,7 @@ main (int argc, char **argv)
 
 	/* create socket */
 	listenfd = Socket(AF_INET, SOCK_STREAM, 0);
-	if (debug) printf ("* initialized socket\n");
+	if (debug) printf ("[31m*[m initialized socket\n");
 
 	/* fill in sockaddr */
 	serv_addr.sin_family = AF_INET;
@@ -119,11 +119,11 @@ main (int argc, char **argv)
 
 	/* bind */
 	Bind (listenfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
-	if (debug) printf ("* bind sucess\n");
+	if (debug) printf ("[31m*[m bind sucess\n");
 	
 	/* listen */
 	Listen (listenfd, 5);
-	if (debug) printf ("* listenning on %s:%d ...\n",
+	if (debug) printf ("[31m*[m listenning on %s:%d ...\n",
 		saddr , ntohs(serv_addr.sin_port));	
 
 	/* standalone : wait and accept clients */
@@ -138,7 +138,7 @@ main (int argc, char **argv)
 		inet_ntop (AF_INET, &clie_addr.sin_addr.s_addr, raddr,
 			sizeof(clie_addr));
 		rport = ntohs(clie_addr.sin_port);
-		if (debug) printf ("* accept client from %s:%d\n",
+		if (debug) printf ("[31m*[m accept client from %s:%d\n",
 				   raddr, rport);
 
 		/* fork the server client,
@@ -187,7 +187,8 @@ do_serv (FILE *fp, int connfd)
 				 raddr, rport, "Server" , inst);
 			/* print the feed back in buffer,
 			   then write to connfd, default on */
-			snprintf (feed, 1023, "RECV %s", inst);
+			//snprintf (feed, 1023, "RECV %s", inst);
+			snprintf (feed, 1023, "--- RECV INST ---\n");
 			write (connfd, feed, strlen(feed));
 		} else if (readn < 0) {
 			perror ("read");
@@ -226,7 +227,7 @@ do_serv (FILE *fp, int connfd)
 				write (connfd, SECRET, sizeof(SECRET));
 			} else if (auth_st <= 0) {
 				write (connfd, SEC_FAIL, sizeof(SEC_FAIL));
-				printf ("+ WARN: %s attempted to read SEC but failed\n",
+				printf ("+ [31mWARN[m: %s attempted to read SEC but failed\n",
 					raddr);
 			}
 		} else if (!strncmp(argv0, "LOGOUT", 6)) {
@@ -268,6 +269,6 @@ inst_parse (const char *src, char *argv0, char *argv1)
 /* when catched SIGINT */
 void do_sigint (int sig)
 {
-	printf ("\n* Signal SIGINT\n");
+	printf ("\n[31m*[m Signal <[31mSIGINT[m>\n");
 	exit (EXIT_SUCCESS);
 }
