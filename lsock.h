@@ -13,6 +13,7 @@
 #include <string.h>
 
 #include <signal.h>
+#include <sys/wait.h>
 
 //int socket(int domain, int type, int protocol);
 int

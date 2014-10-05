@@ -73,8 +73,15 @@
 int do_serv (FILE *fp, int connfd);
 /* parse instruction from client */
 int inst_parse (const char *src, char *argv0, char *argv1);
-/* when SIGINT */
+/* signal SIGINT */
 void do_sigint (int sig);
+void do_sigchld (int sig) {
+	pid_t p;
+	int stat;
+	p = wait(&stat);
+	printf ("[31m*[m child %d terminated\n", p);
+	return;
+}
 /* flush socket related info */
 int flush_sock_re (void)
 {
@@ -139,6 +146,7 @@ main (int argc, char **argv)
 
 	/* standalone : wait and accept clients */
 	(void) signal(SIGINT, do_sigint);
+	(void) signal(SIGCHLD, do_sigchld);
 	while (1) {
 		cli_len = sizeof(clie_addr);
 		/* if no client connects the server, 
