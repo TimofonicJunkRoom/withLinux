@@ -30,17 +30,18 @@
 #define USER "user"
 #define PASS "pass"
 
+
 /* ---------- vars -------------*/
 /* debug flag */
-int debug = 1;
+	int debug = 1;
 
 /* general socket related vars */
-int listenfd;
-int connfd;
-struct sockaddr_in clie_addr;
-struct sockaddr_in serv_addr;
-socklen_t cli_len;
-pid_t c_pid;
+	int listenfd;
+	int connfd;
+	struct sockaddr_in clie_addr;
+	struct sockaddr_in serv_addr;
+	socklen_t cli_len;
+	pid_t c_pid;
 
 /* remote and server information */
 	char raddr[128];		//remote addr 
@@ -99,6 +100,12 @@ int flush_auth (void)
 	bzero (auth_name, sizeof(auth_name));
 	return 0;
 }
+/* auth core */
+int authenticate (int *state, const char *user, const char *pass);
+/* judge if to auth and do auth matter */
+int auto_auth (void);
+
+
 
 /* =========== main ================= */	
 int
@@ -181,11 +188,13 @@ main (int argc, char **argv)
 int
 do_serv (FILE *fp, int connfd)
 {
-	/* do serv loop */
+/* do_serv() loop */
 	while (1) {
+/* STAGE 1 : read the connfd */
 		/* if read instruction from client success ,
 		   print instruction and write feed back */
-		if ( (readn=read(connfd, inst, 1023)) > 0) {
+		readn = read(connfd, inst, 1023);
+		if ( readn > 0) {
 			/* print conn info */
 			fprintf (stdout, "- %s:%d -> %s: INST %s",
 				 raddr, rport, "Server" , inst);
@@ -208,11 +217,10 @@ do_serv (FILE *fp, int connfd)
 			}
 			continue;
 		}
+		/* if went here, server should have recieved something */
 		wcounter = 0;
-		/* after basic read and write done, the instruction
-		   should be parsed */
 
-		/* parse instruction then */
+/* STAGE 2 : parse instruction */
 		inst_parse (inst, argv0, argv1);
 		/* compare parsed instruction with some commands */
 		if (!strncmp(argv0, "GET", 3)) {
@@ -224,8 +232,10 @@ do_serv (FILE *fp, int connfd)
 			exit (EXIT_SUCCESS);
 		} else if (!strncmp(argv0, "USER", 4)) {
 			if (strlen(argv1)>0) strncpy (auth_name, argv1, 16);
+			auto_auth ();
 		} else if (!strncmp(argv0, "PASS", 4)) {
 			if (strlen(argv1)>0) strncpy (auth_pass, argv1, 16);
+			auto_auth ();
 		} else if (!strncmp(argv0, "SEC", 3)) {
 			if (auth_st > 0) {
 				write (connfd, SECRET, sizeof(SECRET));
@@ -242,19 +252,7 @@ do_serv (FILE *fp, int connfd)
 			write (connfd, INST_NA, sizeof(INST_NA));
 			continue;
 		}
-		/* user authentication stuff */
-		if (auth_st < 0) {
-			if (strlen(auth_name)>0 && strlen(auth_pass)>0) {
-				if (strncmp(auth_name, USER, sizeof(USER))==0 &&
-				    strncmp(auth_pass, PASS, sizeof(PASS))==0) {
-					auth_st = 1;
-					write (connfd, AUTH_SUCC, sizeof(AUTH_SUCC));
-				} else {
-					write (connfd, AUTH_FAIL, sizeof(AUTH_FAIL));
-					flush_auth ();
-				}
-			}
-		}
+
 		/* flush  buffers */
 		flush_buf ();
 	}
@@ -271,8 +269,55 @@ inst_parse (const char *src, char *argv0, char *argv1)
 }
 
 /* when catched SIGINT */
-void do_sigint (int sig)
+void
+do_sigint (int sig)
 {
 	printf ("\n[31m*[m Signal <[31mSIGINT[m>\n");
 	exit (EXIT_SUCCESS);
+}
+
+/* verify and auth */
+int
+authenticate (int *state, const char *user, const char *pass)
+{
+	/* return value :
+	   	0 : nothing to do
+		1   auth success
+		-1  auth fail */
+	if (*state == 0) {
+		*state = -1;
+		return 0;
+	}
+	else if (*state >= 1) {
+		return 0;
+	}
+	int chk_user = strncmp (user, USER, sizeof(USER));
+	int chk_pass = strncmp (pass, PASS, sizeof(PASS));
+	if (chk_user==0 && chk_pass==0) {
+		*state = 1;
+		return 1;
+	} else {
+		*state = -1;
+		return -1;
+	}
+}
+
+/* do_auth */
+int
+auto_auth (void)
+{
+	int auth_temp = 0;
+	if (strlen(auth_name)>0 && strlen(auth_pass)>0) {
+		auth_temp = authenticate(&auth_st, auth_name, auth_pass);
+		if (auth_temp == 0) {
+			write (connfd, "-- NOTHING --\n", sizeof("-- NOTHING --\n"));
+		} else if (auth_temp == -1) {
+			write (connfd, "-- AUTH FAIL --\n", sizeof("-- AUTH FAIL --\n"));
+		} else if (auth_temp == 1) {
+			write (connfd, "-- AUTH SUCC --\n", sizeof("-- AUTH SUCC --\n"));
+		} else {
+			exit (EXIT_FAILURE);
+		}
+	}
+	return 0;
 }
