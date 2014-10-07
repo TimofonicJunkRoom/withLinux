@@ -5,17 +5,22 @@
 
    C.D.Luminate <cdluminate@163.com>
    2014/04/18
+
+	Licence : MIT
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "fir_flags.h"
 
-char geom[15][15];
+/* checkboard */
+char chkbd[15][15];
 int size = 15;
 
 void 
-pmatrix (char g[15][15])  // print the matrix of game board
+chkbd_dump (char c[15][15])  // print the matrix of game board
 {
 	int i,j;
 	printf ("  1 2 3 4 5 6 7 8 9 A B C D E F \n");
@@ -23,7 +28,7 @@ pmatrix (char g[15][15])  // print the matrix of game board
 		putchar (' ');
 		for (i=0; i < size; i++) {
 			putchar (' ');
-			putchar (g[j][i]);
+			putchar (c[j][i]);
 		}
 		printf ("  %d", j+1);
 		putchar ('\n');
@@ -46,15 +51,9 @@ void getvalidstep (int *stepx, int *stepy, char g[15][15]);
 int
 main (void)
 {
-	int i,j;
 	/* initialize board with . */
-	for (j=0; j<15; j++) {
-		for (i=0; i<15; i++) {
-			geom[j][i] = '.';
-		}
-	}
-	db ("Game board initialized.\n");
-	pmatrix (geom); /* print */
+	memset (chkbd, '.', sizeof(chkbd));
+	chkbd_dump (chkbd); /* print */
 
 	/* game loop */
 	int loop = 1;
@@ -64,20 +63,20 @@ main (void)
 
 		/* read a step */
 		int x,y;
-		getvalidstep (&x, &y, geom);
+		getvalidstep (&x, &y, chkbd);
 		db ("get step");
 		
-		//settle ( &geom[y][x], 'X');
-		settle ( &geom[y][x], (loop%2==1)?('X'):('O') );
-		pmatrix (geom);
+		//settle ( &chkbd[y][x], 'X');
+		settle ( &chkbd[y][x], (loop%2==1)?('X'):('O') );
+		chkbd_dump (chkbd);
 
 
 		/* if flag-win */
-		if ( flagwin (geom, 'X') ) {
+		if ( flagwin (chkbd, 'X') ) {
 			db ("X win");
 			exit (0);
 		}
-		if ( flagwin (geom, 'O') ) {
+		if ( flagwin (chkbd, 'O') ) {
 			db ("O win");
 			exit (0);
 		}
@@ -89,7 +88,7 @@ main (void)
 }
 
 void 
-getvalidstep (int *stepx, int *stepy, char g[15][15])
+getvalidstep (int *stepx, int *stepy, char c[15][15])
 {
 	db ("enter function getvalidstep");
 	/* input string into it */
@@ -109,13 +108,12 @@ getvalidstep (int *stepx, int *stepy, char g[15][15])
 		*stepy < 0 || *stepy >= size
 	   ) {
 		db ("step out of range");
-		getvalidstep (stepx, stepy, g);
+		getvalidstep (stepx, stepy, c);
 	}
 
 	/* inspact if target location is avaliable */
-	if ( g[*stepy][*stepx] != '.' ) {
+	if ( c[*stepy][*stepx] != '.' ) {
 		db ("occupied");
-		getvalidstep (stepx, stepy, g);
+		getvalidstep (stepx, stepy, c);
 	}
 }
-
