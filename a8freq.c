@@ -2,7 +2,8 @@
  * 	Simply show the alphabets' freqency in file or stream.
  *
  * Author : C.D.Luminate
- * 	cdluminate AT gmail DOT com
+ * 	cdluminate AT gmail DOT com 
+ * 	cdluminate AT 163 DOT com
  * 	started at 2014/05/18
  *
  * https://github.com/CDLuminate/a8freq
@@ -13,6 +14,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 
@@ -45,11 +47,8 @@ int freq_print_s (FILE *,int, unsigned long, double, int);
 
 /* if_count[N] : if to count this ascii char, (0|1) */
 int if_count[256];
-int if_count_flush (int this_if_count[256]) {
-	int this_looper;
-	for (this_looper = 0; this_looper < 256; this_looper++) {
-		this_if_count[this_looper] = 0;
-	}
+int if_count_flush (void) {
+	memset (if_count, 0x00, sizeof(if_count));
 	return 0;
 }
 
@@ -78,8 +77,6 @@ unsigned long counter_total;
 /* counter for whole stream */
 unsigned long counter_stream;
 
-
-
 int
 main (int argc, char **argv)
 {
@@ -90,6 +87,7 @@ main (int argc, char **argv)
 
 	/* init if_count[N] for flag_alpha */
 	for (looper = 0; looper < 256; looper++) {
+		/* * this is a GCC feature */
 		switch (looper) {
 			case 'A' ... 'Z':
 			case 'a' ... 'z':
@@ -98,7 +96,6 @@ main (int argc, char **argv)
 			default:
 				break;
 		}
-		//printf ("%c %d ", looper, if_count[looper]);
 	}
 
 	/* choose printer for human, default */
@@ -159,8 +156,9 @@ main (int argc, char **argv)
 	}
 	/* if flag_alpha was cleared, set if_count */
 	if (!flag_alpha) {
-		if_count_flush (if_count);
+		if_count_flush ();
 		for (looper = 0; looper < 256; looper++) {
+			/* used GCC feature here */
 			switch (looper) {
 				case 'A' ... 'Z':
 					if (flag_upper) if_count[looper] = 1;
