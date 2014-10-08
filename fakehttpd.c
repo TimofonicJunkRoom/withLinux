@@ -1,4 +1,5 @@
 /* fakehttpd.c
+   Linux / GCC
 
    Nearly a extremely tiny httpd, but
    in fact it is a fake.
@@ -7,6 +8,13 @@
 
    2014/10/08
    Licence : MIT
+   */
+/*
+   TODO add signal handle
+   TODO add error handle
+   TODO add debug printf's
+   TODO add log module
+   TODO enhance security
    */
 #include <stdio.h>
 #include <stdlib.h>

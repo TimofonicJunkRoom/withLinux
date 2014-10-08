@@ -13,7 +13,7 @@ HTTP/1.0 or HTTP/1.1 protocol tightly.
 An empty html for testing the server.  
 
 ## Purpose
-What if I just want a simple httpd to offser a static html page ?  
+What if I just want a simple httpd to offer a static html page ?  
 (implemented now, somehow)  
 What if I just want a simple tool to pass a file ?  
 (doing)  
