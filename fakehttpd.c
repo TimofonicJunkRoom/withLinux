@@ -45,8 +45,12 @@ struct sockaddr_in clientaddr;
 int sockfd; /* socket file descriptor to listen */
 int connfd; /* connection file descriptor */
 socklen_t client_len;
+int serverport = PORT; /* default 8000 */
+int fileind; /* file name indicator, = optind */
 
 pid_t child_pid;
+
+int opt;
 
 /* FUNCTIONS */
 int httpd_serve (const char *pathname, int connfd);
@@ -55,13 +59,36 @@ int httpd_serve (const char *pathname, int connfd);
 int
 main (int argc, char **argv)
 {
-	/* parse argv */
-	if (argc != 2) {
-		exit (-1);
+	/* parse argv with getopt() */
+	while ( (opt = getopt(argc, argv, "hp:")) != -1) {
+		switch (opt) {
+			case 'h':
+				fputs ("Help message to be added\n", stderr);
+				exit (EXIT_SUCCESS);
+				break;
+			case 'p':
+				serverport = atoi(optarg);
+				/* see if the given number is valid */
+				if (serverport < 1 ||
+				    serverport > 65535) {
+					fputs ("Invalid Port Number.\n", stderr);
+					exit (EXIT_FAILURE);
+				}
+				break;
+			default:
+				fputs ("help msg\n", stderr);
+				exit (EXIT_FAILURE);
+		}
 	}
-
-	/* only a open() test : open specified file */
-	if ((openfd=open(argv[1], O_RDONLY)) == -1) {
+				
+	/* only a open() test : open specified file,
+	   note that the filename is the last argument */
+	fileind = optind;
+	if (fileind >= argc) {
+		fprintf (stderr, "%s: Expected Filename\n", argv[0]);
+		exit (EXIT_FAILURE);
+	}
+	if ((openfd=open(argv[fileind], O_RDONLY)) == -1) {
 		perror ("open");
 		exit (EXIT_FAILURE);
 	}
@@ -84,7 +111,7 @@ main (int argc, char **argv)
 	/* fill sockaddr structure */
 	bzero (&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_port = htons(PORT);
+	serveraddr.sin_port = htons((short)serverport);
 	inet_pton (AF_INET, "127.0.0.1", &serveraddr.sin_addr);
 	/* bind */
 	if (bind(sockfd, (struct sockaddr *)&serveraddr,
@@ -113,7 +140,7 @@ main (int argc, char **argv)
 			/* only child do this */
 			close (sockfd);
 			/* do fakehttpd major matter and exit */
-			httpd_serve (argv[1], connfd);
+			httpd_serve (argv[fileind], connfd);
 			exit (EXIT_SUCCESS);
 		}
 		/* the parent process will step here, instead of if(){}
