@@ -192,23 +192,29 @@ httpd_serve (const char *pathname, int connfd)
 
 	/* read the request, then parse it with
 	   httpd_parse_req, which returns the HTTP
-	   status code */
+	   status code, and it will put the requested filename
+	   in the req_fname string */
 	if ( read(connfd, request, 1023) == -1) {
 		perror ("read");
 		exit (EXIT_FAILURE);
 	}
-	switch ((http_status=httpd_parse_req (request, req_fname))) {
+	http_status = httpd_parse_req (request, req_fname);
+
+	/* send response header */
+	httpd_resp_head (connfd, http_status);
+
+	/* decide what to do after sending the header */
+	switch (http_status) {
 		case 200:
 			/* HTTP/1.0 200 OK */
 			break;
+		case 501:
 		default:
 			/* UNKNOWN */
 			close (connfd);
-			exit (EXIT_FAILURE);
+			exit (EXIT_SUCCESS);
 	}
 			
-	/* send response header */
-	httpd_resp_head (connfd, http_status);
 
 	/* open the file specified, the 2nd time, then dump into connfd */
 	openfd = open (pathname, O_RDONLY);
@@ -228,13 +234,15 @@ httpd_serve (const char *pathname, int connfd)
 int
 httpd_parse_req (const char *request, char *req_fname)
 {
-	if (strncmp(request, "GET", 3) != 0) {
-#define BADREQ "500 Bad Request"
-		write (connfd, BADREQ, sizeof(BADREQ));
-		close (connfd);
-		exit (EXIT_SUCCESS);
+	/* strncmp the request */
+	if (strncmp(request, "GET", 3)==0) {
+	//if (strncmp(request, "GET / HTTP/1.0", 14)==0) {
+		/* do the default */
+		return 200;
+	} else {
+		return 501;
 	}
-	return 200;
+	return -1;
 }
 
 int
@@ -244,13 +252,28 @@ httpd_resp_head (int connfd, int _hstatus)
 	char response[1024];
 	bzero (response, 1024);
 
-/* the headers */
-#define H_200 "HTTP/1.0 200 OK\n\
+/* General Header */
+#define H_A \
+"HTTP/1.1 %s\n\
+Date: %s\n\
+Server: Fakehttpd\n\
+Content-Length: %ld\n\
+Connection: close\n\
+Content-Type: %s\n\n"
+/* 200 header */
+#define H_200 "HTTP/1.1 200 OK\n\
 Date:\n\
 Server: Fakehttpd\n\
 Content-Length: %ld\n\
-Content-Type: text/html; charset=utf-8\n\
-Connection: keep-alive\n\n"
+Connection: close\n\
+Content-Type: text/html; charset=utf-8\n\n"
+/* 501 header */
+#define H_501 "HTTP/1.1 501 Not Implemented\n\
+Date:\n\
+Server: Fakehttpd\n\
+Content-Length: 0\n\
+Connection: close\n\
+Content-Type: text/html; charset=utf-8\n\n"
 
 	/* send header according to http_status */
 	switch (_hstatus) {
@@ -259,10 +282,13 @@ Connection: keep-alive\n\n"
 			snprintf (response, 1024, H_200, content_length);
 			write (connfd, response, strnlen(response, 1024));
 			break;
+		case 501:
+			/* 501 not implemented */
+			snprintf (response, 1024, H_501);
+			write (connfd, response, strnlen(response, 1024));
+			break;
 		default:
-			/* ? */
-			close (connfd);
-			exit (EXIT_FAILURE);
+			return -1;
 	}
 	return 0;
 }
