@@ -25,6 +25,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <signal.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -67,17 +69,28 @@ int fileind; /* file name indicator, = optind */
 
 pid_t child_pid;
 
-int opt;
+int opt; /* for getopt() */
 
 /* FUNCTIONS */
 int httpd_serve (const char *pathname, int connfd); /* all httpd matter */
 int httpd_parse_req (const char *req, char *filename); /* parse request */
 int httpd_resp_head (int connfd, int status); /* send response head */
 
+/* Signal Handle */
+struct sigaction act;
+struct sigaction oldact;
+void handle_sig (int sig);
+
 /* *MAIN* */
 int
 main (int argc, char **argv)
 {
+	/* prepare signal actions */
+	act.sa_handler = handle_sig;
+	act.sa_flags = SA_RESETHAND | SA_NODEFER;
+	sigaction (SIGINT, &act, &oldact);
+	printf ("sig set \n");
+
 	/* parse argv with getopt() */
 	while ( (opt = getopt(argc, argv, "hp:v")) != -1) {
 		switch (opt) {
@@ -291,4 +304,10 @@ Content-Type: text/html; charset=utf-8\n\n"
 			return -1;
 	}
 	return 0;
+}
+
+void
+handle_sig (int sig)
+{
+	printf ("signal SIGINT");
 }
