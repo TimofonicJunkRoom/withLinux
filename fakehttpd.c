@@ -70,7 +70,8 @@ pid_t child_pid;
 int opt;
 
 /* FUNCTIONS */
-int httpd_serve (const char *pathname, int connfd);
+int httpd_serve (const char *pathname, int connfd); /* all httpd matter */
+int httpd_parse_req (const char *req, char *filename); /* parse request */
 
 /* *MAIN* */
 int
@@ -178,21 +179,32 @@ main (int argc, char **argv)
 int
 httpd_serve (const char *pathname, int connfd)
 {
+	/* prepare buffer and var */
 	char request[1024];
+	char req_fname[1024];
+
 	char response[1024];
 
-	/* parse request */
 	bzero (request, 1024);
+	bzero (req_fname, 1024);
+
+	/* read the request, then parse it with
+	   httpd_parse_req, which returns the HTTP
+	   status code */
 	if ( read(connfd, request, 1023) == -1) {
 		perror ("read");
 		exit (EXIT_FAILURE);
 	}
-	if (strncmp(request, "GET", 3) != 0) {
-#define BADREQ "500 Bad Request"
-		write (connfd, BADREQ, sizeof(BADREQ));
-		close (connfd);
-		exit (EXIT_SUCCESS);
+	switch (httpd_parse_req (request, req_fname)) {
+		case 200:
+			/* HTTP/1.0 200 OK */
+			break;
+		default:
+			/* UNKNOWN */
+			close (connfd);
+			exit (EXIT_FAILURE);
 	}
+			
 
 	/* send response header */
 #define RESPONSE "HTTP/1.0 200 OK\n\
@@ -219,3 +231,16 @@ Connection: keep-alive\n\
 	//shutdown (connfd, SHUT_RDWR);
 	return 0;
 }
+
+int
+httpd_parse_req (const char *request, char *req_fname)
+{
+	if (strncmp(request, "GET", 3) != 0) {
+#define BADREQ "500 Bad Request"
+		write (connfd, BADREQ, sizeof(BADREQ));
+		close (connfd);
+		exit (EXIT_SUCCESS);
+	}
+	return 200;
+}
+
