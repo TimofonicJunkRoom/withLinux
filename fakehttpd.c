@@ -31,7 +31,24 @@
 
 #define PORT 8000
 
+/* USAGE / HELP */
+int Usage (const char *argv0) {
+	fprintf (stderr, "\
+Fakehttpd, version devel\n\
+Author: C.D.Luminate / MIT Licence / 2014\n\
+Usage:  %s [options] FILE\n\
+options:\n\
+	-h	show this help message\n\
+	-p PORT	specify a port number\n\
+	*-v	verbose/debug output\n\
+	*-b	set the addr to bind\n\
+	...\n\
+To be continued\n", argv0);
+	return 0;
+}
+
 /* FLAGS */
+/* TODO someday, set debug to 0 as default */
 int debug = 1;
 
 /* VARIABLES */
@@ -60,10 +77,10 @@ int
 main (int argc, char **argv)
 {
 	/* parse argv with getopt() */
-	while ( (opt = getopt(argc, argv, "hp:")) != -1) {
+	while ( (opt = getopt(argc, argv, "hp:v")) != -1) {
 		switch (opt) {
 			case 'h':
-				fputs ("Help message to be added\n", stderr);
+				Usage (argv[0]);
 				exit (EXIT_SUCCESS);
 				break;
 			case 'p':
@@ -75,8 +92,11 @@ main (int argc, char **argv)
 					exit (EXIT_FAILURE);
 				}
 				break;
+			case 'v':
+				debug = 1;
+				break;
 			default:
-				fputs ("help msg\n", stderr);
+				Usage (argv[0]);
 				exit (EXIT_FAILURE);
 		}
 	}
