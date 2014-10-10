@@ -89,7 +89,6 @@ main (int argc, char **argv)
 	act.sa_handler = handle_sig;
 	act.sa_flags = SA_RESETHAND | SA_NODEFER;
 	sigaction (SIGINT, &act, &oldact);
-	printf ("sig set \n");
 
 	/* parse argv with getopt() */
 	while ( (opt = getopt(argc, argv, "hp:v")) != -1) {
@@ -309,5 +308,13 @@ Content-Type: text/html; charset=utf-8\n\n"
 void
 handle_sig (int sig)
 {
-	printf ("signal SIGINT");
+	write (2,"\n", 2); /* put \n after ^C when press ^C */
+	switch (sig) {
+		case SIGINT:
+			_exit(0x0C); /* action in interrupted */ 
+			break;
+		default:
+			/* not defined, do nothing */
+			;
+	}
 }
