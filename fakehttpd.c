@@ -72,6 +72,7 @@ int opt;
 /* FUNCTIONS */
 int httpd_serve (const char *pathname, int connfd); /* all httpd matter */
 int httpd_parse_req (const char *req, char *filename); /* parse request */
+int httpd_resp_head (int connfd, int status); /* send response head */
 
 /* *MAIN* */
 int
@@ -183,10 +184,11 @@ httpd_serve (const char *pathname, int connfd)
 	char request[1024];
 	char req_fname[1024];
 
-	char response[1024];
+	int http_status;
 
 	bzero (request, 1024);
 	bzero (req_fname, 1024);
+	http_status = 0;
 
 	/* read the request, then parse it with
 	   httpd_parse_req, which returns the HTTP
@@ -195,7 +197,7 @@ httpd_serve (const char *pathname, int connfd)
 		perror ("read");
 		exit (EXIT_FAILURE);
 	}
-	switch (httpd_parse_req (request, req_fname)) {
+	switch ((http_status=httpd_parse_req (request, req_fname))) {
 		case 200:
 			/* HTTP/1.0 200 OK */
 			break;
@@ -205,17 +207,8 @@ httpd_serve (const char *pathname, int connfd)
 			exit (EXIT_FAILURE);
 	}
 			
-
 	/* send response header */
-#define RESPONSE "HTTP/1.0 200 OK\n\
-Date:\n\
-Server: Fakehttpd\n\
-Content-Length: %ld\n\
-Content-Type: text/html; charset=utf-8\n\
-Connection: keep-alive\n\
-\n\n"
-	snprintf (response, 1024, RESPONSE, content_length);
-	write (connfd, response, strnlen(response, 1024));
+	httpd_resp_head (connfd, http_status);
 
 	/* open the file specified, the 2nd time, then dump into connfd */
 	openfd = open (pathname, O_RDONLY);
@@ -244,3 +237,32 @@ httpd_parse_req (const char *request, char *req_fname)
 	return 200;
 }
 
+int
+httpd_resp_head (int connfd, int _hstatus)
+{
+	/* prepare response head */
+	char response[1024];
+	bzero (response, 1024);
+
+/* the headers */
+#define H_200 "HTTP/1.0 200 OK\n\
+Date:\n\
+Server: Fakehttpd\n\
+Content-Length: %ld\n\
+Content-Type: text/html; charset=utf-8\n\
+Connection: keep-alive\n\n"
+
+	/* send header according to http_status */
+	switch (_hstatus) {
+		case 200:
+			/* 200 OK */
+			snprintf (response, 1024, H_200, content_length);
+			write (connfd, response, strnlen(response, 1024));
+			break;
+		default:
+			/* ? */
+			close (connfd);
+			exit (EXIT_FAILURE);
+	}
+	return 0;
+}
