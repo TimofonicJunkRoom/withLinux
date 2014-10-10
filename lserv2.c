@@ -216,9 +216,9 @@ do_serv (FILE *fp, int connfd)
 			exit (EXIT_FAILURE);
 		} else {
 			/* readn = 0, the normal case */
-			usleep (100);
+			usleep (1000*50);
 			wcounter += 100;
-			if (wcounter >= 10*1000) {
+			if (wcounter >= 1000*1000*10) {
 				printf ("timeout\n");
 				Close (connfd);
 				exit (EXIT_FAILURE);
