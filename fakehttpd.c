@@ -72,8 +72,8 @@ pid_t child_pid;
 int opt; /* for getopt() */
 
 /* FUNCTIONS */
-int httpd_serve (const char *pathname, int connfd); /* all httpd matter */
-int httpd_parse_req (const char *req, char *filename); /* parse request */
+int httpd_serve (const char *argfile, int connfd); /* all httpd matter */
+int httpd_parse_req (const char *req); /* parse request */
 int httpd_resp_head (int connfd, int status); /* send response head */
 
 /* Signal Handle */
@@ -189,28 +189,25 @@ main (int argc, char **argv)
 	return 0;
 }
 
-int
-httpd_serve (const char *pathname, int connfd)
+int /* the whole HTTP service matter */
+httpd_serve (const char *argfile, int connfd)
 {
 	/* prepare buffer and var */
 	char request[1024];
-	char req_fname[1024];
 
 	int http_status;
 
 	bzero (request, 1024);
-	bzero (req_fname, 1024);
 	http_status = 0;
 
 	/* read the request, then parse it with
 	   httpd_parse_req, which returns the HTTP
-	   status code, and it will put the requested filename
-	   in the req_fname string */
+	   status code */
 	if ( read(connfd, request, 1023) == -1) {
 		perror ("read");
 		exit (EXIT_FAILURE);
 	}
-	http_status = httpd_parse_req (request, req_fname);
+	http_status = httpd_parse_req (request);
 
 	/* send response header */
 	httpd_resp_head (connfd, http_status);
@@ -229,7 +226,7 @@ httpd_serve (const char *pathname, int connfd)
 			
 
 	/* open the file specified, the 2nd time, then dump into connfd */
-	openfd = open (pathname, O_RDONLY);
+	openfd = open (argfile, O_RDONLY);
 	bzero (buffer, 1024);
 	while ( (readn = read(openfd, buffer, 1024)) > 0) {
 		write (connfd, buffer, strnlen(buffer, 1024));
@@ -243,8 +240,8 @@ httpd_serve (const char *pathname, int connfd)
 	return 0;
 }
 
-int
-httpd_parse_req (const char *request, char *req_fname)
+int /* parse the request string, then return the HTTP status code */
+httpd_parse_req (const char *request)
 {
 	/* strncmp the request */
 	if (strncmp(request, "GET", 3)==0) {
@@ -257,7 +254,8 @@ httpd_parse_req (const char *request, char *req_fname)
 	return -1;
 }
 
-int
+int /* generate http response head according to the status number,
+       then write it to client */
 httpd_resp_head (int connfd, int _hstatus)
 {
 	/* prepare response head */
@@ -300,21 +298,25 @@ Content-Type: text/html; charset=utf-8\n\n"
 			write (connfd, response, strnlen(response, 1024));
 			break;
 		default:
+			/* somthing must be wrong */
 			return -1;
 	}
 	return 0;
 }
 
-void
+void /* signal handler, now only process SIGINT */
 handle_sig (int sig)
 {
 	write (2,"\n", 2); /* put \n after ^C when press ^C */
 	switch (sig) {
 		case SIGINT:
-			_exit(0x0C); /* action in interrupted */ 
+			/* action : interrupted */
+			_exit(0x0C);  
 			break;
 		default:
 			/* not defined, do nothing */
 			;
 	}
 }
+
+/* End Of Code */
