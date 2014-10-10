@@ -26,10 +26,16 @@ $ ./fakehttpd some_web_pages.html
 ```
 $ ./fakehttpd -h
 ```
+* Verify the Server function :  
+```
+$ firefox | Chromium
+visit "localhost:8000"
+```
 
 ## Design
-* It can only pass 1 file at most  
+* It can only offer 1 file at most  
 * MUCH LESS functions than a norman httpd  
+* Based on IPv4 TCP / Socket
 
 ## Case of Use
 * Open a single 'STATIC HTML PAGE' to the public  
