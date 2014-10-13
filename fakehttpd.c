@@ -57,6 +57,7 @@ int debug = 1;
 int openfd; /* file descriptor returned by open() */
 char buffer[1024]; /* buffer of read() */
 int readn; /* return value of read() */
+char req_fname[256]; /* store requested file name */
 long content_length; /* size of file opened */
 
 struct sockaddr_in serveraddr;
@@ -64,7 +65,8 @@ struct sockaddr_in clientaddr;
 int sockfd; /* socket file descriptor to listen */
 int connfd; /* connection file descriptor */
 socklen_t client_len;
-int serverport = PORT; /* default 8000 */
+int serverport; /* port to listen */
+char bindaddr[32]; /* the IP address to bind */
 int fileind; /* file name indicator, = optind */
 
 pid_t child_pid;
@@ -72,9 +74,11 @@ pid_t child_pid;
 int opt; /* for getopt() */
 
 /* FUNCTIONS */
-int httpd_serve (const char *argfile, int connfd); /* all httpd matter */
-int httpd_parse_req (const char *req); /* parse request */
-int httpd_resp_head (int connfd, int status); /* send response head */
+int httpd_serve (char *argfile, int connfd); /* all httpd matter */
+int httpd_parse_req (const char *req, char *pathname); /* parse request */
+int httpd_resp_head (int connfd, int status, long length, char *type); /* send response head */
+int httpd_resp_file (int connfd, char *pathname); /* write the file into connfd */
+
 
 /* Signal Handle */
 struct sigaction act;
@@ -90,12 +94,19 @@ main (int argc, char **argv)
 	act.sa_flags = SA_RESETHAND | SA_NODEFER;
 	sigaction (SIGINT, &act, &oldact);
 
+	/* set default value */
+	serverport = PORT;
+	strcpy (bindaddr, "127.0.0.1");
+
 	/* parse argv with getopt() */
-	while ( (opt = getopt(argc, argv, "hp:v")) != -1) {
+	while ( (opt = getopt(argc, argv, "b:hp:v")) != -1) {
 		switch (opt) {
-			case 'h':
+			case 'h': /* help */
 				Usage (argv[0]);
 				exit (EXIT_SUCCESS);
+				break;
+			case 'b': /* specify bind addr */
+				strncpy (bindaddr, optarg, 31);
 				break;
 			case 'p':
 				serverport = atoi(optarg);
@@ -146,7 +157,7 @@ main (int argc, char **argv)
 	bzero (&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_port = htons((short)serverport);
-	inet_pton (AF_INET, "127.0.0.1", &serveraddr.sin_addr);
+	inet_pton (AF_INET, bindaddr, &serveraddr.sin_addr);
 	/* bind */
 	if (bind(sockfd, (struct sockaddr *)&serveraddr,
 	    sizeof(serveraddr)) == -1) {
@@ -173,8 +184,11 @@ main (int argc, char **argv)
 		if ( (child_pid = fork()) == 0) {
 			/* only child do this */
 			close (sockfd);
-			/* do fakehttpd major matter and exit */
+			/* do fakehttpd major matter */
 			httpd_serve (argv[fileind], connfd);
+			/* close */
+			close (openfd);
+			close (connfd);
 			exit (EXIT_SUCCESS);
 		}
 		/* the parent process will step here, instead of if(){}
@@ -190,7 +204,7 @@ main (int argc, char **argv)
 }
 
 int /* the whole HTTP service matter */
-httpd_serve (const char *argfile, int connfd)
+httpd_serve (char *argfile, int connfd)
 {
 	/* prepare buffer and var */
 	char request[1024];
@@ -207,56 +221,49 @@ httpd_serve (const char *argfile, int connfd)
 		perror ("read");
 		exit (EXIT_FAILURE);
 	}
-	http_status = httpd_parse_req (request);
 
-	/* send response header */
-	httpd_resp_head (connfd, http_status);
+	http_status = httpd_parse_req (request, req_fname);
+
 
 	/* decide what to do after sending the header */
 	switch (http_status) {
-		case 200:
+		case 1:
 			/* HTTP/1.0 200 OK */
+			httpd_resp_head (connfd, 200, content_length, "");
+			httpd_resp_file (connfd, argfile);
 			break;
-		case 501:
+		case -1:
+			/* HTTP/1.0 501 */
+			httpd_resp_head (connfd, 501, 0, "");
+			break;
 		default:
-			/* UNKNOWN */
-			close (connfd);
-			exit (EXIT_SUCCESS);
+			/* do nothing on error */
+			;
 	}
-			
-
-	/* open the file specified, the 2nd time, then dump into connfd */
-	openfd = open (argfile, O_RDONLY);
-	bzero (buffer, 1024);
-	while ( (readn = read(openfd, buffer, 1024)) > 0) {
-		write (connfd, buffer, strnlen(buffer, 1024));
-		bzero (buffer, 1024);
-	}
-
-	/* close */
-	close (openfd);
-	close (connfd);
-	//shutdown (connfd, SHUT_RDWR);
 	return 0;
 }
 
-int /* parse the request string, then return the HTTP status code */
-httpd_parse_req (const char *request)
+int /* parse the request string, then return the action code */
+httpd_parse_req (const char *request, char *filename)
 {
+	/* action code
+	    1  GET, default
+	   -1  other, 501 */
+
 	/* strncmp the request */
 	if (strncmp(request, "GET", 3)==0) {
 	//if (strncmp(request, "GET / HTTP/1.0", 14)==0) {
 		/* do the default */
-		return 200;
+		sscanf (request, "GET /%s HTTP", filename);
+		return 1;
 	} else {
-		return 501;
+		return -1;
 	}
-	return -1;
 }
 
 int /* generate http response head according to the status number,
        then write it to client */
-httpd_resp_head (int connfd, int _hstatus)
+httpd_resp_head (int connfd, int _status, long length, char *type)
 {
 	/* prepare response head */
 	char response[1024];
@@ -286,13 +293,13 @@ Connection: close\n\
 Content-Type: text/html; charset=utf-8\n\n"
 
 	/* send header according to http_status */
-	switch (_hstatus) {
-		case 200:
+	switch (_status) {
+		case 1:
 			/* 200 OK */
 			snprintf (response, 1024, H_200, content_length);
 			write (connfd, response, strnlen(response, 1024));
 			break;
-		case 501:
+		case -1:
 			/* 501 not implemented */
 			snprintf (response, 1024, H_501);
 			write (connfd, response, strnlen(response, 1024));
@@ -300,6 +307,19 @@ Content-Type: text/html; charset=utf-8\n\n"
 		default:
 			/* somthing must be wrong */
 			return -1;
+	}
+	return 0;
+}
+
+int
+httpd_resp_file (int connfd, char *pathname)
+{
+	/* open the file specified, the 2nd time, then dump into connfd */
+	openfd = open (pathname, O_RDONLY);
+	bzero (buffer, 1024);
+	while ( (readn = read(openfd, buffer, 1024)) > 0) {
+		write (connfd, buffer, strnlen(buffer, 1024));
+		bzero (buffer, 1024);
 	}
 	return 0;
 }
