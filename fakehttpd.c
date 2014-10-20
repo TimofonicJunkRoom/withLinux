@@ -10,11 +10,9 @@
    Licence : MIT
    */
 /*
-   TODO add signal handle
    TODO add error handle
    TODO add debug printf's
    TODO add log module
-   TODO enhance security
    */
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,22 +34,21 @@
 /* USAGE / HELP */
 int Usage (const char *argv0) {
 	fprintf (stderr, "\
-Fakehttpd, version devel\n\
+Fakehttpd, ipv4, version devel\n\
 Author: C.D.Luminate / MIT Licence / 2014\n\
 Usage:  %s [options] FILE\n\
 options:\n\
 	-h	show this help message\n\
 	-p PORT	specify a port number\n\
-	*-v	verbose/debug output\n\
-	*-b	set the addr to bind\n\
-	...\n\
-To be continued\n", argv0);
+	-v	verbose output(now default)\n\
+	-b	set bind address\n\
+	...\n", argv0);
 	return 0;
 }
 
 /* FLAGS */
 /* TODO someday, set debug to 0 as default */
-int debug = 1;
+int debug = 0;
 
 /* VARIABLES */
 int openfd; /* file descriptor returned by open() */
@@ -186,7 +183,7 @@ main (int argc, char **argv)
 			close (sockfd);
 			/* do fakehttpd major matter */
 			httpd_serve (argv[fileind], connfd);
-			/* close */
+			/* then close and exit */
 			close (openfd);
 			close (connfd);
 			exit (EXIT_SUCCESS);
@@ -201,7 +198,7 @@ main (int argc, char **argv)
 	close (openfd);
 	close (sockfd);
 	return 0;
-}
+} /* END OF main */
 
 int /* the whole HTTP service matter */
 httpd_serve (char *argfile, int connfd)
@@ -209,8 +206,10 @@ httpd_serve (char *argfile, int connfd)
 	/* prepare buffer and var */
 	char request[1024];
 
-	int http_status;
+	int http_status; /* internal service status code,
+			    not the HTTP STATUS CODE */
 
+	/* prepare buffer */
 	bzero (request, 1024);
 	http_status = 0;
 
@@ -222,8 +221,9 @@ httpd_serve (char *argfile, int connfd)
 		exit (EXIT_FAILURE);
 	}
 
+	/* parse request and get the internal status value */
 	http_status = httpd_parse_req (request, req_fname);
-
+	if (debug) fprintf (stdout, "requested file '/%s'\n", req_fname);
 
 	/* decide what to do after sending the header */
 	switch (http_status) {
