@@ -5,7 +5,9 @@
 \begin{CJK}{UTF8}{gbsn}
 
 \section*{lserv2设计}
-	本文档旨在lserv2的设计进行说明。（这其实是作业要求）
+	本文档旨在lserv2的设计进行说明。（这其实是作业要求）\newline
+	\today \newline
+	与本文档相关的文件为\fbox{lserv2.c}以及\fbox{lclie2.c}.
 
 \section{编译和运行}
 	这是针对linux编写的程序，在linux下执行
@@ -29,6 +31,7 @@ nc localhost 2333
 	\subsection{设计模式}
 		TCP并发服务器，指令驱动
 
+\newpage
 \section{设计}
 	\subsection{实现概要}
 		在实现了C/S的相互通信的基础上\footnote{也即，服务器和客户端可以在stdin中写入信息，
@@ -41,10 +44,19 @@ nc localhost 2333
 		\item[服务器] 接收指令，解析，反馈。具体功能参见下文。
 		\end{description}
 	\subsection{具体功能}
-		以下命令都是
+		以下命令都可以在客户端中手工输入，同时服务器能够反馈：
+		\begin{enumerate}
+		\item GET: 回传一段预定义的HTML代码
+		\item USER: 指令格式为 USER <username>，登记用户名
+		\item PASS: 指令格式为 PASS <password>，登记密码
+		\item QUIT: 退出程序（客户端和服务器均会退出）
+		\item LOGOUT: 登出
+		\item SEC: 打印预定义的秘密信息，如果没有成功登录则会发出警告
+		\item \*: 如果遇到其他指令，均不进行额外操作
+		\end{enumerate}
 
-
-
+\section{更多}
+	更多细节均在程序注释中写明。
 
 \end{CJK}
 \end{document}
