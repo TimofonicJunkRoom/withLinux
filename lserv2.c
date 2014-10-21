@@ -7,10 +7,12 @@
 
    C.D.Luminate <cdluminate@163.com>
    2014/10/{03,04} */
-/* TODO : some times I behaves strangely,
+/* TODO : some times it behaves strangely,
    e.g. if I type PASS pass first, then USER user,
    	the auth process will not go, but some former version
 	of me will do. */
+/* ISSUE : the signal() function is not POSIX standard,
+   	   should use POSIX sigaction() instead. */
 
 /* lsock.h */
 #include "lsock.h"
@@ -65,8 +67,8 @@
 /* authentication */
 	/* auth_state , >0 means login, <0 not login, 0 not defined */
 	int auth_st = -1; 
-	char auth_name[] = USER;
-	char auth_pass[] = PASS;
+	char auth_name[16];
+	char auth_pass[16];
 
 /* -------------functions ----------*/
 /* service things */
