@@ -48,7 +48,7 @@ options:\n\
 
 /* FLAGS */
 /* TODO someday, set debug to 0 as default */
-int debug = 0;
+int debug = 1;
 
 /* VARIABLES */
 int openfd; /* file descriptor returned by open() */
@@ -229,12 +229,12 @@ httpd_serve (char *argfile, int connfd)
 	switch (http_status) {
 		case 1:
 			/* HTTP/1.0 200 OK */
-			httpd_resp_head (connfd, 200, content_length, "");
+			httpd_resp_head (connfd, 1, content_length, "");
 			httpd_resp_file (connfd, argfile);
 			break;
 		case -1:
 			/* HTTP/1.0 501 */
-			httpd_resp_head (connfd, 501, 0, "");
+			httpd_resp_head (connfd, -1, 0, "");
 			break;
 		default:
 			/* do nothing on error */
@@ -251,9 +251,12 @@ httpd_parse_req (const char *request, char *filename)
 	   -1  other, 501 */
 
 	/* strncmp the request */
-	if (strncmp(request, "GET", 3)==0) {
-	//if (strncmp(request, "GET / HTTP/1.0", 14)==0) {
+	//if (strncmp(request, "GET", 3)==0) {
+	if (strncmp(request, "GET / HTTP/1.0", 14)==0) {
 		/* do the default */
+		//sscanf (request, "GET /%s HTTP", filename);
+		return 1;
+	} else if (strncmp(request, "GET /", 5)==0) {
 		sscanf (request, "GET /%s HTTP", filename);
 		return 1;
 	} else {
@@ -327,10 +330,11 @@ httpd_resp_file (int connfd, char *pathname)
 void /* signal handler, now only process SIGINT */
 handle_sig (int sig)
 {
-	write (2,"\n", 2); /* put \n after ^C when press ^C */
+	//write (2,"\n", 2); /* put \n after ^C when press ^C */
 	switch (sig) {
 		case SIGINT:
 			/* action : interrupted */
+			shutdown (connfd, SHUT_RDWR);
 			_exit(0x0C);  
 			break;
 		default:
