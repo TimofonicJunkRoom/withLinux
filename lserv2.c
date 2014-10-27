@@ -20,16 +20,9 @@
 #define BANNER "Sort_of_Server2 :: Please input your instructions.\n"
 #define BYE_MSG "From Server : BYE\n\0\0"
 #define HTML "<html>It works!</html>\n"
-#define INST_NA "--- Instruction Not Supported ---\n"
 
-#define AUTH_FAIL "--- Auth Failure ---\n"
-#define AUTH_SUCC "--- Auth Success ---\n"
 #define SECRET "++ This is the secret information for authed user\n"
-#define SEC_FAIL "++ You are not permitted to see that SEC\n"
-
-#define USER "user"
-#define PASS "pass"
-
+#define SEC_FAIL "++ not permitted, REJECT\n"
 
 /* ---------- vars -------------*/
 /* debug flag */
@@ -65,11 +58,11 @@ int opt;
 
 /* more functions */
 /* authentication */
-	/* auth_state , >0 means login, <0 not login, 0 not defined */
+	/* auth_state , >0 means login, <=0 not login */
 int auth_st = -1; 
 char auth_user[8];
 char auth_pass[8];
-char true_user[8];
+char true_user[8]; /* max user and pass length is 4 */
 char true_pass[8];
 
 /* -------------functions ----------*/
@@ -80,10 +73,10 @@ int inst_parse (const char *src, char *argv0, char *argv1);
 /* signal SIGINT */
 void do_sigint (int sig);
 void do_sigchld (int sig) {
-	pid_t p;
-	int stat;
-	p = wait(&stat);
-	printf ("[31m*[m child %d terminated\n", p);
+	pid_t _pid;
+	int _stat;
+	_pid = wait(&_stat);
+	printf ("[31m*[m child %d terminated\n", _pid);
 	return;
 }
 /* flush socket related info */
@@ -124,7 +117,7 @@ int readconf (const char *_file, char *_buffer)
 		exit (EXIT_FAILURE);
 	}
 	read (_fd, _buffer, 4);
-	close (_fd);
+	Close (_fd);
 	return 0;
 }
 
@@ -177,11 +170,13 @@ main (int argc, char **argv)
 	/* listen */
 	Listen (listenfd, 5);
 	if (debug) printf ("[31m*[m listenning on %s:%d ...\n",
-		saddr , ntohs(serv_addr.sin_port));	
+			   saddr , ntohs(serv_addr.sin_port));	
 
-	/* standalone : wait and accept clients */
+	/* prepare signal actions */
 	(void) signal(SIGINT, do_sigint);
 	(void) signal(SIGCHLD, do_sigchld);
+
+	/* standalone loop */
 	while (1) {
 		cli_len = sizeof(clie_addr);
 		/* if no client connects the server, 
@@ -263,7 +258,7 @@ do_serv (FILE *fp, int connfd)
 		/* if went here, server should have recieved something */
 		wcounter = 0;
 
-/* STAGE 2 : parse instruction */
+/* STAGE 2 : parse instruction and respond */
 		inst_parse (inst, argv0, argv1);
 		/* compare parsed instruction with some commands */
 		if (!strncmp(argv0, "GET", 3)) {
@@ -274,10 +269,10 @@ do_serv (FILE *fp, int connfd)
 			Close (connfd);
 			exit (EXIT_SUCCESS);
 		} else if (!strncmp(argv0, "USER", 4)) {
-			if (strlen(argv1)>0) strncpy (auth_user, argv1, 16);
+			if (strlen(argv1)>0) strncpy (auth_user, argv1, 4);
 			auto_auth ();
 		} else if (!strncmp(argv0, "PASS", 4)) {
-			if (strlen(argv1)>0) strncpy (auth_pass, argv1, 16);
+			if (strlen(argv1)>0) strncpy (auth_pass, argv1, 4);
 			auto_auth ();
 		} else if (!strncmp(argv0, "SEC", 3)) {
 			if (auth_st > 0) {
@@ -290,13 +285,17 @@ do_serv (FILE *fp, int connfd)
 		} else if (!strncmp(argv0, "LOGOUT", 6)) {
 			auth_st = -1;
 			flush_auth ();
+#define LOGOUT "--- Logging out ---\n"
+			write (connfd, LOGOUT, sizeof(LOGOUT));
 		} else {
 			/* instruction not supported */
+#define INST_NA "--- Instruction Not Supported ---\n"
 			write (connfd, INST_NA, sizeof(INST_NA));
 			continue;
 		}
+/* End of Stage 2*/
 
-		/* flush  buffers */
+		/* flush general buffers */
 		flush_buf ();
 	}
 	return 0;
@@ -324,19 +323,23 @@ int
 authenticate (int *state, const char *user, const char *pass)
 {
 	/* return value :
-	   	0 : nothing to do
-		1   auth success
-		-1  auth fail */
-	if (*state == 0) {
+		1 || >1  auth success
+	       -1 || <0  auth fail
+	        0        jump over */
+
+	/* step 1, correct state if need */
+	if (*state < -1) {
 		*state = -1;
 		return 0;
 	}
-	else if (*state >= 1) {
+	else if (*state > 0) {
+		/* authed succ */
 		return 0;
 	}
-	int chk_user = strncmp (user, true_user, sizeof(true_user));
-	int chk_pass = strncmp (pass, true_pass, sizeof(true_pass));
-	if (chk_user==0 && chk_pass==0) {
+
+	/* step 2, auth */
+	if (strncmp (user, true_user, sizeof(true_user)) == 0 &&
+	    strncmp (pass, true_pass, sizeof(true_pass)) == 0) {
 		*state = 1;
 		return 1;
 	} else {
@@ -349,17 +352,18 @@ authenticate (int *state, const char *user, const char *pass)
 int
 auto_auth (void)
 {
-	int auth_temp = 0;
+	int _temp = 0;
 	if (strlen(auth_user)>0 && strlen(auth_pass)>0) {
-		auth_temp = authenticate(&auth_st, auth_user, auth_pass);
-		if (auth_temp == 0) {
-			write (connfd, "-- NOTHING --\n", sizeof("-- NOTHING --\n"));
-		} else if (auth_temp == -1) {
-			write (connfd, "-- AUTH FAIL --\n", sizeof("-- AUTH FAIL --\n"));
-		} else if (auth_temp == 1) {
-			write (connfd, "-- AUTH SUCC --\n", sizeof("-- AUTH SUCC --\n"));
+		_temp = authenticate(&auth_st, auth_user, auth_pass);
+		if (_temp <= 0) {
+#define AUTH_FAIL "--- Auth Failure ---\n"
+			write (connfd, AUTH_FAIL, sizeof(AUTH_FAIL));
+			flush_auth();
 		} else {
-			exit (EXIT_FAILURE);
+			/* _temp > 0 */
+#define AUTH_SUCC "--- Auth Success ---\n"
+			write (connfd, AUTH_SUCC, sizeof(AUTH_SUCC));
+			flush_auth();
 		}
 	}
 	return 0;
