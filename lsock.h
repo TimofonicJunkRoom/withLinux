@@ -14,6 +14,9 @@
 
 #include <signal.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
 
 //int socket(int domain, int type, int protocol);
 int

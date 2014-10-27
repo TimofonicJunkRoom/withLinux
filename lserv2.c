@@ -17,8 +17,6 @@
 /* lsock.h */
 #include "lsock.h"
 
-#define PORT 2333
-
 #define BANNER "Sort_of_Server2 :: Please input your instructions.\n"
 #define BYE_MSG "From Server : BYE\n\0\0"
 #define HTML "<html>It works!</html>\n"
@@ -35,40 +33,44 @@
 
 /* ---------- vars -------------*/
 /* debug flag */
-	int debug = 1;
+int debug = 1;
 
 /* general socket related vars */
-	int listenfd;
-	int connfd;
-	struct sockaddr_in clie_addr;
-	struct sockaddr_in serv_addr;
-	socklen_t cli_len;
-	pid_t c_pid;
+int listenfd;
+int connfd;
+struct sockaddr_in clie_addr;
+struct sockaddr_in serv_addr;
+socklen_t cli_len;
+pid_t c_pid;
+int port = 2333; /* local listen port, 2333 default */
 
 /* remote and server information */
-	char raddr[128];		//remote addr 
-	unsigned short rport = 0;	//remote port
-	char saddr[128];		//server addr
-	unsigned short sport = 0;	//server port
+char raddr[128];		//remote addr 
+unsigned short rport = 0;	//remote port
+char saddr[128];		//server addr
+unsigned short sport = 0;	//server port
 
 /* instruction buffer */
-	char inst[1024];
+char inst[1024];
 /* feed back buffer */
-	char feed[1024];
+char feed[1024];
 /* store parsed instruction */
-	char argv0[1024];
-	char argv1[1024];
+char argv0[1024];
+char argv1[1024];
 /* wait time counter */
-	long wcounter = 0;
+long wcounter = 0;
 /* readn : store return value of read() */
-	int readn = 0;
+int readn = 0;
+int opt;
 
 /* more functions */
 /* authentication */
 	/* auth_state , >0 means login, <0 not login, 0 not defined */
-	int auth_st = -1; 
-	char auth_name[16];
-	char auth_pass[16];
+int auth_st = -1; 
+char auth_user[8];
+char auth_pass[8];
+char true_user[8];
+char true_pass[8];
 
 /* -------------functions ----------*/
 /* service things */
@@ -106,24 +108,55 @@ int flush_buf (void)
 int flush_auth (void)
 {
 	bzero (auth_pass, sizeof(auth_pass));
-	bzero (auth_name, sizeof(auth_name));
+	bzero (auth_user, sizeof(auth_user));
 	return 0;
 }
 /* auth core */
 int authenticate (int *state, const char *user, const char *pass);
 /* judge if to auth and do auth matter */
 int auto_auth (void);
-
-
+/* read configuration, user and pass */
+int readconf (const char *_file, char *_buffer)
+{
+	int _fd;
+	if ((_fd = open (_file, O_RDONLY)) == -1) {
+		perror ("open");
+		exit (EXIT_FAILURE);
+	}
+	read (_fd, _buffer, 4);
+	close (_fd);
+	return 0;
+}
 
 /* =========== main ================= */	
 int
 main (int argc, char **argv)
 {
+	/* parse option */
+	while ((opt = getopt(argc, argv, "p:")) != -1) {
+		switch (opt) {
+		case 'p':
+			port = atoi(optarg);
+			if (port > 65535 || port < 0) {
+				printf ("Invalid Port Number\n");
+				exit (EXIT_FAILURE);
+			}
+			break;
+		default:
+			printf ("Unkown Option\n");
+			exit (EXIT_FAILURE);
+		}
+	}
+
 	/* flush socket related info */
 	flush_sock_re ();
 	flush_buf ();
 	flush_auth ();
+
+	/* read config */
+	readconf ("user.conf", true_user);
+	readconf ("pass.conf", true_pass);
+	if (debug) fprintf (stderr, "* user='%s' pass='%s'\n", true_user, true_pass);
 
 	/* create socket */
 	listenfd = Socket(AF_INET, SOCK_STREAM, 0);
@@ -132,7 +165,7 @@ main (int argc, char **argv)
 	/* fill in sockaddr */
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serv_addr.sin_port = htons(PORT);
+	serv_addr.sin_port = htons(port);
 	/* fill server ipv4 addr and port info */
 	inet_ntop (AF_INET, &serv_addr.sin_addr, saddr, sizeof(serv_addr));
 	sport = ntohs (serv_addr.sin_port);
@@ -241,7 +274,7 @@ do_serv (FILE *fp, int connfd)
 			Close (connfd);
 			exit (EXIT_SUCCESS);
 		} else if (!strncmp(argv0, "USER", 4)) {
-			if (strlen(argv1)>0) strncpy (auth_name, argv1, 16);
+			if (strlen(argv1)>0) strncpy (auth_user, argv1, 16);
 			auto_auth ();
 		} else if (!strncmp(argv0, "PASS", 4)) {
 			if (strlen(argv1)>0) strncpy (auth_pass, argv1, 16);
@@ -301,8 +334,8 @@ authenticate (int *state, const char *user, const char *pass)
 	else if (*state >= 1) {
 		return 0;
 	}
-	int chk_user = strncmp (user, USER, sizeof(USER));
-	int chk_pass = strncmp (pass, PASS, sizeof(PASS));
+	int chk_user = strncmp (user, true_user, sizeof(true_user));
+	int chk_pass = strncmp (pass, true_pass, sizeof(true_pass));
 	if (chk_user==0 && chk_pass==0) {
 		*state = 1;
 		return 1;
@@ -317,8 +350,8 @@ int
 auto_auth (void)
 {
 	int auth_temp = 0;
-	if (strlen(auth_name)>0 && strlen(auth_pass)>0) {
-		auth_temp = authenticate(&auth_st, auth_name, auth_pass);
+	if (strlen(auth_user)>0 && strlen(auth_pass)>0) {
+		auth_temp = authenticate(&auth_st, auth_user, auth_pass);
 		if (auth_temp == 0) {
 			write (connfd, "-- NOTHING --\n", sizeof("-- NOTHING --\n"));
 		} else if (auth_temp == -1) {
