@@ -147,9 +147,10 @@ main (int argc, char **argv)
 	flush_auth ();
 
 	/* read config */
+	/* user and pass fixed length 4 */
 	readconf ("user.conf", true_user);
 	readconf ("pass.conf", true_pass);
-	if (debug) fprintf (stderr, "* user='%s' pass='%s'\n", true_user, true_pass);
+	if (debug) fprintf (stderr, "\x1b[31m""*[m user='[34m%s[m' pass='[34m%s[m'\n""\x1b[m", true_user, true_pass);
 
 	/* create socket */
 	listenfd = Socket(AF_INET, SOCK_STREAM, 0);
