@@ -185,7 +185,7 @@ main (int argc, char **argv)
 			httpd_serve (argv[fileind], connfd);
 			/* then close and exit */
 			close (openfd);
-			close (connfd);
+			shutdown (connfd, SHUT_RDWR);
 			exit (EXIT_SUCCESS);
 		}
 		/* the parent process will step here, instead of if(){}
@@ -254,7 +254,6 @@ httpd_parse_req (const char *request, char *filename)
 	//if (strncmp(request, "GET", 3)==0) {
 	if (strncmp(request, "GET / HTTP/1.0", 14)==0) {
 		/* do the default */
-		//sscanf (request, "GET /%s HTTP", filename);
 		return 1;
 	} else if (strncmp(request, "GET /", 5)==0) {
 		sscanf (request, "GET /%s HTTP", filename);
