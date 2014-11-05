@@ -5,5 +5,11 @@ lsock_learn
 这是个人在学习UNIX网络编程的过程中产生的程序，  
 具体细节可以参见c文件中的注释。  
 
-特别地，为了满足某些作业需求，  
-作者折腾了一个tex文档来对lserv2.c进行描述。
+* [fakehttpd]...一个简单http服务器  
+  具体参见其中的README文件
+* [config]......lserv2 的配置文件目录
+* [lserv1]......非常基础的socket程序
+* [.]...........lserv2 研究用的主程序
+
+##Reference
+> UNP
