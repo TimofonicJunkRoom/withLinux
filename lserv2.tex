@@ -9,12 +9,11 @@
 \section*{lserv2设计}
 	本文档旨在lserv2的设计进行说明。（同时是某课的作业）\newline
 	\today \newline
-	与本文档相关的源代码文件为\fbox{lserv2.c}以及\fbox{lclie2.c}, \fbox{lserv2.tex}是本文档的源文件，
-	均可在
+	与本文档相关的源代码文件为\fbox{lserv2.c}以及\fbox{lclie2.c}, 本文档的源文件为\fbox{lserv2.tex}，
+	lserv2的配置文件目录为 \fbox{config}。 均可从下列地址获得。
 	\begin{verbatim}
 http://github.com/CDLuminate/lsock_learn/
 	\end{verbatim}
-	获得。
 
 \tableofcontents
 \newpage
@@ -34,6 +33,11 @@ $ nc localhost 2333
 	\end{verbatim}
 	与该服务器进行互动。（lclie2.c也能互动）\newline
 	具体可以使用的指令参见下文。
+\subsection{配置}
+	\begin{description}
+	\item[端口] 可用 -p 选项指定端口
+	\item[账户] 在 config 目录中进行配置
+	\end{description}
 
 \newpage
 \section{设计}
@@ -82,6 +86,8 @@ Try = 256^{4}
 	\subsection{中间人攻击/入侵}
 		出于C/S通信采用明文，因此只要获得 C/S/Route 之间任意一方的控制权，进行抓包，
 		就能够抓取认证信息。
+	\subsection{配置文件}
+		用户名和密码均放于配置文件中，文件泄漏会导致风险。
 
 \section{参考以及原型}
 	\subsection{参考书籍}
