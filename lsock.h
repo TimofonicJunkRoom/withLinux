@@ -16,6 +16,8 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/time.h>
+#include <sys/select.h>
 #include <fcntl.h>
 
 //int socket(int domain, int type, int protocol);

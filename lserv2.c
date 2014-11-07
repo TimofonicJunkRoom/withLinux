@@ -50,8 +50,6 @@ char feed[1024];
 /* store parsed instruction */
 char argv0[1024];
 char argv1[1024];
-/* wait time counter */
-long wcounter = 0;
 /* readn : store return value of read() */
 int readn = 0;
 int opt;
@@ -227,13 +225,32 @@ main (int argc, char **argv)
 int
 do_serv (FILE *fp, int connfd)
 {
-/* do_serv() loop */
+	/* both for select */
+	int maxfdp1;
+	fd_set rset, wset;
+
+	FD_ZERO (&rset);
+	FD_ZERO (&wset);
+
+/* do_serv() infinite loop */
 	while (1) {
-/* STAGE 1 : read the connfd */
+		/* prepare set for select */
+		FD_SET (connfd, &rset);
+		FD_SET (connfd, &wset);
+		maxfdp1 = connfd + 1;
+
+/* STAGE 1 : select and read the connfd */
 		/* if read instruction from client success ,
 		   print instruction and write feed back */
+
+		/* block at Select until connfd is readable */
+		if (select (maxfdp1, &rset, NULL, NULL, NULL) == -1) {
+			perror ("select");
+			exit (EXIT_FAILURE);
+		}
+
 		readn = read(connfd, inst, 1023);
-		if ( readn > 0) {
+		if ( readn >= 0) {
 			/* print conn info */
 			fprintf (stdout, "- %s:%d -> %s: INST %s",
 				 raddr, rport, "Server" , inst);
@@ -241,26 +258,26 @@ do_serv (FILE *fp, int connfd)
 			   then write to connfd, default on */
 			//snprintf (feed, 1023, "RECV %s", inst);
 			snprintf (feed, 1023, "--- RECV INST ---\n");
-			write (connfd, feed, strlen(feed));
-		} else if (readn < 0) {
-			perror ("read");
-			exit (EXIT_FAILURE);
-		} else {
-			/* readn = 0, the normal case */
-			usleep (1000*50);
-			wcounter += 100;
-			if (wcounter >= 1000*1000*10) {
-				printf ("timeout\n");
-				Close (connfd);
+			if (select (maxfdp1, NULL, &wset, NULL, NULL) == 0) {
+				perror ("select");
 				exit (EXIT_FAILURE);
 			}
-			continue;
+			write (connfd, feed, strlen(feed));
+		} else {/* (readn < 0) */ 
+			perror ("read");
+			exit (EXIT_FAILURE);
 		}
 		/* if went here, server should have recieved something */
-		wcounter = 0;
 
 /* STAGE 2 : parse instruction and respond */
 		inst_parse (inst, argv0, argv1);
+		
+		/* block until connfd is write-able */
+		if (select (maxfdp1, NULL, &wset, NULL, NULL) == 0) {
+			perror ("select");
+			exit (EXIT_FAILURE);
+		}
+
 		/* compare parsed instruction with some commands */
 		if (!strncmp(argv0, "GET", 3)) {
 			write (connfd, HTML, sizeof(HTML));
