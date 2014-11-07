@@ -162,6 +162,14 @@ main (int argc, char **argv)
 	inet_ntop (AF_INET, &serv_addr.sin_addr, saddr, sizeof(serv_addr));
 	sport = ntohs (serv_addr.sin_port);
 
+	/* use socket option SO_REUSEADDR | SO_REUSEPORT */
+	int _flag = 1;
+	int _optlen = sizeof(int);
+	if (setsockopt (listenfd, SOL_SOCKET, SO_REUSEADDR, &_flag, _optlen) == -1) {
+		perror ("setsockopt");
+		exit (EXIT_FAILURE);
+	}
+
 	/* bind */
 	Bind (listenfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
 	if (debug) printf ("[31m*[m bind sucess\n");
