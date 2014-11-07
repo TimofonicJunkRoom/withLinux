@@ -1,6 +1,8 @@
 /* C.D.Luminate <cdluminate@163.com> */
 /* MIT LICENCE */
 
+#define MD5_FILE_TO_CRACK "hhhh.md5"
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -26,7 +28,7 @@ main (int argc, char **argv)
 			   0x33, 0xac, 0x29, 0xcc,
 			   0xb8, 0x65, 0x3d, 0x9b }; */
 
-	int fd = open ("aaaa.md5", O_RDONLY);
+	int fd = open (MD5_FILE_TO_CRACK, O_RDONLY);
 	if (fd == -1) {
 		perror ("open");
 		exit (1);
