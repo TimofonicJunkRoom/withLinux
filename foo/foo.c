@@ -58,8 +58,8 @@ main (int argc, char **argv)
 
 					MD5 ((const unsigned char *)c, 4, (unsigned char *)md);
 					if (memcmp (md, md_ans, 16) == 0) {
-						write (2, c, 4);
-						write (2, "\n", 2);
+						write (1, c, 4);
+						write (1, "\n", 2);
 						exit (0);
 					}
 				}

@@ -99,10 +99,16 @@ Try = 256^{4}
 	更多细节均在程序注释中写明。
 	lserv2\footnote{https://github.com/cdluminate}以及本文档(.tex)遵循MIT许可证。
 	\subsection{changelog}
+		Date: ?
 		\begin{enumerate}
 		\item 增加一个读取配置文件（用户名和密码）的部分，避免用户名和密码写死的尴尬。
 		\item 增加getopt部分，可以更改监听端口。
 		\end{enumerate}
+		Date, 2014/11/08
+		\begin{enumerate}
+		\item 增加select()调用，使lserv2阻塞在select而不是直接阻塞在read()和write()调用。
+		\end{enumerate}
+
 
 	\begin{verbatim}
 Copyright (c) 2014 lumin zhou
