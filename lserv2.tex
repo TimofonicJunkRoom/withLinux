@@ -108,7 +108,10 @@ Try = 256^{4}
 		\begin{enumerate}
 		\item 增加select()调用，使lserv2阻塞在select而不是直接阻塞在read()和write()调用。
 		\end{enumerate}
-
+		Date, 2014/11/09
+		\begin{enumerate}
+		\item 增加\fbox{LSOCK\_USE\_IPv4}和\fbox{LSOCK\_USE\_IPv6}两个flag。使得程序可以运行于IPv4或者IPv6上，要切换只需要修改lserv2.c头部的预处理器部分。
+		\end{enumerate}
 
 	\begin{verbatim}
 Copyright (c) 2014 lumin zhou
