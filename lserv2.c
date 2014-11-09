@@ -17,6 +17,10 @@
 /* lsock.h */
 #include "lsock.h"
 
+/* settings */
+//#define LSOCK_USE_IPv4
+#define LSOCK_USE_IPv6
+
 #define BANNER "Sort_of_Server2 :: Please input your instructions.\n"
 #define BYE_MSG "From Server : BYE\n\0\0"
 #define HTML "<html>It works!</html>\n"
@@ -31,8 +35,13 @@ int debug = 1;
 /* general socket related vars */
 int listenfd;
 int connfd;
+#ifdef LSOCK_USE_IPv4
 struct sockaddr_in clie_addr;
 struct sockaddr_in serv_addr;
+#else
+struct sockaddr_in6 clie_addr;
+struct sockaddr_in6 serv_addr;
+#endif
 socklen_t cli_len;
 pid_t c_pid;
 int port = 2333; /* local listen port, 2333 default */
@@ -151,16 +160,34 @@ main (int argc, char **argv)
 	if (debug) fprintf (stderr, "\x1b[31m""*[m user='[34m%s[m' pass='[34m%s[m'\n""\x1b[m", true_user, true_pass);
 
 	/* create socket */
-	listenfd = Socket(AF_INET, SOCK_STREAM, 0);
+#ifdef LSOCK_USE_IPv4
+	listenfd = Socket (AF_INET, SOCK_STREAM, 0);
+#else
+	listenfd = Socket (AF_INET6, SOCK_STREAM, 0);
+#endif
 	if (debug) printf ("[31m*[m initialized socket\n");
 
 	/* fill in sockaddr */
+#ifdef LSOCK_USE_IPv4
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(port);
+#else
+	serv_addr.sin6_family = AF_INET6;
+	//serv_addr.sin6_addr.s6_addr = htonl(INADDR_ANY);
+	inet_pton (AF_INET6, "::0", &serv_addr.sin6_addr);
+	serv_addr.sin6_port = htons(port);
+
+#endif
+
 	/* fill server ipv4 addr and port info */
+#ifdef LSOCK_USE_IPv4
 	inet_ntop (AF_INET, &serv_addr.sin_addr, saddr, sizeof(serv_addr));
 	sport = ntohs (serv_addr.sin_port);
+#else
+	inet_ntop (AF_INET6, &serv_addr.sin6_addr, saddr, sizeof(serv_addr));
+	sport = ntohs (serv_addr.sin6_port);
+#endif
 
 	/* use socket option SO_REUSEADDR | SO_REUSEPORT */
 	int _flag = 1;
@@ -176,8 +203,14 @@ main (int argc, char **argv)
 	
 	/* listen */
 	Listen (listenfd, 5);
+#ifdef LSOCK_USE_IPv4
 	if (debug) printf ("[31m*[m listenning on %s:%d ...\n",
 			   saddr , ntohs(serv_addr.sin_port));	
+#else
+	if (debug) printf ("[31m*[m listenning on [%s]:%d ...\n",
+			   saddr , ntohs(serv_addr.sin6_port));	
+#endif
+
 
 	/* prepare signal actions */
 	(void) signal(SIGINT, do_sigint);
@@ -191,9 +224,15 @@ main (int argc, char **argv)
 		connfd = Accept(listenfd,
 				(struct sockaddr *)&clie_addr, &cli_len);
 		/* get client addr and port info */
+#ifdef LSOCK_USE_IPv4
+		rport = ntohs (clie_addr.sin_port);
 		inet_ntop (AF_INET, &clie_addr.sin_addr.s_addr, raddr,
 			sizeof(clie_addr));
-		rport = ntohs(clie_addr.sin_port);
+#else
+		rport = ntohs (clie_addr.sin6_port);
+		inet_ntop (AF_INET, &clie_addr.sin6_addr.s6_addr, raddr,
+			sizeof(clie_addr));
+#endif
 		if (debug) printf ("[31m*[m accept client from %s:%d\n",
 				   raddr, rport);
 
