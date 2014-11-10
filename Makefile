@@ -6,3 +6,5 @@ main:
 	${CC} -o a8shift a8shift.c
 purge:
 	rm a8freq a8lu a8shift
+bf:
+	gcc -Wall -fopenmp -o bytefreq bytefreq.c

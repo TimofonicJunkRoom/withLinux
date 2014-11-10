@@ -1,7 +1,7 @@
 Bytefreq
 ========
 
-[C,util] Byte/Char Frequency Counter.  
+[C,util] Byte/Char Frequency, Serial/Parallel.  
 
 THIS PROGRAME IS BEING REWRITED NOW.  
 
@@ -11,7 +11,10 @@ THIS PROGRAME IS BEING REWRITED NOW.
 According to some Theories, certain types of classic codes, such as substitution cipher, can be cracked via alphabet freqency analyze, see reference below.  
   
 New tools, functions, features are being added.     
-   
+
+[bytefreq.c](./bytefreq.c)  
+The Main Bytefreq utility, it supports both serial and parallel count method, and is under developing.  
+In the future I will delete a8freq and replace it with bytefreq.  
 [a8freq.c](./a8freq.c)   
 Simply show freqency of alphabets in file.   
 Specifying chars to count is supported now (lower, upper, number).  
