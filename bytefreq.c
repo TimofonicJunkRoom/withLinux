@@ -42,7 +42,10 @@ long (* Crunch)(int _fd, long _counter[256]);
 int
 main (int argc, char **argv)
 {
+	/* use Serial approach as default */
 	Crunch = crunch_serial;
+	/* need a test, see TODO in crunch.c */
+	//Crunch = crunch_parallel;
 
 	if (argc != 2) {
 		Usage (argv[0]);

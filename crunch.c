@@ -9,7 +9,7 @@
 
 
 /* TODO : malloc error handle
- *
+ * TODO : find a proper buffer size
  */
 
 #include "crunch.h"
@@ -18,8 +18,9 @@
 #include <unistd.h>
 #include <omp.h>
 
-#define BF_BFSZ_SERI (32768*sizeof(char))
-#define BF_BFSZ_PARA (131072*sizeof(char))
+/* 131072 Bytes, 128KB buffer */
+#define BF_BFSZ_SERI (131072*sizeof(char))
+#define BF_BFSZ_PARA (524288*sizeof(char))
 
 long crunch_serial (int _fd, long _counter[256])
 {
