@@ -1,7 +1,13 @@
 /* bytefreq.c
 
-   cdluminate
+   Count Byte/Char freqency, using Serial/Parallel Approaches.
+
+   C.D.Luminate <cdluminate AT 163 DOT com> 
+   MIT Licence, 2014
  */
+
+// TODO add getopt
+// TODO add commemt
 
 #include "crunch.c"
 
@@ -12,8 +18,23 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-long counter[256];
-int fd;
+/* ================================================= */
+void Usage (char *pname)
+{
+	fprintf (stderr,
+"bytefreq : Count Byte freqency in Serial/Parallel approach.\n"
+"Author: C.D.Luminate / MIT Licence / 2014\n"
+"Usage:\n"
+"   %s [options] file\n"
+"options:\n"
+"  under dev ...\n", pname);
+}
+
+/* ================================================= */
+long counter[256]; /* counter for bytes */
+long total_read;
+
+int fd; /* for open */
 int loop;
 
 long (* Crunch)(int _fd, long _counter[256]);
@@ -24,7 +45,7 @@ main (int argc, char **argv)
 	Crunch = crunch_serial;
 
 	if (argc != 2) {
-		printf ("usage : %s FILE\n", argv[0]);
+		Usage (argv[0]);
 		exit (1);
 	}
 
@@ -34,12 +55,13 @@ main (int argc, char **argv)
 	}
 
 	fputs ("Crunching data ...\n", stderr);
-	Crunch (fd, counter);
-	fputs ("Dumping data ...\n", stderr);
+	total_read = Crunch (fd, counter);
+	fputs ("Dump data ...\n", stderr);
 
 	for (loop = 0; loop < 256; loop++) {
 		if (counter[loop]) printf ("%0x : %ld\n", loop, counter[loop]);
 	}
+	printf ("Read %ld in total\n", total_read);
 	
 	return 0;
 }
