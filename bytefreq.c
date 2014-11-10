@@ -14,6 +14,7 @@
 
 long counter[256];
 int fd;
+int loop;
 
 long (* Crunch)(int _fd, long _counter[256]);
 
@@ -23,6 +24,7 @@ main (int argc, char **argv)
 	Crunch = crunch_serial;
 
 	if (argc != 2) {
+		printf ("usage : %s FILE\n", argv[0]);
 		exit (1);
 	}
 
@@ -33,8 +35,11 @@ main (int argc, char **argv)
 
 	fputs ("Crunching data ...\n", stderr);
 	Crunch (fd, counter);
-	
-	write (1, counter, 256*sizeof(long));
+	fputs ("Dumping data ...\n", stderr);
 
+	for (loop = 0; loop < 256; loop++) {
+		if (counter[loop]) printf ("%0x : %ld\n", loop, counter[loop]);
+	}
+	
 	return 0;
 }

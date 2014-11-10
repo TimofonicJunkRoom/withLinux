@@ -13,8 +13,8 @@
 #include <unistd.h>
 #include <omp.h>
 
-#define BF_BFSZ_SERI 32768
-#define BF_BFSZ_PARA 131072
+#define BF_BFSZ_SERI (32768*sizeof(char))
+#define BF_BFSZ_PARA (131072*sizeof(char))
 
 long crunch_serial (int _fd, long _counter[256])
 {
@@ -22,11 +22,12 @@ long crunch_serial (int _fd, long _counter[256])
 	long _total_read = 0;
 
 	/* flush counter */
-	bzero (_counter, 256 * sizeof(long));
+	bzero (_counter, 256*sizeof(long));
 
 	/* allocate buffer and flush it */
 	char *_buf;
 	_buf = (char *)malloc (BF_BFSZ_SERI);
+	if (_buf == NULL) exit (1);
 	bzero (_buf, BF_BFSZ_SERI);
 
 	/* start crunching */
@@ -35,8 +36,8 @@ long crunch_serial (int _fd, long _counter[256])
 	while ((_readn = read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
 		/* #pragma omp parallel for */
 		for (_loop = 0; _loop < _readn; _loop++) {
-			_counter[(unsigned int)*(_buf+_loop)]++;
-			_total_read +=  _readn;
+			_counter[(unsigned char)*(_buf+_loop)]++;
+			_total_read += _readn;
 		}
 	}
 	/* free buffer and return */
@@ -50,21 +51,22 @@ long crunch_parallel (int _fd, long _counter[256])
 	long _total_read = 0;
 
 	/* flush counter */
-	bzero (_counter, 256 * sizeof(long));
+	bzero (_counter, 256*sizeof(long));
 
 	/* allocate buffer and flush it */
 	char *_buf;
 	_buf = (char *)malloc (BF_BFSZ_PARA);
+	if (_buf == NULL) exit (1);
 	bzero (_buf, BF_BFSZ_PARA);
 
 	/* start crunching */
 	int _loop;
 	long _readn;
 	while ((_readn = read(_fd, _buf, BF_BFSZ_PARA)) > 0) {
-		/* #pragma omp parallel for */
+		#pragma omp parallel for
 		for (_loop = 0; _loop < _readn; _loop++) {
-			_counter[(unsigned int)*(_buf+_loop)]++;
-			_total_read +=  _readn;
+			_counter[(unsigned char)*(_buf+_loop)]++;
+			_total_read += _readn;
 		}
 	}
 	/* free buffer and return */

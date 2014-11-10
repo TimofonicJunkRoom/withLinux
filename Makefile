@@ -7,4 +7,4 @@ main:
 purge:
 	rm a8freq a8lu a8shift
 bf:
-	gcc -Wall -fopenmp -o bytefreq bytefreq.c
+	gcc -g -Wall -fopenmp -o bytefreq bytefreq.c
