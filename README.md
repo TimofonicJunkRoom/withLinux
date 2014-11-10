@@ -1,21 +1,13 @@
 Bytefreq
 ========
+UNDER DEVELOPMENT  
 
-[C,util] Byte/Char Frequency, Serial/Parallel.  
-
-THIS PROGRAME IS BEING REWRITED NOW.  
-
-(A set of) Simple linux c tools, for generating and cracking a certain type of substitution cipher.    
-  
-[Substitution cipher is very easy to be cracked.](http://en.wikipedia.org/wiki/Substitution_cipher)   
-According to some Theories, certain types of classic codes, such as substitution cipher, can be cracked via alphabet freqency analyze, see reference below.  
-  
-New tools, functions, features are being added.     
+[C,util, UNIX-Like] Byte/Char Frequency, Serial/Parallel.  
 
 [bytefreq.c](./bytefreq.c)  
 The Main Bytefreq utility, it supports both serial and parallel count method, and is under developing.  
 In the future I will delete a8freq and replace it with bytefreq.  
-[a8freq.c](./a8freq.c)   
+[a8freq.c (obsolete)](./a8freq.c)   
 Simply show freqency of alphabets in file.   
 Specifying chars to count is supported now (lower, upper, number).  
 [a8lu.c](./a8lu.c)     
@@ -23,18 +15,13 @@ Convert alphabets between upper and lower case.
 [a8shift.c](./a8shift.c)  
 Shift alphabets by (+/-)N positions in alphabet list.  
   
-For their Usage, look up the c file, and there is function "Usage ()" in each .c file.  
-  
-### a8freq :: reference
-
-see http://en.wikipedia.org/wiki/Cryptology  
-see http://en.wikipedia.org/wiki/Substitution_cipher  
-
-Have fun playing with it ! :-)  
-  
-  
 ---
 ### Examples
+
+#### Bytefreq
+```
+$ bytefreq FILE
+```
 
 #### Examples :: Generate Substitution cipher
 There is an rough and wild way that works:  
