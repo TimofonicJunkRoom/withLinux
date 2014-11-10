@@ -22,20 +22,31 @@
 void Usage (char *pname)
 {
 	fprintf (stderr,
-"bytefreq : Count Byte freqency in Serial/Parallel approach.\n"
-"Author: C.D.Luminate / MIT Licence / 2014\n"
 "Usage:\n"
-"   %s [options] file\n"
+"  %s [options] file\n"
+"  (More info see -v)\n"
 "options:\n"
-"  under dev ...\n", pname);
+"  -h show this help message\n"
+"  -v show version info\n"
+"  -p use parallel approach\n"
+"  ...\n", pname);
 }
 
+void Version (char *pname)
+{
+	fprintf (stderr,
+"Version info of %s :\n"
+"Count Byte freqency in Serial/Parallel approach.\n"
+"Author: C.D.Luminate / MIT Licence / 2014\n"
+"Version: developing\n", pname);
+}
 /* ================================================= */
 long counter[256]; /* counter for bytes */
 long total_read;
 
 int fd; /* for open */
 int loop;
+int opt;
 
 long (* Crunch)(int _fd, long _counter[256]);
 
@@ -47,12 +58,36 @@ main (int argc, char **argv)
 	/* need a test, see TODO in crunch.c */
 	//Crunch = crunch_parallel;
 
-	if (argc != 2) {
-		Usage (argv[0]);
-		exit (1);
+	/* parse option */
+	while ((opt = getopt(argc, argv, "pvh")) != -1) {
+		switch (opt) {
+		case 'p':
+			/* use parallel */
+			Crunch = crunch_parallel;
+			break;
+		case 'h':
+			/* help */
+			Usage (argv[0]);
+			exit (EXIT_SUCCESS);
+			break;
+		case 'v':
+			/* version info */
+			Version (argv[0]);
+			exit (EXIT_SUCCESS);
+			break;
+		default:
+			Usage (argv[0]);
+			exit (EXIT_FAILURE);
+		}
 	}
-
-	if ((fd = open (argv[1], O_RDONLY)) == -1) {
+	/* see if user gave a file */
+	if (optind >= argc) {
+		fprintf (stderr, "%s: a file must be specified.\n", argv[0]);
+		Usage (argv[0]);
+		exit (EXIT_FAILURE);
+	}
+	/* open file, then pass the fd to Crunch() */
+	if ((fd = open (argv[optind], O_RDONLY)) == -1) {
 		perror ("open");
 		exit (1);
 	}
