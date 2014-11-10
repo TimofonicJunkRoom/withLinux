@@ -1,7 +1,9 @@
 Bytefreq
 ========
 
-[C,util] Byte/Char Frequency Counter.
+[C,util] Byte/Char Frequency Counter.  
+
+THIS PROGRAME IS BEING REWRITED NOW.  
 
 (A set of) Simple linux c tools, for generating and cracking a certain type of substitution cipher.    
   
