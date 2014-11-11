@@ -10,6 +10,7 @@
 // TODO add commemt
 
 #include "crunch.c"
+#include "mark.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,39 +25,53 @@ void Usage (char *pname)
 	fprintf (stderr,
 "Usage:\n"
 "  %s [options] file\n"
-"  (More info see -v)\n"
 "options:\n"
 "  -h show this help message\n"
 "  -v show version info\n"
 "  -p use parallel approach\n"
-"  ...\n", pname);
+"  ...\n"
+"  for more info see -v\n", pname);
 }
 
 void Version (char *pname)
 {
 	fprintf (stderr,
-"Version info of %s :\n"
-"Count Byte freqency in Serial/Parallel approach.\n"
-"Author: C.D.Luminate / MIT Licence / 2014\n"
-"Version: developing\n", pname);
+"Version: developing\n"
+"%s : Count Byte freqency in Serial/Parallel approach.\n"
+"Author: C.D.Luminate / MIT Licence / 2014\n", pname);
 }
 /* ================================================= */
-long counter[256]; /* counter for bytes */
+
+long counter[256]; /* counter for bytes, these are raw data */
+struct countgrp {
+	/* deal with raw data */
+	long control;
+	long symbol;
+	long number;
+	long upper;
+	long lower;
+} cntgrp;
+int count_mark[256]; /* 1 if specified by user, or 0 */
+
 long total_read;
 
 int fd; /* for open */
 int loop;
-int opt;
+int opt; /* for getopt() */
 
+/* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256]);
 
 int
 main (int argc, char **argv)
 {
-	/* use Serial approach as default */
+	/* Serial as default, use -p to switch to parallel */
 	Crunch = crunch_serial;
-	/* need a test, see TODO in crunch.c */
-	//Crunch = crunch_parallel;
+
+	bzero (count_mark, sizeof(count_mark));
+
+	// temporary
+	_count_marker (256, count_mark);
 
 	/* parse option */
 	while ((opt = getopt(argc, argv, "pvh")) != -1) {
@@ -75,6 +90,18 @@ main (int argc, char **argv)
 			Version (argv[0]);
 			exit (EXIT_SUCCESS);
 			break;
+		case 'u':
+			/* upper */
+		case 'l':
+			/* lower */
+		case 'A':
+			/* all */
+		case 'a':
+			/* alphabets, i.e. upper && lower */
+		case 's':
+			/* symbol */
+		case 'n':
+			/* number */
 		default:
 			Usage (argv[0]);
 			exit (EXIT_FAILURE);
@@ -97,7 +124,7 @@ main (int argc, char **argv)
 	fputs ("Dump data ...\n", stderr);
 
 	for (loop = 0; loop < 256; loop++) {
-		if (counter[loop]) printf ("%0x : %ld\n", loop, counter[loop]);
+		if (count_mark[loop]) printf ("%0x : %ld\n", loop, counter[loop]);
 	}
 	printf ("Read %ld in total\n", total_read);
 	
