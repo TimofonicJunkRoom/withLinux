@@ -52,6 +52,9 @@ void Version (char *pname)
 /* ================================================= */
 
 long counter[256]; /* counter for bytes, these are raw data */
+int count_mark[256]; /* 1 if specified by user, or 0 */
+long total_read;
+
 struct {
 	/* deal with raw data */
 	long control;
@@ -59,19 +62,29 @@ struct {
 	long number;
 	long upper;
 	long lower;
-} counterp; /* counter plus */
-int count_mark[256]; /* 1 if specified by user, or 0 */
+} counterwrap; /* raw counter wrapp */
 
-long total_read;
+struct bytefreq_ex {
+	/* store the extreme values */
+	long spec_max;
+	long spec_min;
+	long byte_max;
+	long byte_min;
+	char spec_max_char;
+	char spec_min_char;
+	char byte_max_char;
+	char byte_min_char;
+} extr;
 
 int fd; /* for open */
 int loop;
 int opt; /* for getopt() */
 
-int no_mark_set (int _mark[256]);
-
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256]);
+int no_mark_set (int _mark[256]);
+void find_spec_extreme (struct bytefreq_ex *_ex, int _mark[256], long _counter[256]);
+void find_byte_extreme (struct bytefreq_ex *_ex, long _counter[256]);
 
 /* ----------------------------------------------------------- */
 int
@@ -150,11 +163,22 @@ main (int argc, char **argv)
 	fputs ("Crunching data ...\n", stderr);
 	total_read = Crunch (fd, counter);
 
+	/* ###### cook the raw counter ##### */
+	/* find minmax */
+	find_byte_extreme (&extr, counter);
+	find_spec_extreme (&extr, count_mark, counter);
+
 	/* TODO optimize printer as a8freq's */
 	for (loop = 0; loop < 256; loop++) {
 		if (count_mark[loop]) printf ("%0x : %ld\n", loop, counter[loop]);
 	}
-	printf ("Total read() size %ld\n", total_read);
+
+	/* ###### summary ####### */
+	fprintf (stdout, "Maximous of specified : (0x%X  %c) : %ld\n",
+		 extr.spec_max_char, extr.spec_max_char, extr.spec_max);
+	fprintf (stdout, "Minimous of specified : (0x%X, %c) : %ld\n",
+		 extr.spec_min_char, extr.spec_min_char, extr.spec_min);
+	fprintf (stdout, "Total read() size %ld\n", total_read);
 	
 	return 0;
 }
@@ -168,4 +192,65 @@ no_mark_set (int _mark[256])
 		if (_mark[_lo] > 0) return 0;
 	}
 	return 1;
+}
+
+void
+find_byte_extreme (struct bytefreq_ex *_ex, long _counter[256])
+{
+	int _lo;
+	long _max = 0;
+	long _min = 0;
+	char _maxc = 0;
+	char _minc = 0;
+
+	for (_lo = 0; _lo < 256; _lo++) {
+		if (_counter[_lo] > _max) {
+			_max = _counter[_lo];
+			_maxc = (char)_lo;
+		}
+	}
+	_min = _max; /* important ! */
+	for (_lo = 0; _lo < 256; _lo++) {
+		if (_counter[_lo] < _min) {
+			_min = _counter[_lo];
+			_minc = (char)_lo;
+		}
+	}
+
+	_ex -> byte_max = _max;
+	_ex -> byte_min = _min;
+	_ex -> byte_max_char = _maxc;
+	_ex -> byte_min_char = _minc;
+	return;
+}
+
+void
+find_spec_extreme (struct bytefreq_ex *_ex, int _mark[256], long _counter[256])
+{
+	int _lo;
+	long _max = 0;
+	long _min;
+	char _maxc = 0;
+	char _minc = 0;
+
+	for (_lo = 0; _lo < 256; _lo++) {
+		if (_counter[_lo] > _max && _mark[_lo])
+		{
+			_max = _counter[_lo];
+			_maxc = (char)_lo;
+		}
+	}
+	_min = _max; /* important ! */
+	for (_lo = 0; _lo < 256; _lo++) {
+		if (_counter[_lo] < _min && _mark[_lo]) {
+			_min = _counter[_lo];
+			_minc = (char)_lo;
+		}
+	}
+
+	_ex -> spec_max = _max;
+	_ex -> spec_min = _min;
+	_ex -> spec_max_char = _maxc;
+	_ex -> spec_min_char = _minc;
+	return;
 }
