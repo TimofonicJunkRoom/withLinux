@@ -38,11 +38,43 @@ Options:
 	...
 	for more info see -v
 ```
-#### compile  
+In fact, the parallel approach (OpenMP) seems to have lower performance than normal Serial one. 
+Demo:
 ```
-$ make
+$ ./bytefreq -l Makefile
+Crunching data ...
+(0x61, a) : 11 | 4.151% of spec | 2.895% of ALL
+(0x62, b) : 17 | 6.415% of spec | 4.474% of ALL
+(0x63, c) : 9 | 3.396% of spec | 2.368% of ALL
+(0x64, d) : 2 | 0.755% of spec | 0.526% of ALL
+(0x65, e) : 32 | 12.075% of spec | 8.421% of ALL
+(0x66, f) : 13 | 4.906% of spec | 3.421% of ALL
+(0x67, g) : 6 | 2.264% of spec | 1.579% of ALL
+(0x68, h) : 6 | 2.264% of spec | 1.579% of ALL
+(0x69, i) : 18 | 6.792% of spec | 4.737% of ALL
+(0x6a, j) : 0 | 0.000% of spec | 0.000% of ALL
+(0x6b, k) : 1 | 0.377% of spec | 0.263% of ALL
+(0x6c, l) : 19 | 7.170% of spec | 5.000% of ALL
+(0x6d, m) : 8 | 3.019% of spec | 2.105% of ALL
+(0x6e, n) : 21 | 7.925% of spec | 5.526% of ALL
+(0x6f, o) : 7 | 2.642% of spec | 1.842% of ALL
+(0x70, p) : 10 | 3.774% of spec | 2.632% of ALL
+(0x71, q) : 9 | 3.396% of spec | 2.368% of ALL
+(0x72, r) : 21 | 7.925% of spec | 5.526% of ALL
+(0x73, s) : 16 | 6.038% of spec | 4.211% of ALL
+(0x74, t) : 19 | 7.170% of spec | 5.000% of ALL
+(0x75, u) : 9 | 3.396% of spec | 2.368% of ALL
+(0x76, v) : 0 | 0.000% of spec | 0.000% of ALL
+(0x77, w) : 1 | 0.377% of spec | 0.263% of ALL
+(0x78, x) : 0 | 0.000% of spec | 0.000% of ALL
+(0x79, y) : 10 | 3.774% of spec | 2.632% of ALL
+(0x7a, z) : 0 | 0.000% of spec | 0.000% of ALL
+Maximous of specified : (0x65  e) : 32
+Minimous of specified : (0x6A, j) : 0
+Total specified : 265, 69.737%
+Total   read()  : 380
 ```
-
+  
 ---
 #### Expample of util/a8lu.c
 ```
