@@ -43,14 +43,14 @@ void Version (char *pname)
 /* ================================================= */
 
 long counter[256]; /* counter for bytes, these are raw data */
-struct countgrp {
+struct {
 	/* deal with raw data */
 	long control;
 	long symbol;
 	long number;
 	long upper;
 	long lower;
-} cntgrp;
+} counterp; /* counter plus */
 int count_mark[256]; /* 1 if specified by user, or 0 */
 
 long total_read;
@@ -71,10 +71,10 @@ main (int argc, char **argv)
 	bzero (count_mark, sizeof(count_mark));
 
 	// temporary
-	_count_marker (256, count_mark);
+	//_count_marker (128, count_mark);
 
 	/* parse option */
-	while ((opt = getopt(argc, argv, "pvh")) != -1) {
+	while ((opt = getopt(argc, argv, "hvpulAasn")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -92,16 +92,29 @@ main (int argc, char **argv)
 			break;
 		case 'u':
 			/* upper */
+			mark_upper (count_mark);
+			break;
 		case 'l':
 			/* lower */
+			mark_lower (count_mark);
+			break;
 		case 'A':
 			/* all */
+			mark_all (count_mark);
+			break;
 		case 'a':
 			/* alphabets, i.e. upper && lower */
+			mark_lower (count_mark);
+			mark_upper (count_mark);
+			break;
 		case 's':
 			/* symbol */
+			mark_symbol (count_mark);
+			break;
 		case 'n':
 			/* number */
+			mark_number (count_mark);
+			break;
 		default:
 			Usage (argv[0]);
 			exit (EXIT_FAILURE);
