@@ -1,6 +1,5 @@
 Bytefreq
 ========
-UNDER DEVELOPMENT  
 
 [C,util, UNIX-Like] Byte/Char Frequency, Serial/Parallel.  
 
@@ -39,8 +38,11 @@ Options:
 	...
 	for more info see -v
 ```
-#### compile
-just make.
+#### compile  
+```
+$ make
+```
+
 ---
 #### Expample of util/a8lu.c
 ```
@@ -88,7 +90,9 @@ The gnu's tr is enough to this purpose.
 ```
 $ tr -s 'ORIGIN_LIST' 'TARGET_LIST'
 ```
-For example, $ tr -s 'abc' 'xyz'  
+For example,
+```
+$ tr -s 'abc' 'xyz'  
 abcdefxyz		<- from stdin  
 xyzdefxyz		<- processed by tr  
 ```  
