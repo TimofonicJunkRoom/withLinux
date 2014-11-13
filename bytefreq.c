@@ -6,9 +6,6 @@
    MIT Licence, 2014
  */
 
-// TODO add getopt
-// TODO add commemt
-
 #include "crunch.c"
 #include "mark.h"
 
@@ -32,6 +29,7 @@ void Usage (char *pname)
 "  -h show this help message\n"
 "  -V show version info\n"
 "  -p use parallel approach\n"
+"  -d don't use percent output, use float instead\n"
 "  -A specify all bytes to count\n"
 "  -l specify lower to count\n"
 "  -u specify upper to count\n"
@@ -55,6 +53,11 @@ long counter[256]; /* counter for bytes, these are raw data */
 int count_mark[256]; /* 1 if specified by user, or 0 */
 long total_read;
 
+int fd; /* for open */
+int loop;
+int opt; /* for getopt() */
+int dont_use_percent_output;
+
 struct {
 	/* deal with raw data */
 	long control;
@@ -68,7 +71,7 @@ struct {
 	long alpha;
 } counterwrap; /* raw counter wrapp */
 
-struct {
+struct bytefreq_tot {
 	long total_spec;
 	long total_byte;
 } countertot;
@@ -85,15 +88,12 @@ struct bytefreq_ex {
 	char byte_min_char;
 } extr;
 
-int fd; /* for open */
-int loop;
-int opt; /* for getopt() */
-
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256]);
 int no_mark_set (int _mark[256]);
 void find_spec_extreme (struct bytefreq_ex *_ex, int _mark[256], long _counter[256]);
 void find_byte_extreme (struct bytefreq_ex *_ex, long _counter[256]);
+void find_total (struct bytefreq_tot *_tot, int _mark[256], long _counter[256]);
 
 /* ----------------------------------------------------------- */
 int
@@ -105,7 +105,7 @@ main (int argc, char **argv)
 	bzero (count_mark, sizeof(count_mark));
 
 	/* parse option */
-	while ((opt = getopt(argc, argv, "hVpulAasn")) != -1) {
+	while ((opt = getopt(argc, argv, "hVpulAasnd")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -146,6 +146,10 @@ main (int argc, char **argv)
 			/* number */
 			mark_number (count_mark);
 			break;
+		case 'd':
+			/* don't use percent output */
+			dont_use_percent_output = 1;
+			break;
 		default:
 			Usage (argv[0]);
 			exit (EXIT_FAILURE);
@@ -176,18 +180,28 @@ main (int argc, char **argv)
 	/* find minmax */
 	find_byte_extreme (&extr, counter);
 	find_spec_extreme (&extr, count_mark, counter);
+	find_total (&countertot, count_mark, counter);
 
-	/* TODO optimize printer as a8freq's */
+	/* print info about specified chars */
 	for (loop = 0; loop < 256; loop++) {
 		if (!count_mark[loop])
 			continue;
 
-		if (loop == extr.spec_max_char)
+		if (counter[loop] == extr.spec_max)
 			fprintf (stdout, "\x1B[31m");
-		if (loop == extr.spec_min_char)
+		if (counter[loop] == extr.spec_min)
 			fprintf (stdout, "\x1B[32m");
 
-		fprintf (stdout, "%0x : %ld\x1B[m\n", loop, counter[loop]);
+		if (dont_use_percent_output)
+			fprintf (stdout, "(0x%x, %c) : %ld | %.8lf of spec | %.8lf of ALL\n", loop, loop,
+				 counter[loop], (double)counter[loop]/countertot.total_spec,
+				 (double)counter[loop]/countertot.total_byte);
+		else
+			fprintf (stdout, "(0x%x, %c) : %ld | %.8lf%% of spec | %.8lf%% of ALL\n", loop, loop,
+				 counter[loop], (double)100.0*counter[loop]/countertot.total_spec,
+				 (double)100.0*counter[loop]/countertot.total_byte);
+
+		fprintf (stdout, "\x1B[m"); /* restore color */
 	}
 
 	/* ###### summary ####### */
@@ -269,5 +283,17 @@ find_spec_extreme (struct bytefreq_ex *_ex, int _mark[256], long _counter[256])
 	_ex -> spec_min = _min;
 	_ex -> spec_max_char = _maxc;
 	_ex -> spec_min_char = _minc;
+	return;
+}
+
+void
+find_total (struct bytefreq_tot *_tot, int _mark[256], long _counter[256])
+{
+	int _lo;
+	for (_lo = 0; _lo < 256; _lo++) {
+		_tot -> total_byte += _counter[_lo];
+		if (_mark[_lo])
+			_tot -> total_spec += _counter[_lo];
+	}
 	return;
 }
