@@ -1,6 +1,6 @@
 CC=/usr/bin/gcc -Wall
 
-main:
+bf:
 	gcc -g -Wall -fopenmp -o bytefreq bytefreq.c
 purge:
 	rm bytefreq

@@ -7,6 +7,7 @@ UNDER DEVELOPMENT
 [bytefreq.c](./bytefreq.c)  
 The Main Bytefreq utility, it supports both serial and parallel count approaches,
 	and the performance of them need to be tested.  
+The parallel appraoch is implemented with OpenMP, with juse one "#pragma" added.  
 [util/a8lu.c](./util/a8lu.c)     
 Convert alphabets between upper and lower case.   
 [util/a8shift.c](./util/a8shift.c)  
