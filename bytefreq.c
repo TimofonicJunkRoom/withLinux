@@ -62,7 +62,16 @@ struct {
 	long number;
 	long upper;
 	long lower;
+	/* cooked data */
+	long visible;
+	long invisible;
+	long alpha;
 } counterwrap; /* raw counter wrapp */
+
+struct {
+	long total_spec;
+	long total_byte;
+} countertot;
 
 struct bytefreq_ex {
 	/* store the extreme values */
@@ -160,7 +169,7 @@ main (int argc, char **argv)
 	}
 
 	/* ###### start Crunch ########## */
-	fputs ("Crunching data ...\n", stderr);
+	fputs ("\x1B[mCrunching data ...\n", stderr);
 	total_read = Crunch (fd, counter);
 
 	/* ###### cook the raw counter ##### */
@@ -170,15 +179,23 @@ main (int argc, char **argv)
 
 	/* TODO optimize printer as a8freq's */
 	for (loop = 0; loop < 256; loop++) {
-		if (count_mark[loop]) printf ("%0x : %ld\n", loop, counter[loop]);
+		if (!count_mark[loop])
+			continue;
+
+		if (loop == extr.spec_max_char)
+			fprintf (stdout, "\x1B[31m");
+		if (loop == extr.spec_min_char)
+			fprintf (stdout, "\x1B[32m");
+
+		fprintf (stdout, "%0x : %ld\x1B[m\n", loop, counter[loop]);
 	}
 
 	/* ###### summary ####### */
-	fprintf (stdout, "Maximous of specified : (0x%X  %c) : %ld\n",
+	fprintf (stdout, "Maximous of specified : (0x%X  %c) : \x1B[33m%ld\x1B[m\n",
 		 extr.spec_max_char, extr.spec_max_char, extr.spec_max);
-	fprintf (stdout, "Minimous of specified : (0x%X, %c) : %ld\n",
+	fprintf (stdout, "Minimous of specified : (0x%X, %c) : \x1B[33m%ld\x1B[m\n",
 		 extr.spec_min_char, extr.spec_min_char, extr.spec_min);
-	fprintf (stdout, "Total read() size %ld\n", total_read);
+	fprintf (stdout, "Total read() : \x1B[33m%ld\x1B[m\n", total_read);
 	
 	return 0;
 }
