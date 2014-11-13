@@ -25,10 +25,19 @@ void Usage (char *pname)
 	fprintf (stderr,
 "Usage:\n"
 "  %s [options] file\n"
-"options:\n"
+"Description:\n"
+"  Count the frequency of specified char.\n"
+"  Only shows Total read size if no char specified.\n"
+"Options:\n"
 "  -h show this help message\n"
-"  -v show version info\n"
+"  -V show version info\n"
 "  -p use parallel approach\n"
+"  -A specify all bytes to count\n"
+"  -l specify lower to count\n"
+"  -u specify upper to count\n"
+"  -s specify symbol to count\n"
+"  -c specify control character to count\n"
+"  -a specify alphabets to count (= '-lu')\n"
 "  ...\n"
 "  for more info see -v\n", pname);
 }
@@ -59,9 +68,12 @@ int fd; /* for open */
 int loop;
 int opt; /* for getopt() */
 
+int no_mark_set (int _mark[256]);
+
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256]);
 
+/* ----------------------------------------------------------- */
 int
 main (int argc, char **argv)
 {
@@ -70,11 +82,8 @@ main (int argc, char **argv)
 
 	bzero (count_mark, sizeof(count_mark));
 
-	// temporary
-	//_count_marker (128, count_mark);
-
 	/* parse option */
-	while ((opt = getopt(argc, argv, "hvpulAasn")) != -1) {
+	while ((opt = getopt(argc, argv, "hVpulAasn")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -85,7 +94,7 @@ main (int argc, char **argv)
 			Usage (argv[0]);
 			exit (EXIT_SUCCESS);
 			break;
-		case 'v':
+		case 'V':
 			/* version info */
 			Version (argv[0]);
 			exit (EXIT_SUCCESS);
@@ -131,15 +140,32 @@ main (int argc, char **argv)
 		perror ("open");
 		exit (1);
 	}
+	/* see marks */
+	if (no_mark_set (count_mark)) {
+		fprintf (stderr,
+"HINT: see -h to find out options.\n");
+	}
 
+	/* ###### start Crunch ########## */
 	fputs ("Crunching data ...\n", stderr);
 	total_read = Crunch (fd, counter);
-	fputs ("Dump data ...\n", stderr);
 
+	/* TODO optimize printer as a8freq's */
 	for (loop = 0; loop < 256; loop++) {
 		if (count_mark[loop]) printf ("%0x : %ld\n", loop, counter[loop]);
 	}
-	printf ("Read %ld in total\n", total_read);
+	printf ("Total read() size %ld\n", total_read);
 	
 	return 0;
+}
+
+int
+no_mark_set (int _mark[256])
+{
+	/* if no mark is set, return 1 (true), or return 0(false) */
+	int _lo;
+	for (_lo = 0; _lo < 256; _lo++) {
+		if (_mark[_lo] > 0) return 0;
+	}
+	return 1;
 }

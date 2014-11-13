@@ -39,7 +39,9 @@ long crunch_serial (int _fd, long _counter[256])
 	/* start crunching */
 	int _loop;
 	long _readn;
+	write (2, "!", 1);
 	while ((_readn = read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
+		write (2, ".", 1);
 		_total_read += _readn;
 		/* #pragma omp parallel for */
 		for (_loop = 0; _loop < _readn; _loop++) {
@@ -48,6 +50,7 @@ long crunch_serial (int _fd, long _counter[256])
 	}
 	/* free buffer and return */
 	free (_buf);
+	write (2, "!\n", 2);
 	return _total_read;
 }
 
