@@ -7,5 +7,5 @@
    MIT Licence, 2014
  */
 
-long crunch_serial (int _fd, long _counter[256]);
-long crunch_parallel (int _fd, long _counter[256]);
+long crunch_serial (int _fd, long _counter[256], int _verbose);
+long crunch_parallel (int _fd, long _counter[256], int _verbose);

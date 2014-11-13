@@ -21,13 +21,15 @@ void Usage (char *pname)
 {
 	fprintf (stderr,
 "Usage:\n"
-"  %s [options] file\n"
+"  %s [options] [FILE]\n"
 "Description:\n"
 "  Count the frequency of specified char.\n"
 "  Only shows Total read size if no char specified.\n"
+"  If no <FILE> is given, it would count from the stdin.\n"
 "Options:\n"
 "  -h show this help message\n"
 "  -V show version info\n"
+"  -v verbose mode\n"
 "  -p use parallel approach\n"
 "  -d don't use percent output, use float instead\n"
 "  -A specify all bytes to count\n"
@@ -57,6 +59,8 @@ int fd; /* for open */
 int loop;
 int opt; /* for getopt() */
 int dont_use_percent_output;
+int use_stdin;
+int use_verbose;
 
 struct {
 	/* deal with raw data */
@@ -89,7 +93,7 @@ struct bytefreq_ex {
 } extr;
 
 /* used to select a crunch_* function */
-long (* Crunch)(int _fd, long _counter[256]);
+long (* Crunch)(int _fd, long _counter[256], int _verbose);
 int no_mark_set (int _mark[256]);
 void find_spec_extreme (struct bytefreq_ex *_ex, int _mark[256], long _counter[256]);
 void find_byte_extreme (struct bytefreq_ex *_ex, long _counter[256]);
@@ -105,7 +109,7 @@ main (int argc, char **argv)
 	bzero (count_mark, sizeof(count_mark));
 
 	/* parse option */
-	while ((opt = getopt(argc, argv, "hVpulAasnd")) != -1) {
+	while ((opt = getopt(argc, argv, "hVpulAasndv")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -120,6 +124,10 @@ main (int argc, char **argv)
 			/* version info */
 			Version (argv[0]);
 			exit (EXIT_SUCCESS);
+			break;
+		case 'v':
+			/* verbose mode */
+			use_verbose = 1;
 			break;
 		case 'u':
 			/* upper */
@@ -155,16 +163,17 @@ main (int argc, char **argv)
 			exit (EXIT_FAILURE);
 		}
 	}
-	/* see if user gave a file */
+	/* see if user want to use stdin */
 	if (optind >= argc) {
-		fprintf (stderr, "%s: a file must be specified.\n", argv[0]);
-		Usage (argv[0]);
-		exit (EXIT_FAILURE);
+		use_stdin = 1;
+		fd = fileno(stdin);
 	}
 	/* open file, then pass the fd to Crunch() */
-	if ((fd = open (argv[optind], O_RDONLY)) == -1) {
-		perror ("open");
-		exit (1);
+	if (!use_stdin) {
+		if ((fd = open (argv[optind], O_RDONLY)) == -1) {
+			perror ("open");
+			exit (EXIT_FAILURE);
+		}
 	}
 	/* see marks */
 	if (no_mark_set (count_mark)) {
@@ -174,7 +183,7 @@ main (int argc, char **argv)
 
 	/* ###### start Crunch ########## */
 	fputs ("\x1B[mCrunching data ...\n", stderr);
-	total_read = Crunch (fd, counter);
+	total_read = Crunch (fd, counter, use_verbose);
 
 	/* ###### cook the raw counter ##### */
 	/* find minmax */
