@@ -218,7 +218,10 @@ main (int argc, char **argv)
 		 extr.spec_max_char, extr.spec_max_char, extr.spec_max);
 	fprintf (stdout, "Minimous of specified : (0x%X, %c) : \x1B[33m%ld\x1B[m\n",
 		 extr.spec_min_char, extr.spec_min_char, extr.spec_min);
-	fprintf (stdout, "Total read() : \x1B[33m%ld\x1B[m\n", total_read);
+	fprintf (stdout, "Total specified : \x1B[33m%ld, %.2lf%%\x1B[m\n",
+			countertot.total_spec,
+			(double)100.0*countertot.total_spec/countertot.total_byte);
+	fprintf (stdout, "Total   read()  : \x1B[33m%ld\x1B[m\n", total_read);
 	
 	return 0;
 }
