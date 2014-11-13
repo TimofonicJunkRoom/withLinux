@@ -6,7 +6,7 @@
    MIT Licence, 2014
  */
 
-#include "crunch.c"
+#include "crunch.h"
 #include "mark.h"
 
 #include <stdio.h>
@@ -206,7 +206,7 @@ main (int argc, char **argv)
 				 counter[loop], (double)counter[loop]/countertot.total_spec,
 				 (double)counter[loop]/countertot.total_byte);
 		else
-			fprintf (stdout, "(0x%x, %c) : %ld | %.8lf%% of spec | %.8lf%% of ALL\n", loop, loop,
+			fprintf (stdout, "(0x%x, %c) : %ld | %.3lf%% of spec | %.3lf%% of ALL\n", loop, loop,
 				 counter[loop], (double)100.0*counter[loop]/countertot.total_spec,
 				 (double)100.0*counter[loop]/countertot.total_byte);
 
@@ -218,7 +218,7 @@ main (int argc, char **argv)
 		 extr.spec_max_char, extr.spec_max_char, extr.spec_max);
 	fprintf (stdout, "Minimous of specified : (0x%X, %c) : \x1B[33m%ld\x1B[m\n",
 		 extr.spec_min_char, extr.spec_min_char, extr.spec_min);
-	fprintf (stdout, "Total specified : \x1B[33m%ld, %.2lf%%\x1B[m\n",
+	fprintf (stdout, "Total specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
 			countertot.total_spec,
 			(double)100.0*countertot.total_spec/countertot.total_byte);
 	fprintf (stdout, "Total   read()  : \x1B[33m%ld\x1B[m\n", total_read);
