@@ -196,6 +196,7 @@ main (int argc, char **argv)
 
 	/* print the table header */
 	fprintf (stdout,
+"=========================================================\n"
 "Character    Count           of_ALL          of_Specified\n"
 "=========    ============    ============    ============\n");
 
