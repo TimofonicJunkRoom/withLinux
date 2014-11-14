@@ -109,7 +109,7 @@ main (int argc, char **argv)
 	bzero (count_mark, sizeof(count_mark));
 
 	/* parse option */
-	while ((opt = getopt(argc, argv, "hVpulAasndv")) != -1) {
+	while ((opt = getopt(argc, argv, "hVpulAasndvc")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -128,6 +128,9 @@ main (int argc, char **argv)
 		case 'v':
 			/* verbose mode */
 			use_verbose = 1;
+			break;
+		case 'c':
+			mark_control (count_mark);
 			break;
 		case 'u':
 			/* upper */
@@ -191,6 +194,11 @@ main (int argc, char **argv)
 	find_spec_extreme (&extr, count_mark, counter);
 	find_total (&countertot, count_mark, counter);
 
+	/* print the table header */
+	fprintf (stdout,
+"Character    Count           of_ALL          of_Specified\n"
+"=========    ============    ============    ============\n");
+
 	/* print info about specified chars */
 	for (loop = 0; loop < 256; loop++) {
 		if (!count_mark[loop])
@@ -202,11 +210,11 @@ main (int argc, char **argv)
 			fprintf (stdout, "\x1B[32m");
 
 		if (dont_use_percent_output)
-			fprintf (stdout, "(0x%x, %c) : %ld | %.8lf of spec | %.8lf of ALL\n", loop, loop,
+			fprintf (stdout, "(0x%1$x, %2$c)    %3$12ld    %5$12.8lf    %4$12.8lf\n", loop, loop,
 				 counter[loop], (double)counter[loop]/countertot.total_spec,
 				 (double)counter[loop]/countertot.total_byte);
 		else
-			fprintf (stdout, "(0x%x, %c) : %ld | %.3lf%% of spec | %.3lf%% of ALL\n", loop, loop,
+			fprintf (stdout, "(0x%1$x, %2$c)    %3$12ld   %5$11.3lf %%   %4$11.3lf %%\n", loop, loop,
 				 counter[loop], (double)100.0*counter[loop]/countertot.total_spec,
 				 (double)100.0*counter[loop]/countertot.total_byte);
 
