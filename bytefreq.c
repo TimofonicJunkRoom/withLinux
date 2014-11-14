@@ -221,7 +221,7 @@ main (int argc, char **argv)
 	fprintf (stdout, "Total specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
 			countertot.total_spec,
 			(double)100.0*countertot.total_spec/countertot.total_byte);
-	fprintf (stdout, "Total   read()  : \x1B[33m%ld\x1B[m\n", total_read);
+	fprintf (stdout, "Total read()    : \x1B[33m%ld\x1B[m\n", total_read);
 	
 	return 0;
 }

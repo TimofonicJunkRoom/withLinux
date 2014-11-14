@@ -8,10 +8,10 @@
  */
 
 
-/* TODO : malloc error handle
- * TODO : find a proper buffer size
+ /* TODO : find a proper buffer size
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -23,7 +23,7 @@
 
 long crunch_serial (int _fd, long _counter[256], int _verbose);
 long crunch_parallel (int _fd, long _counter[256], int _verbose);
-
+void *Malloc (size_t size);
 
 long crunch_serial (int _fd, long _counter[256], int _verbose)
 {
@@ -35,7 +35,7 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 
 	/* allocate buffer and flush it */
 	char *_buf;
-	_buf = (char *)malloc (BF_BFSZ_SERI);
+	_buf = (char *)Malloc (BF_BFSZ_SERI);
 	if (_buf == NULL) exit (1);
 	bzero (_buf, BF_BFSZ_SERI);
 
@@ -67,7 +67,7 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 
 	/* allocate buffer and flush it */
 	char *_buf;
-	_buf = (char *)malloc (BF_BFSZ_PARA);
+	_buf = (char *)Malloc (BF_BFSZ_PARA);
 	if (_buf == NULL) exit (1);
 	bzero (_buf, BF_BFSZ_PARA);
 
@@ -84,4 +84,15 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 	/* free buffer and return */
 	free (_buf);
 	return _total_read;
+}
+
+void *
+Malloc (size_t size)
+{
+	void *_ptr;
+	if ((_ptr = malloc (size)) == NULL) {
+		perror ("malloc");
+		exit (EXIT_FAILURE);
+	}
+	return _ptr;
 }
