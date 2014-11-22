@@ -80,9 +80,7 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 	bzero (_counter, 256*sizeof(long));
 
 	/* allocate buffer and flush it */
-	char *_buf;
-	_buf = (char *)Malloc (BF_BFSZ_PARA);
-	if (_buf == NULL) exit (1);
+	char *_buf = (char *)Malloc (BF_BFSZ_PARA);
 	bzero (_buf, BF_BFSZ_PARA);
 
 	/* start crunching */
@@ -109,6 +107,8 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		fprintf (stderr, "* Error: crunch_unixsock() doesn't read stdin\n");
 		exit (EXIT_SUCCESS);
 	}
+	/* flush counter */
+	bzero (_counter, 256*sizeof(long));
 
 #define UNIXPATH "/tmp/bytefreq_socket_unix"
 	/* prepare misc */
@@ -117,14 +117,10 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	struct stat st;
 	fstat (_fd, &st);
 
-	/* prepare variables */
 	long _ret_tot = 0;
 
 	int unixfd[2];
 	bzero (unixfd, sizeof(unixfd));
-
-	struct sockaddr_un unixsock;
-	bzero (&unixsock, sizeof(unixsock));
 
 	/* launch socket */
 	Socketpair (AF_UNIX, SOCK_STREAM, 0, unixfd);
@@ -134,22 +130,38 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	bzero (tmp, 512);
 
 	/* child write unixfd[1], parent read unixfd[0] */
-	switch (pid = Fork()) {
-	case 0:
-		/* children */
+	if ((pid = Fork()) == 0) {
+		/* children's matter:
+		   just sendfile() */
 		close (unixfd[0]);
+		if (_verbose) fprintf (stderr, "* Child: start sendfile() to parent.\n");
 		sendfile (unixfd[1], _fd, NULL, st.st_size);
 		/* done sendfile(), quit */
 		close (unixfd[1]);
+		if (_verbose) fprintf (stderr, "* Child: done, exit.\n");
 		exit (EXIT_SUCCESS);
-		break;
-	default:
-		/* parent */
-		fprintf (stderr, "* Fork: child %d\n", pid);
-		read (unixfd[0], tmp, 512);
-		printf ("%s", tmp);
 	}
+		/* parent's matter:
+		   read from socket, and count */
+	close (unixfd[1]);
+	if (_verbose) fprintf (stderr, "* Fork: child %d\n", pid);
+	char *_buf = (char *) Malloc (BF_BFSZ_UNIX);
+	bzero (_buf, BF_BFSZ_UNIX);
 
+	int _readn;
+	int _loop;
+	if (_verbose) write (2, "!", 1);
+	while ((_readn = read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
+		if (_verbose) write (2, ".", 1);
+		_ret_tot += _readn;
+		for (_loop = 0; _loop < _readn; _loop++) {
+			_counter[(unsigned char)*(_buf+_loop)]++;
+		}
+	}
+	/* free buffer and return */
+	free (_buf);
+	if (_verbose) write (2, "!\n", 2);
+	close (unixfd[0]);
 	return _ret_tot;
 }
 /* ============================================================================ */

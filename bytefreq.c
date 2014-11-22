@@ -33,6 +33,7 @@ void Usage (char *pname)
 "  -V show version info\n"
 "  -v verbose mode\n"
 "  -p use parallel approach\n"
+"  -U use UNIX socket apprach (sendfile)\n"
 "  -d don't use percent output, use float instead\n"
 "  -A specify all bytes to count\n"
 "  -l specify lower to count\n"
