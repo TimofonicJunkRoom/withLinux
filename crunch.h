@@ -120,18 +120,8 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 long
 crunch_unixsock (int _fd, long _counter[256], int _verbose)
 {
-	/* BSD-style progress bar */
-	char bar[3];
-		bar[0] = '-';
-		bar[1] = '\\';
-		bar[2] = '/';
+	/* for tht BSD style bar */
 	int turn = 0;
-	char bb[5];
-		bb[0] = '\b';
-		bb[1] = '\b';
-		bb[2] = '-';
-		bb[3] = ']';
-		bb[4] = 0x00;
 
 	/* doesn't read stdin */
 	if (_fd == fileno(stdin)) {
@@ -182,19 +172,17 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	/* start to count */
 	int _readn;
 	int _loop;
-	if (_verbose) write (2, "[ ]", 3);
+	if (_verbose) write (2, "[ ] ...%", 8);
 	while ((_readn = read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
 		if (_verbose) {
-			bb[2] = bar[turn++];
-			write (2, bb, strnlen(bb, 5));
-			if (turn > 2) turn = 0;
+			BSDbar (&turn, (int)(100.0*_ret_tot/st.st_size));
 		}
 		_ret_tot += _readn;
 		for (_loop = 0; _loop < _readn; _loop++) {
 			_counter[(unsigned char)*(_buf+_loop)]++;
 		}
 	}
-	if (_verbose) write (2, "\b\bO]\n", 5);
+	if (_verbose) write (2, "\n", 1);
 	/* free buffer and return */
 	free (_buf);
 	close (unixfd[0]);
@@ -227,13 +215,12 @@ Sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
 void
 BSDbar (int *iptr, int num)
 {
-	/* "[ ]    " size 8 */
 	/* BSD-style progress bar */
-	char bar[3];
+	static char bar[3];
 		bar[0] = '-';
 		bar[1] = '\\';
 		bar[2] = '/';
-	char bb[8]; /* bar buffer */
+	static char bb[8]; /* bar buffer */
 		bb[0] = '[';
 		bb[1] = ' ';
 		bb[2] = ']';
