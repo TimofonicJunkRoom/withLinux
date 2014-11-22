@@ -1,12 +1,12 @@
 Bytefreq
 ========
 
-[C,util, UNIX-Like] Byte/Char Frequency, in choose-able reading approaches.  
+[C,util, UNIX-Like] Byte/Char Frequency, in choosable processing approaches.  
 
 [bytefreq.c](./bytefreq.c)  
 The Main Bytefreq utility, it can count Byte(or Char) frequency,  
 user can specify which set of bytes(chars) to be counted.  
-And it supports several reading approaches as following,  
+And it supports several processing approaches as following,  
 * [serial] this is the default option, infinite read() until EOF.  
 * [parallel] infinite read() until EOF, and count with OpenMP's simple multi-thread.  
 * [unix_socket] unix_socket + fork() + sendfile(), performance not tested.  
