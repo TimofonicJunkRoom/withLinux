@@ -148,6 +148,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	char *_buf = (char *) Malloc (BF_BFSZ_UNIX);
 	bzero (_buf, BF_BFSZ_UNIX);
 
+	/* start to count */
 	int _readn;
 	int _loop;
 	if (_verbose) write (2, "!", 1);

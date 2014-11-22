@@ -29,28 +29,29 @@ void Usage (char *pname)
 "  Only shows Total read size if no char specified.\n"
 "  If no <FILE> is given, it would count from the stdin.\n"
 "Options:\n"
-"  -h show this help message\n"
-"  -V show version info\n"
-"  -v verbose mode\n"
-"  -p use parallel approach\n"
-"  -U use UNIX socket apprach (sendfile)\n"
-"  -d don't use percent output, use float instead\n"
-"  -A specify all bytes to count\n"
-"  -l specify lower to count\n"
-"  -u specify upper to count\n"
-"  -s specify symbol to count\n"
-"  -c specify control character to count\n"
-"  -a specify alphabets to count (= '-lu')\n"
-"  -S specify a byte (decimal)\n"
+"  -h     show this help message\n"
+"  -V     show version info\n"
+"  -v     verbose mode\n"
+"  -d     don't use percent output, use float instead\n"
+"\n"
+"  -p     use parallel approach\n"
+"  -U     use UNIX socket apprach (sendfile)\n"
+"  -A     specify all bytes to count\n"
+"  -l     specify lower to count\n"
+"  -u     specify upper to count\n"
+"  -s     specify symbol to count\n"
+"  -c     specify control character to count\n"
+"  -a     specify alphabets to count (= '-lu')\n"
+"  -S <N> specify the byte N (decimal)\n"
 "  ...\n"
-"  for more info see -v\n", pname);
+"For more info see -v\n", pname);
 }
 
 void Version (char *pname)
 {
 	fprintf (stderr,
-"Version: 0.1.1 (2014/11/14)\n"
-"%s : Count Byte freqency in Serial/Parallel approach.\n"
+"Version: 2.0 (2014/11/22)\n"
+"%s : Count Byte freqency in different approaches.\n"
 "Author: C.D.Luminate / MIT Licence / 2014\n", pname);
 }
 /* ================================================= */
