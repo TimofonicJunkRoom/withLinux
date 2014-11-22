@@ -142,6 +142,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 
 	struct stat st;
 	fstat (_fd, &st);
+	if (_verbose) fprintf (stderr, "* debug: file size [%lld]\n", (long long)st.st_size);
 
 	long _ret_tot = 0;
 
@@ -160,8 +161,17 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		/* children's matter:
 		   just sendfile() */
 		close (unixfd[0]);
+		off_t _offset = 0;
+		size_t _count = (long long)st.st_size;
+		size_t sendn;
+
 		if (_verbose) fprintf (stderr, "* Child: start sendfile() to parent.\n");
-		sendfile (unixfd[1], _fd, NULL, st.st_size);
+		while ((sendn = sendfile (unixfd[1], _fd, &_offset, _count)) > 0) {
+			if (sendn == -1) {
+				perror ("sendfile");
+				exit (EXIT_FAILURE);
+			}
+		}
 		/* done sendfile(), quit */
 		close (unixfd[1]);
 		if (_verbose) fprintf (stderr, "* Child: done, exit.\n");
