@@ -35,6 +35,7 @@
 #define BF_BFSZ_PARA (524288*sizeof(char))
 #define BF_BFSZ_UNIX (262144*sizeof(char))
 
+/* interface */
 long crunch_serial (int _fd, long _counter[256], int _verbose);
 long crunch_parallel (int _fd, long _counter[256], int _verbose);
 long crunch_unixsock (int _fd, long _counter[256], int _verbose);
@@ -43,18 +44,17 @@ long crunch_unixsock (int _fd, long _counter[256], int _verbose);
 void *Malloc (size_t size);
 ssize_t Sendfile(int out_fd, int in_fd, off_t *offset, size_t count);
 
+/* other */
+void BSDbar (int *turn, int num);
+
+/* ============================================================================ */
 long crunch_serial (int _fd, long _counter[256], int _verbose)
 {
-	/* BSD-style progress bar */
-	char bar[3];
-		bar[0] = '-';
-		bar[1] = '\\';
-		bar[2] = '/';
-	int turn = 0;
-	char bb[3];
-		bb[0] = '\b';
-		bb[1] = '-';
-		bb[2] = 0x00;
+	/* stat */
+	struct stat st;
+	bzero (&st, sizeof(st));
+
+	fstat (_fd, &st);
 
 	/* the value to return */
 	long _total_read = 0;
@@ -69,14 +69,13 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 	bzero (_buf, BF_BFSZ_SERI);
 
 	/* start crunching */
+	int turn = 0; /* bsd bar */
 	int _loop;
 	long _readn;
-	if (_verbose) write (2, "!!", 2);
+	if (_verbose) write (2, "[ ] ...%", 8);
 	while ((_readn = read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
-		if (_verbose) {	
-			bb[1] = bar[turn++];
-			fprintf (stderr, "%s", bb);
-			if (turn > 2) turn = 0;
+		if (_verbose) {
+			BSDbar (&turn, (int)(100.0*_total_read/st.st_size));
 		}
 		_total_read += _readn;
 		/* #pragma omp parallel for */
@@ -84,7 +83,7 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 			_counter[(unsigned char)*(_buf+_loop)]++;
 		}
 	}
-	if (_verbose) write (2, "!\n", 2);
+	if (_verbose) write (2, "%\n", 2);
 	/* free buffer and return */
 	free (_buf);
 	return _total_read;
@@ -223,4 +222,30 @@ Sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
 		exit (EXIT_FAILURE);
 	}
 	return _;
+}
+
+void
+BSDbar (int *iptr, int num)
+{
+	/* "[ ]    " size 8 */
+	/* BSD-style progress bar */
+	char bar[3];
+		bar[0] = '-';
+		bar[1] = '\\';
+		bar[2] = '/';
+	char bb[8]; /* bar buffer */
+		bb[0] = '[';
+		bb[1] = ' ';
+		bb[2] = ']';
+		bb[3] = ' ';
+		bb[4] = ' '; //
+		bb[5] = ' '; //
+		bb[6] = ' '; //
+		bb[7] = '%';
+
+	if (*iptr > 2 || *iptr < 0) *iptr = 0;
+	write (2, "\b\b\b\b\b\b\b\b", 8);
+	snprintf (bb, 8, "[%c] %3d%%", bar[(*iptr)++], num);
+	write (2, bb, 8);
+	return;
 }
