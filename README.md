@@ -18,25 +18,26 @@ As following said, and additionally, ANSI color is used in the print funtion.
 ```
 $ bytefreq -h
 Usage:
-	./bytefreq [options] [FILE]
+  ./bytefreq [options] [FILE]
 Description:
-	Count the frequency of specified char.
-	Only shows Total read size if no char specified.
-	If no <FILE> is given, it would count from the stdin.
+  Count the frequency of specified char.
+  Only shows Total read size if no char specified.
+  If no <FILE> is given, it would count from the stdin.
 Options:
-	-h show this help message
-	-V show version info
-	-v verbose mode
-	-p use parallel approach
-	-d don't use percent output, use float instead
-	-A specify all bytes to count
-	-l specify lower to count
-	-u specify upper to count
-	-s specify symbol to count
-	-c specify control character to count
-	-a specify alphabets to count (= '-lu')
-	...
-	for more info see -v
+  -h show this help message
+  -V show version info
+  -v verbose mode
+  -p use parallel approach
+  -d don't use percent output, use float instead
+  -A specify all bytes to count
+  -l specify lower to count
+  -u specify upper to count
+  -s specify symbol to count
+  -c specify control character to count
+  -a specify alphabets to count (= '-lu')
+  -S specify a byte (decimal)
+  ...
+  for more info see -v
 ```
 In fact, the parallel approach (OpenMP) seems to have lower performance than normal Serial one.  
 So, likely that parallel computing doesn't help I/O intensive tasks much.  

@@ -6,6 +6,8 @@
    MIT Licence, 2014
  */
 
+// TODO : -S option does not accept 0x?? hex number (atoi)
+
 #include "crunch.h"
 #include "mark.h"
 
@@ -38,6 +40,7 @@ void Usage (char *pname)
 "  -s specify symbol to count\n"
 "  -c specify control character to count\n"
 "  -a specify alphabets to count (= '-lu')\n"
+"  -S specify a byte (decimal)\n"
 "  ...\n"
 "  for more info see -v\n", pname);
 }
@@ -109,7 +112,7 @@ main (int argc, char **argv)
 	bzero (count_mark, sizeof(count_mark));
 
 	/* parse option */
-	while ((opt = getopt(argc, argv, "hVpulAasndvc")) != -1) {
+	while ((opt = getopt(argc, argv, "hVpulAasndvcS:")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -160,6 +163,14 @@ main (int argc, char **argv)
 		case 'd':
 			/* don't use percent output */
 			dont_use_percent_output = 1;
+			break;
+		case 'S':
+			/* specify a byte (decimal) to count */
+			if (atoi(optarg) > 255 || atoi(optarg) < 0) {
+				fprintf (stderr, "%s: Specified an invalid byte.\n", argv[0]);
+				exit (EXIT_FAILURE);
+			}
+			count_mark[(unsigned int)atoi(optarg)] = 1;
 			break;
 		default:
 			Usage (argv[0]);
