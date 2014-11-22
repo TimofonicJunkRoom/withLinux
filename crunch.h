@@ -38,7 +38,10 @@
 long crunch_serial (int _fd, long _counter[256], int _verbose);
 long crunch_parallel (int _fd, long _counter[256], int _verbose);
 long crunch_unixsock (int _fd, long _counter[256], int _verbose);
+
+/* wrapper */
 void *Malloc (size_t size);
+ssize_t Sendfile(int out_fd, int in_fd, off_t *offset, size_t count);
 
 long crunch_serial (int _fd, long _counter[256], int _verbose)
 {
@@ -160,15 +163,9 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		close (unixfd[0]);
 		off_t _offset = 0;
 		size_t _count = (long long)st.st_size;
-		size_t sendn;
 
 		//if (_verbose) fprintf (stderr, "* Child: start sendfile() to parent.\n");
-		while ((sendn = sendfile (unixfd[1], _fd, &_offset, _count)) > 0) {
-			if (sendn == -1) {
-				perror ("sendfile");
-				exit (EXIT_FAILURE);
-			}
-		}
+		while (sendfile (unixfd[1], _fd, &_offset, _count) > 0) { ;}
 		/* done sendfile(), quit */
 		close (unixfd[1]);
 		if (_verbose) fprintf (stderr, "* Child: sendfile() finished, exit.\n");
@@ -213,4 +210,15 @@ Malloc (size_t size) /* wrapper for malloc(3) */
 		exit (EXIT_FAILURE);
 	}
 	return _ptr;
+}
+
+ssize_t
+Sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
+{
+	ssize_t _ = sendfile (out_fd, in_fd, offset, count);
+	if (_ == -1) {
+		perror ("sendfile");
+		exit (EXIT_FAILURE);
+	}
+	return _;
 }
