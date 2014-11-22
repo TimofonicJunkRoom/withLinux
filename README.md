@@ -1,12 +1,16 @@
 Bytefreq
 ========
 
-[C,util, UNIX-Like] Byte/Char Frequency, Serial/Parallel.  
+[C,util, UNIX-Like] Byte/Char Frequency, in choose-able reading approaches.  
 
 [bytefreq.c](./bytefreq.c)  
-The Main Bytefreq utility, it supports both serial and parallel count approaches,
-	and the performance of them need to be tested.  
-The parallel appraoch is implemented with OpenMP, with juse one "#pragma" added.  
+The Main Bytefreq utility, it can count Byte(or Char) frequency,  
+user can specify which set of bytes(chars) to be counted.  
+And it supports several reading approaches as following,  
+* [serial] this is the default option, infinite read() until EOF.  
+* [parallel] infinite read() until EOF, and count with OpenMP's simple multi-thread.  
+* [unix_socket] unix_socket + fork() + sendfile(), performance not tested.  
+  
 [util/a8lu.c](./util/a8lu.c)     
 Convert alphabets between upper and lower case.   
 [util/a8shift.c](./util/a8shift.c)  
@@ -14,33 +18,42 @@ Shift alphabets by (+/-)N positions in alphabet list.
   
 ---
 ### Bytefreq
-As following said, and additionally, ANSI color is used in the print funtion.  
+We can also do some I/O performance experiments with this utility,  
+as it offers 3 kinds of reading methods.  
 ```
 $ bytefreq -h
 Usage:
   ./bytefreq [options] [FILE]
 Description:
-  Count the frequency of specified char.
+  Count frequency of specified set of Bytes/Char.
   Only shows Total read size if no char specified.
-  If no <FILE> is given, it would count from the stdin.
+  If given no <FILE>, it would read from the stdin.
 Options:
-  -h show this help message
-  -V show version info
-  -v verbose mode
-  -p use parallel approach
-  -d don't use percent output, use float instead
-  -A specify all bytes to count
-  -l specify lower to count
-  -u specify upper to count
-  -s specify symbol to count
-  -c specify control character to count
-  -a specify alphabets to count (= '-lu')
-  -S specify a byte (decimal)
+  -h     show this help message
+  -V     show version info
+  -v     verbose mode
+  -d     don't use percent output, use float instead
+
+  -p     use parallel approach
+  -U     use UNIX socket apprach (sendfile)
+  -A     specify all bytes to count
+  -l     specify lower to count
+  -u     specify upper to count
+  -s     specify symbol to count
+  -c     specify control character to count
+  -a     specify alphabets to count (= '-lu')
+  -S <N> specify the byte N (decimal)
   ...
-  for more info see -v
+For more info see -v
 ```
+Additionally, ANSI color is used in the print funtion.  
 In fact, the parallel approach (OpenMP) seems to have lower performance than normal Serial one.  
 So, likely that parallel computing doesn't help I/O intensive tasks much.  
+As for sendfile(), man page says it has better performance than infinite read and write.  
+  
+By the way, having analyzed the freqency of bytes/chars, we can do something
+further, such as decode substitude cipher (which is a kind of classic encryption method).  
+  
 Demo:
 ```
 $ ./bytefreq -l bytefreq.c

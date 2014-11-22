@@ -10,6 +10,7 @@
 
  /* TODO : find a proper buffer size
  */
+// TODO : use mmap to optimize crunch_serial
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -136,25 +137,21 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	/* flush counter */
 	bzero (_counter, 256*sizeof(long));
 
-#define UNIXPATH "/tmp/bytefreq_socket_unix"
 	/* prepare misc */
 	pid_t pid;
 
 	struct stat st;
-	fstat (_fd, &st);
+		fstat (_fd, &st);
 	if (_verbose) fprintf (stderr, "* debug: file size [%lld]\n", (long long)st.st_size);
 
 	long _ret_tot = 0;
 
 	int unixfd[2];
-	bzero (unixfd, sizeof(unixfd));
+		bzero (unixfd, sizeof(unixfd));
 
 	/* launch socket */
 	Socketpair (AF_UNIX, SOCK_STREAM, 0, unixfd);
 	if (_verbose) fprintf (stderr, "* UNIX: initialized socket\n");
-
-	char tmp[512];
-	bzero (tmp, 512);
 
 	/* child write unixfd[1], parent read unixfd[0] */
 	if ((pid = Fork()) == 0) {
@@ -165,7 +162,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		size_t _count = (long long)st.st_size;
 		size_t sendn;
 
-		if (_verbose) fprintf (stderr, "* Child: start sendfile() to parent.\n");
+		//if (_verbose) fprintf (stderr, "* Child: start sendfile() to parent.\n");
 		while ((sendn = sendfile (unixfd[1], _fd, &_offset, _count)) > 0) {
 			if (sendn == -1) {
 				perror ("sendfile");
@@ -180,7 +177,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		/* parent's matter:
 		   read from socket, and count */
 	close (unixfd[1]);
-	if (_verbose) fprintf (stderr, "* Fork: child %d\n", pid);
+	if (_verbose) fprintf (stderr, "* Forked child %d is doing sendfile()...\n", pid);
 	char *_buf = (char *) Malloc (BF_BFSZ_UNIX);
 	bzero (_buf, BF_BFSZ_UNIX);
 
