@@ -127,10 +127,12 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		bar[1] = '\\';
 		bar[2] = '/';
 	int turn = 0;
-	char bb[3];
+	char bb[5];
 		bb[0] = '\b';
-		bb[1] = '-';
-		bb[2] = 0x00;
+		bb[1] = '\b';
+		bb[2] = '-';
+		bb[3] = ']';
+		bb[4] = 0x00;
 
 	/* doesn't read stdin */
 	if (_fd == fileno(stdin)) {
@@ -145,7 +147,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 
 	struct stat st;
 		fstat (_fd, &st);
-	if (_verbose) fprintf (stderr, "* debug: file size [%lld]\n", (long long)st.st_size);
+	if (_verbose>1) fprintf (stderr, "* debug: file size [%lld]\n", (long long)st.st_size);
 
 	long _ret_tot = 0;
 
@@ -154,7 +156,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 
 	/* launch socket */
 	Socketpair (AF_UNIX, SOCK_STREAM, 0, unixfd);
-	if (_verbose) fprintf (stderr, "* UNIX: initialized socket\n");
+	if (_verbose>1) fprintf (stderr, "* UNIX: initialized socket\n");
 
 	/* child write unixfd[1], parent read unixfd[0] */
 	if ((pid = Fork()) == 0) {
@@ -164,11 +166,11 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		off_t _offset = 0;
 		size_t _count = (long long)st.st_size;
 
-		//if (_verbose) fprintf (stderr, "* Child: start sendfile() to parent.\n");
+		if (_verbose>1) fprintf (stderr, "* Child: start sendfile() to parent.\n");
 		while (sendfile (unixfd[1], _fd, &_offset, _count) > 0) { ;}
 		/* done sendfile(), quit */
 		close (unixfd[1]);
-		if (_verbose) fprintf (stderr, "* Child: sendfile() finished, exit.\n");
+		if (_verbose>1) fprintf (stderr, "* Child: sendfile() finished, exit.\n");
 		exit (EXIT_SUCCESS);
 	}
 		/* parent's matter:
@@ -181,11 +183,11 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	/* start to count */
 	int _readn;
 	int _loop;
-	if (_verbose) write (2, "!!", 2);
+	if (_verbose) write (2, "[ ]", 3);
 	while ((_readn = read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
 		if (_verbose) {
-			bb[1] = bar[turn++];
-			fprintf (stderr, "%s", bb);
+			bb[2] = bar[turn++];
+			write (2, bb, strnlen(bb, 5));
 			if (turn > 2) turn = 0;
 		}
 		_ret_tot += _readn;
@@ -193,7 +195,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 			_counter[(unsigned char)*(_buf+_loop)]++;
 		}
 	}
-	if (_verbose) write (2, "!\n", 2);
+	if (_verbose) write (2, "\b\bO]\n", 5);
 	/* free buffer and return */
 	free (_buf);
 	close (unixfd[0]);
