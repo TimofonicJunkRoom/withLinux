@@ -19,9 +19,15 @@
 
 #include <omp.h>
 
+/* used by crunch_unixsock */
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/sendfile.h>
+
 #include "sock_wrapper.h"
+/* end use of crunch_unixsock */
 
 /* 131072 Bytes, 128KB buffer */
 #define BF_BFSZ_SERI (131072*sizeof(char))
@@ -98,8 +104,18 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 long
 crunch_unixsock (int _fd, long _counter[256], int _verbose)
 {
+	/* doesn't read stdin */
+	if (_fd == fileno(stdin)) {
+		fprintf (stderr, "* Error: crunch_unixsock() doesn't read stdin\n");
+		exit (EXIT_SUCCESS);
+	}
+
 #define UNIXPATH "/tmp/bytefreq_socket_unix"
+	/* prepare misc */
 	pid_t pid;
+
+	struct stat st;
+	fstat (_fd, &st);
 
 	/* prepare variables */
 	long _ret_tot = 0;
@@ -117,12 +133,13 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	char tmp[512];
 	bzero (tmp, 512);
 
-	switch (pid = fork()) {
+	/* child write unixfd[1], parent read unixfd[0] */
+	switch (pid = Fork()) {
 	case 0:
 		/* children */
 		close (unixfd[0]);
-		write (unixfd[1], "hello", 6);
-
+		sendfile (unixfd[1], _fd, NULL, st.st_size);
+		/* done sendfile(), quit */
 		close (unixfd[1]);
 		exit (EXIT_SUCCESS);
 		break;
