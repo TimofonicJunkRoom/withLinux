@@ -14,15 +14,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <unistd.h>
+
 #include <omp.h>
+
+#include <sys/socket.h>
+#include <sys/un.h>
+#include "sock_wrapper.h"
 
 /* 131072 Bytes, 128KB buffer */
 #define BF_BFSZ_SERI (131072*sizeof(char))
 #define BF_BFSZ_PARA (524288*sizeof(char))
+#define BF_BFSZ_UNIX (262144*sizeof(char))
 
 long crunch_serial (int _fd, long _counter[256], int _verbose);
 long crunch_parallel (int _fd, long _counter[256], int _verbose);
+long crunch_unixsock (int _fd, long _counter[256], int _verbose);
 void *Malloc (size_t size);
 
 long crunch_serial (int _fd, long _counter[256], int _verbose)
@@ -86,8 +94,51 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 	return _total_read;
 }
 
+/* ============================================================================ */
+long
+crunch_unixsock (int _fd, long _counter[256], int _verbose)
+{
+#define UNIXPATH "/tmp/bytefreq_socket_unix"
+	pid_t pid;
+
+	/* prepare variables */
+	long _ret_tot = 0;
+
+	int unixfd[2];
+	bzero (unixfd, sizeof(unixfd));
+
+	struct sockaddr_un unixsock;
+	bzero (&unixsock, sizeof(unixsock));
+
+	/* launch socket */
+	Socketpair (AF_UNIX, SOCK_STREAM, 0, unixfd);
+	if (_verbose) fprintf (stderr, "* UNIX: initialized socket\n");
+
+	char tmp[512];
+	bzero (tmp, 512);
+
+	switch (pid = fork()) {
+	case 0:
+		/* children */
+		close (unixfd[0]);
+		write (unixfd[1], "hello", 6);
+
+		close (unixfd[1]);
+		exit (EXIT_SUCCESS);
+		break;
+	default:
+		/* parent */
+		fprintf (stderr, "* Fork: child %d\n", pid);
+		read (unixfd[0], tmp, 512);
+		printf ("%s", tmp);
+	}
+
+	return _ret_tot;
+}
+/* ============================================================================ */
+
 void *
-Malloc (size_t size)
+Malloc (size_t size) /* wrapper for malloc(3) */
 {
 	void *_ptr;
 	if ((_ptr = malloc (size)) == NULL) {

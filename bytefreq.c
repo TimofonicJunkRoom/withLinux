@@ -112,7 +112,7 @@ main (int argc, char **argv)
 	bzero (count_mark, sizeof(count_mark));
 
 	/* parse option */
-	while ((opt = getopt(argc, argv, "hVpulAasndvcS:")) != -1) {
+	while ((opt = getopt(argc, argv, "hVpulAasndvcS:U")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -171,6 +171,10 @@ main (int argc, char **argv)
 				exit (EXIT_FAILURE);
 			}
 			count_mark[(unsigned int)atoi(optarg)] = 1;
+			break;
+		case 'U':
+			/* use crunch_unixsock */
+			Crunch = crunch_unixsock;
 			break;
 		default:
 			Usage (argv[0]);
