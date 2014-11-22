@@ -41,6 +41,17 @@ void *Malloc (size_t size);
 
 long crunch_serial (int _fd, long _counter[256], int _verbose)
 {
+	/* BSD-style progress bar */
+	char bar[3];
+		bar[0] = '-';
+		bar[1] = '\\';
+		bar[2] = '/';
+	int turn = 0;
+	char bb[3];
+		bb[0] = '\b';
+		bb[1] = '-';
+		bb[2] = 0x00;
+
 	/* the value to return */
 	long _total_read = 0;
 
@@ -56,18 +67,22 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 	/* start crunching */
 	int _loop;
 	long _readn;
-	if (_verbose) write (2, "!", 1);
+	if (_verbose) write (2, "!!", 2);
 	while ((_readn = read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
-		if (_verbose) write (2, ".", 1);
+		if (_verbose) {	
+			bb[1] = bar[turn++];
+			fprintf (stderr, "%s", bb);
+			if (turn > 2) turn = 0;
+		}
 		_total_read += _readn;
 		/* #pragma omp parallel for */
 		for (_loop = 0; _loop < _readn; _loop++) {
 			_counter[(unsigned char)*(_buf+_loop)]++;
 		}
 	}
+	if (_verbose) write (2, "!\n", 2);
 	/* free buffer and return */
 	free (_buf);
-	if (_verbose) write (2, "!\n", 2);
 	return _total_read;
 }
 
@@ -102,6 +117,17 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 long
 crunch_unixsock (int _fd, long _counter[256], int _verbose)
 {
+	/* BSD-style progress bar */
+	char bar[3];
+		bar[0] = '-';
+		bar[1] = '\\';
+		bar[2] = '/';
+	int turn = 0;
+	char bb[3];
+		bb[0] = '\b';
+		bb[1] = '-';
+		bb[2] = 0x00;
+
 	/* doesn't read stdin */
 	if (_fd == fileno(stdin)) {
 		fprintf (stderr, "* Error: crunch_unixsock() doesn't read stdin\n");
@@ -151,17 +177,21 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	/* start to count */
 	int _readn;
 	int _loop;
-	if (_verbose) write (2, "!", 1);
+	if (_verbose) write (2, "!!", 2);
 	while ((_readn = read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
-		if (_verbose) write (2, ".", 1);
+		if (_verbose) {
+			bb[1] = bar[turn++];
+			fprintf (stderr, "%s", bb);
+			if (turn > 2) turn = 0;
+		}
 		_ret_tot += _readn;
 		for (_loop = 0; _loop < _readn; _loop++) {
 			_counter[(unsigned char)*(_buf+_loop)]++;
 		}
 	}
+	if (_verbose) write (2, "!\n", 2);
 	/* free buffer and return */
 	free (_buf);
-	if (_verbose) write (2, "!\n", 2);
 	close (unixfd[0]);
 	return _ret_tot;
 }
