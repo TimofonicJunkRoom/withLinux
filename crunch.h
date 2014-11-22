@@ -75,7 +75,7 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 	if (_verbose) write (2, "[ ] ...%", 8);
 	while ((_readn = read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
 		if (_verbose) {
-			BSDbar (&turn, (int)(100.0*_total_read/st.st_size));
+			BSDbar (&turn, (int)(100.0*(1+_total_read/st.st_size)));
 		}
 		_total_read += _readn;
 		/* #pragma omp parallel for */
@@ -175,7 +175,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	if (_verbose) write (2, "[ ] ...%", 8);
 	while ((_readn = read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
 		if (_verbose) {
-			BSDbar (&turn, (int)(100.0*_ret_tot/st.st_size));
+			BSDbar (&turn, (int)(100.0*(1+_ret_tot/st.st_size)));
 		}
 		_ret_tot += _readn;
 		for (_loop = 0; _loop < _readn; _loop++) {
