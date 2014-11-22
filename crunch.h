@@ -171,13 +171,13 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		}
 		/* done sendfile(), quit */
 		close (unixfd[1]);
-		if (_verbose) fprintf (stderr, "* Child: done, exit.\n");
+		if (_verbose) fprintf (stderr, "* Child: sendfile() finished, exit.\n");
 		exit (EXIT_SUCCESS);
 	}
 		/* parent's matter:
 		   read from socket, and count */
 	close (unixfd[1]);
-	if (_verbose) fprintf (stderr, "* Forked child %d is doing sendfile()...\n", pid);
+	if (_verbose) fprintf (stderr, "* Forked child %d is trying its best running sendfile()...\n", pid);
 	char *_buf = (char *) Malloc (BF_BFSZ_UNIX);
 	bzero (_buf, BF_BFSZ_UNIX);
 
