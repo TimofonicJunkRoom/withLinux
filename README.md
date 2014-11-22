@@ -10,6 +10,8 @@ And it supports several processing approaches as following,
 * [serial] this is the default option, infinite read() until EOF.  
 * [parallel] infinite read() until EOF, and count with OpenMP's simple multi-thread.  
 * [unix_socket] unix_socket + fork() + sendfile(), performance not tested.  
+And some feature:  
+* [BSD-like status bar with progress number]  
   
 [util/a8lu.c](./util/a8lu.c)     
 Convert alphabets between upper and lower case.   

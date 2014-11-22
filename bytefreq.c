@@ -50,7 +50,7 @@ void Usage (char *pname)
 void Version (char *pname)
 {
 	fprintf (stderr,
-"Version: 2.0 (2014/11/22)\n"
+"Version: 2.1 (2014/11/22)\n"
 "%s : Count Byte freqency in different approaches.\n"
 "Author: C.D.Luminate / MIT Licence / 2014\n", pname);
 }
