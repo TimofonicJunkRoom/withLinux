@@ -231,11 +231,11 @@ main (int argc, char **argv)
 			fprintf (stdout, "\x1B[32m");
 
 		if (dont_use_percent_output)
-			fprintf (stdout, "(0x%1$x, %2$c)    %3$12ld    %5$12.8lf    %4$12.8lf\n", loop, loop,
+			fprintf (stdout, "(0x%1$x, '%2$c')    %3$12ld    %5$12.8lf    %4$12.8lf\n", loop, loop,
 				 counter[loop], (double)counter[loop]/countertot.total_spec,
 				 (double)counter[loop]/countertot.total_byte);
 		else
-			fprintf (stdout, "(0x%1$x, %2$c)    %3$12ld   %5$11.3lf %%   %4$11.3lf %%\n", loop, loop,
+			fprintf (stdout, "(0x%1$x, '%2$c')    %3$12ld   %5$11.3lf %%   %4$11.3lf %%\n", loop, loop,
 				 counter[loop], (double)100.0*counter[loop]/countertot.total_spec,
 				 (double)100.0*counter[loop]/countertot.total_byte);
 
@@ -243,16 +243,17 @@ main (int argc, char **argv)
 	}
 
 	/* ###### summary ####### */
-	fprintf (stdout, "Maximous of specified : (0x%X  %c) : \x1B[33m%ld\x1B[m\n",
+	fprintf (stdout, "Maximous of specified : (0x%X  '%c') : \x1B[33m%ld\x1B[m\n",
 		 extr.spec_max_char, extr.spec_max_char, extr.spec_max);
-	fprintf (stdout, "Minimous of specified : (0x%X, %c) : \x1B[33m%ld\x1B[m\n",
+	fprintf (stdout, "Minimous of specified : (0x%X, '%c') : \x1B[33m%ld\x1B[m\n",
 		 extr.spec_min_char, extr.spec_min_char, extr.spec_min);
-	fprintf (stdout, "The Math Expection    : (0x%X, %c)\n",
-		 (char)expection(counter), (char)expection(counter));
+	fprintf (stdout, "The Math Expection    : (0x%X, '%c', dec %d)\n",
+		 (char)expection(counter), (char)expection(counter), expection(counter));
 	fprintf (stdout, "Total bytes specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
-			countertot.total_spec,
-			(double)100.0*countertot.total_spec/countertot.total_byte);
-	fprintf (stdout, "Total bytes read()    : \x1B[33m%ld\x1B[m\n", total_read);
+	 	 countertot.total_spec,
+		 (double)100.0*countertot.total_spec/countertot.total_byte);
+	fprintf (stdout, "Total bytes read()    : \x1B[33m%ld\x1B[m\n",
+	         total_read);
 	
 	return 0;
 }
