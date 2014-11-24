@@ -44,8 +44,10 @@ long crunch_unixsock (int _fd, long _counter[256], int _verbose);
 void *Malloc (size_t size);
 ssize_t Sendfile(int out_fd, int in_fd, off_t *offset, size_t count);
 
-/* other */
-void BSDbar (int *turn, int num);
+/* the BSD-style progress bar */
+void BSDbar_init (void);
+void BSDbar_refresh (int *turn, int num);
+void BSDbar_clear (void);
 
 /* ============================================================================ */
 long crunch_serial (int _fd, long _counter[256], int _verbose)
@@ -72,10 +74,10 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 	int turn = 0; /* bsd bar */
 	int _loop;
 	long _readn;
-	if (_verbose) write (2, "[ ] ...%", 8);
+	if (_verbose) BSDbar_init ();
 	while ((_readn = read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
 		if (_verbose) {
-			BSDbar (&turn, (int)(1.0+100.0*((float)_total_read/st.st_size)));
+			BSDbar_refresh (&turn, (int)(1.0+100.0*((float)_total_read/st.st_size)));
 		}
 		_total_read += _readn;
 		/* #pragma omp parallel for */
@@ -83,7 +85,10 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 			_counter[(unsigned char)*(_buf+_loop)]++;
 		}
 	}
-	if (_verbose) write (2, "%\n", 2);
+	if (_verbose) {
+		BSDbar_clear ();
+		write (2, "\n", 2);
+	}
 	/* free buffer and return */
 	free (_buf);
 	return _total_read;
@@ -172,17 +177,20 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	/* start to count */
 	int _readn;
 	int _loop;
-	if (_verbose) write (2, "[ ] ...%", 8);
+	if (_verbose) BSDbar_init();
 	while ((_readn = read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
 		if (_verbose) {
-			BSDbar (&turn, (int)(1.0+100.0*((float)_ret_tot/st.st_size)));
+			BSDbar_refresh (&turn, (int)(1.0+100.0*((float)_ret_tot/st.st_size)));
 		}
 		_ret_tot += _readn;
 		for (_loop = 0; _loop < _readn; _loop++) {
 			_counter[(unsigned char)*(_buf+_loop)]++;
 		}
 	}
-	if (_verbose) write (2, "\n", 1);
+	if (_verbose) {
+		BSDbar_clear ();
+		write (2, "\n", 1);
+	}
 	/* free buffer and return */
 	free (_buf);
 	close (unixfd[0]);
@@ -213,9 +221,9 @@ Sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
 }
 
 void
-BSDbar (int *iptr, int num)
+BSDbar_refresh (int *iptr, int num)
 {
-	/* BSD-style progress bar */
+	/* refresh BSD-style progress bar */
 	static char bar[3];
 		bar[0] = '-';
 		bar[1] = '\\';
@@ -234,5 +242,19 @@ BSDbar (int *iptr, int num)
 	write (2, "\b\b\b\b\b\b\b\b", 8);
 	snprintf (bb, 8, "[%c] %3d%%", bar[(*iptr)++], num);
 	write (2, bb, 8);
+	return;
+}
+
+void
+BSDbar_init (void)
+{
+	write (2, "[ ] ...%", 8);
+	return;
+}
+
+void
+BSDbar_clear (void)
+{
+	write (2, "\b\b\b\b\b\b\b\b        ", 16);
 	return;
 }

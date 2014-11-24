@@ -247,7 +247,7 @@ main (int argc, char **argv)
 		 extr.spec_max_char, extr.spec_max_char, extr.spec_max);
 	fprintf (stdout, "Minimous of specified : (0x%X, '%c') : \x1B[33m%ld\x1B[m\n",
 		 extr.spec_min_char, extr.spec_min_char, extr.spec_min);
-	fprintf (stdout, "The Math Expection    : (0x%X, '%c', dec %d)\n",
+	fprintf (stdout, "The Math Expection    : (0x%X, '%c', dec \x1B[33m%d\x1B[m)\n",
 		 (char)expection(counter), (char)expection(counter), expection(counter));
 	fprintf (stdout, "Total bytes specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
 	 	 countertot.total_spec,
