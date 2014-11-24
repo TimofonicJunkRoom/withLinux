@@ -31,9 +31,9 @@
 /* end use of crunch_unixsock */
 
 /* 131072 Bytes, 128KB buffer */
-#define BF_BFSZ_SERI (131072*sizeof(char))
-#define BF_BFSZ_PARA (524288*sizeof(char))
-#define BF_BFSZ_UNIX (262144*sizeof(char))
+#define BF_BFSZ_SERI (524288*sizeof(char))
+#define BF_BFSZ_PARA (4194304*sizeof(char))
+#define BF_BFSZ_UNIX (1048576*sizeof(char))
 
 /* interface */
 long crunch_serial (int _fd, long _counter[256], int _verbose);
@@ -170,7 +170,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		/* parent's matter:
 		   read from socket, and count */
 	close (unixfd[1]);
-	if (_verbose) fprintf (stderr, "* Forked child %d is trying its best running sendfile()...\n", pid);
+	if (_verbose>1) fprintf (stderr, "* Forked child %d is trying its best running sendfile()...\n", pid);
 	char *_buf = (char *) Malloc (BF_BFSZ_UNIX);
 	bzero (_buf, BF_BFSZ_UNIX);
 
