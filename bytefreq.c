@@ -9,6 +9,8 @@
 // TODO : -S option does not accept 0x?? hex number (atoi)
 /* FIXME : when user's file size exceeds max_of(long), overflow. */
 
+#define BYTEFREQ_VERSION "Version: 2.2 (2014/11/24)\n"
+
 #include "crunch.h"
 #include "mark.h"
 
@@ -51,7 +53,7 @@ void Usage (char *pname)
 void Version (char *pname)
 {
 	fprintf (stderr,
-"Version: 2.1 (2014/11/22)\n"
+BYTEFREQ_VERSION
 "%s : Count Byte freqency in different approaches.\n"
 "Author: C.D.Luminate / MIT Licence / 2014\n", pname);
 }
