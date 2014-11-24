@@ -7,6 +7,7 @@
  */
 
 // TODO : -S option does not accept 0x?? hex number (atoi)
+/* FIXME : when user's file size exceeds max_of(long), overflow. */
 
 #include "crunch.h"
 #include "mark.h"
@@ -99,10 +100,12 @@ struct bytefreq_ex {
 
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256], int _verbose);
+
 int no_mark_set (int _mark[256]);
 void find_spec_extreme (struct bytefreq_ex *_ex, int _mark[256], long _counter[256]);
 void find_byte_extreme (struct bytefreq_ex *_ex, long _counter[256]);
 void find_total (struct bytefreq_tot *_tot, int _mark[256], long _counter[256]);
+int expection (long _counter[256]);
 
 /* ----------------------------------------------------------- */
 int
@@ -244,10 +247,12 @@ main (int argc, char **argv)
 		 extr.spec_max_char, extr.spec_max_char, extr.spec_max);
 	fprintf (stdout, "Minimous of specified : (0x%X, %c) : \x1B[33m%ld\x1B[m\n",
 		 extr.spec_min_char, extr.spec_min_char, extr.spec_min);
-	fprintf (stdout, "Total specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
+	fprintf (stdout, "The Math Expection    : (0x%X, %c)\n",
+		 (char)expection(counter), (char)expection(counter));
+	fprintf (stdout, "Total bytes specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
 			countertot.total_spec,
 			(double)100.0*countertot.total_spec/countertot.total_byte);
-	fprintf (stdout, "Total read()    : \x1B[33m%ld\x1B[m\n", total_read);
+	fprintf (stdout, "Total bytes read()    : \x1B[33m%ld\x1B[m\n", total_read);
 	
 	return 0;
 }
@@ -334,4 +339,18 @@ find_total (struct bytefreq_tot *_tot, int _mark[256], long _counter[256])
 			_tot -> total_spec += _counter[_lo];
 	}
 	return;
+}
+
+int
+expection (long _counter[256])
+{
+	/* calculate the average char among the whole counter array */
+	long _tot = 0;
+	long _cxn = 0;
+	int _t;
+	for (_t = 0; _t < 256; _t++) {
+		_tot += _counter[_t];
+		_cxn += _counter[_t] * _t;
+	}
+	return (int)(_cxn/_tot);
 }
