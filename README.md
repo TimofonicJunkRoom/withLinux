@@ -5,7 +5,7 @@ Bytefreq
 Bytefreq aims to figure out the freqency of each byte or character.  
   
 ##### Feature:  
-* Following data would be printed by default:
+* Following data would be printed by default, see [DEMO](# Bytefreq Demo):
   1. Among bytes specified, which one enjoys the [maximum/minimum]() freqency.
   2. The [mathematical expectation]() of all bytes.
   3. The number of bytes that specified by user, and proportion.
@@ -27,36 +27,7 @@ Bytefreq aims to figure out the freqency of each byte or character.
 * The parallel approach (OpenMP) seems to have lower performance than normal Serial one. So, likely that parallel computing doesn't help I/O intensive tasks much.  
 * having analyzed the freqency of bytes/chars, we can do something further, such as decode substitude cipher (which is a kind of classic encryption method), the utilities described below may do somthing related.    
   
-### Bytefreq help message
 
-```
-$ bytefreq -h
-Usage:
-  bytefreq [options] [FILE]
-Description:
-  Count frequency of specified set of Bytes/Char.
-  Only shows Total read size if no char specified.
-  If given no <FILE>, it would read from the stdin.
-Options:
-  -h     show this help message
-  -V     show version info
-  -v     verbose mode
-  -d     don't use percent output, use float instead
-
-  -p     use parallel approach
-  -U     use UNIX socket apprach (sendfile)
-  -A     specify all bytes to count
-  -l     specify lower to count
-  -u     specify upper to count
-  -s     specify symbol to count
-  -c     specify control character to count
-  -a     specify alphabets to count (= '-lu')
-  -S <N> specify the byte N (decimal)
-  ...
-For more info see -v
-
-```
-  
 ### Bytefreq Demo
 ```
 $ bytefreq bytefreq -l
@@ -97,6 +68,37 @@ Total bytes specified : 1690, 10.751%
 Total bytes read()    : 15720
 ```
 
+
+### Bytefreq help message
+
+```
+$ bytefreq -h
+Usage:
+  bytefreq [options] [FILE]
+Description:
+  Count frequency of specified set of Bytes/Char.
+  Only shows Total read size if no char specified.
+  If given no <FILE>, it would read from the stdin.
+Options:
+  -h     show this help message
+  -V     show version info
+  -v     verbose mode
+  -d     don't use percent output, use float instead
+
+  -p     use parallel approach
+  -U     use UNIX socket apprach (sendfile)
+  -A     specify all bytes to count
+  -l     specify lower to count
+  -u     specify upper to count
+  -s     specify symbol to count
+  -c     specify control character to count
+  -a     specify alphabets to count (= '-lu')
+  -S <N> specify the byte N (decimal)
+  ...
+For more info see -v
+
+```
+  
 ### Compile
 just make.  
 It works on Debian GNU/Linux.
