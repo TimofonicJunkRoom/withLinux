@@ -1,31 +1,38 @@
 Bytefreq
 ========
 
-[C,util, UNIX-Like] Byte/Char Frequency, in choosable processing approaches.  
+[C, utility, Linux platform]  
+Bytefreq aims to figure out the freqency of each byte or character.  
+  
+##### Feature:  
+* Whether user select character sets (see below) or not, these data would be printed:
+  1. Among bytes specified to count, which one enjoys the [maximum/minimum] freqency.
+  2. The [mathematical expectation] of all bytes.
+  3. The number of bytes that specified by user, and its proportion.
+  4. Total read size, should be same to the answer of stat().
+* data processing approaches are choosable.  
+  1. [serial] default action, in this way bytefreq will infinitely read() and count until EOF.  
+  2. [parallel] option '-p', in this way bytefreq will infinitely read() and count them in 4-thread parallel approach.  
+  3. [unix_socket] option '-U', in this way bytefreq will open an UNIX socket and read data with sendfile().  
+* user can specify the character set that they want to count, here are some available sets, which can be combined randomly.  
+  1. control character, symbols (option -c -s)
+  2. upper and lower, alphabets also do (option -u -l -a)
+  3. count all bytes (option -A)
+  4. specify a single byte (option -S)  
+* ANSI color used, that is, the character enjoys the highest freqency among specified would be printed in RED, likewise the lowest in GREEN. Besides, some important statistics also highlighted in YELLOW.
+* when '-v' (verbose) option specified, it will show a BSD-style-like progress bar (spinning bar and proportion number).
+  
+##### Info:  
+* We can also do some I/O performance experiments with this utility, as it offers 3 kinds of reading method.  
+* The parallel approach (OpenMP) seems to have lower performance than normal Serial one. So, likely that parallel computing doesn't help I/O intensive tasks much.  
+* having analyzed the freqency of bytes/chars, we can do something further, such as decode substitude cipher (which is a kind of classic encryption method), the utilities described below may do somthing related.    
+  
+### Bytefreq help message
 
-[bytefreq.c](./bytefreq.c)  
-The Main Bytefreq utility, it can count Byte(or Char) frequency,  
-user can specify which set of bytes(chars) to be counted.  
-And it supports several processing approaches as following,  
-* [serial] this is the default option, infinite read() until EOF.  
-* [parallel] infinite read() until EOF, and count with OpenMP's simple multi-thread.  
-* [unix_socket] unix_socket + fork() + sendfile(), performance not tested.  
-And some feature:  
-* [BSD-like status bar with progress number]  
-  
-[util/a8lu.c](./util/a8lu.c)     
-Convert alphabets between upper and lower case.   
-[util/a8shift.c](./util/a8shift.c)  
-Shift alphabets by (+/-)N positions in alphabet list.  
-  
----
-### Bytefreq
-We can also do some I/O performance experiments with this utility,  
-as it offers 3 kinds of reading methods.  
 ```
 $ bytefreq -h
 Usage:
-  ./bytefreq [options] [FILE]
+  bytefreq [options] [FILE]
 Description:
   Count frequency of specified set of Bytes/Char.
   Only shows Total read size if no char specified.
@@ -47,54 +54,60 @@ Options:
   -S <N> specify the byte N (decimal)
   ...
 For more info see -v
+
 ```
-Additionally, ANSI color is used in the print funtion.  
-In fact, the parallel approach (OpenMP) seems to have lower performance than normal Serial one.  
-So, likely that parallel computing doesn't help I/O intensive tasks much.  
-As for sendfile(), man page says it has better performance than infinite read and write.  
   
-By the way, having analyzed the freqency of bytes/chars, we can do something
-further, such as decode substitude cipher (which is a kind of classic encryption method).  
-  
-Demo:
+### Bytefreq Demo
 ```
-$ ./bytefreq -l bytefreq.c
+$ bytefreq bytefreq -l
 Crunching data ...
 =========================================================
 Character    Count           of_ALL          of_Specified
 =========    ============    ============    ============
-(0x61, a)             243         3.213 %         6.080 %
-(0x62, b)              66         0.873 %         1.651 %
-(0x63, c)             234         3.094 %         5.854 %
-(0x64, d)             105         1.389 %         2.627 %
-(0x65, e)             400         5.290 %        10.008 %
-(0x66, f)             124         1.640 %         3.102 %
-(0x67, g)              47         0.622 %         1.176 %
-(0x68, h)              82         1.084 %         2.052 %
-(0x69, i)             204         2.698 %         5.104 %
-(0x6a, j)               0         0.000 %         0.000 %
-(0x6b, k)              53         0.701 %         1.326 %
-(0x6c, l)             199         2.632 %         4.979 %
-(0x6d, m)             143         1.891 %         3.578 %
-(0x6e, n)             318         4.205 %         7.956 %
-(0x6f, o)             361         4.774 %         9.032 %
-(0x70, p)             142         1.878 %         3.553 %
-(0x71, q)              12         0.159 %         0.300 %
-(0x72, r)             320         4.232 %         8.006 %
-(0x73, s)             184         2.433 %         4.603 %
-(0x74, t)             389         5.144 %         9.732 %
-(0x75, u)             182         2.407 %         4.553 %
-(0x76, v)              30         0.397 %         0.751 %
-(0x77, w)              21         0.278 %         0.525 %
-(0x78, x)              87         1.150 %         2.177 %
-(0x79, y)              48         0.635 %         1.201 %
-(0x7a, z)               3         0.040 %         0.075 %
-Maximous of specified : (0x65  e) : 400
-Minimous of specified : (0x6A, j) : 0
-Total specified : 3997, 52.856%
-Total read()    : 7562
-
+(0x61, 'a')              81         0.515 %         4.793 %
+(0x62, 'b')              22         0.140 %         1.302 %
+(0x63, 'c')              70         0.445 %         4.142 %
+(0x64, 'd')              72         0.458 %         4.260 %
+(0x65, 'e')             159         1.011 %         9.408 %
+(0x66, 'f')             135         0.859 %         7.988 %
+(0x67, 'g')              67         0.426 %         3.964 %
+(0x68, 'h')              71         0.452 %         4.201 %
+(0x69, 'i')             113         0.719 %         6.686 %
+(0x6a, 'j')               4         0.025 %         0.237 %
+(0x6b, 'k')              12         0.076 %         0.710 %
+(0x6c, 'l')              78         0.496 %         4.615 %
+(0x6d, 'm')              41         0.261 %         2.426 %
+(0x6e, 'n')              96         0.611 %         5.680 %
+(0x6f, 'o')             112         0.712 %         6.627 %
+(0x70, 'p')              61         0.388 %         3.609 %
+(0x71, 'q')               8         0.051 %         0.473 %
+(0x72, 'r')              85         0.541 %         5.030 %
+(0x73, 's')             103         0.655 %         6.095 %
+(0x74, 't')             146         0.929 %         8.639 %
+(0x75, 'u')              65         0.413 %         3.846 %
+(0x76, 'v')              15         0.095 %         0.888 %
+(0x77, 'w')              10         0.064 %         0.592 %
+(0x78, 'x')              25         0.159 %         1.479 %
+(0x79, 'y')              28         0.178 %         1.657 %
+(0x7a, 'z')              11         0.070 %         0.651 %
+Maximous of specified : (0x65  'e') : 159
+Minimous of specified : (0x6A, 'j') : 4
+The Math Expection    : (0x3A, ':', dec 58)
+Total bytes specified : 1690, 10.751%
+Total bytes read()    : 15720
 ```
+
+### Compile
+just make.  
+It works on Debian GNU/Linux.
+
+#### other utilities included in this repo
+There are some other small programs that may be useful:  
+[util/a8lu.c](./util/a8lu.c)     
+Convert alphabets between upper and lower case.   
+[util/a8shift.c](./util/a8shift.c)  
+Shift alphabets by (+/-)N positions in alphabet list.  
+
   
 ---
 #### Expample of util/a8lu.c
