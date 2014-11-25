@@ -5,22 +5,22 @@ Bytefreq
 Bytefreq aims to figure out the freqency of each byte or character.  
   
 ##### Feature:  
-* Whether user select character sets (see below) or not, these data would be printed:
-  1. Among bytes specified to count, which one enjoys the [maximum/minimum] freqency.
-  2. The [mathematical expectation] of all bytes.
-  3. The number of bytes that specified by user, and its proportion.
+* Following data would be printed by default:
+  1. Among bytes specified, which one enjoys the [maximum/minimum]() freqency.
+  2. The [mathematical expectation]() of all bytes.
+  3. The number of bytes that specified by user, and proportion.
   4. Total read size, should be same to the answer of stat().
 * data processing approaches are choosable.  
-  1. [serial] default action, in this way bytefreq will infinitely read() and count until EOF.  
-  2. [parallel] option '-p', in this way bytefreq will infinitely read() and count them in 4-thread parallel approach.  
-  3. [unix_socket] option '-U', in this way bytefreq will open an UNIX socket and read data with sendfile().  
-* user can specify the character set that they want to count, here are some available sets, which can be combined randomly.  
+  1. [serial]() default action, infinitely read() and count until EOF.  
+  2. [parallel]() option '-p', infinitely read() and count them in 4-thread parallel.  
+  3. [unix_socket]() option '-U', manipulate data with sendfile() via UNIX Socket.
+* user can specify the character set to count (following can be combined randomly).  
   1. control character, symbols (option -c -s)
   2. upper and lower, alphabets also do (option -u -l -a)
   3. count all bytes (option -A)
   4. specify a single byte (option -S)  
-* ANSI color used, that is, the character enjoys the highest freqency among specified would be printed in RED, likewise the lowest in GREEN. Besides, some important statistics also highlighted in YELLOW.
-* when '-v' (verbose) option specified, it will show a BSD-style-like progress bar (spinning bar and proportion number).
+* ANSI color used to highlight values and special entries.  
+* '-v' (verbose) option offers a BSD-style-like progress bar (spinning bar and proportion number).
   
 ##### Info:  
 * We can also do some I/O performance experiments with this utility, as it offers 3 kinds of reading method.  
