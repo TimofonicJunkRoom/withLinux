@@ -15,6 +15,7 @@
 #include "include/mark.h"
 #include "include/struct.h"
 #include "include/find.h"
+#include "include/print.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -183,46 +184,15 @@ main (int argc, char **argv)
 	find_spec_extreme (&(bf.ex), bf.mark, bf.c);
 	find_total (&(bf.tot), bf.mark, bf.c);
 
-	/* print the table header */
-	fprintf (stdout,
-"===========================================================\n"
-"Character      Count           of_ALL          of_Specified\n"
-"===========    ============    ============    ============\n");
+	print_the_table_header ();
 
 	/* print info about specified chars */
 	for (loop = 0; loop < 256; loop++) {
-		if (!(bf.mark[loop]))
-			continue;
-
-		if (bf.c[loop] == bf.ex.spec_max)
-			fprintf (stdout, "\x1B[31m");
-		if (bf.c[loop] == bf.ex.spec_min)
-			fprintf (stdout, "\x1B[32m");
-
-		if (dont_use_percent_output)
-			fprintf (stdout, "(0x%1$x, '%2$c')    %3$12ld    %5$12.8lf    %4$12.8lf\n", loop, loop,
-				 bf.c[loop], (double)bf.c[loop]/bf.tot.total_spec,
-				 (double)bf.c[loop]/bf.tot.total_byte);
-		else
-			fprintf (stdout, "(0x%1$x, '%2$c')    %3$12ld   %5$11.3lf %%   %4$11.3lf %%\n", loop, loop,
-				 bf.c[loop], (double)100.0*bf.c[loop]/bf.tot.total_spec,
-				 (double)100.0*bf.c[loop]/bf.tot.total_byte);
-
-		fprintf (stdout, "\x1B[m"); /* restore color */
+		print_entry (bf, loop, dont_use_percent_output);	
 	}
 
 	/* ###### summary ####### */
-	fprintf (stdout, "Maximous of specified : (0x%X  '%c') : \x1B[33m%ld\x1B[m\n",
-		 bf.ex.spec_max_char, bf.ex.spec_max_char, bf.ex.spec_max);
-	fprintf (stdout, "Minimous of specified : (0x%X, '%c') : \x1B[33m%ld\x1B[m\n",
-		 bf.ex.spec_min_char, bf.ex.spec_min_char, bf.ex.spec_min);
-	fprintf (stdout, "The Math Expection    : (0x%X, '%c', dec \x1B[33m%d\x1B[m)\n",
-		 (char)find_expection(bf.c), (char)find_expection(bf.c), find_expection(bf.c));
-	fprintf (stdout, "Total bytes specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
-	 	 bf.tot.total_spec,
-		 (double)100.0*bf.tot.total_spec/bf.tot.total_byte);
-	fprintf (stdout, "Total bytes read()    : \x1B[33m%ld\x1B[m\n",
-	         total_read);
-	
+	print_summary (bf, total_read);
+
 	return 0;
 }
