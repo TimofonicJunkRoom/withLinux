@@ -14,6 +14,7 @@
 #include "crunch.h"
 #include "mark.h"
 #include "struct.h"
+#include "find.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -73,12 +74,6 @@ int verbose;
 
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256], int _verbose);
-
-int no_mark_set (int _mark[256]);
-void find_spec_extreme (struct bytefreq_ex *_ex, int _mark[256], long _counter[256]);
-void find_byte_extreme (struct bytefreq_ex *_ex, long _counter[256]);
-void find_total (struct bytefreq_tot *_tot, int _mark[256], long _counter[256]);
-int expection (long _counter[256]);
 
 /* ----------------------------------------------------------- */
 int
@@ -173,7 +168,7 @@ main (int argc, char **argv)
 		}
 	}
 	/* see marks */
-	if (no_mark_set (bf.mark)) {
+	if (find_mark_set (bf.mark) == 0) {
 		fprintf (stderr,
 "HINT: see -h to find out more options.\n");
 	}
@@ -222,7 +217,7 @@ main (int argc, char **argv)
 	fprintf (stdout, "Minimous of specified : (0x%X, '%c') : \x1B[33m%ld\x1B[m\n",
 		 bf.ex.spec_min_char, bf.ex.spec_min_char, bf.ex.spec_min);
 	fprintf (stdout, "The Math Expection    : (0x%X, '%c', dec \x1B[33m%d\x1B[m)\n",
-		 (char)expection(bf.c), (char)expection(bf.c), expection(bf.c));
+		 (char)find_expection(bf.c), (char)find_expection(bf.c), find_expection(bf.c));
 	fprintf (stdout, "Total bytes specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
 	 	 bf.tot.total_spec,
 		 (double)100.0*bf.tot.total_spec/bf.tot.total_byte);
@@ -230,102 +225,4 @@ main (int argc, char **argv)
 	         total_read);
 	
 	return 0;
-}
-
-int
-no_mark_set (int _mark[256])
-{
-	/* if no mark is set, return 1 (true), or return 0(false) */
-	int _lo;
-	for (_lo = 0; _lo < 256; _lo++) {
-		if (_mark[_lo] > 0) return 0;
-	}
-	return 1;
-}
-
-void
-find_byte_extreme (struct bytefreq_ex *_ex, long _counter[256])
-{
-	int _lo;
-	long _max = 0;
-	long _min = 0;
-	char _maxc = 0;
-	char _minc = 0;
-
-	for (_lo = 0; _lo < 256; _lo++) {
-		if (_counter[_lo] > _max) {
-			_max = _counter[_lo];
-			_maxc = (char)_lo;
-		}
-	}
-	_min = _max; /* important ! */
-	for (_lo = 0; _lo < 256; _lo++) {
-		if (_counter[_lo] < _min) {
-			_min = _counter[_lo];
-			_minc = (char)_lo;
-		}
-	}
-
-	_ex -> byte_max = _max;
-	_ex -> byte_min = _min;
-	_ex -> byte_max_char = _maxc;
-	_ex -> byte_min_char = _minc;
-	return;
-}
-
-void
-find_spec_extreme (struct bytefreq_ex *_ex, int _mark[256], long _counter[256])
-{
-	int _lo;
-	long _max = 0;
-	long _min;
-	char _maxc = 0;
-	char _minc = 0;
-
-	for (_lo = 0; _lo < 256; _lo++) {
-		if (_counter[_lo] > _max && _mark[_lo])
-		{
-			_max = _counter[_lo];
-			_maxc = (char)_lo;
-		}
-	}
-	_min = _max; /* important ! */
-	for (_lo = 0; _lo < 256; _lo++) {
-		if (_counter[_lo] < _min && _mark[_lo]) {
-			_min = _counter[_lo];
-			_minc = (char)_lo;
-		}
-	}
-
-	_ex -> spec_max = _max;
-	_ex -> spec_min = _min;
-	_ex -> spec_max_char = _maxc;
-	_ex -> spec_min_char = _minc;
-	return;
-}
-
-void
-find_total (struct bytefreq_tot *_tot, int _mark[256], long _counter[256])
-{
-	int _lo;
-	for (_lo = 0; _lo < 256; _lo++) {
-		_tot -> total_byte += _counter[_lo];
-		if (_mark[_lo])
-			_tot -> total_spec += _counter[_lo];
-	}
-	return;
-}
-
-int
-expection (long _counter[256])
-{
-	/* calculate the mathematical expection char among the whole counter array */
-	long _tot = 0;
-	long _cxn = 0;
-	int _t;
-	for (_t = 0; _t < 256; _t++) {
-		_tot += _counter[_t];
-		_cxn += _counter[_t] * _t;
-	}
-	return (int)(_cxn/_tot);
 }
