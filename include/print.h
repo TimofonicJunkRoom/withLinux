@@ -18,7 +18,7 @@ print_the_table_header ()
 }
 
 void
-print_entry (struct bytefreq bf, int loop, int dont_use_percent_output)
+print_entry (struct bytefreq bf, int loop, int use_percent_output)
 {
 	/* if not marked, skip */
 	if (!(bf.mark[loop]))
@@ -31,7 +31,7 @@ print_entry (struct bytefreq bf, int loop, int dont_use_percent_output)
 		fprintf (stdout, "\x1B[32m");
 
 	/* print entry, and consider flag "dont_use_percent_output" */
-	if (dont_use_percent_output)
+	if (!use_percent_output)
 		fprintf (stdout, "(0x%1$x, '%2$c')    %3$12ld    %5$12.8lf    %4$12.8lf\n", loop, loop,
 			 bf.c[loop], (double)bf.c[loop]/bf.tot.total_spec,
 			 (double)bf.c[loop]/bf.tot.total_byte);

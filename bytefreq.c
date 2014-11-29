@@ -31,13 +31,14 @@ void Usage (char *pname)
 "Usage:\n"
 "  %s [options] [FILE]\n"
 "Description:\n"
-"  Count frequency of specified set of Bytes/Char.\n"
+"  Count Byte/Char frequency.\n"
 "  Only shows Total read size if no char specified.\n"
 "  If given no <FILE>, it would read from the stdin.\n"
 "Options:\n"
 "  -h     show this help message\n"
 "  -V     show version info\n"
 "  -v     verbose mode\n"
+"  -D     debug mode (> -v)\n"
 "  -d     don't use percent output, use float instead\n"
 "\n"
 "  -p     use parallel approach\n"
@@ -53,25 +54,23 @@ void Usage (char *pname)
 "For more info see -v\n", pname);
 }
 
-void Version (char *pname)
+void Version (void)
 {
 	fprintf (stderr,
 BYTEFREQ_VERSION
-"%s : Count Byte freqency in different approaches.\n"
-"Author: C.D.Luminate / MIT Licence / 2014\n", pname);
+"Author: C.D.Luminate / MIT Licence / 2014\n");
 }
 /* ================================================= */
 
-long counter[256]; /* counter for bytes, these are raw data */
-int count_mark[256]; /* 1 if specified by user, or 0 */
-long total_read;
+long total_read; /* apart from struct bytefreq */
 
 int fd; /* for open */
 int loop;
 int opt; /* for getopt() */
-int dont_use_percent_output;
+
+int use_percent_output;
 int use_stdin;
-int verbose;
+int use_verbose;
 
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256], int _verbose);
@@ -82,12 +81,14 @@ main (int argc, char **argv)
 {
 	/* Serial as default, use -p to switch to parallel */
 	Crunch = crunch_serial;
+	/* percent output as default */
+	use_percent_output = 1;
 
 	/* clear structure */
 	bzero (&bf, sizeof(bf));
 
 	/* parse option */
-	while ((opt = getopt(argc, argv, "hVpulAasndvcS:U")) != -1) {
+	while ((opt = getopt(argc, argv, "hVpulAasndvcS:UD")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -100,12 +101,16 @@ main (int argc, char **argv)
 			break;
 		case 'V':
 			/* version info */
-			Version (argv[0]);
+			Version ();
 			exit (EXIT_SUCCESS);
 			break;
 		case 'v':
 			/* verbose mode */
-			verbose = 1;
+			use_verbose = 1;
+			break;
+		case 'D':
+			/* debug mode */
+			use_verbose = 2;
 			break;
 		case 'c':
 			mark_control (bf.mark);
@@ -137,7 +142,7 @@ main (int argc, char **argv)
 			break;
 		case 'd':
 			/* don't use percent output */
-			dont_use_percent_output = 1;
+			use_percent_output = 0;
 			break;
 		case 'S':
 			/* specify a byte (decimal) to count */
@@ -175,8 +180,8 @@ main (int argc, char **argv)
 	}
 
 	/* ###### start Crunch ########## */
-	fputs ("\x1B[mCrunching data ...\n", stderr);
-	total_read = Crunch (fd, bf.c, verbose);
+	if (use_verbose) fputs ("\x1B[mCrunching data ...\n", stderr);
+	total_read = Crunch (fd, bf.c, use_verbose);
 
 	/* ###### cook the raw counter ##### */
 	/* find minmax */
@@ -184,11 +189,13 @@ main (int argc, char **argv)
 	find_spec_extreme (&(bf.ex), bf.mark, bf.c);
 	find_total (&(bf.tot), bf.mark, bf.c);
 
+	/* #### print table #### */
+	fprintf (stdout, "\x1B[m");
 	print_the_table_header ();
 
 	/* print info about specified chars */
 	for (loop = 0; loop < 256; loop++) {
-		print_entry (bf, loop, dont_use_percent_output);	
+		print_entry (bf, loop, use_percent_output);	
 	}
 
 	/* ###### summary ####### */
