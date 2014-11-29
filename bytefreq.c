@@ -11,10 +11,10 @@
 
 #define BYTEFREQ_VERSION "Version: 2.2 (2014/11/24)\n"
 
-#include "crunch.h"
-#include "mark.h"
-#include "struct.h"
-#include "find.h"
+#include "include/crunch.h"
+#include "include/mark.h"
+#include "include/struct.h"
+#include "include/find.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -174,7 +174,7 @@ main (int argc, char **argv)
 	}
 
 	/* ###### start Crunch ########## */
-	if (verbose) fputs ("\x1B[mCrunching data ...\n", stderr);
+	fputs ("\x1B[mCrunching data ...\n", stderr);
 	total_read = Crunch (fd, bf.c, verbose);
 
 	/* ###### cook the raw counter ##### */
