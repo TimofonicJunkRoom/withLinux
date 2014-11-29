@@ -13,6 +13,7 @@
 
 #include "crunch.h"
 #include "mark.h"
+#include "struct.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -68,37 +69,7 @@ int loop;
 int opt; /* for getopt() */
 int dont_use_percent_output;
 int use_stdin;
-int use_verbose;
-
-struct {
-	/* deal with raw data */
-	long control;
-	long symbol;
-	long number;
-	long upper;
-	long lower;
-	/* cooked data */
-	long visible;
-	long invisible;
-	long alpha;
-} counterwrap; /* raw counter wrapp */
-
-struct bytefreq_tot {
-	long total_spec;
-	long total_byte;
-} countertot;
-
-struct bytefreq_ex {
-	/* store the extreme values */
-	long spec_max;
-	long spec_min;
-	long byte_max;
-	long byte_min;
-	char spec_max_char;
-	char spec_min_char;
-	char byte_max_char;
-	char byte_min_char;
-} extr;
+int verbose;
 
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256], int _verbose);
@@ -116,7 +87,8 @@ main (int argc, char **argv)
 	/* Serial as default, use -p to switch to parallel */
 	Crunch = crunch_serial;
 
-	bzero (count_mark, sizeof(count_mark));
+	/* clear structure */
+	bzero (&bf, sizeof(bf));
 
 	/* parse option */
 	while ((opt = getopt(argc, argv, "hVpulAasndvcS:U")) != -1) {
@@ -137,35 +109,35 @@ main (int argc, char **argv)
 			break;
 		case 'v':
 			/* verbose mode */
-			use_verbose = 1;
+			verbose = 1;
 			break;
 		case 'c':
-			mark_control (count_mark);
+			mark_control (bf.mark);
 			break;
 		case 'u':
 			/* upper */
-			mark_upper (count_mark);
+			mark_upper (bf.mark);
 			break;
 		case 'l':
 			/* lower */
-			mark_lower (count_mark);
+			mark_lower (bf.mark);
 			break;
 		case 'A':
 			/* all */
-			mark_all (count_mark);
+			mark_all (bf.mark);
 			break;
 		case 'a':
 			/* alphabets, i.e. upper && lower */
-			mark_lower (count_mark);
-			mark_upper (count_mark);
+			mark_lower (bf.mark);
+			mark_upper (bf.mark);
 			break;
 		case 's':
 			/* symbol */
-			mark_symbol (count_mark);
+			mark_symbol (bf.mark);
 			break;
 		case 'n':
 			/* number */
-			mark_number (count_mark);
+			mark_number (bf.mark);
 			break;
 		case 'd':
 			/* don't use percent output */
@@ -177,7 +149,7 @@ main (int argc, char **argv)
 				fprintf (stderr, "%s: Specified an invalid byte.\n", argv[0]);
 				exit (EXIT_FAILURE);
 			}
-			count_mark[(unsigned int)atoi(optarg)] = 1;
+			bf.mark[(unsigned int)atoi(optarg)] = 1;
 			break;
 		case 'U':
 			/* use crunch_unixsock */
@@ -201,59 +173,59 @@ main (int argc, char **argv)
 		}
 	}
 	/* see marks */
-	if (no_mark_set (count_mark)) {
+	if (no_mark_set (bf.mark)) {
 		fprintf (stderr,
-"HINT: see -h to find out options.\n");
+"HINT: see -h to find out more options.\n");
 	}
 
 	/* ###### start Crunch ########## */
-	fputs ("\x1B[mCrunching data ...\n", stderr);
-	total_read = Crunch (fd, counter, use_verbose);
+	if (verbose) fputs ("\x1B[mCrunching data ...\n", stderr);
+	total_read = Crunch (fd, bf.c, verbose);
 
 	/* ###### cook the raw counter ##### */
 	/* find minmax */
-	find_byte_extreme (&extr, counter);
-	find_spec_extreme (&extr, count_mark, counter);
-	find_total (&countertot, count_mark, counter);
+	find_byte_extreme (&(bf.ex), bf.c);
+	find_spec_extreme (&(bf.ex), bf.mark, bf.c);
+	find_total (&(bf.tot), bf.mark, bf.c);
 
 	/* print the table header */
 	fprintf (stdout,
-"=========================================================\n"
-"Character    Count           of_ALL          of_Specified\n"
-"=========    ============    ============    ============\n");
+"===========================================================\n"
+"Character      Count           of_ALL          of_Specified\n"
+"===========    ============    ============    ============\n");
 
 	/* print info about specified chars */
 	for (loop = 0; loop < 256; loop++) {
-		if (!count_mark[loop])
+		if (!(bf.mark[loop]))
 			continue;
 
-		if (counter[loop] == extr.spec_max)
+		if (bf.c[loop] == bf.ex.spec_max)
 			fprintf (stdout, "\x1B[31m");
-		if (counter[loop] == extr.spec_min)
+		if (bf.c[loop] == bf.ex.spec_min)
 			fprintf (stdout, "\x1B[32m");
 
 		if (dont_use_percent_output)
 			fprintf (stdout, "(0x%1$x, '%2$c')    %3$12ld    %5$12.8lf    %4$12.8lf\n", loop, loop,
-				 counter[loop], (double)counter[loop]/countertot.total_spec,
-				 (double)counter[loop]/countertot.total_byte);
+				 bf.c[loop], (double)bf.c[loop]/bf.tot.total_spec,
+				 (double)bf.c[loop]/bf.tot.total_byte);
 		else
 			fprintf (stdout, "(0x%1$x, '%2$c')    %3$12ld   %5$11.3lf %%   %4$11.3lf %%\n", loop, loop,
-				 counter[loop], (double)100.0*counter[loop]/countertot.total_spec,
-				 (double)100.0*counter[loop]/countertot.total_byte);
+				 bf.c[loop], (double)100.0*bf.c[loop]/bf.tot.total_spec,
+				 (double)100.0*bf.c[loop]/bf.tot.total_byte);
 
 		fprintf (stdout, "\x1B[m"); /* restore color */
 	}
 
 	/* ###### summary ####### */
 	fprintf (stdout, "Maximous of specified : (0x%X  '%c') : \x1B[33m%ld\x1B[m\n",
-		 extr.spec_max_char, extr.spec_max_char, extr.spec_max);
+		 bf.ex.spec_max_char, bf.ex.spec_max_char, bf.ex.spec_max);
 	fprintf (stdout, "Minimous of specified : (0x%X, '%c') : \x1B[33m%ld\x1B[m\n",
-		 extr.spec_min_char, extr.spec_min_char, extr.spec_min);
+		 bf.ex.spec_min_char, bf.ex.spec_min_char, bf.ex.spec_min);
 	fprintf (stdout, "The Math Expection    : (0x%X, '%c', dec \x1B[33m%d\x1B[m)\n",
-		 (char)expection(counter), (char)expection(counter), expection(counter));
+		 (char)expection(bf.c), (char)expection(bf.c), expection(bf.c));
 	fprintf (stdout, "Total bytes specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
-	 	 countertot.total_spec,
-		 (double)100.0*countertot.total_spec/countertot.total_byte);
+	 	 bf.tot.total_spec,
+		 (double)100.0*bf.tot.total_spec/bf.tot.total_byte);
 	fprintf (stdout, "Total bytes read()    : \x1B[33m%ld\x1B[m\n",
 	         total_read);
 	
@@ -347,7 +319,7 @@ find_total (struct bytefreq_tot *_tot, int _mark[256], long _counter[256])
 int
 expection (long _counter[256])
 {
-	/* calculate the average char among the whole counter array */
+	/* calculate the mathematical expection char among the whole counter array */
 	long _tot = 0;
 	long _cxn = 0;
 	int _t;
