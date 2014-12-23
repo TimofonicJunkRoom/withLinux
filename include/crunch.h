@@ -28,6 +28,7 @@
 #include <sys/sendfile.h>
 
 #include "wrapper.h"
+#include "bsdbar.h"
 /* end use of crunch_unixsock */
 
 /* 131072 Bytes, 128KB buffer */
@@ -39,15 +40,6 @@
 long crunch_serial (int _fd, long _counter[256], int _verbose);
 long crunch_parallel (int _fd, long _counter[256], int _verbose);
 long crunch_unixsock (int _fd, long _counter[256], int _verbose);
-
-/* wrapper */
-void *Malloc (size_t size);
-ssize_t Sendfile(int out_fd, int in_fd, off_t *offset, size_t count);
-
-/* the BSD-style progress bar */
-void BSDbar_init (void);
-void BSDbar_refresh (int *turn, int num);
-void BSDbar_clear (void);
 
 /* ============================================================================ */
 long crunch_serial (int _fd, long _counter[256], int _verbose)
@@ -74,7 +66,7 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 	int _loop;
 	long _readn;
 	if (_verbose) BSDbar_init ();
-	while ((_readn = read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
+	while ((_readn = Read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
 		if (_verbose) {
 			BSDbar_refresh (&turn, (int)(1.0+100.0*((float)_total_read/st.st_size)));
 		}
@@ -86,7 +78,7 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 	}
 	if (_verbose) {
 		BSDbar_clear ();
-		write (2, "\n", 2);
+		Write (2, "\n", 2);
 	}
 	/* free buffer and return */
 	free (_buf);
@@ -115,7 +107,7 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 	int turn;
 	int _loop;
 	long _readn;
-	while ((_readn = read(_fd, _buf, BF_BFSZ_PARA)) > 0) {
+	while ((_readn = Read(_fd, _buf, BF_BFSZ_PARA)) > 0) {
 		if (_verbose) BSDbar_refresh (&turn, 100*_total_read/st.st_size);
 		_total_read += _readn;
 		#pragma omp parallel for
@@ -125,7 +117,7 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 	}
 	if (_verbose) {
 		BSDbar_clear();
-		write (2, "\n", 1);
+		Write (2, "\n", 1);
 	}
 	/* free buffer and return */
 	free (_buf);
@@ -189,7 +181,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	int _readn;
 	int _loop;
 	if (_verbose) BSDbar_init();
-	while ((_readn = read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
+	while ((_readn = Read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
 		if (_verbose) {
 			BSDbar_refresh (&turn, (int)(1.0+100.0*((float)_ret_tot/st.st_size)));
 		}
@@ -200,7 +192,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	}
 	if (_verbose) {
 		BSDbar_clear ();
-		write (2, "\n", 1);
+		Write (2, "\n", 1);
 	}
 	/* free buffer and return */
 	free (_buf);
@@ -209,63 +201,3 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 }
 /* ============================================================================ */
 
-void *
-Malloc (size_t size) /* wrapper for malloc(3) */
-{
-	void *_ptr;
-	if ((_ptr = malloc (size)) == NULL) {
-		perror ("malloc");
-		exit (EXIT_FAILURE);
-	}
-	return _ptr;
-}
-
-ssize_t
-Sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
-{
-	ssize_t _ = sendfile (out_fd, in_fd, offset, count);
-	if (_ == -1) {
-		perror ("sendfile");
-		exit (EXIT_FAILURE);
-	}
-	return _;
-}
-
-void
-BSDbar_refresh (int *iptr, int num)
-{
-	/* refresh BSD-style progress bar */
-	static char bar[3];
-		bar[0] = '-';
-		bar[1] = '\\';
-		bar[2] = '/';
-	static char bb[8]; /* bar buffer */
-		bb[0] = '[';
-		bb[1] = ' ';
-		bb[2] = ']';
-		bb[3] = ' ';
-		bb[4] = ' '; //
-		bb[5] = ' '; //
-		bb[6] = ' '; //
-		bb[7] = '%';
-
-	if (*iptr > 2 || *iptr < 0) *iptr = 0;
-	write (2, "\b\b\b\b\b\b\b\b", 8);
-	snprintf (bb, 8, "[%c] %3d%%", bar[(*iptr)++], num);
-	write (2, bb, 8);
-	return;
-}
-
-void
-BSDbar_init (void)
-{
-	write (2, "[ ] ...%", 8);
-	return;
-}
-
-void
-BSDbar_clear (void)
-{
-	write (2, "\b\b\b\b\b\b\b\b        ", 16);
-	return;
-}

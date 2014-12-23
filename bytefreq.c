@@ -167,12 +167,8 @@ main (int argc, char **argv)
 		fd = fileno(stdin);
 	}
 	/* open file, then pass the fd to Crunch() */
-	if (!use_stdin) {
-		if ((fd = open (argv[optind], O_RDONLY)) == -1) {
-			perror ("open");
-			exit (EXIT_FAILURE);
-		}
-	}
+	if (!use_stdin) 
+		fd = Open (argv[optind], O_RDONLY);
 	/* see marks */
 	if (find_mark_set (bf.mark) == 0) {
 		fprintf (stderr,
@@ -183,7 +179,6 @@ main (int argc, char **argv)
 	if (use_verbose) fputs ("\x1B[mCrunching data ...\n", stderr);
 	total_read = Crunch (fd, bf.c, use_verbose);
 
-	/* ###### cook the raw counter ##### */
 	/* find minmax */
 	find_byte_extreme (&(bf.ex), bf.c);
 	find_spec_extreme (&(bf.ex), bf.mark, bf.c);
@@ -198,7 +193,6 @@ main (int argc, char **argv)
 		print_entry (bf, loop, use_percent_output);	
 	}
 
-	/* ###### summary ####### */
 	print_summary (bf, total_read);
 
 	return 0;

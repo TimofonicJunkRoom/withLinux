@@ -52,7 +52,7 @@ print_summary (struct bytefreq bf, long total_read)
 		 bf.ex.spec_max_char, bf.ex.spec_max_char, bf.ex.spec_max);
 	fprintf (stdout, "Minimous of specified : (0x%X, '%c') : \x1B[33m%ld\x1B[m\n",
 		 bf.ex.spec_min_char, bf.ex.spec_min_char, bf.ex.spec_min);
-	fprintf (stdout, "The Math Expection    : (0x%X, '%c', dec \x1B[33m%d\x1B[m)\n",
+	fprintf (stdout, "The Math Expectation  : (0x%X, '%c', dec \x1B[33m%d\x1B[m)\n",
 		 (char)find_expection(bf.c), (char)find_expection(bf.c), find_expection(bf.c));
 	fprintf (stdout, "Total bytes specified : \x1B[33m%ld, %.3lf%%\x1B[m\n",
 	 	 bf.tot.total_spec,
