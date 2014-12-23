@@ -9,7 +9,7 @@
 // TODO : -S option does not accept 0x?? hex number (atoi)
 /* FIXME : when user's file size exceeds max_of(long), overflow. */
 
-#define BYTEFREQ_VERSION "Version: 2.3 (2014/11/29)\n"
+#define BYTEFREQ_VERSION "Version: 2.4 (2014/12/23)\n"
 
 #include "include/crunch.h"
 #include "include/mark.h"
