@@ -39,10 +39,11 @@ void Usage (char *pname)
 "  -V     show version info\n"
 "  -v     verbose mode\n"
 "  -D     debug mode (> -v)\n"
-"  -d     don't use percent output, use float instead\n"
+"  -f     use float instead of percent output\n"
 "\n"
 "  -p     use parallel approach\n"
 "  -U     use UNIX socket apprach (sendfile)\n"
+"\n"
 "  -A     specify all bytes to count\n"
 "  -l     specify lower to count\n"
 "  -u     specify upper to count\n"
@@ -66,12 +67,13 @@ long total_read; /* apart from struct bytefreq */
 
 int fd; /* for open */
 int loop;
-int opt; /* for getopt() */
 
+/* flags */
 int use_percent_output;
 int use_stdin;
 int use_verbose;
 
+void bf_parse_option (int argc, char **argv);
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256], int _verbose);
 
@@ -87,8 +89,49 @@ main (int argc, char **argv)
 	/* clear structure */
 	bzero (&bf, sizeof(bf));
 
-	/* parse option */
-	while ((opt = getopt(argc, argv, "hVpulAasndvcS:UD")) != -1) {
+    /* parse options and set flags itself */
+    bf_parse_option (argc, argv);
+
+	/* open file, then pass the fd to Crunch() */
+	if (!use_stdin) 
+		fd = Open (argv[optind], O_RDONLY);
+	/* see marks */
+	if (find_mark_set (bf.mark) == 0) {
+		fprintf (stderr,
+"HINT: see -h to find out more options.\n");
+	}
+
+	/* ###### start Crunch ########## */
+	if (use_verbose) fputs ("\x1B[mCrunching data ...\n", stderr);
+	total_read = Crunch (fd, bf.c, use_verbose);
+
+	/* find minmax */
+	find_byte_extreme (&(bf.ex), bf.c);
+	find_spec_extreme (&(bf.ex), bf.mark, bf.c);
+	find_total (&(bf.tot), bf.mark, bf.c);
+
+	/* #### print table #### */
+	fprintf (stdout, "\x1B[m");
+	print_the_table_header ();
+
+	/* print info about specified chars */
+	for (loop = 0; loop < 256; loop++) {
+		print_entry (bf, loop, use_percent_output);	
+	}
+
+	print_summary (bf, total_read);
+
+	return 0;
+}
+
+
+void
+bf_parse_option (int argc, char **argv)
+{
+    /* parse option */
+    int opt = 0; /* for getopt() */
+
+	while ((opt = getopt(argc, argv, "hVpulAasnfvcS:UD")) != -1) {
 		switch (opt) {
 		case 'p':
 			/* use parallel */
@@ -140,7 +183,7 @@ main (int argc, char **argv)
 			/* number */
 			mark_number (bf.mark);
 			break;
-		case 'd':
+		case 'f':
 			/* don't use percent output */
 			use_percent_output = 0;
 			break;
@@ -166,34 +209,5 @@ main (int argc, char **argv)
 		use_stdin = 1;
 		fd = fileno(stdin);
 	}
-	/* open file, then pass the fd to Crunch() */
-	if (!use_stdin) 
-		fd = Open (argv[optind], O_RDONLY);
-	/* see marks */
-	if (find_mark_set (bf.mark) == 0) {
-		fprintf (stderr,
-"HINT: see -h to find out more options.\n");
-	}
-
-	/* ###### start Crunch ########## */
-	if (use_verbose) fputs ("\x1B[mCrunching data ...\n", stderr);
-	total_read = Crunch (fd, bf.c, use_verbose);
-
-	/* find minmax */
-	find_byte_extreme (&(bf.ex), bf.c);
-	find_spec_extreme (&(bf.ex), bf.mark, bf.c);
-	find_total (&(bf.tot), bf.mark, bf.c);
-
-	/* #### print table #### */
-	fprintf (stdout, "\x1B[m");
-	print_the_table_header ();
-
-	/* print info about specified chars */
-	for (loop = 0; loop < 256; loop++) {
-		print_entry (bf, loop, use_percent_output);	
-	}
-
-	print_summary (bf, total_read);
-
-	return 0;
+    return;
 }
