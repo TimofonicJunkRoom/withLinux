@@ -65,6 +65,17 @@ Open (const char *pathname, int flags)
     return fd;
 }
 
+int
+Close (int fd)
+{
+    int ret;
+    if ((ret = close (fd)) == -1) {
+        perror ("close");
+        exit (EXIT_FAILURE);
+    }
+    return ret;
+}
+
 ssize_t
 Read (int fd, void *buf, size_t count)
 {

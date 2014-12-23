@@ -159,20 +159,23 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	if ((pid = Fork()) == 0) {
 		/* children's matter:
 		   just sendfile() */
-		close (unixfd[0]);
+		Close (unixfd[0]);
 		off_t _offset = 0;
-		size_t _count = (long long)st.st_size;
+		size_t _count = (size_t)st.st_size;
+        ssize_t ssize = 0;
 
 		if (_verbose>1) fprintf (stderr, "* Child: start sendfile() to parent.\n");
-		while (sendfile (unixfd[1], _fd, &_offset, _count) > 0) { ;}
+		while ((ssize = Sendfile (unixfd[1], _fd, &_offset, _count)) > 0) {
+            _count -= ssize;
+        }
 		/* done sendfile(), quit */
-		close (unixfd[1]);
+		Close (unixfd[1]);
 		if (_verbose>1) fprintf (stderr, "* Child: sendfile() finished, exit.\n");
 		exit (EXIT_SUCCESS);
 	}
 		/* parent's matter:
 		   read from socket, and count */
-	close (unixfd[1]);
+	Close (unixfd[1]);
 	if (_verbose>1) fprintf (stderr, "* Forked child %d is trying its best running sendfile()...\n", pid);
 	char *_buf = (char *) Malloc (BF_BFSZ_UNIX);
 	bzero (_buf, BF_BFSZ_UNIX);
@@ -196,7 +199,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	}
 	/* free buffer and return */
 	free (_buf);
-	close (unixfd[0]);
+	Close (unixfd[0]);
 	return _ret_tot;
 }
 /* ============================================================================ */
