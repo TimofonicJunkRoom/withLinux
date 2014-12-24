@@ -11,18 +11,28 @@
 
 #define BYTEFREQ_VERSION "Version: 2.4 (2014/12/23)\n"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <sys/sendfile.h>
+
+#include <omp.h>
+
+#include "include/wrapper.h"
+#include "include/bsdbar.h"
+
 #include "include/crunch.h"
 #include "include/mark.h"
 #include "include/struct.h"
 #include "include/find.h"
 #include "include/print.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 /* ================================================= */
 void Usage (char *pname)
@@ -123,7 +133,7 @@ main (int argc, char **argv)
 
 	return 0;
 }
-
+/* ------------------------------------------------------------------- */
 
 void
 bf_parse_option (int argc, char **argv)

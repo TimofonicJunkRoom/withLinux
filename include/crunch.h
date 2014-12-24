@@ -12,23 +12,8 @@
  */
 // TODO : use mmap to optimize crunch_serial
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include <unistd.h>
 
-#include <omp.h>
-
-/* used by crunch_unixsock */
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/sendfile.h>
-
-#include "wrapper.h"
-#include "bsdbar.h"
 /* end use of crunch_unixsock */
 
 /* 131072 Bytes, 128KB buffer */
