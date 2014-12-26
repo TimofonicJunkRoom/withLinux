@@ -4,7 +4,7 @@
    cdluminate@163.com
 */
 
-int i = 0; /* bar state indicator */
+int _bsdbar_indicator = 0; /* bar state indicator */
 
 void
 BSDbar_init (void)
@@ -39,7 +39,7 @@ void
 BSDbar_refresh (int num)
 {
     /* note that 'int num' is the proportion to display */
-    _BSDbar_refresh (&i, num);
+    _BSDbar_refresh (&_bsdbar_indicator, num);
     return;
 }
 
