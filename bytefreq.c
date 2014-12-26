@@ -79,7 +79,7 @@ int fd; /* for open */
 int loop; /* var for loop */
 
 /* flags */
-int use_percent_output;
+int use_percent_output = 1; /* set to 1 as default, 0 to cancel */
 int use_stdin;
 int use_verbose;
 
@@ -88,28 +88,23 @@ void bf_parse_option (int argc, char **argv);
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256], int _verbose);
 
-/* ----------------------------------------------------------- */
+/* MAIN */
 int
 main (int argc, char **argv)
 {
-	/* Serial as default, use -p to switch to parallel */
-	Crunch = crunch_serial;
-	/* percent output as default */
-	use_percent_output = 1;
-
+	/* Serial one as default, use -p to switch to parallel */
+	Crunch = crunch_serial; /* see include/crunch.h */
 	/* clear structure */
 	bzero (&bf, sizeof(bf));
-
     /* parse options and set flags itself */
     bf_parse_option (argc, argv);
 
 	/* open file, then pass the fd to Crunch() */
 	if (!use_stdin) 
 		fd = Open (argv[optind], O_RDONLY);
-	/* see marks */
+	/* hint if no char is marked */
 	if (find_mark_set (bf.mark) == 0) {
-		fprintf (stderr,
-"HINT: see -h to find out more options.\n");
+		fprintf (stderr, "HINT: see -h to find out more options.\n");
 	}
 
 	/* =======Start Crunch=========== */
@@ -122,7 +117,7 @@ main (int argc, char **argv)
 	find_total (&(bf.tot), bf.mark, bf.c);
 
 	/* #### print table #### */
-	fprintf (stdout, "\x1B[m");
+	fprintf (stdout, "\x1B[m"); /* restore color */
 	print_the_table_header ();
 
 	/* print info about specified chars */
@@ -131,10 +126,8 @@ main (int argc, char **argv)
 	}
 
 	print_summary (bf, total_read);
-
 	return 0;
 }
-/* ------------------------------------------------------------------- */
 
 void
 bf_parse_option (int argc, char **argv)
@@ -144,70 +137,56 @@ bf_parse_option (int argc, char **argv)
 
 	while ((opt = getopt(argc, argv, "hVpulAasnfvcS:UD")) != -1) {
 		switch (opt) {
-		case 'p':
-			/* use parallel */
+		case 'p': /* use parallel */
 			Crunch = crunch_parallel;
 			break;
-		case 'h':
-			/* help */
+		case 'h': /* help */
 			Usage (argv[0]);
 			exit (EXIT_SUCCESS);
 			break;
-		case 'V':
-			/* version info */
+		case 'V': /* version info */
 			Version ();
 			exit (EXIT_SUCCESS);
 			break;
-		case 'v':
-			/* verbose mode */
+		case 'v': /* verbose mode */
 			use_verbose = 1;
 			break;
-		case 'D':
-			/* debug mode */
+		case 'D': /* debug mode */
 			use_verbose = 2;
 			break;
-		case 'c':
+		case 'c': /* control */
 			mark_control (bf.mark);
 			break;
-		case 'u':
-			/* upper */
+		case 'u': /* upper */
 			mark_upper (bf.mark);
 			break;
-		case 'l':
-			/* lower */
+		case 'l': /* lower */
 			mark_lower (bf.mark);
 			break;
-		case 'A':
-			/* all */
+		case 'A': /* all */
 			mark_all (bf.mark);
 			break;
-		case 'a':
-			/* alphabets, i.e. upper && lower */
+		case 'a': /* alphabets, i.e. upper && lower */
 			mark_lower (bf.mark);
 			mark_upper (bf.mark);
 			break;
-		case 's':
-			/* symbol */
+		case 's': /* symbol */
 			mark_symbol (bf.mark);
 			break;
-		case 'n':
-			/* number */
+		case 'n': /* number */
 			mark_number (bf.mark);
 			break;
-		case 'f':
-			/* don't use percent output */
+		case 'f': /* don't use percent output */
 			use_percent_output = 0;
 			break;
-		case 'S':
-			/* specify a byte (decimal) to count */
+		case 'S': /* specify a byte (decimal) to count */
 			if (atoi(optarg) > 255 || atoi(optarg) < 0) {
 				fprintf (stderr, "%s: Specified an invalid byte.\n", argv[0]);
 				exit (EXIT_FAILURE);
 			}
 			bf.mark[(unsigned int)atoi(optarg)] = 1;
 			break;
-		case 'U':
-			/* use crunch_unixsock */
+		case 'U': /* use crunch_unixsock */
 			Crunch = crunch_unixsock;
 			break;
 		default:
