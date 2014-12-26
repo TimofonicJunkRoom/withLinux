@@ -20,7 +20,13 @@
    4. that's all
 */
 
-int _bsdbar_indicator = 0; /* bar state indicator */
+/* INTERFACE */
+void BSDbar_init (void);
+void BSDbar_clear (void);
+void BSDbar_refresh (int num);
+/* END INTERFACE */
+
+int _bsdbar_indicator = 0; /* bar state indicator, internal use */
 
 void
 BSDbar_init (void)
@@ -30,6 +36,7 @@ BSDbar_init (void)
 	return;
 }
 
+/* this function is for internal use */
 void
 _BSDbar_refresh (int *iptr, int num)
 {

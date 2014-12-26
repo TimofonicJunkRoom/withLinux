@@ -13,13 +13,13 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	pid_t pid;
 
 	struct stat st;
-		fstat (_fd, &st);
-	if (_verbose>1) fprintf (stderr, "* debug: file size [%lld]\n", (long long)st.st_size);
+	fstat (_fd, &st);
+	if (_verbose>1) fprintf (stderr, "* debug: file size [%ld]\n", (long)st.st_size);
 
 	long _ret_tot = 0;
 
 	int unixfd[2];
-		bzero (unixfd, sizeof(unixfd));
+	bzero (unixfd, sizeof(unixfd));
 
 	/* launch socket */
 	Socketpair (AF_UNIX, SOCK_STREAM, 0, unixfd);
@@ -43,8 +43,8 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 		if (_verbose>1) fprintf (stderr, "* Child: sendfile() finished, exit.\n");
 		exit (EXIT_SUCCESS);
 	}
-		/* parent's matter:
-		   read from socket, and count */
+	/* parent's matter:
+       read from socket, and count */
 	Close (unixfd[1]);
 	if (_verbose>1) fprintf (stderr, "* Forked child %d is trying its best running sendfile()...\n", pid);
 	char *_buf = (char *) Malloc (BF_BFSZ_UNIX);
