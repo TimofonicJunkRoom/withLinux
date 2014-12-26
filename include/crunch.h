@@ -47,13 +47,12 @@ long crunch_serial (int _fd, long _counter[256], int _verbose)
 	bzero (_buf, BF_BFSZ_SERI);
 
 	/* start crunching */
-	int turn = 0; /* bsd bar */
 	int _loop;
 	long _readn;
 	if (_verbose) BSDbar_init ();
 	while ((_readn = Read(_fd, _buf, BF_BFSZ_SERI)) > 0) {
 		if (_verbose) {
-			BSDbar_refresh (&turn, (int)(1.0+100.0*((float)_total_read/st.st_size)));
+			BSDbar_refresh ((int)(1.0+100.0*((float)_total_read/st.st_size)));
 		}
 		_total_read += _readn;
 		/* #pragma omp parallel for */
@@ -89,11 +88,10 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 
 	/* start crunching */
 	if (_verbose) BSDbar_init ();
-	int turn;
 	int _loop;
 	long _readn;
 	while ((_readn = Read(_fd, _buf, BF_BFSZ_PARA)) > 0) {
-		if (_verbose) BSDbar_refresh (&turn, 100*_total_read/st.st_size);
+		if (_verbose) BSDbar_refresh (100*_total_read/st.st_size);
 		_total_read += _readn;
 		#pragma omp parallel for
 		for (_loop = 0; _loop < _readn; _loop++) {
@@ -113,9 +111,6 @@ long crunch_parallel (int _fd, long _counter[256], int _verbose)
 long
 crunch_unixsock (int _fd, long _counter[256], int _verbose)
 {
-	/* for tht BSD style bar */
-	int turn = 0;
-
 	/* doesn't read stdin */
 	if (_fd == fileno(stdin)) {
 		fprintf (stderr, "* Error: crunch_unixsock() doesn't read stdin\n");
@@ -171,7 +166,7 @@ crunch_unixsock (int _fd, long _counter[256], int _verbose)
 	if (_verbose) BSDbar_init();
 	while ((_readn = Read(unixfd[0], _buf, BF_BFSZ_UNIX)) > 0) {
 		if (_verbose) {
-			BSDbar_refresh (&turn, (int)(1.0+100.0*((float)_ret_tot/st.st_size)));
+			BSDbar_refresh ((int)(1.0+100.0*((float)_ret_tot/st.st_size)));
 		}
 		_ret_tot += _readn;
 		for (_loop = 0; _loop < _readn; _loop++) {
