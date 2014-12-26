@@ -34,7 +34,7 @@
 #include "include/find.h"
 #include "include/print.h"
 
-/* ================================================= */
+/* ===BEGIN HELP MESSAGE============================ */
 void Usage (char *pname)
 {
 	fprintf (stderr,
@@ -71,18 +71,19 @@ void Version (void)
 BYTEFREQ_VERSION
 "Author: C.D.Luminate / MIT Licence / 2014\n");
 }
-/* ================================================= */
+/* ===END HELP MESSAGE============================== */
 
 long total_read; /* apart from struct bytefreq */
 
 int fd; /* for open */
-int loop;
+int loop; /* var for loop */
 
 /* flags */
 int use_percent_output;
 int use_stdin;
 int use_verbose;
 
+/* use getopt() */
 void bf_parse_option (int argc, char **argv);
 /* used to select a crunch_* function */
 long (* Crunch)(int _fd, long _counter[256], int _verbose);
@@ -111,7 +112,7 @@ main (int argc, char **argv)
 "HINT: see -h to find out more options.\n");
 	}
 
-	/* ###### start Crunch ########## */
+	/* =======Start Crunch=========== */
 	if (use_verbose) fputs ("\x1B[mCrunching data ...\n", stderr);
 	total_read = Crunch (fd, bf.c, use_verbose);
 

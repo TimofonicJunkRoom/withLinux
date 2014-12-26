@@ -4,6 +4,22 @@
    cdluminate@163.com
 */
 
+/* SYNOPSIS
+
+   0. #include "bsdbar.h"
+   
+   1. when going to start the progress bar, invoke
+      BSDbar_init ();
+
+   2. when going to refresh the progress bar, invoke
+      BSDbar_refresh (int proportion);
+
+   3. when going to clear the bar, invoke
+      BSDbar_clear ();
+
+   4. that's all
+*/
+
 int _bsdbar_indicator = 0; /* bar state indicator */
 
 void
@@ -46,7 +62,7 @@ BSDbar_refresh (int num)
 void
 BSDbar_clear (void)
 {
-    /* clear the padding/bar */
-	Write (2, "\b\b\b\b\b\b\b\b        ", 16);
+    /* clear the padding/bar and newline*/
+	Write (2, "\b\b\b\b\b\b\b\b        \n", 17);
 	return;
 }

@@ -32,10 +32,8 @@ crunch_serial (int _fd, long _counter[256], int _verbose)
 			_counter[(unsigned char)*(_buf+_loop)]++;
 		}
 	}
-	if (_verbose) {
-		BSDbar_clear ();
-		Write (2, "\n", 2);
-	}
+	if (_verbose) BSDbar_clear ();
+
 	/* free buffer and return */
 	free (_buf);
 	return _total_read;
