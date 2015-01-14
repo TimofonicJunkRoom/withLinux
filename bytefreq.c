@@ -107,6 +107,9 @@ main (int argc, char **argv)
 		fprintf (stderr, "HINT: see -h to find out more options.\n");
 	}
 
+	/* optimize I/O */
+	posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL);
+
 	/* =======Start Crunch=========== */
 	if (use_verbose) fputs ("\x1B[mCrunching data ...\n", stderr);
 	total_read = Crunch (fd, bf.c, use_verbose);
