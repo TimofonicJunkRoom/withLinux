@@ -3,7 +3,7 @@ CC=/usr/bin/gcc -Wall
 main:
 	make bf
 bf:
-	gcc -O2 -Wall -fopenmp -o bytefreq bytefreq.c
+	gcc -O1 -Wall -fopenmp -o bytefreq bytefreq.c
 	strip bytefreq
 purge:
 	rm bytefreq
