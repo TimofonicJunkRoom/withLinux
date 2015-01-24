@@ -51,7 +51,12 @@ def mine (_keyword, _count):
 		_f.write (page)
 		_f.close ()
 		# parse cursor
-		cursor = (json.loads(page))["scroll_cursor"]
+		jsond = json.loads(page)
+		if "scroll_cursor" in jsond:
+			cursor = jsond["scroll_cursor"]
+		else:
+			print ("unexpected error: can't find scroll_cursor.")
+			exit (1)
 		if debug>2: print ("* [main] Generated NEW Cursor :\n\t{}".format(cursor))
 		count = count - 1
 
