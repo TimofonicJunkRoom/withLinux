@@ -9,11 +9,9 @@
 
 import os
 import requests
-import re
 import json
 
 debug = 1
-
 config_count = 2
 
 def do_search_1 (_keyword):
@@ -29,26 +27,18 @@ def do_search_2 (_keyword, _cursor):
 	"""
 	url = "https://twitter.com/i/search/timeline?q=" + _keyword + "&scroll_cursor=" + _cursor
 	if debug: print ("* [do_search] KEY : {}, url : {}".format(_keyword, url).replace('\n', ''))
-
 #	page = requests.get (url, proxies = proxies1)
 	page = requests.get (url)
-	#print (page.text)
 	return page.text
 
 def mine (_keyword, _count):
 	count = _count
 	cursor = ""
-	A = ""
-	B = ""
-# check ./pool/archive directory
+# check ./pool/{_keyword} directory
 	if not os.path.exists ("pool"):
 		os.makedirs ("pool")
-	if not os.path.exists ("pool/archive"):
-		os.makedirs ("pool/archive")
-
-# set misc things
-#	cur_pattern = re.compile ("TWEET-.*-.*-")
-
+	if not os.path.exists ("pool/"+_keyword):
+		os.makedirs ("pool/"+_keyword)
 # search
 	while (count >= 0):
 		print ("* [main] Searching, {} time(s) left.".format(count))
@@ -57,22 +47,10 @@ def mine (_keyword, _count):
 			page = do_search_1 (_keyword)
 		else:
 			page = do_search_2 (_keyword, cursor)
-		_f = open ("pool/archive/{}.".format(str(_keyword)) + str(count), "w+")
+		_f = open ("pool/{}/{}".format(_keyword, str(count)), "w+")
 		_f.write (page)
 		_f.close ()
-		"""
-		# parse cursor, this is a dirty hack
-		page.replace (',', '\n')
-		cur_match = cur_pattern.findall (page)
-		cur_match = cur_match[0]
-		cur_match = cur_match.split ('-')
-		A = cur_match[1]
-		B = cur_match[2]
-		if debug>2: print ("* [main] Parsed NEW A{} B{}".format(A,B))
-		# make up cursor
-		cursor = "TWEET-" + str(A) + "-" + str(B)
-		"""
-		# parse cursor, cleaner hack
+		# parse cursor
 		cursor = (json.loads(page))["scroll_cursor"]
 		if debug>2: print ("* [main] Generated NEW Cursor :\n\t{}".format(cursor))
 		count = count - 1
