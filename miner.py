@@ -12,13 +12,15 @@ import requests
 import json
 
 debug = 1
-config_count = 2
+config_count = 1
+
 
 def do_search_1 (_keyword):
 	url = "https://twitter.com/i/search/timeline?q=" + _keyword
 	if debug: print ("* [do_search] KEY : {}, url : {}".format(_keyword, url).replace('\n', ''))
 	page = requests.get (url)
 	return page.text
+
 
 def do_search_2 (_keyword, _cursor):
 	"""
@@ -31,8 +33,9 @@ def do_search_2 (_keyword, _cursor):
 	page = requests.get (url)
 	return page.text
 
+
 def mine (_keyword, _count):
-	count = _count
+	count = 1
 	cursor = ""
 # check ./pool/{_keyword} directory
 	if not os.path.exists ("pool"):
@@ -40,26 +43,32 @@ def mine (_keyword, _count):
 	if not os.path.exists ("pool/"+_keyword):
 		os.makedirs ("pool/"+_keyword)
 # search
-	while (count >= 0):
-		print ("* [main] Searching, {} time(s) left.".format(count))
-		# get page and save to archive
-		if count == _count:
+	while (count <= _count):
+		print ("* [main] Searching for the {} (th) time.".format(count))
+		# get the raw page and save to archive
+		if count == 1:
 			page = do_search_1 (_keyword)
 		else:
 			page = do_search_2 (_keyword, cursor)
 		_f = open ("pool/{}/{}".format(_keyword, str(count)), "w+")
 		_f.write (page)
 		_f.close ()
-		# parse cursor
+		# save html included in json
 		jsond = json.loads(page)
+		if not "items_html" in jsond:
+			print ("unexpected error: can't find item_html, abort.")	
+		_f = open ("pool/{}/{}.html".format(_keyword, str(count)), "w+")
+		_f.write (jsond["items_html"])
+		_f.close ()
+		# parse cursor
 		if "scroll_cursor" in jsond:
 			cursor = jsond["scroll_cursor"]
 		else:
-			print ("unexpected error: can't find scroll_cursor.")
+			print ("unexpected error: can't find scroll_cursor, abort.")
 			exit (1)
 		if debug>2: print ("* [main] Generated NEW Cursor :\n\t{}".format(cursor))
-		count = count - 1
-
+		count = count + 1
+	
 def main():
 # check config file
 		if not os.path.exists ("mine.list"):
@@ -68,7 +77,9 @@ def main():
 # open config and start mine!
 		config_file = open ("mine.list")
 		for words in config_file.readlines():
-				mine (words.replace('\n', '').replace(' ', '+'), config_count)
+			if words[0] == '#': continue
+			mine (words.replace('\n', '').replace(' ', '+'), config_count)
 		config_file.close()	
 
+	 
 main()
