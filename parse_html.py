@@ -5,27 +5,30 @@ import html
 import html.parser
 from html.parser import HTMLParser
 
+depth = 0
+
 class MinerHTMLParser (HTMLParser):
+	depth = 0
 	def handle_starttag (self, tag, attrs):
-		ret = ""
-		ret = ret + "_stag: " + tag
+		depth = depth + 1
+		print ("\t"*depth + "_stag: ", tag)
 		for attr in attrs:
-			ret = ret +  "	attr: " +  str(attr)
-		return ret
+			print ("	attr: ", str(attr))
 	def handle_endtag (self, tag):
-		print ("_etag: ", tag)
+		depth = depth - 1
+		print ("\t"*depth + "_etag: ", tag)
 	def handle_data (self, data):
-		print ("_data: ", data)
+		depth = depth
+		print ("\t"*(depth+1) + str(data))
 
-def parsehtml(_s):
-	a = []
+
+def main():
+	f = open ("pool/linux/1.html", 'r')
+	page = f.read()
+	f.close()
+#print (page)
 	parser = MinerHTMLParser()
-	a.append(parser.feed (_s))
-	ff = open ("/tmp/a", 'w+')
-	ff.write(str(a))
-	ff.close()
+#	parser = HTMLParser()
+	parser.feed (page)
 
-# temp: parser html
-#		parsehtml (html.unescape(jsond["items_html"]))
-
-
+main()
