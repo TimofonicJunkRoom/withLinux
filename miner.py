@@ -17,7 +17,7 @@ config_count = 1
 
 def do_search_1 (_keyword):
 	url = "https://twitter.com/i/search/timeline?q=" + _keyword
-	if debug: print ("* [do_search] KEY : {}, url : {}".format(_keyword, url).replace('\n', ''))
+	if debug: print ("* [do_search_1] {}".format(url).replace('\n', ''))
 	page = requests.get (url)
 	return page.text
 
@@ -28,7 +28,7 @@ def do_search_2 (_keyword, _cursor):
 	return the page.text server returned here
 	"""
 	url = "https://twitter.com/i/search/timeline?q=" + _keyword + "&scroll_cursor=" + _cursor
-	if debug: print ("* [do_search] KEY : {}, url : {}".format(_keyword, url).replace('\n', ''))
+	if debug: print ("* [do_search_2] {}".format(url).replace('\n', ''))
 #	page = requests.get (url, proxies = proxies1)
 	page = requests.get (url)
 	return page.text
@@ -44,22 +44,20 @@ def mine (_keyword, _count):
 		os.makedirs ("pool/"+_keyword)
 # search
 	while (count <= _count):
-		print ("* [main] Searching for the {} (th) time.".format(count))
+		print ("* [main] Search '{}' for the {} (th) time.".format(_keyword, count))
 		# get the raw page and save to archive
 		if count == 1:
 			page = do_search_1 (_keyword)
 		else:
 			page = do_search_2 (_keyword, cursor)
-		_f = open ("pool/{}/{}".format(_keyword, str(count)), "w+")
-		_f.write (page)
-		_f.close ()
+		with open ("pool/{}/{}".format(_keyword, str(count)), "w+") as _f:
+			_f.write (page)
 		# save html included in json
 		jsond = json.loads(page)
 		if not "items_html" in jsond:
 			print ("unexpected error: can't find item_html, abort.")	
-		_f = open ("pool/{}/{}.html".format(_keyword, str(count)), "w+")
-		_f.write (jsond["items_html"])
-		_f.close ()
+		with open ("pool/{}/{}.html".format(_keyword, str(count)), "w+") as _f:
+			_f.write (jsond["items_html"])
 		# parse cursor
 		if "scroll_cursor" in jsond:
 			cursor = jsond["scroll_cursor"]
