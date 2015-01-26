@@ -34,7 +34,10 @@ def main():
 	parser = MinerHTMLParser()
 #	parser = HTMLParser()
 	parser.feed (page)
-	print (idc)
+#	print (idc)
+	for key, val in sorted(idc.items()):
+		print (key, ':', val)
+
 #	with open ("pool/linux/1.html.json", 'w+') as f:
 #		f.write(json.dumps(idc))
 
