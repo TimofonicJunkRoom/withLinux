@@ -79,5 +79,6 @@ def main():
 			mine (words.replace('\n', '').replace(' ', '+'), config_count)
 		config_file.close()	
 
-	 
-main()
+
+if __name__ == "__main__":
+	main()
