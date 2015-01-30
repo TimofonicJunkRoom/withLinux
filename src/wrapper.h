@@ -1,4 +1,4 @@
-/* sock_wrapper.h
+/* wrapper.h
  * data cruncher for Bytefreq, this is a part of bytefreq
 
    Count Byte/Char freqency, using Serial/Parallel Approaches.
@@ -6,6 +6,9 @@
    C.D.Luminate <cdluminate AT 163 DOT com> 
    MIT Licence, 2014
 */
+
+#ifndef Bytefreq_WRAPPER_H
+#define Bytefreq_WRAPPER_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -119,3 +122,5 @@ Sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
 	}
 	return _;
 }
+
+#endif /* Bytefreq_WRAPPER_H */

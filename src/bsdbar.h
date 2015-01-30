@@ -20,19 +20,25 @@
    4. that's all
 */
 
+#ifndef BSDBAR_H
+#define BSDBAR_H
+
+#include <unistd.h>
+#include <stdio.h>
+#include "wrapper.h"
+
 /* INTERFACE */
 void BSDbar_init (void);
 void BSDbar_clear (void);
 void BSDbar_refresh (int num);
 /* END INTERFACE */
 
-int _bsdbar_indicator = 0; /* bar state indicator, internal use */
-struct _bsdbar {
+static struct _bsdbar {
 	char bar;
 	struct _bsdbar * next;
 } bar1, bar2, bar3;
 
-struct _bsdbar * _bar_cursor = &bar1;
+static struct _bsdbar * _bar_cursor;
 
 void
 BSDbar_init (void)
@@ -46,13 +52,15 @@ BSDbar_init (void)
 	bar1.next = &bar2;
 	bar2.next = &bar3;
 	bar3.next = &bar1;
+	/* point the cursor to bar1 */
+	_bar_cursor = &bar1;
 
 	return;
 }
 
 /* this function is for internal use */
-void
-_BSDbar_refresh (char _bar, int num)
+static void
+_BSDbar_refresh (char _bar, int _propor)
 {
 	/* refresh BSD-style progress bar */
     /* whole buffer of the bar */
@@ -60,16 +68,17 @@ _BSDbar_refresh (char _bar, int num)
         '[', ' ', ']', ' ', ' ', ' ', ' ', '%'
     };
 	Write (2, "\b\b\b\b\b\b\b\b", 8); /* clear the previous bar */
-	snprintf (bb, 8, "[%c] %3d%%", _bar, num); /* prepare buffer */
+	snprintf (bb, 8, "[%c] %3d%%", _bar, _propor); /* prepare buffer */
+	fflush (NULL); /* sync stdio buffer to user-defined buffer */
 	Write (2, bb, 8); /* print the buffer to stderr */
 	return;
 }
 
 void
-BSDbar_refresh (int num)
+BSDbar_refresh (int _propor)
 {
     /* note that 'int num' is the proportion to display */
-    _BSDbar_refresh (_bar_cursor -> bar, num);
+    _BSDbar_refresh (_bar_cursor -> bar, _propor);
 	_bar_cursor = _bar_cursor -> next;
     return;
 }
@@ -81,3 +90,5 @@ BSDbar_clear (void)
 	Write (2, "\b\b\b\b\b\b\b\b        \n", 17);
 	return;
 }
+
+#endif /* BSDBAR_H */

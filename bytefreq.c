@@ -7,7 +7,7 @@
  */
 
 // TODO : -S option does not accept 0x?? hex number (atoi)
-/* FIXME : when user's file size exceeds max_of(long), overflow. */
+/* FIXME : long int overflow issue . */
 
 #define BYTEFREQ_VERSION "Version: 2.4 (2014/12/23)\n"
 
@@ -25,14 +25,14 @@
 
 #include <omp.h>
 
-#include "include/wrapper.h"
-#include "include/bsdbar.h"
+#include "src/wrapper.h"
+#include "src/bsdbar.h"
 
-#include "include/crunch.h"
-#include "include/mark.h"
-#include "include/struct.h"
-#include "include/find.h"
-#include "include/print.h"
+#include "src/crunch.h"
+#include "src/mark.h"
+#include "src/struct.h"
+#include "src/find.h"
+#include "src/print.h"
 
 /* ===BEGIN HELP MESSAGE============================ */
 void Usage (char *pname)
