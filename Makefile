@@ -1,3 +1,6 @@
+DESTDIR=
+BIN=$(DESTDIR)/usr/bin
+
 CC=/usr/bin/gcc -Wall
 
 main:
@@ -5,13 +8,9 @@ main:
 bf:
 	gcc -O1 -Wall -fopenmp -o bytefreq bytefreq.c
 	strip bytefreq
-purge:
+clean:
 	rm bytefreq
-install:
-	strip bytefreq
-	cp bytefreq /usr/bin/
-	chmod 0755 /usr/bin/bytefreq
+install: bf
+	install -m0755 bytefreq $(BIN)/ 
 uninstall:
 	rm /usr/bin/bytefreq 
-help:
-	@echo "N/A : compile\npurge : delete binary file\ninstall : install bytefreq into /usr/bin/\nuninstall : ..\nhelp : show this message\n"

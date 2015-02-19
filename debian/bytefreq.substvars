@@ -1,0 +1,2 @@
+shlibs:Depends=libc6 (>= 2.2.5), libgomp1 (>= 4.9)
+misc:Depends=
