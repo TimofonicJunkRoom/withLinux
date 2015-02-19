@@ -101,7 +101,12 @@ For more info see -v
   
 ### Compile
 just make.  
-It works on Debian GNU/Linux.
+  
+If you want to make package of it, you can invoke  
+```
+$ make deb-pkg
+```
+as long as you have dpkg-buildpackage command installed.  
 
 #### other utilities included in this repo
 There are some other small programs that may be useful:  
