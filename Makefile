@@ -14,3 +14,5 @@ install: bf
 	install -m0755 bytefreq $(BIN)/ 
 uninstall:
 	rm /usr/bin/bytefreq 
+deb-pkg:
+	dpkg-buildpackage -us -uc
