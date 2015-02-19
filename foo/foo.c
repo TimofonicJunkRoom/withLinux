@@ -20,6 +20,9 @@
 int
 main (int argc, char **argv)
 {
+	if (argc != 2)
+		exit (1);
+
 	char md_ans[16];
 	bzero (md_ans, 16);
 
@@ -29,7 +32,7 @@ main (int argc, char **argv)
 			   0x33, 0xac, 0x29, 0xcc,
 			   0xb8, 0x65, 0x3d, 0x9b }; */
 
-	int fd = open (MD5_FILE_TO_CRACK, O_RDONLY);
+	int fd = open (argv[1], O_RDONLY);
 	if (fd == -1) {
 		perror ("open");
 		exit (1);
@@ -41,7 +44,7 @@ main (int argc, char **argv)
 	char c2 = 0;
 	char c3 = 0;
 
-	#pragma omp parallel for num_threads(4) private(c1,c2,c3)
+//	#pragma omp parallel for num_threads(4) private(c1,c2,c3)
 	for (c0 = 32; c0 < 127; c0++) {
 		char c[5];
 		bzero (c, 5);
