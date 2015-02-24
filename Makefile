@@ -7,11 +7,12 @@ main:
 	make bf
 bf:
 	gcc -O1 -Wall -fopenmp -o bytefreq bytefreq.c
-	strip bytefreq
 clean:
-	rm bytefreq
+	if [ -e bytefreq ]; then\
+		rm bytefreq; \
+	fi
 install: bf
-	install -m0755 bytefreq $(BIN)/ 
+	install -m0755 bytefreq $(BIN)
 uninstall:
 	rm /usr/bin/bytefreq 
 deb-pkg:
