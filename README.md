@@ -1,13 +1,13 @@
-# cda - cd into Archive(tarball)
+# cda - cd into Archive (tarball)
 [unix,c] cd into archive (tarball)
 
-## what this ?
-Initially I have a tarball
+## what's this ?
+Assume that I have a tarball
 ```shell
 $ ls -l test.tar.gz 
 -rw-r--r-- 1 lumin lumin 186 Jun 15 16:01 test.tar.gz
 ```
-Then I invoke this "cda" in order to "chdir()" into this archive
+Then I invoke this "cda" in order to "chdir()" into target archive
 ```shell
 $ cda test.tar.gz 
 * Extract Archive "test.tar.gz"
@@ -27,6 +27,15 @@ $ find
 ./test/e
 ./test/f
 ```
+Then exit the shell
+```
+$ exit
+exit
+* [OK] now removing temp directory
+$ 
+```
+Note that:
+* For safety, currently cda don't really invoke `rm` to remove temp dir.
 
 ## Compile & install
 * compile: `make`
@@ -34,7 +43,6 @@ $ find
 
 ## Hints
 * you can set the variable `debug` to 0 in `cda.c` to hide debug info.
-* cda invoke RM to remove temporary directory, and now `RM = "echo"`
 
 ##LICENSE
-`GPL-3+`
+GPL-3+
