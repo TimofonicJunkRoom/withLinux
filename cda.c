@@ -29,7 +29,7 @@ License: GPL-3.0+
 #include <string.h>
 
 char * TAR = "tar";
-char * RM = "echo";
+char * RM = "rm";
 
 #define PREFIX ""
 #define TEMPLATE "/tmp/cda.XXXXXX"
@@ -156,13 +156,9 @@ main (int argc, char **argv, char **env)
 	/* remove the temp dir */
 	printf ("* [OK] now removing temp directory\n");
 	printf ("* NOTE: in the testing phase of me the software, I don't invoke\n"
-			"  command [rm] at all, for safety.\n"
-			"  So please remove that temp dir manually.\n"
-			"\n"
-			"  if you want use [rm], apply this patch at [cda.c:16] :\n"
-			"  - char * RM = \"echo\";\n"
-			"  + cahr * RM = \"rm\";\n");
-	snprintf (cmd_buf, 4095, "cd /; %s -rf %s", RM, path_buf);
+			"        command [rm -rf DIR] directly, invoke [rm -i -rf DIR] instead,\n"
+			"        just for safety.\n");
+	snprintf (cmd_buf, 4095, "cd /; %s -i -rf %s", RM, path_buf);
 	if (debug) printf ("* run \"%s\"\n", cmd_buf);
 	system (cmd_buf);
 	/* XXX: don't forget to free() ! */
