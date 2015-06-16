@@ -1,8 +1,12 @@
 CFLAGS := -g -O2 -Wall 
 
 main:
-	$(CC) $(CFLAGS) -c cda.c
-	$(CC) $(CFLAGS) -o cda cda.o
+	$(MAKE) cda
+%.o: %.c %.h
+	$(CC) $(CFLAGS) -c $<
+cda: cda.o
+	$(CC) $(CFLAGS) $< -o cda 
+	
 clean:
 	$(RM) *.o cda
 install: main
