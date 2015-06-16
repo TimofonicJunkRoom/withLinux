@@ -106,9 +106,10 @@ remove_tmpdir (char * _tmpdir, int _force, int _verbose)
 		perror ("execve"); /* execve only returns on error */
 		exit (EXIT_FAILURE);
 	} else {  /* fork : parent */
-		if (debug) printf ("* fork() [%d] to execve rm\n", pid);
+		if (1<debug) printf ("* fork() [%d] to execve rm\n", pid);
 		waitpid (-1, &_tmp, 0);
-		if (debug) printf ("* child rm terminated (%d).\n", _tmp);
+		if (debug) printf ("* Child RM terminated with (%d) - %s.\n", _tmp,
+				           (0==_tmp)?"Success":"Failure");
 		if (0 != _tmp) {
 			printf ("* cda: rm failed. (%d)\n", _tmp);
 			exit (EXIT_FAILURE);
@@ -145,7 +146,7 @@ main (int argc, char **argv, char **env)
 		perror ("stat");
 		exit (EXIT_FAILURE);
 	}
-	if (debug) {
+	if (1<debug) {
 		perror ("stat");
 		printf ("* stat_buf: uid= %d; gid= %d; mode= %o;\n",
 				stat_buf -> st_uid,
@@ -164,14 +165,14 @@ main (int argc, char **argv, char **env)
 		perror ("access");
 		exit (EXIT_FAILURE);
 	}
-	if (debug) perror ("access");
+	if (1<debug) perror ("access");
 	/* mkdtemp for extracting files */
-	if (debug) printf ("* using template \"%s\"\n", template);
+	if (1<debug) printf ("* using template \"%s\"\n", template);
 	if ((temp_dir = mkdtemp (template)) == NULL) {
 		printf ("! mkdtemp() failed.\n");
 		exit (EXIT_FAILURE);
 	}
-	if (debug) printf ("* created temp dir \"%s\"\n", temp_dir);
+	if (debug) printf ("* Created temp dir \"%s\"\n", temp_dir);
 	/* extract archive into temp_dir */
 	if ((pid = fork()) == -1) {
 		perror ("fork");
@@ -236,16 +237,16 @@ main (int argc, char **argv, char **env)
 		perror ("execve");
 		exit (EXIT_FAILURE);
 	} else { /* fork : parent */
-		if (debug) printf ("* fork() [%d] to execve tar\n", pid);
+		if (1<debug) printf ("* fork() [%d] to execve tar\n", pid);
 		waitpid (-1, &status, 0);
-		if (debug) printf ("* child tar terminated (%d).\n", status);
+		if (debug) printf ("* Child TAR terminated (%d).\n", status);
 		if (0 != status) {
 			printf ("* child tar exited with error (%d).\n", status);
 			exit (EXIT_FAILURE);
 		}
 	}
 	/* step into temp and popup a shell */
-	if (debug) printf ("* step into Archive (tempdir) %s\n", temp_dir);
+	if (debug) printf ("* Stepping into Archive (tempdir): %s\n", temp_dir);
 	if (chdir(temp_dir) == -1) {
 		perror ("chdir");
 		exit (EXIT_FAILURE);
@@ -254,13 +255,13 @@ main (int argc, char **argv, char **env)
 		printf ("* getcwd failed\n");
 		exit (EXIT_FAILURE);
 	}
-	if (debug) printf ("* cda: now pwd = %s\n*      fork and execve bash ...\n", path_buf);
+	if (debug) printf ("* cda: PWD = %s\n*      fork and execve bash ...\n", path_buf);
 	/* TODO: fork a new one to execve bash ? */
 	system ("bash");
 	/* when user exited bash above, this program continues from here */
 
 	/* remove the temp dir */
-	printf ("* cda: OK, removing temp directory \"%s\"...\n", path_buf);
+	printf ("* cda: OK, Removing temp directory \"%s\"...\n", path_buf);
 	/* traditional delete
     snprintf (cmd_buf, 4095, "cd /; %s -i -rf %s", RM, path_buf);
 	if (debug) printf ("* run \"%s\"\n", cmd_buf);
