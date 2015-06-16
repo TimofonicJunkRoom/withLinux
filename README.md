@@ -40,6 +40,13 @@ Note that:
 * For safety, by default cda really invoke `rm -i -rf DIR` to remove temp dir.
   If you want to remove it directly, run `$ cda ARCHIVE -f`
 
+## Supported Archive formats  
+* .tar.gz | .tgz
+* .tar.bz2
+* .tar.xz | .txz
+* .tar
+* more in the future
+
 ## Without 'cda'
 Let's do the same thing as above, withou `cda`
 ```shell
