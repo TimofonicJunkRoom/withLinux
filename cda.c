@@ -30,7 +30,13 @@ License: GPL-3.0+
 
 extern char * myversion;
 
+char * decompress;
+char * decompress_fname;
+
+char * UNZIP = "unzip";
+char * UNZIP_fname = "/usr/bin/unzip";
 char * TAR = "tar";
+char * TAR_fname = "/bin/tar";
 char * RM = "rm";
 
 #define PREFIX ""
@@ -59,9 +65,19 @@ Usage (char *myname)
 "Option:\n"
 "    -f force remove tmpdir, instead of interactive rm.\n"
 "\n"
+"  supported: tar.gz|tgz, tar.xz|txz, tar.bz2, tar, zip"
 "  version: %s\n"
 "", myname, myversion);
 	return;
+}
+
+int
+flush_newargv (char ** _newargv)
+{
+	int i;
+	for (i = 0; i < 6; i++)
+		_newargv[i] = NULL;
+	return 0;
 }
 
 int
@@ -156,8 +172,16 @@ main (int argc, char **argv, char **env)
 		perror ("fork");
 		exit (EXIT_FAILURE);
 	}
-	if (pid == 0) {
-		/* fork : child */
+	if (pid == 0) { /* fork : child */
+		/* FYI: tar zxvf x.tar.gz -C /tmp NULL */
+		decompress = TAR; /* use tar by default */
+		decompress_fname = TAR_fname;
+		newargv[0] = TAR;
+		/* newargv[1] = */
+		newargv[2] = argv[1];
+		newargv[3] = "-C";
+		newargv[4] = temp_dir;
+		newargv[5] = NULL; /* this is the last one ! */
 		if ((strstr(argv[1], ".tar.gz") != NULL)||(strstr(argv[1], ".tgz") != NULL)) {
 			if (debug) printf ("* detected [ .tar.gz | .tgz ]\n");
 			newargv[1] = "zxf";
@@ -170,23 +194,26 @@ main (int argc, char **argv, char **env)
 		} else if (strstr(argv[1], ".tar") != NULL) {
 			if (debug) printf ("* detedted [ .tar ]\n");
 			newargv[1] = "xf";
-		} else {
+		} else if (strstr(argv[1], ".zip") != NULL) {
+			flush_newargv (newargv);
+			decompress = UNZIP;
+			decompress_fname = UNZIP_fname;
+			newargv[0] = UNZIP;
+			newargv[1] = "-q"; /* quiet */
+			newargv[2] = argv[1];
+			newargv[3] = "-d";
+			newargv[4] = temp_dir;
+			newargv[5] = NULL;
+		} else{
 			/* TODO: more formats ? */
 			printf ("* I finally realized that, you are not feeding me an Archive !\n");
 			exit (EXIT_FAILURE);
 		}
-		/* FYI: tar zxvf x.tar.gz -C /tmp NULL */
-		newargv[0] = TAR;
-		newargv[2] = argv[1];
-		newargv[3] = "-C";
-		newargv[4] = temp_dir;
-		newargv[5] = NULL; /* this is the last one ! */
 		/* end constructing newargv */
-		execve ("/bin/tar", newargv, newenv);
+		execve (decompress_fname, newargv, newenv);
 		perror ("execve");
 		exit (EXIT_FAILURE);
-	} else {
-		/* fork : parent */
+	} else { /* fork : parent */
 		if (debug) printf ("* fork() [%d] to execve tar\n", pid);
 		waitpid (-1, &status, 0);
 		if (debug) printf ("* child tar terminated (%d).\n", status);
@@ -223,4 +250,3 @@ main (int argc, char **argv, char **env)
 	free (stat_buf);
 	return 0;
 }
-
