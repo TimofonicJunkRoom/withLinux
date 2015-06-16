@@ -42,9 +42,11 @@ Note that:
 
 ## Supported Archive formats  
 * .tar.gz | .tgz
-* .tar.bz2
+* .tar.bz2 | .tbz | .tbz2
 * .tar.xz | .txz
 * .tar
+* .zip
+* .7z
 * more in the future
 
 ## Without 'cda'

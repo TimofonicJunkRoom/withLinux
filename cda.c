@@ -37,6 +37,9 @@ char * UNZIP = "unzip";
 char * UNZIP_fname = "/usr/bin/unzip";
 char * TAR = "tar";
 char * TAR_fname = "/bin/tar";
+char * _7Z = "7z";
+char * _7Z_fname = "/usr/bin/7z";
+
 char * RM = "rm";
 
 #define PREFIX ""
@@ -54,6 +57,7 @@ char          template[] = TEMPLATE;
 char        * temp_dir;
 char        * newargv[] = { NULL, NULL, NULL, NULL, NULL, NULL };
 char        * newenv[] = { NULL };
+char        * buffer; /* general purpose */
 
 void
 Usage (char *myname)
@@ -65,7 +69,7 @@ Usage (char *myname)
 "Option:\n"
 "    -f force remove tmpdir, instead of interactive rm.\n"
 "\n"
-"  supported: tar.gz|tgz, tar.xz|txz, tar.bz2, tar, zip"
+"  supports: tar.gz|tgz, tar.xz|txz, tar.bz2|tbz|tbz2, tar, zip, 7z"
 "  version: %s\n"
 "", myname, myversion);
 	return;
@@ -130,7 +134,8 @@ main (int argc, char **argv, char **env)
 	stat_buf = malloc (sizeof(struct stat));
 	path_buf = malloc (4096);
 	cmd_buf  = malloc (4096);
-	if (stat_buf == NULL || path_buf == NULL || cmd_buf == NULL) {
+	buffer   = malloc (4096);
+	if (stat_buf == NULL || path_buf == NULL || cmd_buf == NULL || buffer == NULL) {
 		printf ("! cda: malloc failed\n");
 		exit (EXIT_FAILURE);
 	}
@@ -182,19 +187,24 @@ main (int argc, char **argv, char **env)
 		newargv[3] = "-C";
 		newargv[4] = temp_dir;
 		newargv[5] = NULL; /* this is the last one ! */
-		if ((strstr(argv[1], ".tar.gz") != NULL)||(strstr(argv[1], ".tgz") != NULL)) {
+		if (strstr(argv[1], ".tar.gz") != NULL ||
+		    strstr(argv[1], ".tgz")    != NULL) {
 			if (debug) printf ("* detected [ .tar.gz | .tgz ]\n");
 			newargv[1] = "zxf";
-		} else if (strstr(argv[1], ".tar.bz2") != NULL) {
-			if (debug) printf ("* detedted [ .tar.bz2 ]\n");
+		} else if (strstr(argv[1], ".tar.bz2") != NULL ||
+				   strstr(argv[1], ".tbz2")    != NULL ||
+				   strstr(argv[1], ".tbz")     != NULL) {
+			if (debug) printf ("* detedted [ .tar.bz2 | .tbz | .tbz2 ]\n");
 			newargv[1] = "jxf";
-		} else if (strstr(argv[1], ".tar.xz") != NULL) {
-			if (debug) printf ("* detedted [ .tar.xz ]\n");
+		} else if (strstr(argv[1], ".tar.xz") != NULL ||
+				   strstr(argv[1], ".txz")    != NULL) {
+			if (debug) printf ("* detedted [ .tar.xz | .txz ]\n");
 			newargv[1] = "Jxf";
 		} else if (strstr(argv[1], ".tar") != NULL) {
 			if (debug) printf ("* detedted [ .tar ]\n");
 			newargv[1] = "xf";
 		} else if (strstr(argv[1], ".zip") != NULL) {
+			if (debug) printf ("* detedted [ .zip ]\n");
 			flush_newargv (newargv);
 			decompress = UNZIP;
 			decompress_fname = UNZIP_fname;
@@ -204,9 +214,21 @@ main (int argc, char **argv, char **env)
 			newargv[3] = "-d";
 			newargv[4] = temp_dir;
 			newargv[5] = NULL;
-		} else{
+		} else if(strstr(argv[1], ".7z") != NULL) {
+			if (debug) printf ("* detedted [ .7z ]\n");
+			bzero (buffer, 4096);
+			flush_newargv (newargv);
+			decompress = _7Z;
+			decompress_fname = _7Z_fname;
+			newargv[0] = _7Z;
+			newargv[1] = "x"; /* extract with full path */
+			newargv[2] = argv[1];
+			newargv[3] = strncat(strncat(buffer, "-o", 4095), temp_dir, 4095);
+			newargv[4] = NULL;
+			newargv[5] = NULL;
+		} else {
 			/* TODO: more formats ? */
-			printf ("* I finally realized that, you are not feeding me an Archive !\n");
+			printf ("* I don't recogonize this kind of \"Archive\" !\n");
 			exit (EXIT_FAILURE);
 		}
 		/* end constructing newargv */
@@ -245,6 +267,7 @@ main (int argc, char **argv, char **env)
 	system (cmd_buf); */
 	remove_tmpdir (path_buf, force, 0);
 	/* XXX: don't forget to free() ! */
+	free (buffer);
 	free (cmd_buf);
 	free (path_buf);
 	free (stat_buf);
