@@ -21,11 +21,7 @@ $ find
 .
 ./test
 ./test/a
-./test/b
-./test/c
-./test/d
-./test/e
-./test/f
+[...]
 ```
 Then exit the shell
 ```
@@ -36,6 +32,19 @@ $
 ```
 Note that:
 * For safety, currently cda don't really invoke `rm` to remove temp dir.
+
+## Without 'cda'
+Let's do the same thing as above, withou `cda`
+```shell
+$ ls -l test.tar.gz
+[...]
+(1)$ tar zxvf test.tar.gz -C SOME_DIRECTORY
+[...]
+(2)$ cd SOME_DIRECTORY
+......
+(3)$ rm -rf SOME_DIRECTORY
+```
+`cda` encapsules the (1,2,3) steps into one.
 
 ## Compile & install
 * compile: `make`
