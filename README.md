@@ -31,7 +31,8 @@ exit
 $ 
 ```
 Note that:
-* For safety, currently cda don't really invoke `rm` to remove temp dir.
+* For safety, by default cda really invoke `rm -i -rf DIR` to remove temp dir.
+  If you want to remove it directly, run `$ cda ARCHIVE -f`
 
 ## Without 'cda'
 Let's do the same thing as above, withou `cda`
