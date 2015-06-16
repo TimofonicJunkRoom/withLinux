@@ -86,9 +86,9 @@ remove_tmpdir (char * _tmpdir, int _force, int _verbose)
 		perror ("execve"); /* execve only returns on error */
 		exit (EXIT_FAILURE);
 	} else {  /* fork : parent */
-		if (debug) printf ("* fork() [%d]\n", pid);
+		if (debug) printf ("* fork() [%d] to execve rm\n", pid);
 		waitpid (-1, &_tmp, 0);
-		if (debug) printf ("* child terminated (%d).\n", _tmp);
+		if (debug) printf ("* child rm terminated (%d).\n", _tmp);
 		if (0 != _tmp) {
 			printf ("* cda: rm failed. (%d)\n", _tmp);
 			exit (EXIT_FAILURE);
@@ -100,6 +100,7 @@ remove_tmpdir (char * _tmpdir, int _force, int _verbose)
 int
 main (int argc, char **argv, char **env)
 {
+	/* TODO: use getopt() ? */
 	/* check argv[1] */
 	if (argv[1] == NULL) {
 		Usage (argv[0]);
@@ -170,8 +171,9 @@ main (int argc, char **argv, char **env)
 			if (debug) printf ("* detedted [ .tar ]\n");
 			newargv[1] = "xf";
 		} else {
+			/* TODO: more formats ? */
 			printf ("* I finally realized that, you are not feeding me an Archive !\n");
-			exit (EXIT_SUCCESS);
+			exit (EXIT_FAILURE);
 		}
 		/* FYI: tar zxvf x.tar.gz -C /tmp NULL */
 		newargv[0] = TAR;
@@ -185,16 +187,16 @@ main (int argc, char **argv, char **env)
 		exit (EXIT_FAILURE);
 	} else {
 		/* fork : parent */
-		if (debug) printf ("* p: fork() [%d]\n", pid);
+		if (debug) printf ("* fork() [%d] to execve tar\n", pid);
 		waitpid (-1, &status, 0);
-		if (debug) printf ("* child terminated (%d).\n", status);
+		if (debug) printf ("* child tar terminated (%d).\n", status);
 		if (0 != status) {
-			printf ("* child exited with error (%d).\n", status);
+			printf ("* child tar exited with error (%d).\n", status);
 			exit (EXIT_FAILURE);
 		}
 	}
 	/* step into temp and popup a shell */
-	if (debug) printf ("* step into tempdir %s\n", temp_dir);
+	if (debug) printf ("* step into Archive (tempdir) %s\n", temp_dir);
 	if (chdir(temp_dir) == -1) {
 		perror ("chdir");
 		exit (EXIT_FAILURE);
@@ -203,8 +205,10 @@ main (int argc, char **argv, char **env)
 		printf ("* getcwd failed\n");
 		exit (EXIT_FAILURE);
 	}
-	if (debug) printf ("* now pwd = %s\n", path_buf);
-	system ("bash");	
+	if (debug) printf ("* cda: now pwd = %s\n*      fork and execve bash ...\n", path_buf);
+	/* TODO: fork a new one to execve bash ? */
+	system ("bash");
+	/* when user exited bash above, this program continues from here */
 
 	/* remove the temp dir */
 	printf ("* cda: OK, removing temp directory \"%s\"...\n", path_buf);
