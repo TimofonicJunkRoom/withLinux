@@ -35,7 +35,9 @@ char * RM = "rm";
 #define TEMPLATE "/tmp/cda.XXXXXX"
 
 int debug = 1;
+int force = 0;
 
+int           status;
 pid_t         pid;
 struct stat * stat_buf;
 char        * path_buf;
@@ -43,14 +45,51 @@ char        * cmd_buf;
 char          template[] = TEMPLATE;
 char        * temp_dir;
 char        * newargv[] = { NULL, NULL, NULL, NULL, NULL, NULL };
+char        * newenv[] = { NULL };
 
 void
 Usage (char *myname)
 {
 	printf (""
 "Usage:\n"
-"    %s  <FILE|DIR>\n", myname);
+"    %s  <ARCHIVE> [-f]\n"
+"Option:\n"
+"    -f force remove tmpdir, instead of interactive rm.\n"
+"", myname);
 	return;
+}
+
+int
+remove_tmpdir (char * _tmpdir, int _force, int _verbose)
+{   
+	int _tmp = 0x00;
+	/* remove temp_dir */
+	if ((pid = fork()) == -1) {
+		perror ("fork");
+		exit (EXIT_FAILURE);
+	}
+	if (pid == 0) {  /* fork : child */
+		/* construct newargv for rm */
+		newargv[0] = "rm"; 
+		newargv[1] = "-rf";
+		newargv[2] = _tmpdir; 
+		newargv[3] = (1 == _force) ? (NULL) : ("-i");
+		newargv[4] = NULL; 
+		newargv[5] = NULL; /* this is the last one ! */
+		/* end constructing newargv */
+		execve ("/bin/rm", newargv, newenv);
+		perror ("execve"); /* execve only returns on error */
+		exit (EXIT_FAILURE);
+	} else {  /* fork : parent */
+		if (debug) printf ("* fork() [%d]\n", pid);
+		waitpid (-1, &_tmp, 0);
+		if (debug) printf ("* child terminated (%d).\n", _tmp);
+		if (0 != _tmp) {
+			printf ("* cda: rm failed. (%d)\n", _tmp);
+			exit (EXIT_FAILURE);
+		}
+	}
+	return _tmp;
 }
 
 int
@@ -61,6 +100,10 @@ main (int argc, char **argv, char **env)
 		Usage (argv[0]);
 		exit (EXIT_FAILURE);
 	}
+	/* parse argv[2] */
+	if (NULL != argv[2])
+		if (NULL != strstr(argv[2], "-f"))
+			force = 1;
 	/* malloc buffers, check NULL  */
 	stat_buf = malloc (sizeof(struct stat));
 	path_buf = malloc (4096);
@@ -112,17 +155,17 @@ main (int argc, char **argv, char **env)
 		if ((strstr(argv[1], ".tar.gz") != NULL)||(strstr(argv[1], ".tgz") != NULL)) {
 			if (debug) printf ("* detected [ .tar.gz | .tgz ]\n");
 			//newargv = { "tar", "zxvf", argv[1], "-C", temp_dir, NULL };
-			newargv[1] = "zxvf";
+			newargv[1] = "zxf";
 		} else if (strstr(argv[1], ".tar.bz2") != NULL) {
 			if (debug) printf ("* detedted [ .tar.bz2 ]\n");
 			//newargv = { "tar", "jxvf", argv[1], "-C", temp_dir, NULL };
-			newargv[1] = "jxvf";
+			newargv[1] = "jxf";
 		} else if (strstr(argv[1], ".tar.xz") != NULL) {
 			//newargv = { "tar", "Jxvf", argv[1], "-C", temp_dir, NULL };
-			newargv[1] = "Jxvf";
+			newargv[1] = "Jxf";
 		} else if (strstr(argv[1], ".tar") != NULL) {
 			//newargv = { "tar", "xvf", argv[1], "-C", temp_dir, NULL };
-			newargv[1] = "xvf";
+			newargv[1] = "xf";
 		} else {
 			printf ("* I finally realized that, you are not feeding me an Archive !\n");
 			exit (EXIT_SUCCESS);
@@ -133,7 +176,6 @@ main (int argc, char **argv, char **env)
 		newargv[3] = "-C";
 		newargv[4] = temp_dir;
 		newargv[5] = NULL; /* this is the last one ! */
-		char * newenv[] = { NULL };
 		/* end constructing newargv */
 		execve ("/bin/tar", newargv, newenv);
 		perror ("execve");
@@ -141,8 +183,12 @@ main (int argc, char **argv, char **env)
 	} else {
 		/* fork : parent */
 		if (debug) printf ("* p: fork() [%d]\n", pid);
-		waitpid (-1, NULL, 0);
-		if (debug) printf ("* p: child terminated.\n");
+		waitpid (-1, &status, 0);
+		if (debug) printf ("* child terminated (%d).\n", status);
+		if (0 != status) {
+			printf ("* child exited with error (%d).\n", status);
+			exit (EXIT_FAILURE);
+		}
 	}
 	/* step into temp and popup a shell */
 	if (debug) printf ("* step into tempdir %s\n", temp_dir);
@@ -150,17 +196,20 @@ main (int argc, char **argv, char **env)
 		perror ("chdir");
 		exit (EXIT_FAILURE);
 	}
-	if (debug) printf ("* now pwd = %s\n", getcwd(path_buf, 4095));
+	if (NULL == getcwd (path_buf, 4095)) {
+		printf ("* getcwd failed\n");
+		exit (EXIT_FAILURE);
+	}
+	if (debug) printf ("* now pwd = %s\n", path_buf);
 	system ("bash");	
 
 	/* remove the temp dir */
-	printf ("* [OK] now removing temp directory\n");
-	printf ("* NOTE: in the testing phase of me the software, I don't invoke\n"
-			"        command [rm -rf DIR] directly, invoke [rm -i -rf DIR] instead,\n"
-			"        just for safety.\n");
-	snprintf (cmd_buf, 4095, "cd /; %s -i -rf %s", RM, path_buf);
+	printf ("* cda: OK, removing temp directory \"%s\"...\n", path_buf);
+	/* traditional delete
+    snprintf (cmd_buf, 4095, "cd /; %s -i -rf %s", RM, path_buf);
 	if (debug) printf ("* run \"%s\"\n", cmd_buf);
-	system (cmd_buf);
+	system (cmd_buf); */
+	remove_tmpdir (path_buf, force, 0);
 	/* XXX: don't forget to free() ! */
 	free (cmd_buf);
 	free (path_buf);
@@ -168,3 +217,4 @@ main (int argc, char **argv, char **env)
 	//close (fd);
 	return 0;
 }
+
