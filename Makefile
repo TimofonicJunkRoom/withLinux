@@ -1,7 +1,9 @@
-CFLAGS := -g -O2 -Wall 
+CFLAGS  := -g -O2 -Wall 
+INSTALL := install
+DESTDIR :=
+BIN     := /usr/bin/
 
-main:
-	$(MAKE) cda
+main: cda
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 cda: cda.o
@@ -10,4 +12,4 @@ cda: cda.o
 clean:
 	$(RM) *.o cda
 install: main
-	install -m 0755 cda /usr/bin/
+	$(INSTALL) -m 0755 cda $(DESTDIR)/$(BIN)
