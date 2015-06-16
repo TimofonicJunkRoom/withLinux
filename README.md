@@ -11,12 +11,12 @@ Then I invoke this "cda" in order to "chdir()" into target archive
 ```shell
 $ cda coreutils_8.23.orig.tar.gz -f
 * Extract Archive "coreutils_8.23.orig.tar.gz"
-* created temp dir "/tmp/cda.CRllN2"
-* p: fork() [4844]
+* Created temp dir "/tmp/cda.XoyzAa"
 * detected [ .tar.gz | .tgz ]
-* child terminated (0).
-* step into tempdir /tmp/cda.CRllN2
-* now pwd = /tmp/cda.CRllN2
+* Child TAR terminated (0).
+* Stepping into Archive (tempdir): /tmp/cda.XoyzAa
+* cda: PWD = /tmp/cda.XoyzAa
+*      fork and execve bash ...
 $ 
 ```
 Now we are "in" the archive:
@@ -30,15 +30,13 @@ $ find | head
 Then exit the shell
 ```
 $ exit
-exit
-* cda: OK, removing temp directory "/tmp/cda.CRllN2"...
-* fork() [4861]
-* child terminated (0).
+* cda: OK, Removing temp directory "/tmp/cda.XoyzAa"...
+* Child RM terminated with (0) - Success.
 $ 
 ```
 Note that:
 * For safety, by default cda really invoke `rm -i -rf DIR` to remove temp dir.
-  If you want to remove it directly, run `$ cda ARCHIVE -f`
+If you want to remove it directly, run `$ cda ARCHIVE -f`
 
 ## Supported Archive formats  
 * .tar.gz | .tgz
