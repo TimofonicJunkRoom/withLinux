@@ -1,5 +1,7 @@
 /* cda.h */
 
+char * myversion = "0.1";
+
 void
 Usage (char * myname);
 

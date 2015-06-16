@@ -28,6 +28,8 @@ License: GPL-3.0+
 #include <sys/wait.h>
 #include <string.h>
 
+extern char * myversion;
+
 char * TAR = "tar";
 char * RM = "rm";
 
@@ -51,12 +53,14 @@ void
 Usage (char *myname)
 {
 	printf (""
-"             cda - chdir into Archive\n"
+"          cda - chdir into Archive\n"
 "Usage:\n"
 "    %s  <ARCHIVE> [-f]\n"
 "Option:\n"
 "    -f force remove tmpdir, instead of interactive rm.\n"
-"", myname);
+"\n"
+"  version: %s\n"
+"", myname, myversion);
 	return;
 }
 
