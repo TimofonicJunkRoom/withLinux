@@ -51,6 +51,7 @@ void
 Usage (char *myname)
 {
 	printf (""
+"             cda - chdir into Archive\n"
 "Usage:\n"
 "    %s  <ARCHIVE> [-f]\n"
 "Option:\n"
@@ -154,17 +155,15 @@ main (int argc, char **argv, char **env)
 		/* fork : child */
 		if ((strstr(argv[1], ".tar.gz") != NULL)||(strstr(argv[1], ".tgz") != NULL)) {
 			if (debug) printf ("* detected [ .tar.gz | .tgz ]\n");
-			//newargv = { "tar", "zxvf", argv[1], "-C", temp_dir, NULL };
 			newargv[1] = "zxf";
 		} else if (strstr(argv[1], ".tar.bz2") != NULL) {
 			if (debug) printf ("* detedted [ .tar.bz2 ]\n");
-			//newargv = { "tar", "jxvf", argv[1], "-C", temp_dir, NULL };
 			newargv[1] = "jxf";
 		} else if (strstr(argv[1], ".tar.xz") != NULL) {
-			//newargv = { "tar", "Jxvf", argv[1], "-C", temp_dir, NULL };
+			if (debug) printf ("* detedted [ .tar.xz ]\n");
 			newargv[1] = "Jxf";
 		} else if (strstr(argv[1], ".tar") != NULL) {
-			//newargv = { "tar", "xvf", argv[1], "-C", temp_dir, NULL };
+			if (debug) printf ("* detedted [ .tar ]\n");
 			newargv[1] = "xf";
 		} else {
 			printf ("* I finally realized that, you are not feeding me an Archive !\n");
@@ -214,7 +213,6 @@ main (int argc, char **argv, char **env)
 	free (cmd_buf);
 	free (path_buf);
 	free (stat_buf);
-	//close (fd);
 	return 0;
 }
 
