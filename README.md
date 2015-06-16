@@ -4,30 +4,36 @@
 ## what's this ?
 Assume that I have a tarball
 ```shell
-$ ls -l test.tar.gz 
--rw-r--r-- 1 lumin lumin 186 Jun 15 16:01 test.tar.gz
+$ ls -l coreutils_8.23.orig.tar.gz 
+-rw-r--r-- 1 root root 12582141 Sep  1  2014 coreutils_8.23.orig.tar.gz
 ```
 Then I invoke this "cda" in order to "chdir()" into target archive
 ```shell
-$ cda test.tar.gz 
-* Extract Archive "test.tar.gz"
+$ cda coreutils_8.23.orig.tar.gz -f
+* Extract Archive "coreutils_8.23.orig.tar.gz"
+* created temp dir "/tmp/cda.CRllN2"
+* p: fork() [4844]
 * detected [ .tar.gz | .tgz ]
-* p: child terminated.
-* step into tempdir /tmp/cda.b5WBt3
+* child terminated (0).
+* step into tempdir /tmp/cda.CRllN2
+* now pwd = /tmp/cda.CRllN2
+$ 
 ```
 Now we are "in" the archive:
 ```shell
-$ find
+$ find | head
 .
-./test
-./test/a
+./coreutils-8.23
+./coreutils-8.23/THANKS
 [...]
 ```
 Then exit the shell
 ```
 $ exit
 exit
-* [OK] now removing temp directory
+* cda: OK, removing temp directory "/tmp/cda.CRllN2"...
+* fork() [4861]
+* child terminated (0).
 $ 
 ```
 Note that:
