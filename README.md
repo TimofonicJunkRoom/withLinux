@@ -1,5 +1,6 @@
-# cda - cd into Archive (tarball)
-[unix,c] cd into archive (tarball)
+# cda - cd into Archive
+[unix,c] cd into archive  
+not only tarballs, .7z and .zip are also supported.
 
 ## what's this ?
 Assume that I have a tarball
