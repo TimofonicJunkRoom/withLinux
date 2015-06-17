@@ -1,7 +1,7 @@
 # cda - cd into Archive
 
 ### SYNOPSIS
-`cda <ARCHIVE> [-f]`
+`cda <ARCHIVE> [-f]`[-d DIRECTORY]
 
 ### DESCRIPTION
 `cda` is a command line utility that helps you "enter into" or "chdir() into" an archive conveniently.  
@@ -54,6 +54,25 @@ If you want to remove it directly, run `$ cda ARCHIVE -f`
 * .7z
 * more in the future
 
+## Program Usage
+```shell
+          cda - chdir into Archive
+Usage:
+    cda <ARCHIVE> [-f]
+Option:
+    -f        force remove tmpdir, instead of interactive rm.
+    -d <TEMP> Specify the temp directory to use.
+              (would override the CDA env).
+Environment:
+    CDA   specify the temp directory to use.
+          (default: /tmp)
+Formats:
+    tar.gz | tgz, tar.xz | txz, 
+    tar.bz2 | tbz | tbz2, tar, zip | jar, 7z
+Version:
+    0.2.1 (2015 17 June)
+```
+
 ## Without 'cda'
 Let's do the same thing as above, withou `cda`
 ```shell
@@ -76,3 +95,4 @@ $ ls -l test.tar.gz
 
 ##LICENSE
 GPL-3+
+
