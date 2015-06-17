@@ -55,7 +55,8 @@ char        * path_buf;
 char        * cmd_buf;
 char          template[] = TEMPLATE;
 char        * temp_dir;
-char        * newargv[] = { NULL, NULL, NULL, NULL, NULL, NULL };
+char        * newargv[] = { NULL, NULL, NULL, NULL,
+	                        NULL, NULL, NULL, NULL }; /* should be enough? */
 char        * newenv[] = { NULL };
 char        * buffer; /* general purpose */
 
@@ -80,22 +81,26 @@ int
 flush_newargv (char ** _newargv)
 {
 	int i;
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < 8; i++)
 		_newargv[i] = NULL;
 	return 0;
 }
 
 char **
-setargvl6 (char **_newargv, char *v0, char *v1, char *v2, char *v3, char *v4, char *v5)
+setargvl8 (char **_newargv,
+		   char *v0, char *v1, char *v2, char *v3,
+		   char *v4, char *v5, char *v6, char *v7)
 {
-	/* set newargv length 6 */
+	/* set newargv length 8 */
 	flush_newargv (_newargv);
 	newargv[0] = v0;
 	newargv[1] = v1;
 	newargv[2] = v2;
 	newargv[3] = v3;
 	newargv[4] = v4;
-	newargv[5] = NULL; /* last one must be NULL, char *v5 overriden */	
+	newargv[5] = v5;
+	newargv[6] = v6;
+	newargv[7] = NULL; /* last one must be NULL, char *v7 overriden */	
 	return _newargv;
 }
 
@@ -110,8 +115,8 @@ remove_tmpdir (char * _tmpdir, int _force, int _verbose)
 	}
 	if (pid == 0) {  /* fork : child */
 		/* construct newargv for rm */
-		setargvl6 (newargv, "rm", "-rf", _tmpdir,
-				   (1 == _force)?(NULL):("-i"), NULL, NULL);
+		setargvl8 (newargv, "rm", "-rf", _tmpdir,
+				   (1 == _force)?(NULL):("-i"), NULL, NULL, NULL, NULL);
 		/* end constructing newargv */
 		execve ("/bin/rm", newargv, newenv);
 		perror ("execve"); /* execve only returns on error */
@@ -193,7 +198,7 @@ main (int argc, char **argv, char **env)
 	}
 	if (pid == 0) { /* fork : child */
 		/* FYI: tar zxvf x.tar.gz -C /tmp NULL */
-		setargvl6 (newargv, TAR, NULL, argv[1], "-C", temp_dir, NULL);
+		setargvl8 (newargv, TAR, NULL, argv[1], "-C", temp_dir, NULL, NULL, NULL);
 		if (strstr(argv[1], ".tar.gz") != NULL ||
 		    strstr(argv[1], ".tgz")    != NULL) {
 			if (debug) printf ("* detected [ .tar.gz | .tgz ]\n");
@@ -216,16 +221,16 @@ main (int argc, char **argv, char **env)
 			flush_newargv (newargv);
 			decompress = UNZIP;
 			decompress_fname = UNZIP_fname;
-			setargvl6 (newargv, UNZIP, "-q", argv[1], "-d", temp_dir, NULL);
+			setargvl8 (newargv, UNZIP, "-q", argv[1], "-d", temp_dir, NULL, NULL, NULL);
 		} else if(strstr(argv[1], ".7z") != NULL) {
 			if (debug) printf ("* detedted [ .7z ]\n");
 			bzero (buffer, 4096);
 			flush_newargv (newargv);
 			decompress = _7Z;
 			decompress_fname = _7Z_fname;
-			setargvl6 (newargv, _7Z, "x", argv[1],
+			setargvl8 (newargv, _7Z, "x", argv[1],
 					   strncat(strncat(buffer, "-o", 4095), temp_dir, 4095),
-					   NULL, NULL);
+					   NULL, NULL, NULL, NULL);
 		} else {
 			/* TODO: more formats ? */
 			printf ("* I don't recogonize this kind of \"Archive\" !\n");
