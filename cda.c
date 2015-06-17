@@ -50,6 +50,7 @@ int debug = 1;
 int force = 0;
 
 char * prefix = PREFIX;
+char * archive;
 
 int           status;
 pid_t         pid;
@@ -71,14 +72,17 @@ Usage (char *myname)
 "Usage:\n"
 "    %s <ARCHIVE> [-f]\n"
 "Option:\n"
-"    -f    force remove tmpdir, instead of interactive rm.\n"
-"Env:\n"
+"    -f        force remove tmpdir, instead of interactive rm.\n"
+"    -d <TEMP> Specify the temp directory to use.\n"
+"              (would override the CDA env).\n"
+"Environment:\n"
 "    CDA   specify the temp directory to use.\n"
 "          (default: /tmp)\n"
 "Formats:\n"
 "    tar.gz | tgz, tar.xz | txz, \n"
 "    tar.bz2 | tbz | tbz2, tar, zip | jar, 7z\n"
-"Version: %s\n"
+"Version:\n"
+"    %s\n"
 "", myname, myversion);
 	return;
 }
@@ -143,16 +147,43 @@ remove_tmpdir (char * _tmpdir, int _force, int _verbose)
 int
 main (int argc, char **argv, char **env)
 {
-	/* TODO: use getopt() ? */
-	/* check argv[1] */
-	if (argv[1] == NULL) {
+	/* for getopt() */
+	int opt;
+	/* check argc */
+	if (2 > argc) {
+		printf ("! Please Spefify Archive.\n");
 		Usage (argv[0]);
 		exit (EXIT_FAILURE);
 	}
-	/* parse argv[2] */
-	if (NULL != argv[2])
-		if (NULL != strstr(argv[2], "-f"))
+	/* check env and apply env CDA */
+	if (NULL == getenv("CDA")) {
+		if (1<debug) perror ("getenv");
+	} else {
+		prefix = getenv("CDA");
+		if (debug) printf ("* CDA = \"%s\"\n", prefix);
+	}
+	/* parse argument */
+	while ((opt = getopt(argc, argv, "fd:")) != -1) {
+		switch (opt) {
+		case 'f': /* force */
 			force = 1;
+			break;
+		case 'd': /* destination */
+			prefix = optarg;
+			break;
+		default:
+			fprintf (stderr, "! Error: option not defined.\n");
+			exit (EXIT_FAILURE);
+		}
+	}
+	if (optind >= argc) {
+		fprintf (stderr, "! Error: No Archive.\n");
+		exit (EXIT_FAILURE);
+	}
+	archive = argv[optind];
+	if (debug) fprintf (stderr,
+			"* Force = %d, Archive = %s\n",
+			force, archive);
 	/* malloc buffers, check NULL  */
 	stat_buf = malloc (sizeof(struct stat));
 	path_buf = malloc (4096);
@@ -164,7 +195,7 @@ main (int argc, char **argv, char **env)
 	}
 
 	/* stat the target (archive)file/dir */
-	if (stat (argv[1], stat_buf) == -1) {
+	if (stat (archive, stat_buf) == -1) {
 		perror ("stat");
 		exit (EXIT_FAILURE);
 	}
@@ -177,24 +208,18 @@ main (int argc, char **argv, char **env)
 	}
 	/* check target archive */
 	if ( stat_buf -> st_mode & S_IFREG ) {
-		printf ("* Extract Archive \"%s\"\n", argv[1]);
+		printf ("* Extract Archive \"%s\"\n", archive);
 	} else {
 		printf ("* No, I don't manipulate directory or something else.\n");
 		exit (EXIT_SUCCESS);
 	}
 	/* check mode of target */
-	if (access (argv[1], R_OK) == -1) {
+	if (access (archive, R_OK) == -1) {
 		perror ("access");
 		exit (EXIT_FAILURE);
 	}
 	if (1<debug) perror ("access");
-	/* check env and apply env CDA */
-	if (NULL == getenv("CDA")) {
-		if (1<debug) perror ("getenv");
-	} else {
-		prefix = getenv("CDA");
-		if (debug) printf ("* CDA = \"%s\"\n", prefix);
-	}
+	/* chdir to prefix */
 	if (-1 == chdir (prefix)) {
 		perror ("chdir");
 		exit (EXIT_FAILURE);
@@ -215,37 +240,37 @@ main (int argc, char **argv, char **env)
 	}
 	if (pid == 0) { /* fork : child */
 		/* FYI: tar zxvf x.tar.gz -C /tmp NULL */
-		setargvl8 (newargv, TAR, NULL, argv[1], "-C", temp_dir, NULL, NULL, NULL);
-		if (strstr(argv[1], ".tar.gz") != NULL ||
-		    strstr(argv[1], ".tgz")    != NULL) {
+		setargvl8 (newargv, TAR, NULL, archive, "-C", temp_dir, NULL, NULL, NULL);
+		if (strstr(archive, ".tar.gz") != NULL ||
+		    strstr(archive, ".tgz")    != NULL) {
 			if (debug) printf ("* detected [ .tar.gz | .tgz ]\n");
 			newargv[1] = "zxf";
-		} else if (strstr(argv[1], ".tar.bz2") != NULL ||
-				   strstr(argv[1], ".tbz2")    != NULL ||
-				   strstr(argv[1], ".tbz")     != NULL) {
+		} else if (strstr(archive, ".tar.bz2") != NULL ||
+				   strstr(archive, ".tbz2")    != NULL ||
+				   strstr(archive, ".tbz")     != NULL) {
 			if (debug) printf ("* detedted [ .tar.bz2 | .tbz | .tbz2 ]\n");
 			newargv[1] = "jxf";
-		} else if (strstr(argv[1], ".tar.xz") != NULL ||
-				   strstr(argv[1], ".txz")    != NULL) {
+		} else if (strstr(archive, ".tar.xz") != NULL ||
+				   strstr(archive, ".txz")    != NULL) {
 			if (debug) printf ("* detedted [ .tar.xz | .txz ]\n");
 			newargv[1] = "Jxf";
-		} else if (strstr(argv[1], ".tar") != NULL) {
+		} else if (strstr(archive, ".tar") != NULL) {
 			if (debug) printf ("* detedted [ .tar ]\n");
 			newargv[1] = "xf";
-		} else if (strstr(argv[1], ".zip") != NULL ||
-				   strstr(argv[1], ".jar") != NULL) {
+		} else if (strstr(archive, ".zip") != NULL ||
+				   strstr(archive, ".jar") != NULL) {
 			if (debug) printf ("* detedted [ .zip | .jar ]\n");
 			flush_newargv (newargv);
 			decompress = UNZIP;
 			decompress_fname = UNZIP_fname;
-			setargvl8 (newargv, UNZIP, "-q", argv[1], "-d", temp_dir, NULL, NULL, NULL);
-		} else if(strstr(argv[1], ".7z") != NULL) {
+			setargvl8 (newargv, UNZIP, "-q", archive, "-d", temp_dir, NULL, NULL, NULL);
+		} else if(strstr(archive, ".7z") != NULL) {
 			if (debug) printf ("* detedted [ .7z ]\n");
 			bzero (buffer, 4096);
 			flush_newargv (newargv);
 			decompress = _7Z;
 			decompress_fname = _7Z_fname;
-			setargvl8 (newargv, _7Z, "x", argv[1],
+			setargvl8 (newargv, _7Z, "x", archive,
 					   strncat(strncat(buffer, "-o", 4095), temp_dir, 4095),
 					   NULL, NULL, NULL, NULL);
 		} else {
