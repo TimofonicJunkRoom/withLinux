@@ -174,14 +174,14 @@ main (int argc, char **argv, char **env)
 	}
 	if (debug) printf ("* Created temp dir \"%s\"\n", temp_dir);
 	/* extract archive into temp_dir */
+	decompress = TAR; /* use tar by default */
+	decompress_fname = TAR_fname;
 	if ((pid = fork()) == -1) {
 		perror ("fork");
 		exit (EXIT_FAILURE);
 	}
 	if (pid == 0) { /* fork : child */
 		/* FYI: tar zxvf x.tar.gz -C /tmp NULL */
-		decompress = TAR; /* use tar by default */
-		decompress_fname = TAR_fname;
 		newargv[0] = TAR;
 		/* newargv[1] = */
 		newargv[2] = argv[1];
@@ -239,8 +239,8 @@ main (int argc, char **argv, char **env)
 	} else { /* fork : parent */
 		if (1<debug) printf ("* fork() [%d] to execve tar\n", pid);
 		waitpid (-1, &status, 0);
-		if (debug) printf ("* Child Decompressor (%s) terminated (%d).\n",
-				           decompress, status);
+		if (debug) printf ("* Child Decompressor terminated (%d).\n",
+				           status);
 		if (0 != status) {
 			printf ("* child tar exited with error (%d).\n", status);
 			exit (EXIT_FAILURE);
