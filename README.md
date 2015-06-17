@@ -1,8 +1,14 @@
 # cda - cd into Archive
-[unix,c] cd into archive  
-not only tarballs, .7z and .zip are also supported.
 
-## what's this ?
+### SYNOPSIS
+`cda <ARCHIVE> [-f]`
+
+### DESCRIPTION
+`cda` is a command line utility that helps you "enter into" or "chdir() into" an archive conveniently.  
+You can consider it as an Enhaced version of `cd` command in shell.  
+For the suppoted formats see [Supported Archive formats](https://github.com/CDLuminate/cda#supported-archive-formats)
+
+## How does it look like ?
 Assume that I have a tarball
 ```shell
 $ ls -l coreutils_8.23.orig.tar.gz 
