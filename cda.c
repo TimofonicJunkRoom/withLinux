@@ -69,7 +69,7 @@ Usage (char *myname)
 "Option:\n"
 "    -f force remove tmpdir, instead of interactive rm.\n"
 "\n"
-"  supports: tar.gz|tgz, tar.xz|txz, tar.bz2|tbz|tbz2, tar, zip, 7z"
+"  supports: tar.gz|tgz, tar.xz|txz, tar.bz2|tbz|tbz2, tar, zip, 7z\n"
 "  version: %s\n"
 "", myname, myversion);
 	return;
