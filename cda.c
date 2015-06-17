@@ -239,7 +239,8 @@ main (int argc, char **argv, char **env)
 	} else { /* fork : parent */
 		if (1<debug) printf ("* fork() [%d] to execve tar\n", pid);
 		waitpid (-1, &status, 0);
-		if (debug) printf ("* Child TAR terminated (%d).\n", status);
+		if (debug) printf ("* Child Decompressor (%s) terminated (%d).\n",
+				           decompress, status);
 		if (0 != status) {
 			printf ("* child tar exited with error (%d).\n", status);
 			exit (EXIT_FAILURE);
