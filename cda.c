@@ -51,6 +51,7 @@ int force = 0;
 
 char * prefix = PREFIX;
 char * archive;
+char * origin;
 
 int           status;
 pid_t         pid;
@@ -169,6 +170,7 @@ main (int argc, char **argv, char **env)
 			force = 1;
 			break;
 		case 'd': /* destination */
+			/* this will override CDA */
 			prefix = optarg;
 			break;
 		default:
@@ -189,11 +191,18 @@ main (int argc, char **argv, char **env)
 	path_buf = malloc (4096);
 	cmd_buf  = malloc (4096);
 	buffer   = malloc (4096);
-	if (stat_buf == NULL || path_buf == NULL || cmd_buf == NULL || buffer == NULL) {
+	origin   = malloc (4096);
+	if (stat_buf == NULL || path_buf == NULL || cmd_buf == NULL ||
+	    buffer   == NULL || origin   == NULL ) {
 		printf ("! cda: malloc failed\n");
 		exit (EXIT_FAILURE);
 	}
-
+	/* getcwd */
+	if (NULL == getcwd (origin, 4095)) {
+		perror ("getcwd");
+		exit (EXIT_FAILURE);
+	}
+	if (debug) printf ("* origin = %s\n", origin);
 	/* stat the target (archive)file/dir */
 	if (stat (archive, stat_buf) == -1) {
 		perror ("stat");
@@ -231,6 +240,21 @@ main (int argc, char **argv, char **env)
 		exit (EXIT_FAILURE);
 	}
 	if (debug) printf ("* Created temp dir \"%s\"\n", temp_dir);
+	/* chdir to temp */
+	if (-1 == chdir (temp_dir)) {
+		perror ("chdir");
+		exit (EXIT_FAILURE);
+	}
+	/* save the temp dir in path_buf */
+	if (NULL == (path_buf = getcwd(path_buf, 4095))) {
+		perror ("getcwd");
+		exit (EXIT_FAILURE);
+	}
+	/* go back to origin */
+	if (-1 == chdir (origin)) {
+		perror ("chdir");
+		exit (EXIT_FAILURE);
+	}
 	/* extract archive into temp_dir */
 	decompress = TAR; /* use tar by default */
 	decompress_fname = TAR_fname;
@@ -240,7 +264,7 @@ main (int argc, char **argv, char **env)
 	}
 	if (pid == 0) { /* fork : child */
 		/* FYI: tar zxvf x.tar.gz -C /tmp NULL */
-		setargvl8 (newargv, TAR, NULL, archive, "-C", temp_dir, NULL, NULL, NULL);
+		setargvl8 (newargv, TAR, NULL, archive, "-C", path_buf, NULL, NULL, NULL);
 		if (strstr(archive, ".tar.gz") != NULL ||
 		    strstr(archive, ".tgz")    != NULL) {
 			if (debug) printf ("* detected [ .tar.gz | .tgz ]\n");
@@ -263,7 +287,7 @@ main (int argc, char **argv, char **env)
 			flush_newargv (newargv);
 			decompress = UNZIP;
 			decompress_fname = UNZIP_fname;
-			setargvl8 (newargv, UNZIP, "-q", archive, "-d", temp_dir, NULL, NULL, NULL);
+			setargvl8 (newargv, UNZIP, "-q", archive, "-d", path_buf, NULL, NULL, NULL);
 		} else if(strstr(archive, ".7z") != NULL) {
 			if (debug) printf ("* detedted [ .7z ]\n");
 			bzero (buffer, 4096);
@@ -271,7 +295,7 @@ main (int argc, char **argv, char **env)
 			decompress = _7Z;
 			decompress_fname = _7Z_fname;
 			setargvl8 (newargv, _7Z, "x", archive,
-					   strncat(strncat(buffer, "-o", 4095), temp_dir, 4095),
+					   strncat(strncat(buffer, "-o", 4095), path_buf, 4095),
 					   NULL, NULL, NULL, NULL);
 		} else {
 			/* TODO: more formats ? */
@@ -293,16 +317,12 @@ main (int argc, char **argv, char **env)
 		}
 	}
 	/* step into temp and popup a shell */
-	if (debug) printf ("* Stepping into Archive (tempdir): %s\n", temp_dir);
-	if (chdir(temp_dir) == -1) {
+	if (debug) printf ("* Stepping into Archive: %s\n", path_buf);
+	if (chdir(path_buf) == -1) {
 		perror ("chdir");
 		exit (EXIT_FAILURE);
 	}
-	if (NULL == getcwd (path_buf, 4095)) {
-		printf ("* getcwd failed\n");
-		exit (EXIT_FAILURE);
-	}
-	if (debug) printf ("* cda: PWD = %s\n*      fork and execve bash ...\n", path_buf);
+	if (debug) printf ("* cda: PWD = %s\n* fork then execve bash ...\n", path_buf);
 	/* TODO: fork a new one to execve bash ? */
 	system (SHELL);
 	/* when user exited bash above, this program continues from here */
