@@ -42,11 +42,14 @@ char * _7Z_fname = "/usr/bin/7z";
 
 char * RM = "rm";
 
-#define PREFIX ""
-#define TEMPLATE "/tmp/cda.XXXXXX"
+#define PREFIX "/tmp/"
+#define TEMPLATE "./cda.XXXXXX"
+#define SHELL "bash"
 
 int debug = 1;
 int force = 0;
+
+char * prefix = PREFIX;
 
 int           status;
 pid_t         pid;
@@ -66,13 +69,16 @@ Usage (char *myname)
 	printf (""
 "          cda - chdir into Archive\n"
 "Usage:\n"
-"    %s  <ARCHIVE> [-f]\n"
+"    %s <ARCHIVE> [-f]\n"
 "Option:\n"
-"    -f force remove tmpdir, instead of interactive rm.\n"
-"\n"
-"  formats supported: tar.gz | tgz, tar.xz | txz, \n"
-"                     tar.bz2 | tbz | tbz2, tar, zip | jar, 7z\n"
-"  version: %s\n"
+"    -f    force remove tmpdir, instead of interactive rm.\n"
+"Env:\n"
+"    CDA   specify the temp directory to use.\n"
+"          (default: /tmp)\n"
+"Formats:\n"
+"    tar.gz | tgz, tar.xz | txz, \n"
+"    tar.bz2 | tbz | tbz2, tar, zip | jar, 7z\n"
+"Version: %s\n"
 "", myname, myversion);
 	return;
 }
@@ -182,6 +188,17 @@ main (int argc, char **argv, char **env)
 		exit (EXIT_FAILURE);
 	}
 	if (1<debug) perror ("access");
+	/* check env and apply env CDA */
+	if (NULL == getenv("CDA")) {
+		if (1<debug) perror ("getenv");
+	} else {
+		prefix = getenv("CDA");
+		if (debug) printf ("* CDA = \"%s\"\n", prefix);
+	}
+	if (-1 == chdir (prefix)) {
+		perror ("chdir");
+		exit (EXIT_FAILURE);
+	}
 	/* mkdtemp for extracting files */
 	if (1<debug) printf ("* using template \"%s\"\n", template);
 	if ((temp_dir = mkdtemp (template)) == NULL) {
@@ -262,7 +279,7 @@ main (int argc, char **argv, char **env)
 	}
 	if (debug) printf ("* cda: PWD = %s\n*      fork and execve bash ...\n", path_buf);
 	/* TODO: fork a new one to execve bash ? */
-	system ("bash");
+	system (SHELL);
 	/* when user exited bash above, this program continues from here */
 
 	/* remove the temp dir */
