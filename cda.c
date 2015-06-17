@@ -84,6 +84,20 @@ flush_newargv (char ** _newargv)
 	return 0;
 }
 
+char **
+setargvl6 (char **_newargv, char *v0, char *v1, char *v2, char *v3, char *v4, char *v5)
+{
+	/* set newargv length 6 */
+	flush_newargv (_newargv);
+	newargv[0] = v0;
+	newargv[1] = v1;
+	newargv[2] = v2;
+	newargv[3] = v3;
+	newargv[4] = v4;
+	newargv[5] = NULL; /* last one must be NULL, char *v5 overriden */	
+	return _newargv;
+}
+
 int
 remove_tmpdir (char * _tmpdir, int _force, int _verbose)
 {   
@@ -95,12 +109,8 @@ remove_tmpdir (char * _tmpdir, int _force, int _verbose)
 	}
 	if (pid == 0) {  /* fork : child */
 		/* construct newargv for rm */
-		newargv[0] = "rm"; 
-		newargv[1] = "-rf";
-		newargv[2] = _tmpdir; 
-		newargv[3] = (1 == _force) ? (NULL) : ("-i");
-		newargv[4] = NULL; 
-		newargv[5] = NULL; /* this is the last one ! */
+		setargvl6 (newargv, "rm", "-rf", _tmpdir,
+				   (1 == _force)?(NULL):("-i"), NULL, NULL);
 		/* end constructing newargv */
 		execve ("/bin/rm", newargv, newenv);
 		perror ("execve"); /* execve only returns on error */
@@ -182,12 +192,7 @@ main (int argc, char **argv, char **env)
 	}
 	if (pid == 0) { /* fork : child */
 		/* FYI: tar zxvf x.tar.gz -C /tmp NULL */
-		newargv[0] = TAR;
-		/* newargv[1] = */
-		newargv[2] = argv[1];
-		newargv[3] = "-C";
-		newargv[4] = temp_dir;
-		newargv[5] = NULL; /* this is the last one ! */
+		setargvl6 (newargv, TAR, NULL, argv[1], "-C", temp_dir, NULL);
 		if (strstr(argv[1], ".tar.gz") != NULL ||
 		    strstr(argv[1], ".tgz")    != NULL) {
 			if (debug) printf ("* detected [ .tar.gz | .tgz ]\n");
@@ -209,24 +214,16 @@ main (int argc, char **argv, char **env)
 			flush_newargv (newargv);
 			decompress = UNZIP;
 			decompress_fname = UNZIP_fname;
-			newargv[0] = UNZIP;
-			newargv[1] = "-q"; /* quiet */
-			newargv[2] = argv[1];
-			newargv[3] = "-d";
-			newargv[4] = temp_dir;
-			newargv[5] = NULL;
+			setargvl6 (newargv, UNZIP, "-q", argv[1], "-d", temp_dir, NULL);
 		} else if(strstr(argv[1], ".7z") != NULL) {
 			if (debug) printf ("* detedted [ .7z ]\n");
 			bzero (buffer, 4096);
 			flush_newargv (newargv);
 			decompress = _7Z;
 			decompress_fname = _7Z_fname;
-			newargv[0] = _7Z;
-			newargv[1] = "x"; /* extract with full path */
-			newargv[2] = argv[1];
-			newargv[3] = strncat(strncat(buffer, "-o", 4095), temp_dir, 4095);
-			newargv[4] = NULL;
-			newargv[5] = NULL;
+			setargvl6 (newargv, _7Z, "x", argv[1],
+					   strncat(strncat(buffer, "-o", 4095), temp_dir, 4095),
+					   NULL, NULL);
 		} else {
 			/* TODO: more formats ? */
 			printf ("* I don't recogonize this kind of \"Archive\" !\n");
