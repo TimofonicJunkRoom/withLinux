@@ -50,7 +50,7 @@ If you want to remove it directly, run `$ cda ARCHIVE -f`
 * .tar.bz2 | .tbz | .tbz2
 * .tar.xz | .txz
 * .tar
-* .zip
+* .zip | .jar
 * .7z
 * more in the future
 

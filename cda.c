@@ -69,7 +69,8 @@ Usage (char *myname)
 "Option:\n"
 "    -f force remove tmpdir, instead of interactive rm.\n"
 "\n"
-"  supports: tar.gz|tgz, tar.xz|txz, tar.bz2|tbz|tbz2, tar, zip, 7z\n"
+"  formats supported: tar.gz | tgz, tar.xz | txz, \n"
+"                     tar.bz2 | tbz | tbz2, tar, zip | jar, 7z\n"
 "  version: %s\n"
 "", myname, myversion);
 	return;
@@ -209,8 +210,9 @@ main (int argc, char **argv, char **env)
 		} else if (strstr(argv[1], ".tar") != NULL) {
 			if (debug) printf ("* detedted [ .tar ]\n");
 			newargv[1] = "xf";
-		} else if (strstr(argv[1], ".zip") != NULL) {
-			if (debug) printf ("* detedted [ .zip ]\n");
+		} else if (strstr(argv[1], ".zip") != NULL ||
+				   strstr(argv[1], ".jar") != NULL) {
+			if (debug) printf ("* detedted [ .zip | .jar ]\n");
 			flush_newargv (newargv);
 			decompress = UNZIP;
 			decompress_fname = UNZIP_fname;
