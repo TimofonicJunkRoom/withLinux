@@ -1,12 +1,16 @@
 # cda - cd into Archive
 
 ### SYNOPSIS
-`cda <ARCHIVE> [-f]`[-d DIRECTORY]
+`cda <ARCHIVE> [-f] [-d DIRECTORY]`  
+`cda.sh <ARCHIVE>`
+
 
 ### DESCRIPTION
 `cda` is a command line utility that helps you "enter into" or "chdir() into" an archive conveniently.  
 You can consider it as an Enhaced version of `cd` command in shell.  
-For the suppoted formats see [Supported Archive formats](https://github.com/CDLuminate/cda#supported-archive-formats)
+For the suppoted formats see [Supported Archive formats](https://github.com/CDLuminate/cda#supported-archive-formats)  
+  
+`cda.sh` is a archivemount wrapper which implements cda in shell.  
 
 ## How does it look like ?
 Assume that I have a tarball
