@@ -44,12 +44,13 @@ char * RM = "rm";
 
 #define PREFIX "/tmp/"
 #define TEMPLATE "./cda.XXXXXX"
-#define SHELL "bash"
+#define SHELL "/bin/bash"
 
 int debug = 1;
 int force = 0;
 
 char * prefix = PREFIX;
+char * shell = SHELL;
 char * archive;
 char * origin;
 
@@ -73,12 +74,14 @@ Usage (char *myname)
 "Usage:\n"
 "    %s <ARCHIVE> [-f]\n"
 "Option:\n"
-"    -f        force remove tmpdir, instead of interactive rm.\n"
+"    -f        Force remove tmpdir, instead of interactive rm.\n"
 "    -d <TEMP> Specify the temp directory to use.\n"
 "              (would override the CDA env).\n"
 "Environment:\n"
-"    CDA   specify the temp directory to use.\n"
-"          (default: /tmp)\n"
+"    CDA       Specify the temp directory to use.\n"
+"              (default: /tmp)\n"
+"    CDASH     Specify the shell to use after prepared archive.\n"
+"              (default: /bin/bash)\n"
 "Formats:\n"
 "    tar.gz | tgz, tar.xz | txz, \n"
 "    tar.bz2 | tbz | tbz2, tar, zip | jar, 7z\n"
@@ -156,12 +159,18 @@ main (int argc, char **argv, char **env)
 		Usage (argv[0]);
 		exit (EXIT_FAILURE);
 	}
-	/* check env and apply env CDA */
+	/* check env and apply env CDA, CDASH */
 	if (NULL == getenv("CDA")) {
 		if (1<debug) perror ("getenv");
 	} else {
 		prefix = getenv("CDA");
 		if (debug) printf ("* CDA = \"%s\"\n", prefix);
+	}
+	if (NULL == getenv("CDASH")) {
+		if (1<debug) perror ("getenv");
+	} else {
+		shell = getenv("CDASH");
+		if (debug) printf ("* CDASH = \"%s\"\n", shell);
 	}
 	/* parse argument */
 	while ((opt = getopt(argc, argv, "fd:")) != -1) {
@@ -324,7 +333,7 @@ main (int argc, char **argv, char **env)
 	}
 	if (debug) printf ("* cda: PWD = %s\n* fork then execve bash ...\n", path_buf);
 	/* TODO: fork a new one to execve bash ? */
-	system (SHELL);
+	system (shell);
 	/* when user exited bash above, this program continues from here */
 
 	/* remove the temp dir */

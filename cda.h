@@ -1,6 +1,6 @@
 /* cda.h */
 
-char * myversion = "0.2.1 (2015 17 June)";
+char * myversion = "0.2.2 (2015 13 July)";
 
 int
 remove_tmpdir (char * tmpdir, int interactive, int verbose);
