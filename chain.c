@@ -15,6 +15,20 @@ struct CHAIN {
 	struct CHAIN * next;
 };
 
+void
+chain_p (struct CHAIN * node)
+{
+	/* check if node is valid */
+	if (NULL == node) {
+		printf ("E: chain_p(): NULL == node\n");
+		exit (EXIT_FAILURE);
+	}
+	/* print the node */
+	printf ("* NODE (%d) : label = %s\n"
+			"            : blob  = %p\n");
+	return;
+}
+
 struct CHAIN *
 _chain_tail (struct CHAIN * head)
 {
