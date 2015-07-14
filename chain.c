@@ -136,3 +136,4 @@ chain_destroy (struct CHAIN * head)
 	} while (NULL != _cp);
 	return NULL;
 }
+/* vim : set ts = 4 */
