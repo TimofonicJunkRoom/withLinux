@@ -37,6 +37,8 @@ main (void)
 	chain_genindex (root);
 	chainpp.dump (root);
 
+	chainpp.print (chain_pick (root, 2));
+
 	/* destroy */
 	chain_destroy (root);
 	return 0;

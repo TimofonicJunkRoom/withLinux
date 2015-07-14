@@ -217,4 +217,29 @@ chain_genindex (struct CHAIN * node)
 	return _chain_head (node);
 }
 
+struct CHAIN *
+chain_pick (struct CHAIN * node, long id)
+{
+	struct CHAIN * cp;
+	cp = _chain_head (node);
+	while (NULL != cp && id != cp -> id) {
+		cp = cp -> next;
+	}
+	if (NULL == cp) {
+		printf ("E: chain_pick(): id requested not found.\n");
+		return NULL;
+	}
+	return cp;
+}
+
+struct CHAIN *
+chain_insert (struct CHAIN * dest, struct CHAIN * node)
+{}
+
+
+
+struct CHAIN *
+chain_fastinsert (struct CHAIN * dest, char * label, void * blob)
+{}
+
 /* vim : set ts = 4 */

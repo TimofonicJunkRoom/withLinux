@@ -45,3 +45,15 @@ chain_cat (struct CHAIN * dest, struct CHAIN * src);
 struct CHAIN *
 chain_genindex (struct CHAIN * node);
 
+
+struct CHAIN *
+chain_pick (struct CHAIN * node, long id);
+
+
+struct CHAIN *
+chain_insert (struct CHAIN * dest, struct CHAIN * node);
+}
+
+struct CHAIN *
+chain_fastinsert (struct CHAIN * dest, char * label, void * blob);
+}
