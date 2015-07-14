@@ -7,6 +7,10 @@ _chain_tail (struct CHAIN * head);
 
 
 struct CHAIN *
+_chain_head (struct CHAIN * node);
+
+
+struct CHAIN *
 chain_create (int id, char * label, void * blob);
 
 
@@ -20,6 +24,10 @@ chain_append (struct CHAIN * head, struct CHAIN * tailnew);
 
 struct CHAIN *
 chain_fastappend (struct CHAIN * head, char * label, void * blob);
+
+
+void
+chain_dump (struct CHAIN * node);
 
 
 void *

@@ -1,5 +1,5 @@
 /* libstack
-   2015 Lumin
+   2015 Lumin <cdluminate@gmail.com>
    BSD-2-Clause
  */
 #include <stdio.h>
@@ -47,6 +47,23 @@ _chain_tail (struct CHAIN * head)
 	_cp = head;
 	while (NULL != 	_cp -> next) {
 		_cp = _cp -> next;
+	}
+	return _cp;
+}
+
+struct CHAIN *
+_chain_head (struct CHAIN * node)
+{
+	/* check if head is valid */
+	if (NULL == node) {
+		printf ("E: _chain_head(): NULL == node\n");
+		exit (EXIT_FAILURE);
+	}
+	/* move to the last node */
+	struct CHAIN * _cp;
+	_cp = node;
+	while (NULL != 	_cp -> prev) {
+		_cp = _cp -> prev;
 	}
 	return _cp;
 }
@@ -111,6 +128,19 @@ chain_fastappend (struct CHAIN * head, char * label, void * blob)
 	/* create and append a new chain */
 	chain_append (head, _cp);
 	return _cp;
+}
+
+void
+chain_dump (struct CHAIN * node)
+{
+	struct CHAIN * cp;
+	/* move to the head of chain */
+	cp = _chain_head (node);
+	do {
+		chain_print (cp);
+		cp = cp -> next;
+	} while (NULL != cp);
+	return;
 }
 
 void *

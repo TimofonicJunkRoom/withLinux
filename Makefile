@@ -20,6 +20,7 @@ libstack.so: $(OBJ)
 
 demo:
 	$(CC) $(CFLAGS) chain_hello.c -o chain_hello
+	./chain_hello
 	
 clean: cleandemo
 	-$(RM) *.o libstack.so*

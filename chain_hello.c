@@ -11,7 +11,13 @@ main (void)
 	cp = chain_fastappend (root, "Laplace", NULL);
 	chain_print (root);
 	chain_print (cp);
-	
+
+	printf ("chain_dump ()\n");
+	chain_dump (cp);
+
+	chain_fastappend (cp, "Gauss", NULL);
+	chain_dump (cp);
+
 	chain_destroy (root);
 	return 0;
 }
