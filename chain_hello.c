@@ -11,6 +11,8 @@ main (void)
 	cp = chain_fastappend (root, "Laplace", NULL);
 	chain_print (root);
 	chain_print (cp);
+	
+	chain_destroy (root);
 	return 0;
 }
 	
