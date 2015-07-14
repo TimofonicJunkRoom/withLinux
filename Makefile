@@ -17,6 +17,11 @@ libstack.so: $(OBJ)
 	$(CC) -shared $(CFLAGS) $< \
 		-o libstack.so.0 -Wl,-soname,libstack.so.0
 	ln -s libstack.so.0 libstack.so
+
+demo:
+	$(CC) $(CFLAGS) chain_hello.c -o chain_hello
 	
-clean:
-	$(RM) *.o libstack.so*
+clean: cleandemo
+	-$(RM) *.o libstack.so*
+cleandemo:
+	-$(RM) chain_hello

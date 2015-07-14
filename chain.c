@@ -20,13 +20,17 @@ chain_print (struct CHAIN * node)
 {
 	/* check if node is valid */
 	if (NULL == node) {
-		printf ("E: chain_p(): NULL == node\n");
-		exit (EXIT_FAILURE);
+		printf ("* NODE (NULL) : NULL\n");
+		return;
 	}
 	/* print the node */
-	printf ("* NODE (%d) : label = %s\n"
-			"            : blob  = %p\n",
-			node -> id, node -> label, node -> blob);
+	printf ("* NODE # (%d)\n"
+			"       : &node = %p\n"
+			"       : prev  = %p , next = %p\n"
+			"       : label = %s , blob = %p\n",
+			node -> id, node,
+			node -> prev, node -> next,
+			node -> label, node -> blob);
 	return;
 }
 
@@ -67,10 +71,10 @@ chain_create (int id, char * label, void * blob)
 
 /* Initialize a new chain */
 struct CHAIN *
-chain_init (void)
+chain_init (char * label, void * blob)
 {
 	struct CHAIN * head;
-	head = chain_create(0, "HEAD", NULL);
+	head = chain_create(0, label, blob);
 	/* fill in init values */
 	head -> prev = NULL;
 	head -> next = NULL;

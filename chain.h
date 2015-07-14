@@ -11,7 +11,7 @@ chain_create (int id, char * label, void * blob);
 
 
 struct CHAIN *
-chain_init (void);
+chain_init (char * label, void * blob);
 
 
 struct CHAIN *

@@ -9,6 +9,7 @@ main (void)
 	chain_print (root);
 	chain_print (cp);
 	cp = chain_fastappend (root, "Laplace", NULL);
+	chain_print (root);
 	chain_print (cp);
 	return 0;
 }
