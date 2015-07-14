@@ -37,3 +37,11 @@ chain_dump (struct CHAIN * node);
 void *
 chain_destroy (struct CHAIN * head);
 
+
+struct CHAIN *
+chain_cat (struct CHAIN * dest, struct CHAIN * src);
+
+
+struct CHAIN *
+chain_genindex (struct CHAIN * node);
+

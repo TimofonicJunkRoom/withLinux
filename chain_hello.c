@@ -34,6 +34,7 @@ main (void)
 	cp = chain_kill (cp);
 
 	/* dump again */
+	chain_genindex (root);
 	chainpp.dump (root);
 
 	/* destroy */

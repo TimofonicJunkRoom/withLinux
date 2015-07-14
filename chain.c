@@ -176,4 +176,45 @@ chain_destroy (struct CHAIN * head)
 	} while (NULL != _cp);
 	return NULL;
 }
+
+struct CHAIN *
+chain_cat (struct CHAIN * dest, struct CHAIN * src)
+{
+	/* check if the tailnew is valid */
+	if (NULL == dest || NULL == src) {
+		printf ("E: chain_cat(): invalid dest or src\n");
+		exit (EXIT_FAILURE);
+	}
+	/* move to the last node */
+	struct CHAIN * _cp;
+	_cp = _chain_tail (dest);
+	/* append the src after the last node of dest */
+	src -> next = NULL;
+	src -> prev = _cp;
+	_cp -> next = src;
+	/* returns head of the whole chain */	
+	return _chain_head (dest);
+}
+
+struct CHAIN *
+chain_genindex (struct CHAIN * node)
+{
+	if (NULL == node)
+		return NULL;
+
+	/* find the head of the chain */
+	struct CHAIN * cp;
+	cp = _chain_head (node);
+
+	if (0 != cp -> id) {
+		printf ("E: chain_genindex(): Wow ! the id of head is not 0.\n");
+		exit (EXIT_FAILURE);
+	}
+	while (NULL != cp -> next) {
+		cp -> next -> id = cp -> id + 1;
+		cp = cp -> next;
+	}
+	return _chain_head (node);
+}
+
 /* vim : set ts = 4 */
