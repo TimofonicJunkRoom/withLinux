@@ -15,6 +15,10 @@ chain_create (int id, char * label, void * blob);
 
 
 struct CHAIN *
+chain_kill (struct CHAIN * node);
+
+
+struct CHAIN *
 chain_init (char * label, void * blob);
 
 

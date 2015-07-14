@@ -24,8 +24,7 @@ chain_print (struct CHAIN * node)
 		return;
 	}
 	/* print the node */
-	printf ("* NODE # (%d)\n"
-			"       : &node = %p\n"
+	printf ("* NODE # (%d) @ %p\n"
 			"       : prev  = %p , next = %p\n"
 			"       : label = %s , blob = %p\n",
 			node -> id, node,
@@ -84,6 +83,27 @@ chain_create (int id, char * label, void * blob)
 	_cp -> label = label;
 	_cp -> blob = blob;
 	return _cp;
+}
+
+struct CHAIN *
+chain_kill (struct CHAIN * node)
+{
+	struct CHAIN * cp;
+	cp = NULL;
+	/* check if node is NULL */
+	if (NULL == node)
+		return NULL;
+
+	if (NULL != node -> prev) {
+		cp = node -> prev;
+		node -> prev -> next = NULL;
+	}
+	/* free node -> blob first, if not NULL */
+	if (NULL != node -> blob)
+		free (node -> blob);
+	bzero (node, sizeof (struct CHAIN));
+	free (node);
+	return cp;
 }
 
 /* Initialize a new chain */

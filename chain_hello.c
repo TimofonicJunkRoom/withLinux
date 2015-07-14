@@ -24,10 +24,16 @@ main (void)
 	chain_fastappend (cp, "Fermi", NULL);
 	chainpp.fastappend (root, "Lumin", NULL);
 	chain_fastappend (cp, "Galois", NULL);
-	chain_fastappend (root, "Fourier", NULL);
+	cp = chain_fastappend (root, "Fourier", NULL);
 
 	/* dump */
 	printf ("############ chainpp.dump ()\n");
+	chainpp.dump (root);
+
+	/* remove last */
+	cp = chain_kill (cp);
+
+	/* dump again */
 	chainpp.dump (root);
 
 	/* destroy */
