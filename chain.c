@@ -9,7 +9,7 @@
 
 struct CHAIN {
 	struct CHAIN * prev;
-	int    id;
+	long   id;
 	char * label;
 	void * blob; /* extentions */
 	struct CHAIN * next;
@@ -24,7 +24,7 @@ chain_print (struct CHAIN * node)
 		return;
 	}
 	/* print the node */
-	printf ("* NODE # (%d) @ %p\n"
+	printf ("* NODE # (%ld) @ %p\n"
 			"       : prev  = %p , next = %p\n"
 			"       : label = %s , blob = %p\n",
 			node -> id, node,
