@@ -3,13 +3,17 @@ INSTALL := install
 DESTDIR :=
 BIN     := /usr/bin/
 
-main: libchain.so
+OBJ := chain.o 
+
+main: libstack.so
+
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -fPIC -c $<
-libchain.so: chain.o
+
+libstack.so: $(OBJ)
 	$(CC) -shared $(CFLAGS) $< \
-		-o libchain.so.0 -Wl,-soname,libchain.so.0
-	ln -s libchain.so.0 libchain.so
+		-o libstack.so.0 -Wl,-soname,libstack.so.0
+	ln -s libstack.so.0 libstack.so
 	
 clean:
-	$(RM) *.o libchain.so*
+	$(RM) *.o libstack.so*
