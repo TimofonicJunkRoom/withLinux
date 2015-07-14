@@ -134,7 +134,6 @@ void
 chain_dump (struct CHAIN * node)
 {
 	struct CHAIN * cp;
-	/* move to the head of chain */
 	cp = _chain_head (node);
 	do {
 		chain_print (cp);
@@ -146,17 +145,8 @@ chain_dump (struct CHAIN * node)
 void *
 chain_destroy (struct CHAIN * head)
 {
-	/* check if the head is valid */
-	if (NULL == head) {
-		printf ("E: chain_destroy(): invalid head\n");
-		exit (EXIT_FAILURE);
-	}
-	/* move to the last node */
 	struct CHAIN * _cp;
-	_cp = head;
-	while (NULL != 	_cp -> next) {
-		_cp = _cp -> next;
-	}
+	_cp = _chain_tail (head);
 	/* free until NULL == prev */
 	struct CHAIN * _prev;
 	do {

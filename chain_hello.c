@@ -16,6 +16,9 @@ main (void)
 	chain_dump (cp);
 
 	chain_fastappend (cp, "Gauss", NULL);
+	chain_fastappend (cp, "Fermi", NULL);
+	chain_fastappend (cp, "Galois", NULL);
+	chain_fastappend (root, "Fourier", NULL);
 	chain_dump (cp);
 
 	chain_destroy (root);
