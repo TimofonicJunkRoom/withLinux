@@ -16,7 +16,7 @@ struct CHAIN {
 };
 
 void
-chain_p (struct CHAIN * node)
+chain_print (struct CHAIN * node)
 {
 	/* check if node is valid */
 	if (NULL == node) {
@@ -25,7 +25,8 @@ chain_p (struct CHAIN * node)
 	}
 	/* print the node */
 	printf ("* NODE (%d) : label = %s\n"
-			"            : blob  = %p\n");
+			"            : blob  = %p\n",
+			node -> id, node -> label, node -> blob);
 	return;
 }
 
