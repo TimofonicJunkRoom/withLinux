@@ -93,7 +93,7 @@ chain_kill (struct CHAIN * node)
 	/* check if node is NULL */
 	if (NULL == node)
 		return NULL;
-
+	/* if prev is not NULL, clean the bind */
 	if (NULL != node -> prev) {
 		cp = node -> prev;
 		node -> prev -> next = NULL;
@@ -171,6 +171,8 @@ chain_destroy (struct CHAIN * head)
 	struct CHAIN * _prev;
 	do {
 		_prev = _cp -> prev;
+		if (NULL != _cp -> blob)
+			free (_cp -> blob);
 		free (_cp);
 		_cp = _prev;
 	} while (NULL != _cp);
@@ -249,6 +251,23 @@ chain_insert (struct CHAIN * dest, struct CHAIN * node)
 	/* regenerate the index of chain */
 	chain_genindex (dest);
 	return dest -> next;
+}
+
+struct CHAIN *
+chain_remove (struct CHAIN * node)
+{
+	if (NULL == node)
+		return NULL;
+	struct CHAIN * cp;
+	cp = chain_cat (node -> prev, node -> next);
+	chain_genindex (cp);
+	return cp;
+}
+
+struct CHAIN *
+chain_idremove (struct CHAIN * node, long id)
+{
+	return chain_remove (chain_pick (node, id));
 }
 
 struct CHAIN *

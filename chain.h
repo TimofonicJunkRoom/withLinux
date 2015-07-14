@@ -55,6 +55,14 @@ chain_insert (struct CHAIN * dest, struct CHAIN * node);
 
 
 struct CHAIN *
+chain_remove (struct CHAIN * node);
+
+
+struct CHAIN *
+chain_idremove (struct CHAIN * node, long id);
+
+
+struct CHAIN *
 chain_fastinsert (struct CHAIN * dest, char * label, void * blob);
 
 

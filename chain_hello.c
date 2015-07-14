@@ -43,6 +43,12 @@ main (void)
 	/* dump again */
 	chainpp.dump (root);
 
+	printf ("remove test\n");
+
+	chain_idremove (root, 3);
+	chain_idremove (root, 3);
+	chainpp.dump (root);
+
 	/* destroy */
 	chain_destroy (root);
 	return 0;
