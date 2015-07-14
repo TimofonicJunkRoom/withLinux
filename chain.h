@@ -52,8 +52,12 @@ chain_pick (struct CHAIN * node, long id);
 
 struct CHAIN *
 chain_insert (struct CHAIN * dest, struct CHAIN * node);
-}
+
 
 struct CHAIN *
 chain_fastinsert (struct CHAIN * dest, char * label, void * blob);
-}
+
+
+struct CHAIN *
+chain_idfastinsert (struct CHAIN * node, long id, char * label, void * blob);
+

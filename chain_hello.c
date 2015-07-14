@@ -39,6 +39,10 @@ main (void)
 
 	chainpp.print (chain_pick (root, 2));
 
+	chain_idfastinsert (root, 2, "Anonymous", NULL);
+	/* dump again */
+	chainpp.dump (root);
+
 	/* destroy */
 	chain_destroy (root);
 	return 0;

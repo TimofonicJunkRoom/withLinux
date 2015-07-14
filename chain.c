@@ -234,12 +234,35 @@ chain_pick (struct CHAIN * node, long id)
 
 struct CHAIN *
 chain_insert (struct CHAIN * dest, struct CHAIN * node)
-{}
-
-
+{
+	if (NULL == node || NULL == dest)
+		return NULL;
+	/* save dest -> next */
+	struct CHAIN * cp;
+	cp = dest -> next;
+	/* change node */
+	node -> prev = dest;
+	node -> next = dest -> next;
+	/* put node in chain */
+	dest -> next = node;
+	cp -> prev = node;
+	/* regenerate the index of chain */
+	chain_genindex (dest);
+	return dest -> next;
+}
 
 struct CHAIN *
 chain_fastinsert (struct CHAIN * dest, char * label, void * blob)
-{}
+{
+	struct CHAIN * cp;
+	cp = chain_create (dest -> id + 1, label, blob);
+	return chain_insert (dest, cp);
+}
+
+struct CHAIN *
+chain_idfastinsert (struct CHAIN * node, long id, char * label, void * blob)
+{
+	return chain_fastinsert (chain_pick(node, id), label, blob);
+}
 
 /* vim : set ts = 4 */
