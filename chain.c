@@ -185,15 +185,11 @@ chain_cat (struct CHAIN * dest, struct CHAIN * src)
 	/* check if the tailnew is valid */
 	if (NULL == dest || NULL == src) {
 		printf ("E: chain_cat(): invalid dest or src\n");
-		exit (EXIT_FAILURE);
+		return NULL;
 	}
-	/* move to the last node */
-	struct CHAIN * _cp;
-	_cp = _chain_tail (dest);
-	/* append the src after the last node of dest */
-	src -> next = NULL;
-	src -> prev = _cp;
-	_cp -> next = src;
+	/* append the src after the  dest */
+	dest -> next = src;
+	src -> prev = dest;
 	/* returns head of the whole chain */	
 	return _chain_head (dest);
 }
@@ -259,15 +255,21 @@ chain_remove (struct CHAIN * node)
 	if (NULL == node)
 		return NULL;
 	struct CHAIN * cp;
-	cp = chain_cat (node -> prev, node -> next);
-	chain_genindex (cp);
-	return cp;
+	cp = _chain_head (node);
+	chain_cat (node -> prev, node -> next);
+	chain_kill (node);
+	chain_genindex (node);
+	return _chain_head (node);
 }
 
 struct CHAIN *
 chain_idremove (struct CHAIN * node, long id)
 {
 	return chain_remove (chain_pick (node, id));
+	/*chain_cat (chain_pick (node, id-1), chain_pick (node, id+1));
+	chain_kill (node);
+	chain_genindex (node);
+	return _chain_head (node); */ /* XXX: double free bug */
 }
 
 struct CHAIN *

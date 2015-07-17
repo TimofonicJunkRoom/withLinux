@@ -45,8 +45,12 @@ main (void)
 
 	printf ("remove test\n");
 
-	chain_idremove (root, 3);
-	chain_idremove (root, 3);
+	chain_cat (chain_pick (root,2), chain_pick(root,4));
+	chain_genindex (root);
+	chainpp.dump (root);
+
+	chain_idremove (root, 4);
+	/* XXX: idremove removes all after 4 */
 	chainpp.dump (root);
 
 	/* destroy */
