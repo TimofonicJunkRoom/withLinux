@@ -1,4 +1,4 @@
-set mip pool absgap 1.5
+set mip pool absgap 0.05
 set mip pool intensity 4
 set mip limits populate 9999999999999999
 read M1988.lp
@@ -12,15 +12,9 @@ disp sol mem 4 va *
 disp sol mem 5 va *
 disp sol mem 6 va *
 disp sol mem 7 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
-disp sol mem 1 va *
+disp sol mem 8 va *
+disp sol mem 9 va *
+disp sol mem 10 va *
+disp sol mem 11 va *
+disp sol mem 12 va *
+disp sol mem 13 va *
