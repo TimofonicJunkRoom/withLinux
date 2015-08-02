@@ -76,7 +76,9 @@
 		\[ \sum_{i=1}^7 x_{ij} t_i \leq L_j , (j = 1,2 ) \]
 	\item 每一节车厢装货不超重
 		\[ \sum_{i=1}^7 x_{ij} w_i \leq W_j , (j = 1,2) \]
-	\item 对 C5 C6 C7 三类的特殊限制
+	\item 对 C5 C6 C7 三类的特殊限制\footnote{在原文(http://www.comap.com/undergraduate/contests/matrix/PDF/1988/1988B.pdf)中
+		该条件是这样描述的:" The total space (thickness) occupied by these crates must not exceed 302.7 cm"。我们理解为
+		所有车厢上的567类总和不能超过规定数值。}
 		\[ \sum_{i=5}^7 t_i x_{i1} + t_i x_{i2} \leq s \]
 	\end{itemize}
 	优化目标为浪费空间最小，即在约束条件下使用空间最多：
@@ -86,7 +88,7 @@
 	变量限制：\\
 		所有变量均大于或等于零，$x_{ij}$为整数。
 
-	\subsection{求解}
+	\subsection{使用 ILOG CPLEX 程序求解}
 	为了方便输入将$x_{11} - x_{17}$ 重定义为 $x_1 - x_7$，$x_{21} - x_{27}$ 重定义为 $y_1 - y_7$\newline{}
 	File M1988.lp :
 	\begin{verbatim}
