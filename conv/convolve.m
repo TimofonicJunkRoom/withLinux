@@ -1,8 +1,13 @@
 %!/usr/bin/octave
-function output = conv (matrix)
+function output = convolve (matrix)
 
 imgsize = size(matrix);
 conv_mask = [ 1 0 1; 0 1 0; 1 0 1 ];
+
+if imgsize < size(conv_mask)
+	display ('E: input matrix smaller than convolution mask')
+	return
+end
 
 m = [];
 for i = 1:imgsize(1)-2
