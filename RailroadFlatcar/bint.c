@@ -54,7 +54,14 @@ objfrombest (int array[14])
 
 /* please compile with c99 compiler */
 /* c99 -Wall -O2 *.c */
+int y1 = 0;
+int y2 = 0;
+int y3 = 0;
+int y4 = 0;
+int y5 = 0;
+int y6 = 0;
 int y7 = 0;
+
 int
 main(void)
 {
@@ -67,13 +74,13 @@ main(void)
  for (int x6 = 0; x6 <= 4; x6++) {
  for (int x7 = 0; x7 <= 8; x7++) {
   /* bounds of y1 - y7 */
-  for (int y1 = 0; y1 <= 8; y1++) {
-  for (int y2 = 0; y2 <= 7; y2++) {
-  for (int y3 = 0; y3 <= 9; y3++) {
-  for (int y4 = 0; y4 <= 6; y4++) {
-  for (int y5 = 0; y5 <= 6; y5++) {
-  for (int y6 = 0; y6 <= 4; y6++) {
-  #pragma omp parallel for num_threads(4) private(y7)
+  #pragma omp parallel for num_threads(4) private(y1,y2,y3,y4,y5,y6,y7)
+  for (y1 = 0; y1 <= 8; y1++) {
+  for (y2 = 0; y2 <= 7; y2++) {
+  for (y3 = 0; y3 <= 9; y3++) {
+  for (y4 = 0; y4 <= 6; y4++) {
+  for (y5 = 0; y5 <= 6; y5++) {
+  for (y6 = 0; y6 <= 4; y6++) {
   for (y7 = 0; y7 <= 8; y7++) {
    /* constraint group 1 : no exceed max number */
    if (x1 + y1 <= 8) {
