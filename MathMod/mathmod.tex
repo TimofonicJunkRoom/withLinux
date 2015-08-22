@@ -307,12 +307,14 @@ end
 \end{multicols}
 
 \newpage
-\section{Statistics and Regression}
+\section{Statistics and Curve Fitting, Regression, Interpolation}
 \begin{multicols}{2}
-	\subsection{聚类分析}
+	\subsection{Clustering}
 	拟合，分段\newline
 	K-means：原则上需要预先知道类别数量。
-	\subsection{回归分析}
+	\subsection{Regression, Curve Fitting}
+		Find a smooth curve witch matches data best, i.e. Minimize MSE.
+		No requirement that curve must cover all data.
 		\subsubsection{主要内容}
 			\begin{itemize}
 			\item 相关关系.数学表达式
@@ -337,6 +339,27 @@ end
 			\item 相关系数
 			\item 置信区间
 			\end{itemize}
+		\subsubsection{最小二乘拟合}
+			matlab: polyfit, polyval\\
+	\subsection{Interpolation}
+		Find function f, which matches all data, and f is similar to the true function.
+		e.g. Polinomial interpolation
+		\[ P_n (x) = a_0 + a_1 x + \ldots + a_n x^n \]
+		\subsubsection{1D Interpolation}
+			拉格朗日插值\\ 牛顿插值\\ 分段插值\\ 三次样条插值\\
+			e.g. 一次插值，线性插值：点斜式
+			\[ L_1(x) = y_0 + \frac{y_1 - y_0}{x_1 - x_0} (x - x_0) \]
+			e.g. 拉格朗日插值多项式\\
+			hint. 三次样条插值(三次多项，节点二阶倒数连续)比分段线性插值更加光滑。\\
+			matlab: interp1 \\
+		\subsubsection{2D Interpolation}
+			2 cases: Grid data points, Scattered data points.\\
+			Method: Nearest\\
+			Method: Piecewise interpolation\\
+			matlab: grid data: interp2\\
+			matlab: scatterd data: griddata\\
+		\subsubsection{Priciples}
+			Min RSS (Residual Sum of Squares).
 \end{multicols}
 	
 \section{Markov Chain}
