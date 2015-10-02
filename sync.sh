@@ -9,10 +9,11 @@ RSYNC=/usr/bin/rsync
 
 # parameter
 RSYNC_ARG="-4avH -h --del --stats --partial --progress"
-SRC="xdlinux.info::debian/"
+# SRC= (this variable is set in ./config)
 DST="./debian/"
 EXCLUDE="./exclude.txt"
 LOG="./debian.log"
+. ./config
 
 # do check first
 printf "I: Checking Debian Archive Directory ... "
