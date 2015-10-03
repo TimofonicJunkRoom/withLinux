@@ -8,7 +8,7 @@ set -e
 RSYNC=/usr/bin/rsync
 
 # parameter
-RSYNC_ARG="-4avH -h --del --stats --partial --progress"
+RSYNC_ARG="-4avH -h --del --partial --progress"
 # SRC= (this variable is set in ./config)
 # BW= (this variable is set in ./config)
 DST="./debian/"
