@@ -25,10 +25,16 @@ $ make who_is_the_most_energetic_dd
 ```
 and this target would show your rank
 ```
-$ make my_rank LOGIN=packages@qa.debian.org
+$ make rank LOGIN=packages@qa.debian.org
 ```
 where variable `LOGIN` stores your query, e.g. in above command line the `LOGIN`
-is set to the Debian QA Team.
+is set to the Debian QA Team.  
+  
+If you want a full list, just type
+```
+$ make stat > txt
+```
+
   
 ### License
 ```
