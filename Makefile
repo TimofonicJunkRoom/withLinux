@@ -1,5 +1,8 @@
 LOGIN ?= packages@qa.debian.org
-SourcesGZ := debian/dists/jessie/main/source/Sources.gz
+target ?= jessie
+section ?= main
+target_sources := debian/dists/$(target)/$(section)/source/Sources.gz
+SourcesGZ := $(target_sources)
 
 default:
 	./sync.sh
