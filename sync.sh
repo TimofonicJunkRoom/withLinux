@@ -10,6 +10,7 @@ RSYNC=/usr/bin/rsync
 # parameter
 RSYNC_ARG="-4avH -h --del --stats --partial --progress"
 # SRC= (this variable is set in ./config)
+# BW= (this variable is set in ./config)
 DST="./debian/"
 EXCLUDE="./exclude.txt"
 LOG="./debian.log"
@@ -26,7 +27,7 @@ fi
 
 # start syncing
 printf "I: Starting to rsync Debian Source ... \n"
-${RSYNC} ${RSYNC_ARG} \
+${RSYNC} ${RSYNC_ARG} ${BW} \
   --exclude-from=${EXCLUDE} \
   --log-file=${LOG} \
   ${SRC} ${DST}
