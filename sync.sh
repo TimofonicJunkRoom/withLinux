@@ -11,9 +11,11 @@ RSYNC=/usr/bin/rsync
 RSYNC_ARG="-4avH -h --del --partial --progress"
 # SRC= (this variable is set in ./config)
 # BW= (this variable is set in ./config)
+TIMEOUT=--timeout=30
 DST="./debian/"
 EXCLUDE="./exclude.txt"
 LOG="./debian.log"
+# Source ./config as SHELL script
 . ./config
 
 # do check first
@@ -27,7 +29,7 @@ fi
 
 # start syncing
 printf "I: Starting to rsync Debian Source ... \n"
-${RSYNC} ${RSYNC_ARG} ${BW} \
+${RSYNC} ${RSYNC_ARG} ${BW} ${TIMEOUT} \
   --exclude-from=${EXCLUDE} \
   --log-file=${LOG} \
   ${SRC} ${DST}
