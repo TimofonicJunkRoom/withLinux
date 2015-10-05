@@ -4,11 +4,16 @@
 #include <iostream>
 
 #include <unistd.h>
+
 #include <glog/logging.h>
 #include <opencv2/opencv.hpp>
+#include <Magick++.h>
 
 #define WINDOW "CaffeToy"
+
 using namespace std;
+//using namespace cv;
+//using namespace Magick;
 
 int main (int argc, char** argv)  
 {
@@ -19,12 +24,15 @@ int main (int argc, char** argv)
 	LOG(INFO) << "Welcome to CaffeToy";
 
 	IplImage* pFrame = NULL;  
+	Magick::Image image;
+	Magick::Geometry geom = Magick::Geometry (227, 227);
+	geom.aspect(1);
 
 	LOG(INFO) << "Create Camera Capture";
 	CvCapture* pCapture = cvCreateCameraCapture(-1);  
 	CHECK (pCapture != NULL) << "cvCreateCameraCapture [failed]";
 
-	cvSetCaptureProperty (pCapture, CV_CAP_PROP_FPS, 1);
+	//cvSetCaptureProperty (pCapture, CV_CAP_PROP_FPS, 1);
 
 	LOG(INFO) << "Creating named window";
 	cvNamedWindow(WINDOW, 1);  
@@ -41,8 +49,13 @@ int main (int argc, char** argv)
 		cvShowImage (WINDOW, pFrame);  
 		cvSaveImage ("Frame.jpg", pFrame);
 
-		LOG(INFO) << "Resize picture";
-		system ("avconv -i Frame.jpg -s 227x227 Frame.jpg");
+		LOG(INFO) << "Resize picture with Magick++";
+		//system ("avconv -i Frame.jpg -s 227x227 Frame.jpg");
+		//sync();
+		image.read ("./Frame.jpg");
+		image.zoom (geom);
+		image.write ("./Frame.jpg");
+		LOG(INFO) << "Syncing captured Image";
 		sync();
 
 		LOG(INFO) << "Classify resized frame";

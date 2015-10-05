@@ -1,10 +1,12 @@
 CXX ?= /usr/bin/g++
 CXXFLAGS := -g -Wall
-LIBS := -lopencv_core -lopencv_highgui -lglog
+LIBS := -lopencv_core -lopencv_highgui -lglog -lMagick++-6.Q16
+INCLUDE := -I/usr/include/ImageMagick-6/ -I/usr/include/ImageMagick-6/Magic++/ -I/usr/include/ImageMagick-6/magick/ -I/usr/include/x86_64-linux-gnu/ImageMagick-6/
 
 caffetoy: clean
-	$(CXX) $(CXXFLAGS) -c caffetoy.cc -o caffetoy.cc.o
-	$(CXX) $(CXXFLAGS) caffetoy.cc.o $(LIBS) -o caffetoy
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBS) -o caffetoy caffetoy.cc
+#	$(CXX) $(CXXFLAGS) $(INCLUDE) -c caffetoy.cc -o caffetoy.cc.o 
+#	$(CXX) $(CXXFLAGS) $(INCLUDE) caffetoy.cc.o $(LIBS) -o caffetoy 
 
 clean:
 	-$(RM) *.o caffetoy Frame.jpg
