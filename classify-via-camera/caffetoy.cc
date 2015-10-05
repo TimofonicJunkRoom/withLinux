@@ -3,10 +3,9 @@
 // BSD-2-Clause
 #include <iostream>
 
+#include <unistd.h>
 #include <glog/logging.h>
-#include <opencv/cv.h>  
-#include <opencv/cxcore.h>  
-#include <opencv/highgui.h>  
+#include <opencv2/opencv.hpp>
 
 #define WINDOW "CaffeToy"
 using namespace std;
@@ -20,7 +19,6 @@ int main (int argc, char** argv)
 	LOG(INFO) << "Welcome to CaffeToy";
 
 	IplImage* pFrame = NULL;  
-
 
 	LOG(INFO) << "Create Camera Capture";
 	CvCapture* pCapture = cvCreateCameraCapture(-1);  
@@ -43,7 +41,11 @@ int main (int argc, char** argv)
 		cvShowImage (WINDOW, pFrame);  
 		cvSaveImage ("Frame.jpg", pFrame);
 
-		LOG(INFO) << "Classify frame ...";
+		LOG(INFO) << "Resize picture";
+		system ("avconv -i Frame.jpg -s 227x227 Frame.jpg");
+		sync();
+
+		LOG(INFO) << "Classify resized frame";
 		// the program is from caffe source / examples / cpp-classification
 		system ("classification m/deploy.prototxt m/bvlc_reference_caffenet.caffemodel m/imagenet_mean.binaryproto m/synset_words.txt Frame.jpg");
 
