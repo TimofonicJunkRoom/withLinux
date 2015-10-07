@@ -11,13 +11,13 @@
 
 #define WINDOW "CaffeToy"
 
-using namespace std;
+//using namespace std;
 //using namespace cv;
 //using namespace Magick;
 
 int main (int argc, char** argv)  
 {
-	cout << "\x1b[31m\x1b[m";
+	std::cout << "\x1b[31m\x1b[m";
 	// Init google-glog
 	FLAGS_logtostderr = 1;
 	google::InitGoogleLogging (argv[0]);
@@ -41,22 +41,22 @@ int main (int argc, char** argv)
 	while( NULL != (pFrame = cvQueryFrame (pCapture)) )  
 	//while (1)
 	{
+		system ("clear");
 		//cvGrabFrame (pCapture);
 		//pFrame = cvRetrieveFrame (pCapture);
 		if (!pFrame) break;  
 		LOG(INFO) << "cvQueryFrame [OK]";
-
 		cvShowImage (WINDOW, pFrame);  
 		cvSaveImage ("Frame.jpg", pFrame);
 
-		LOG(INFO) << "Resize picture with Magick++";
 		//system ("avconv -i Frame.jpg -s 227x227 Frame.jpg");
 		//sync();
 		image.read ("./Frame.jpg");
 		image.zoom (geom);
 		image.write ("./Frame.jpg");
-		LOG(INFO) << "Syncing captured Image";
+		LOG(INFO) << "Resize picture with Magick++ [OK]";
 		sync();
+		LOG(INFO) << "Sync captured Image [OK]";
 
 		LOG(INFO) << "Classify resized frame";
 		// the program is from caffe source / examples / cpp-classification
@@ -69,16 +69,16 @@ int main (int argc, char** argv)
 		pCapture = cvCreateCameraCapture(-1);  
 		CHECK (pCapture != NULL) << "cvCreateCameraCapture [failed]";
 
+		std::cout << "\x1b[31m----------------------------------------------\x1b[m"
+			<< std::endl;
 		// wait for any key to trigger next time classification
 		// ESC for exit.
 		if ( 27 == (char)cvWaitKey(0)) {
 			LOG(INFO) << "ESC arrived. Exiting ...";
 			break;
 		}
-		cout << "\x1b[31m----------------------------------------------\x1b[m" << endl;
 	}  
-	LOG(INFO) << "Releasing Memory...";
 	cvReleaseCapture (&pCapture);  
 	cvDestroyWindow (WINDOW);  
-	LOG(INFO) << "Exit.";
+	LOG(INFO) << "Release Memory [OK]";
 }
