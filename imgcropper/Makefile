@@ -7,6 +7,7 @@ CONFIG := `pkg-config pkg-config --cflags --libs Magick++`
 
 caffetoy: clean
 	$(CXX) $(CXXFLAGS) $(LIBS) $(CONFIG) $(INCLUDE) -o imgcropper main.cc
+	$(CXX) $(CXXFLAGS) $(LIBS) $(CONFIG) $(INCLUDE) -o imgcropper2 main2.cc
 
 clean:
-	-$(RM) *.o imgcropper
+	-$(RM) *.o imgcropper imgcropper2

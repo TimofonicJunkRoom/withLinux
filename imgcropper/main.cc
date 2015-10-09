@@ -54,4 +54,5 @@ int main (int argc, char** argv)
 	LOG(INFO) << "Image file written: " << target_filename;
 
 	LOG(INFO) << "Exit.";
+	return 0;
 }
