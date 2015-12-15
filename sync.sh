@@ -8,7 +8,7 @@ set -e
 RSYNC=/usr/bin/rsync
 
 # parameter
-RSYNC_ARG="-4avH -h --del --partial --progress"
+RSYNC_ARG="-4avH -h --delete-during --delete-excluded --partial --progress"
 # SRC= (this variable is set in ./config)
 # BW= (this variable is set in ./config)
 TIMEOUT=--timeout=30
@@ -24,7 +24,7 @@ if [ -d debian ]; then
   printf "[ OK ]\n"
 else
   mkdir debian
-  printf "[ Created ]\n"
+  printf "[ Created new directory ]\n"
 fi
 
 # start syncing
