@@ -1,102 +1,59 @@
-# cda - cd into Archive
+# cda - change directory into Archive
 
 ### SYNOPSIS
-`cda <ARCHIVE> [-f] [-d DIRECTORY]`  
+`cda [options] <ARCHIVE> `  
 `cda.sh <ARCHIVE>`
-
 
 ### DESCRIPTION
 `cda` is a command line utility that helps you "enter into" or "chdir() into" an archive conveniently.  
-You can consider it as an Enhaced version of `cd` command in shell.  
-For the suppoted formats see [Supported Archive formats](https://github.com/CDLuminate/cda#supported-archive-formats)  
+You can consider it as an Enhaced version of `cd` command in shell. It builds on [libarchive](https://github.com/libarchive/libarchive) so that it supports many types of archives.
   
 `cda.sh` is a archivemount wrapper which implements cda in shell.  
 
-## How does it look like ?
-Assume that I have a tarball
 ```shell
-$ ls -l coreutils_8.23.orig.tar.gz 
--rw-r--r-- 1 root root 12582141 Sep  1  2014 coreutils_8.23.orig.tar.gz
-```
-Then I invoke this "cda" in order to "chdir()" into target archive
-```shell
-$ cda coreutils_8.23.orig.tar.gz -f
-* Extract Archive "coreutils_8.23.orig.tar.gz"
-* Created temp dir "/tmp/cda.XoyzAa"
-* detected [ .tar.gz | .tgz ]
-* Child TAR terminated (0).
-* Stepping into Archive (tempdir): /tmp/cda.XoyzAa
-* cda: PWD = /tmp/cda.XoyzAa
-*      fork and execve bash ...
-$ 
-```
-Now we are "in" the archive:
-```shell
-$ find | head
-.
-./coreutils-8.23
-./coreutils-8.23/THANKS
-[...]
-```
-Then exit the shell
-```
-$ exit
-* cda: OK, Removing temp directory "/tmp/cda.XoyzAa"...
-* Child RM terminated with (0) - Success.
-$ 
-```
-Note that:
-* For safety, by default cda really invoke `rm -i -rf DIR` to remove temp dir.
-If you want to remove it directly, run `$ cda ARCHIVE -f`
-
-## Supported Archive formats  
-* .tar.gz | .tgz
-* .tar.bz2 | .tbz | .tbz2
-* .tar.xz | .txz
-* .tar
-* .zip | .jar
-* .7z
-* more in the future
-
-## Program Usage
-```shell
-          cda - chdir into Archive
 Usage:
-    cda <ARCHIVE> [-f]
-Option:
-    -f        force remove tmpdir, instead of interactive rm.
-    -d <TEMP> Specify the temp directory to use.
-              (would override the CDA env).
+  ./cda [options] ARCHIVE
+Options:
+  -d <DIR>  Specify the temp directory to use.
+            (would override the CDA env).
+  -f        Force remove tmpdir, instead of interactive rm.
+  -l        Also list archive components.
+  -L        Only list archive components.
+  -X        Only extract the archive.
 Environment:
-    CDA   specify the temp directory to use.
-          (default: /tmp)
-Formats:
-    tar.gz | tgz, tar.xz | txz, 
-    tar.bz2 | tbz | tbz2, tar, zip | jar, 7z
-Version:
-    0.2.1 (2015 17 June)
+  CDA       Set temp dir to use.  (current: /tmp)
+  CDASH     Set shell to use.     (current: /bin/bash)
+
+Dependency    : libarchive 3.1.2
+CDA Version   : 1.0~rc1
 ```
 
-## Without 'cda'
-Let's do the same thing as above, withou `cda`
-```shell
-$ ls -l test.tar.gz
-[...]
-(1)$ tar zxvf test.tar.gz -C SOME_DIRECTORY
-[...]
-(2)$ cd SOME_DIRECTORY
-......
-(3)$ rm -rf SOME_DIRECTORY
+## Example 
 ```
-`cda` encapsules the (1,2,3) steps into one.
+$ CDASH=/bin/sh cda a.tar.gz
+I: CDASH = "/bin/sh"
+I: processing archive "a.tar.gz"
+I: Create temporary directory [/tmp//./cda.gpsq5F]
+I: Child archive handler done. (0).
+I: working at destdir [/tmp/cda.gpsq5F]
+I: Please exit this shell when your operation is done.
+
+$ ls -l
+total 4
+drwxr-xr-x 3 lumin lumin 4096 Feb 15 07:03 cda
+$ exit
+
+I: remove temp directory [/tmp/cda.gpsq5F]
+I: remove the temporary directory [/tmp/cda.gpsq5F] (0) - Success.
+```
 
 ## Compile & install
-* compile: `make`
-* install: `make install`
-
-## Hints
-* you can set the variable `debug` to 0 in `cda.c` to hide debug info.
+* install dependency: `sudo apt install libarchive-dev`  
+* compile: `make`  
+* install: `sudo make install`  
 
 ##LICENSE
-GPL-3+
-
+```
+GPL-3
+COPYRIGHT (C) 2016 Lumin Zhou
+```
