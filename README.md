@@ -10,12 +10,12 @@ You can consider it as an Enhaced version of `cd` command in shell. It builds on
   
 `cda.sh` is a archivemount wrapper which implements cda in shell.  
 
-The idea of cda is:
-1. create a temporary directory
-2. extract the archive specified in command line into the temporary directory
-3. `fork()` and then `execve()` a shell in the temporary directory
-4. when the shell is quited, cda deletes the temporary directory recursively
-Hence "change directory into archive" can be implemented.
+The idea of cda is:  
+1. create a temporary directory  
+2. extract the archive specified in command line into the temporary directory  
+3. `fork()` and then `execve()` a shell in the temporary directory  
+4. when the shell is quited, cda deletes the temporary directory recursively  
+Hence "change directory into archive" can be implemented.  
 
 ```shell
 Usage:
