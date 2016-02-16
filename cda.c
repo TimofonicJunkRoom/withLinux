@@ -35,7 +35,6 @@ License: GPL-3.0+
 #include "cda_log.h"
 
 static int debug = 1;
-static int force = 0;
 
 /*
  * CDA functions
@@ -50,7 +49,6 @@ Usage (char *progname)
 "Options:\n"
 "    -d <DIR>  Specify the temp directory to use.\n"
 "              (would override the CDA env).\n"
-"    -f        Force remove tmpdir, instead of interactive rm.\n"
 "    -l        Also list archive components.\n"
 "    -L        Only list archive components.\n"
 "    -X        Only extract the archive.\n"
@@ -103,11 +101,8 @@ main (int argc, char **argv, char **env)
 		}
 		/* parse argument with getopt() */
 		int opt;
-		while ((opt = getopt(argc, argv, "fd:lLX")) != -1) {
+		while ((opt = getopt(argc, argv, "d:lLX")) != -1) {
 			switch (opt) {
-			case 'f': /* force */
-				force = 1;
-				break;
 			case 'd': /* destination */
 				/* this will override CDA */
 				prefix = optarg;
@@ -332,7 +327,10 @@ remove_tmpdir (char * destdir, int force)
 	if (pid == 0) {  /* fork : child */
 		/* construct newargv for rm */
 		char * rmenv[]  = { NULL };
-		char * rmargv[] = { "rm", (0==force)?("-ri"):("-rf"), destdir, "-v", NULL };
+		char * rmargv[] = { "rm", (0==force)?("-ri"):("-rf"), destdir, NULL };
+		{ /* dump the RM command line */
+			LOG_WARNF (" execve(): %s %s %s \n", rmargv[0], rmargv[1], rmargv[2]);
+		}
 		execve ("/bin/rm", rmargv, rmenv);
 		perror ("execve"); /* execve only returns on error */
 		exit (EXIT_FAILURE);
