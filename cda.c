@@ -44,8 +44,12 @@ static void
 Usage (char *progname)
 {
 	fprintf (stderr, ""
-"Usage:\n"
+"Synopsis:\n"
 "    %s [options] ARCHIVE\n"
+"Description:\n"
+"    Extract the specified archive into a temporary directory,\n"
+"    where a shell will be opened for you. This temporary\n"
+"    directory will be removed in the exitting of shell.\n"
 "Options:\n"
 "    -d <DIR>  Specify the temp directory to use.\n"
 "              (would override the CDA env).\n"
@@ -55,13 +59,12 @@ Usage (char *progname)
 "Environment:\n"
 "    CDA       Set temp dir to use.  (current: %s)\n"
 "    CDASH     Set shell to use.     (current: %s)\n"
-"\n"
-"Dependency    : %s\n"
-"CDA Version   : %s\n"
+"Version:\n"
+"    CDA %s  <-  %s\n"
 "", progname,
 	(NULL==getenv("CDA"))?("/tmp"):getenv("CDA"),
 	(NULL==getenv("CDASH"))?("/bin/bash"):getenv("CDASH"),
-	archive_version_string(), CDA_VERSION);
+	CDA_VERSION, archive_version_string());
 	return;
 }
 
@@ -141,9 +144,9 @@ main (int argc, char **argv, char **env)
 		}
 		/* check whether target archive is a plain file */
 		if ( stat_buf -> st_mode & S_IFREG ) {
-			LOG_INFOF ("processing archive \"%s\"\n", archfname);
+			LOG_INFOF ("entering into archive [%s]\n", archfname);
 		} else {
-			LOG_ERROR ("Only plain files could be processed.\n");
+			LOG_ERROR ("only plain files could be processed.\n");
 			exit (EXIT_FAILURE);
 		}
 		free (stat_buf);
@@ -151,7 +154,7 @@ main (int argc, char **argv, char **env)
 	{ /* Access */
 		/* check mode of target */
 		Access (archfname, R_OK);
-		if (1<debug) perror ("access");
+		LOG_INFOF ("access(\"%s\", R_OK) success.\n", archfname);
 	}
 	{ /* init libarchive settings, and open archive file*/
 		/* libarchive settings */
@@ -170,7 +173,7 @@ main (int argc, char **argv, char **env)
 	{ /* create temporary directory */
 		Chdir (prefix);
 		temp_dir = Mkdtemp (template);
-		LOG_INFOF ("Create temporary directory [%s/%s]\n", prefix, temp_dir);
+		LOG_INFOF ("create temporary directory [%s/%s]\n", prefix, temp_dir);
 		Chdir (temp_dir);
 		Getcwd (destdir, 4095);
 	}
@@ -185,18 +188,19 @@ main (int argc, char **argv, char **env)
 				int status = 0;
 				Waitpid (-1, &status, 0); // wait for any child
 				if (0 != status) {
-					LOG_ERRORF ("child libarchive operations exited with error (%d).\n", status);
+					LOG_ERRORF ("libarchive operations exited with error (%d).\n", status);
 					exit (EXIT_FAILURE);
 				}
-				LOG_INFOF ("Child libarchive handler done. (%d).\n", status);
+				LOG_INFOF ("libarchive operations are successful. (%d).\n", status);
 			}
 		}
 	}
 	{ /* fork and execve() a shell in the cda environment */
 		if (cda_action & CDA_SHELL) {
-			LOG_INFOF ("working at destdir [%s]\n", destdir);
+			LOG_INFOF ("fork and execve a shell for you, under [%s]\n", destdir);
 			LOG_INFO ("\n");
-			LOG_WARNF ("Please exit this shell when your operation is done.\n");
+			LOG_WARNF ("-*- Please exit this shell when your operation is done -*-\n");
+			LOG_INFO ("\n");
 			int tmp;
 			pid_t pid = Fork ();
 			if (0 == pid) { /* child execve a shell */
@@ -212,7 +216,7 @@ main (int argc, char **argv, char **env)
 		if (cda_action == CDA_EXTRACT) {
 			LOG_INFOF ("keeping temp directory [%s]\n", destdir);
 		} else {
-			LOG_INFOF ("remove temp directory [%s]\n", destdir);
+			LOG_INFOF ("removing the temporary directory [%s]\n", destdir);
 			remove_tmpdir (destdir, 1);
 		}
 	}
@@ -336,7 +340,7 @@ remove_tmpdir (char * destdir, int force)
 		exit (EXIT_FAILURE);
 	} else {  /* fork : parent */
 		Waitpid (-1, &_tmp, 0);
-		LOG_INFOF ("remove the temporary directory [%s] (%d) - %s.\n", destdir, _tmp,
+		LOG_INFOF ("removal status on [%s] (%d) - %s.\n", destdir, _tmp,
 			   (0==_tmp)?"Success":"Failure");
 		if (0 != _tmp) {
 			LOG_ERRORF ("failure removing temporary direcotry [%s] (%d)\n", destdir, _tmp);

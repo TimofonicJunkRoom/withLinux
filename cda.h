@@ -41,7 +41,7 @@ License: GPL-3.0+
 #define CDA_SHELL        (0x0100)
 
 #define PREFIX        ("/tmp/")
-#define TEMPLATE      ("./cda.XXXXXX")
+#define TEMPLATE      ("cda.XXXXXX")
 #define SHELL         ("/bin/bash")
 
 #define CDA_COLOR_RED       ((const char *)"\x1B[31m")
