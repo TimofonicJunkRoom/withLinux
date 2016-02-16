@@ -44,8 +44,12 @@ License: GPL-3.0+
 #define TEMPLATE      ("./cda.XXXXXX")
 #define SHELL         ("/bin/bash")
 
-#define CDA_COLOR_RED     ((const char *)"\x1B[31m")
-#define CDA_COLOR_YELLOW  ((const char *)"\x1B[33m")
+#define CDA_COLOR_RED       ((const char *)"\x1B[31m")
+#define CDA_COLOR_RED_B     ((const char *)"\x1B[31;1m")
+#define CDA_COLOR_GREEN     ((const char *)"\x1B[32m")
+#define CDA_COLOR_GREEN_B   ((const char *)"\x1B[32;1m")
+#define CDA_COLOR_YELLOW    ((const char *)"\x1B[33m")
+#define CDA_COLOR_YELLOW_B  ((const char *)"\x1B[33;1m")
 #define CDA_COLOR_RESET   ((const char *)"\x1B[m")
 
 /*

@@ -18,8 +18,6 @@ License: GPL-3.0+
  Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
 */
 
-#include "cda.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,6 +30,9 @@ License: GPL-3.0+
 
 #include <archive.h>
 #include <archive_entry.h>
+
+#include "cda.h"
+#include "cda_log.h"
 
 static int debug = 1;
 static int force = 0;
@@ -83,9 +84,8 @@ main (int argc, char **argv, char **env)
 	char * prefix = PREFIX;
 	char * shell = SHELL;
 	char * archfname;
-
-	char          template[] = TEMPLATE;
-	char        * temp_dir;
+	char   template[] = TEMPLATE;
+	char * temp_dir;
 
 	/* malloc buffers, check NULL  */
 	char * curdir   = (char *) Malloc (4096);
@@ -97,8 +97,7 @@ main (int argc, char **argv, char **env)
 	{ /* check and parse argument */
 		/* check argc */
 		if (2 > argc) {
-			printf ("%sI: Missing arguments.%s\n",
-					CDA_COLOR_RED, CDA_COLOR_RESET);
+			LOG_WARN ("Missing arguments.\n");
 			Usage (argv[0]);
 			exit (EXIT_FAILURE);
 		}
@@ -123,12 +122,12 @@ main (int argc, char **argv, char **env)
 				cda_action = CDA_EXTRACT;
 				break;
 			default:
-				fprintf (stderr, "E: Error: option not defined.\n");
+				LOG_ERROR ("option not defined.\n");
 				exit (EXIT_FAILURE);
 			}
 		}
 		if (optind >= argc) {
-			fprintf (stderr, "E: no archive specified.\n");
+			LOG_ERROR ("no archive specified.\n");
 			exit (EXIT_FAILURE);
 		} else {
 			archfname = argv[optind];
@@ -147,9 +146,9 @@ main (int argc, char **argv, char **env)
 		}
 		/* check whether target archive is a plain file */
 		if ( stat_buf -> st_mode & S_IFREG ) {
-			printf ("I: processing archive \"%s\"\n", archfname);
+			LOG_INFOF ("processing archive \"%s\"\n", archfname);
 		} else {
-			printf ("E: Only plain files could be processed.\n");
+			LOG_ERROR ("Only plain files could be processed.\n");
 			exit (EXIT_FAILURE);
 		}
 		free (stat_buf);
@@ -176,7 +175,7 @@ main (int argc, char **argv, char **env)
 	{ /* create temporary directory */
 		Chdir (prefix);
 		temp_dir = Mkdtemp (template);
-		if (debug) printf ("I: Create temporary directory [%s/%s]\n", prefix, temp_dir);
+		LOG_INFOF ("Create temporary directory [%s/%s]\n", prefix, temp_dir);
 		Chdir (temp_dir);
 		Getcwd (destdir, 4095);
 	}
@@ -191,18 +190,18 @@ main (int argc, char **argv, char **env)
 				int status = 0;
 				Waitpid (-1, &status, 0); // wait for any child
 				if (0 != status) {
-					printf ("* child tar exited with error (%d).\n", status);
+					LOG_ERRORF ("child libarchive operations exited with error (%d).\n", status);
 					exit (EXIT_FAILURE);
 				}
-				if (debug) printf ("I: Child archive handler done. (%d).\n", status);
+				LOG_INFOF ("Child libarchive handler done. (%d).\n", status);
 			}
 		}
 	}
 	{ /* fork and execve() a shell in the cda environment */
 		if (cda_action & CDA_SHELL) {
-			if (debug) printf ("I: working at destdir [%s]\n", destdir);
-			fprintf (stdout, "%sI: Please exit this shell when your operation is done.%s\n",
-					CDA_COLOR_YELLOW, CDA_COLOR_RESET);
+			LOG_INFOF ("working at destdir [%s]\n", destdir);
+			LOG_INFO ("\n");
+			LOG_WARNF ("Please exit this shell when your operation is done.\n");
 			int tmp;
 			pid_t pid = Fork ();
 			if (0 == pid) { /* child execve a shell */
@@ -216,9 +215,9 @@ main (int argc, char **argv, char **env)
 	}
 	{ /* remove the temporary stuff */
 		if (cda_action == CDA_EXTRACT) {
-			fprintf (stdout, "I: keeping temp directory [%s]\n", destdir);
+			LOG_INFOF ("keeping temp directory [%s]\n", destdir);
 		} else {
-			fprintf (stdout, "I: remove temp directory [%s]\n", destdir);
+			LOG_INFOF ("remove temp directory [%s]\n", destdir);
 			remove_tmpdir (destdir, 1);
 		}
 	}
@@ -314,13 +313,13 @@ cda_fetchenv (char *** env, char ** prefix, char ** shell)
 		if (1<debug) perror ("getenv");
 	} else {
 		*prefix = getenv("CDA");
-		if (debug) printf ("I: CDA = \"%s\"\n", *prefix);
+		//if (debug) printf ("I: CDA = \"%s\"\n", *prefix);
 	}
 	if (NULL == getenv("CDASH")) {
 		if (1<debug) perror ("getenv");
 	} else {
 		*shell = getenv("CDASH");
-		if (debug) printf ("I: CDASH = \"%s\"\n", *shell);
+		//if (debug) printf ("I: CDASH = \"%s\"\n", *shell);
 	}
 	return 0;
 }
@@ -339,10 +338,10 @@ remove_tmpdir (char * destdir, int force)
 		exit (EXIT_FAILURE);
 	} else {  /* fork : parent */
 		Waitpid (-1, &_tmp, 0);
-		fprintf (stdout, "I: remove the temporary directory [%s] (%d) - %s.\n", destdir, _tmp,
+		LOG_INFOF ("remove the temporary directory [%s] (%d) - %s.\n", destdir, _tmp,
 			   (0==_tmp)?"Success":"Failure");
 		if (0 != _tmp) {
-			printf ("E: failure removing temporary direcotry [%s] (%d)\n", destdir, _tmp);
+			LOG_ERRORF ("failure removing temporary direcotry [%s] (%d)\n", destdir, _tmp);
 			exit (EXIT_FAILURE);
 		}
 	}
