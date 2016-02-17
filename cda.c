@@ -75,6 +75,9 @@ static int cda_fetchenv (char *** env, char ** prefix, char ** shell);
 static int copy_data (struct archive *, struct archive *);
 static int cda_archive_handler (struct archive *, int, const int);
 
+int archfd;
+off_t archfilesize;
+
 int
 main (int argc, char **argv, char **env)
 {
@@ -151,6 +154,7 @@ main (int argc, char **argv, char **env)
 			LOG_ERROR ("only plain files could be processed.\n");
 			exit (EXIT_FAILURE);
 		}
+		archfilesize = stat_buf -> st_size;
 		free (stat_buf);
 	}
 	{ /* Access */
@@ -159,6 +163,8 @@ main (int argc, char **argv, char **env)
 		LOG_INFOF ("access(\"%s\", R_OK) success.\n", archfname);
 	}
 	{ /* init libarchive settings, and open archive file*/
+		archfd = open (archfname, O_RDONLY);
+		printf ("%ld\n", (long)lseek(archfd, (off_t)0, SEEK_CUR));
 		/* libarchive settings */
 		flags  = ARCHIVE_EXTRACT_TIME;
 		flags |= ARCHIVE_EXTRACT_PERM;
@@ -169,7 +175,8 @@ main (int argc, char **argv, char **env)
 		archive_read_support_filter_all (arch);
 		archive_read_support_format_all (arch);
 		/* open archive */
-		if (ARCHIVE_OK != archive_read_open_filename (arch, archfname, 10240)) {
+		//if (ARCHIVE_OK != archive_read_open_filename (arch, archfname, 10240)) {
+		if (ARCHIVE_OK != archive_read_open_fd (arch, archfd, 10240)) {
 			LOG_ERRORF ("%s\n", archive_error_string(arch));
 			exit (EXIT_FAILURE);
 		}
@@ -232,6 +239,30 @@ main (int argc, char **argv, char **env)
 	return 0;
 }
 
+static struct _pgbar {
+	char ch;
+	struct _pgbar * next;
+} _xx; /* making the compiler happy */
+
+struct _pgbar pgbar1;
+struct _pgbar pgbar2;
+struct _pgbar pgbar3;
+struct _pgbar pgbar4;
+
+struct _pgbar pgbar1 = { '-', &pgbar2 };
+struct _pgbar pgbar2 = { '\\', &pgbar3 };
+struct _pgbar pgbar3 = { '|', &pgbar4 };
+struct _pgbar pgbar4 = { '/', &pgbar1 };
+
+char
+_cda_bar (void)
+{
+	(void) _xx; /* _xx is not used */
+	static struct _pgbar * cur = &pgbar1;
+	cur = cur -> next;
+	return cur -> ch;
+}
+
 static int
 cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 {
@@ -260,7 +291,9 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 
 		{ /* Progress indicator */
 			fprintf (stdout, "\x1b[1A\x1b[K\r");
-			fprintf (stdout, "\r%s\n", archive_entry_pathname (entry));
+			fprintf (stdout, "\r[%c %02d%%] %s\n", _cda_bar(), 
+					(int) (100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize),
+					archive_entry_pathname (entry));
 			fsync (1);
 			//usleep (2000);
 		}
