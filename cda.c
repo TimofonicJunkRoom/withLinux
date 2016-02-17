@@ -182,6 +182,7 @@ main (int argc, char **argv, char **env)
 		Getcwd (destdir, 4095);
 	}
 	{ /* do the CDA matter with the forked child */
+		LOG_INFO ("start libarchive handler ...\n");
 		if (cda_action & (CDA_EXTRACT|CDA_LIST)) {
 			/* extract archive into temp_dir */
 			pid_t pid = Fork ();
@@ -243,6 +244,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 	archive_write_disk_set_options (ext, flags);
 	archive_write_disk_set_standard_lookup (ext);
 
+	fprintf (stdout, "\n"); /* prepare space for progress bar */
 	while (1) {
 
 		r = archive_read_next_header (arch, &entry);
@@ -255,6 +257,13 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 
 		if (cda_action & CDA_LIST)
 			fprintf (stdout, "%s\n", archive_entry_pathname (entry));
+
+		{ /* Progress indicator */
+			fprintf (stdout, "\x1b[1A\x1b[K\r");
+			fprintf (stdout, "\r%s\n", archive_entry_pathname (entry));
+			fsync (1);
+			//usleep (2000);
+		}
 
 		if (cda_action == CDA_LIST) {
 			archive_read_data_skip (arch);
@@ -278,6 +287,9 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 				exit (EXIT_FAILURE);
 		}
 	}
+	/* terminate progress indicator */
+	fprintf (stdout, "\x1b[1A\x1b[K\r\n");
+
 	archive_read_close (arch);
 	archive_read_close (ext);
 	archive_read_free (arch);
