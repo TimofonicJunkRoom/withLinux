@@ -18,40 +18,46 @@ The idea of cda is:
 Hence "change directory into archive" can be implemented.  
 
 ```shell
-Usage:
-  ./cda [options] ARCHIVE
+Synopsis:
+	cda [options] ARCHIVE
+Description:
+	Extract the specified archive into a temporary directory,
+	where a shell will be opened for you. This temporary
+	directory will be removed in the exitting of shell.
 Options:
-  -d <DIR>  Specify the temp directory to use.
-            (would override the CDA env).
-  -f        Force remove tmpdir, instead of interactive rm.
-  -l        Also list archive components.
-  -L        Only list archive components.
-  -X        Only extract the archive.
+	-d <DIR>  Specify the temp directory to use.
+			(would override the CDA env).
+	-l        Also list archive components.
+	-L        Only list archive components.
+	-X        Only extract the archive.
 Environment:
-  CDA       Set temp dir to use.  (current: /tmp)
-  CDASH     Set shell to use.     (current: /bin/bash)
-
-Dependency    : libarchive 3.1.2
-CDA Version   : 1.0~rc1
+	CDA       Set temp dir to use.  (current: /tmp)
+	CDASH     Set shell to use.     (current: /bin/bash)
+Version:
+	CDA 1.2  <-  libarchive 3.1.2
 ```
 
 ## Example 
 ```
-$ CDASH=/bin/sh cda a.tar.gz
-I: CDASH = "/bin/sh"
-I: processing archive "a.tar.gz"
-I: Create temporary directory [/tmp//./cda.gpsq5F]
-I: Child archive handler done. (0).
-I: working at destdir [/tmp/cda.gpsq5F]
-I: Please exit this shell when your operation is done.
+$ cda /tmp/a.tar.gz
+I0117 02:46:54.985 07871 cda.c:147] entering into archive [/tmp/a.tar.gz]
+I0117 02:46:54.985 07871 cda.c:157] access("/tmp/a.tar.gz", R_OK) success.
+I0117 02:46:54.986 07871 cda.c:178] create temporary directory [/tmp//cda.t2BcJ2]
+I0117 02:46:55.016 07871 cda.c:196] libarchive operations are successful. (0).
+I0117 02:46:55.016 07871 cda.c:202] fork and execve a shell for you, under [/tmp/cda.t2BcJ2]
+I0117 02:46:55.016 07871 cda.c:203] 
+W0117 02:46:55.016 07871 cda.c:204] -*- Please exit this shell when your operation is done -*-
+I0117 02:46:55.016 07871 cda.c:205] 
 
 $ ls -l
 total 4
-drwxr-xr-x 3 lumin lumin 4096 Feb 15 07:03 cda
+drwxr-xr-x 3 lumin lumin 4096 Feb 17 02:37 cda
 $ exit
+exit
 
-I: remove temp directory [/tmp/cda.gpsq5F]
-I: remove the temporary directory [/tmp/cda.gpsq5F] (0) - Success.
+I0117 02:46:58.498 07871 cda.c:221] removing the temporary directory [/tmp/cda.t2BcJ2]
+W0117 02:46:58.499 07889 cda.c:338]  execve(): rm -rf /tmp/cda.t2BcJ2 
+I0117 02:46:58.518 07871 cda.c:346] removal status on [/tmp/cda.t2BcJ2] (0) - Success.
 ```
 
 ## Compile & install
