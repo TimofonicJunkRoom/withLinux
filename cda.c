@@ -65,6 +65,8 @@ Usage (char *progname)
 	(NULL==getenv("CDA"))?("/tmp"):getenv("CDA"),
 	(NULL==getenv("CDASH"))?("/bin/bash"):getenv("CDASH"),
 	CDA_VERSION, archive_version_string());
+	fprintf (stderr, "    built on %s %s \n",
+			__DATE__, __TIME__);
 	return;
 }
 
