@@ -49,7 +49,7 @@ _CDA_LOG_CORE (char level,
 			:(level=='W')?CDA_COLOR_YELLOW_B
 			:(level=='E')?CDA_COLOR_RED_B
 			:CDA_COLOR_RESET);
-	fprintf (stderr, "%1c%02d%02d %02d:%02d:%02d.%03d %05d %s:%d @%s()] %s", level,
+	fprintf (stderr, "%1c%02d%02d %02d:%02d:%02d.%03d %05d %s:%d] @%s() %s", level,
 		   	ptm->tm_mon, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec,
 		   	timebp->millitm, pid, file, line, func, msgstring);
 	fprintf (stderr, CDA_COLOR_RESET);
