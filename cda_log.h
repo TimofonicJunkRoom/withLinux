@@ -40,6 +40,7 @@ _CDA_LOG_CORE (char level,
            pid_t pid,
            __typeof__(__FILE__) file,
            __typeof__(__LINE__) line,
+		   __typeof__(__FUNCTION__) func,
            char * msgstring) 
 {
 	ftime (timebp);
@@ -48,23 +49,23 @@ _CDA_LOG_CORE (char level,
 			:(level=='W')?CDA_COLOR_YELLOW_B
 			:(level=='E')?CDA_COLOR_RED_B
 			:CDA_COLOR_RESET);
-	fprintf (stderr, "%1c%02d%02d %02d:%02d:%02d.%03d %05d %s:%d] %s", level,
+	fprintf (stderr, "%1c%02d%02d %02d:%02d:%02d.%03d %05d %s:%d @%s()] %s", level,
 		   	ptm->tm_mon, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec,
-		   	timebp->millitm, pid, file, line, msgstring);
+		   	timebp->millitm, pid, file, line, func, msgstring);
 	fprintf (stderr, CDA_COLOR_RESET);
 	return;
 }
 
 #define LOG_INFO(_cda_msg) do { \
-	_CDA_LOG_CORE ('I', &timeb_s, getpid(), __FILE__, __LINE__, ((_cda_msg))); \
+	_CDA_LOG_CORE ('I', &timeb_s, getpid(), __FILE__, __LINE__, __FUNCTION__, ((_cda_msg))); \
 } while (0)
 
 #define LOG_WARN(_cda_msg) do { \
-	_CDA_LOG_CORE ('W', &timeb_s, getpid(), __FILE__, __LINE__, ((_cda_msg))); \
+	_CDA_LOG_CORE ('W', &timeb_s, getpid(), __FILE__, __LINE__, __FUNCTION__, ((_cda_msg))); \
 } while (0)
 
 #define LOG_ERROR(_cda_msg) do { \
-	_CDA_LOG_CORE ('E', &timeb_s, getpid(), __FILE__, __LINE__, ((_cda_msg))); \
+	_CDA_LOG_CORE ('E', &timeb_s, getpid(), __FILE__, __LINE__, __FUNCTION__, ((_cda_msg))); \
 } while (0)
 
 #define LOG_INFOF(...) do { \
