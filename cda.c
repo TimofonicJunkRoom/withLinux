@@ -167,8 +167,10 @@ main (int argc, char **argv, char **env)
 		archive_read_support_filter_all (arch);
 		archive_read_support_format_all (arch);
 		/* open archive */
-		if (ARCHIVE_OK != archive_read_open_filename (arch, archfname, 10240))
+		if (ARCHIVE_OK != archive_read_open_filename (arch, archfname, 10240)) {
+			LOG_ERRORF ("%s\n", archive_error_string(arch));
 			exit (EXIT_FAILURE);
+		}
 	}
 	{ /* create temporary directory */
 		Chdir (prefix);
@@ -245,12 +247,12 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 		if (ARCHIVE_EOF == r)
 			break;
 		if (ARCHIVE_OK > r)
-			fprintf (stderr, "%s\n", archive_error_string (arch));
+			LOG_ERRORF ("%s\n", archive_error_string (arch));
 		if (ARCHIVE_WARN > r)
 			exit (EXIT_FAILURE);
 
 		if (cda_action & CDA_LIST)
-			printf ("%s\n", archive_entry_pathname (entry));
+			fprintf (stdout, "%s\n", archive_entry_pathname (entry));
 
 		if (cda_action == CDA_LIST) {
 			archive_read_data_skip (arch);
@@ -258,18 +260,18 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 
 			r = archive_write_header (ext, entry);
 			if (ARCHIVE_OK > r)
-				fprintf (stderr, "%s\n", archive_error_string (ext));
+				LOG_WARNF ("%s\n", archive_error_string (ext));
 			else if (0 < archive_entry_size(entry)) {
 				r = copy_data (arch, ext);
 				if (ARCHIVE_OK > r)
-					fprintf (stderr, "%s\n", archive_error_string(ext));
+					LOG_ERRORF ("%s\n", archive_error_string(ext));
 				if (ARCHIVE_WARN > r)
 					exit (EXIT_FAILURE);
 			}
 
 			r = archive_write_finish_entry (ext);
 			if (ARCHIVE_OK > r)
-				fprintf (stderr, "%s\n", archive_error_string(ext));
+				LOG_WARNF ("%s\n", archive_error_string(ext));
 			if (ARCHIVE_WARN > r)
 				exit (EXIT_FAILURE);
 		}
