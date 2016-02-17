@@ -1,3 +1,23 @@
+/* cda_log.h  ---  cd into Archive, logging facility
+ * Copyright (C) 2015 Lumin <cdluminate@gmail.com>
+ * License: GPL-3.0+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * .
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ * .
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * .
+ * On Debian systems, the complete text of the GNU General
+ * Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
+ */
+
 #ifndef CDA_LOG_H_
 #define CDA_LOG_H_
 
@@ -36,15 +56,15 @@ _CDA_LOG_CORE (char level,
 }
 
 #define LOG_INFO(_cda_msg) do { \
-	_CDA_LOG_CORE ('I', &timeb_s, getpid(), __FILE__, __LINE__, _cda_msg); \
+	_CDA_LOG_CORE ('I', &timeb_s, getpid(), __FILE__, __LINE__, ((_cda_msg))); \
 } while (0)
 
 #define LOG_WARN(_cda_msg) do { \
-	_CDA_LOG_CORE ('W', &timeb_s, getpid(), __FILE__, __LINE__, _cda_msg); \
+	_CDA_LOG_CORE ('W', &timeb_s, getpid(), __FILE__, __LINE__, ((_cda_msg))); \
 } while (0)
 
 #define LOG_ERROR(_cda_msg) do { \
-	_CDA_LOG_CORE ('E', &timeb_s, getpid(), __FILE__, __LINE__, _cda_msg); \
+	_CDA_LOG_CORE ('E', &timeb_s, getpid(), __FILE__, __LINE__, ((_cda_msg))); \
 } while (0)
 
 #define LOG_INFOF(...) do { \
@@ -61,27 +81,5 @@ _CDA_LOG_CORE (char level,
 	snprintf (_cda_logbuf, 4095, ##__VA_ARGS__); \
 	LOG_ERROR (_cda_logbuf); \
 } while (0)
-
-//
-//int
-//main (void)
-//{
-//		struct timeb * tp = (struct timeb *) malloc (sizeof(struct timeb));
-//		ftime (tp);
-//
-//		printf ("%ld\n", time(&tp->time));
-//		printf ("%s", ctime(&tp->time));
-//		ptm = gmtime (&tp->time);
-//		printf ("%02d:%02d:%02d.%03d\n",
-//				ptm -> tm_hour,
-//				ptm -> tm_min,
-//				ptm -> tm_sec,
-//				tp -> millitm);
-//		printf ("%03d\n", tp->millitm);
-//
-//		free (tp);
-//		return 0;
-//}
-//
 
 #endif /* CDA_LOG_H_ */
