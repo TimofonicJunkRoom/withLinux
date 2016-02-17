@@ -62,8 +62,7 @@ I0117 02:46:58.518 07871 cda.c:346] removal status on [/tmp/cda.t2BcJ2] (0) - Su
 
 ## Compile & install
 * install dependency: `sudo apt install libarchive-dev`  
-* compile: `make`  
-* install: `sudo make install`  
+* compile: `make` or `cmake . ; make`  
 
 ##LICENSE
 ```
