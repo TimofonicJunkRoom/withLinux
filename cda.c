@@ -26,11 +26,11 @@ License: GPL-3.0+
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
 #include <fcntl.h>
 
 #include <archive.h>
 #include <archive_entry.h>
-#include <termcap.h>
 
 #include "cda.h"
 #include "cda_log.h"
@@ -272,21 +272,13 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 
 	int r;
 	char line_buf[4096] = {0};
-	int term_width = 1;
-	static char term_buffer[2048];
-	char * termtype = getenv ("TERM");
-	{ /* Get terminal */
-		int success;
-		if (termtype == 0)
-			LOG_ERROR ("Specify a terminal type with `setenv TERM <yourtype>'.\n");
-		success = tgetent (term_buffer, termtype);
-		if (success < 0)
-			LOG_ERROR ("Could not access the termcap data base.\n");
-		if (success == 0)
-			LOG_ERRORF ("Terminal type `%s' is not defined.\n", termtype);
-		term_width = tgetnum ("co"); /* column width */
-		// LOG_INFOF ("%d\n", term_width); 
-	}
+
+	struct winsize w;
+	ioctl (STDOUT_FILENO, TIOCGWINSZ, &w);
+	int term_width = w.ws_col;
+	//printf ("lines %d\n", w.ws_row);
+	//printf ("columns %d\n", w.ws_col);
+
 	ext = archive_write_disk_new ();
 	archive_write_disk_set_options (ext, flags);
 	archive_write_disk_set_standard_lookup (ext);

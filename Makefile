@@ -2,7 +2,7 @@ CFLAGS  := -g -O2 -Wall
 INSTALL := install
 DESTDIR :=
 BIN     := /usr/bin/
-LIBS    := -larchive -ltermcap
+LIBS    := -larchive
 
 main: cda
 %.o: %.c %.h
