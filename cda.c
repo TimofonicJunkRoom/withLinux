@@ -30,6 +30,7 @@ License: GPL-3.0+
 
 #include <archive.h>
 #include <archive_entry.h>
+#include <termcap.h>
 
 #include "cda.h"
 #include "cda_log.h"
@@ -270,7 +271,22 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 	struct archive_entry * entry;
 
 	int r;
-
+	char line_buf[4096] = {0};
+	int term_width = 1;
+	static char term_buffer[2048];
+	char * termtype = getenv ("TERM");
+	{ /* Get terminal */
+		int success;
+		if (termtype == 0)
+			LOG_ERROR ("Specify a terminal type with `setenv TERM <yourtype>'.\n");
+		success = tgetent (term_buffer, termtype);
+		if (success < 0)
+			LOG_ERROR ("Could not access the termcap data base.\n");
+		if (success == 0)
+			LOG_ERRORF ("Terminal type `%s' is not defined.\n", termtype);
+		term_width = tgetnum ("co"); /* column width */
+		// LOG_INFOF ("%d\n", term_width); 
+	}
 	ext = archive_write_disk_new ();
 	archive_write_disk_set_options (ext, flags);
 	archive_write_disk_set_standard_lookup (ext);
@@ -290,10 +306,11 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 			fprintf (stdout, "%s\n", archive_entry_pathname (entry));
 
 		{ /* Progress indicator */
-			fprintf (stdout, "\x1b[1A\x1b[K\r");
-			fprintf (stdout, "\r[%c %02d%%] %s\n", _cda_bar(), 
+			fprintf (stdout, "\x1b[1A\x1b[2K\r");
+			snprintf (line_buf, term_width, "\r[%c %02d%%] %.*s\n", _cda_bar(), 
 					(int) (100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize),
-					archive_entry_pathname (entry));
+					(term_width-11), archive_entry_pathname (entry));
+			fprintf (stdout, line_buf);
 			fsync (1);
 			//usleep (2000);
 		}
