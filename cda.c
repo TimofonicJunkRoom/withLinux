@@ -300,7 +300,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 
 		{ /* Progress indicator */
 			fprintf (stdout, "\x1b[1A\x1b[2K\r");
-			snprintf (line_buf, term_width, "\r[%c%3.3d%%] %.*s\n", _cda_bar(), 
+			snprintf (line_buf, term_width, "\r[%c%3.2d%%] %.*s\n", _cda_bar(), 
 					(int) (100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize),
 					(term_width-11), archive_entry_pathname (entry));
 			fprintf (stdout, line_buf);
