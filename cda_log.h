@@ -28,20 +28,24 @@
 #include <sys/timeb.h>
 #include <sys/types.h>
 
+#include <execinfo.h>
+
 #include "cda.h" /* for the color definitions */
 
 struct timeb timeb_s;
 char _cda_logbuf[4096] = {0};
 
+void _CDA_BACKTRACE (void);
+
 /* backend function */
 void
 _CDA_LOG_CORE (char level,
-           struct timeb * timebp,
-           pid_t pid,
-           __typeof__(__FILE__) file,
-           __typeof__(__LINE__) line,
-		   __typeof__(__FUNCTION__) func,
-           char * msgstring) 
+               struct timeb * timebp,
+               pid_t pid,
+               __typeof__(__FILE__) file,
+               __typeof__(__LINE__) line,
+		       __typeof__(__FUNCTION__) func,
+               char * msgstring) 
 {
 	ftime (timebp);
 	struct tm * ptm = gmtime (&timebp->time);
@@ -66,6 +70,7 @@ _CDA_LOG_CORE (char level,
 
 #define LOG_ERROR(_cda_msg) do { \
 	_CDA_LOG_CORE ('E', &timeb_s, getpid(), __FILE__, __LINE__, __FUNCTION__, ((_cda_msg))); \
+	_CDA_BACKTRACE (); exit (EXIT_FAILURE); \
 } while (0)
 
 #define LOG_INFOF(...) do { \
@@ -81,6 +86,23 @@ _CDA_LOG_CORE (char level,
 #define LOG_ERRORF(...) do { \
 	snprintf (_cda_logbuf, 4095, ##__VA_ARGS__); \
 	LOG_ERROR (_cda_logbuf); \
+	_CDA_BACKTRACE (); exit (EXIT_FAILURE); \
 } while (0)
 
+/* see backtrace(3) */
+void
+_CDA_BACKTRACE (void)
+{
+	int nptrs;
+#define CDA_BT_SIZE 16
+	void * bt_buffer[CDA_BT_SIZE];
+
+	nptrs = backtrace (bt_buffer, CDA_BT_SIZE);
+	LOG_INFOF ("backtrace depth %d\n", nptrs);
+
+	backtrace_symbols_fd (bt_buffer, nptrs, STDERR_FILENO);
+	return;
+}
+
+#undef  CDA_BT_SIZE
 #endif /* CDA_LOG_H_ */

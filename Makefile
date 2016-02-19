@@ -1,4 +1,4 @@
-CFLAGS  := -g -O2 -Wall 
+CFLAGS  := -g -O2 -Wall -rdynamic
 INSTALL := install
 DESTDIR :=
 BIN     := /usr/bin/
