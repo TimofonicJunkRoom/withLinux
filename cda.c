@@ -165,6 +165,7 @@ main (int argc, char **argv, char **env)
 	}
 	{ /* init libarchive settings, and open archive file*/
 		archfd = open (archfname, O_RDONLY);
+		posix_fadvise (archfd, 0, 0, POSIX_FADV_SEQUENTIAL);
 		//printf ("%ld\n", (long)lseek(archfd, (off_t)0, SEEK_CUR));
 		/* libarchive settings */
 		flags  = ARCHIVE_EXTRACT_TIME;
