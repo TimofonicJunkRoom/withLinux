@@ -276,7 +276,6 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 
 	struct winsize w;
 	ioctl (STDOUT_FILENO, TIOCGWINSZ, &w);
-	int term_width = w.ws_col;
 	//printf ("lines %d\n", w.ws_row);
 	//printf ("columns %d\n", w.ws_col);
 
@@ -299,12 +298,17 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 			fprintf (stdout, "%s\n", archive_entry_pathname (entry));
 
 		{ /* Progress indicator */
-			fprintf (stdout, "\x1b[1A\x1b[2K\r");
-			snprintf (line_buf, term_width, "[%c%3.2d%%] %*.*s\n", _cda_bar(), 
-					(int) (100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize),
-					-(term_width-10), (term_width-10), archive_entry_pathname (entry));
-			fprintf (stdout, line_buf);
-			fsync (1);
+			//fprintf (stdout, "\x1b[1A\x1b[2K\r");
+			//snprintf (line_buf, term_width, "\x1b[42m\x1b[30m[%c%3.2d%%]\x1b[49m\x1b[39m %*.*s", _cda_bar(), 
+			//		(int) (100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize),
+			//		-(term_width-12), (term_width-12), archive_entry_pathname (entry));
+			ioctl (STDOUT_FILENO, TIOCGWINSZ, &w); /* get window size */
+			snprintf (line_buf, w.ws_col+21, "\x1b[42m\x1b[30m[%c%3.2d%%]\x1b[49m\x1b[39m %-255.255s", _cda_bar(), 
+					(int)(100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize), archive_entry_pathname (entry));
+			fprintf (stdout, "\0337\033[%d;0f%s", w.ws_row, line_buf); /* save cursor, and print string */
+			fsync (STDOUT_FILENO);
+			fprintf (stdout, "\0338"); /* restore cursor */
+			fsync (STDOUT_FILENO);
 			//usleep (2000);
 		}
 
