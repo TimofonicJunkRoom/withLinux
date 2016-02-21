@@ -35,7 +35,7 @@ License: GPL-3.0+
 #include <archive.h>
 #include <archive_entry.h>
 
-#define CDA_VERSION   ("1.6 (21 Feb. 2016)")
+#define CDA_VERSION   ("1.6.1 (21 Feb. 2016)")
 
 #define CDA_LIST         (0x0001)
 #define CDA_EXTRACT      (0x0010)
