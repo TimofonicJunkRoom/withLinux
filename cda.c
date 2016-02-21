@@ -34,6 +34,7 @@ License: GPL-3.0+
 
 #include "cda.h"
 #include "cda_log.h"
+#include "cda_wrapper.h"
 
 static int debug = 1;
 
