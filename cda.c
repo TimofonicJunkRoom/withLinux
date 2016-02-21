@@ -200,7 +200,7 @@ main (int argc, char **argv, char **env)
 	{ /* fork and execve() a shell in the cda environment */
 		if (cda_action & CDA_SHELL) {
 			if (1<debug) LOG_DEBUGF ("fork and execve a shell for you, under [%s]\n", destdir);
-			LOG_WARNF ("-*- Please exit this shell when your operation is done -*-\n");
+			LOG_WARNF ("-*- Exit this shell when operations complete -*-\n");
 			int tmp;
 			pid_t pid = Fork ();
 			if (0 == pid) { /* child execve a shell */
@@ -267,7 +267,6 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 	archive_write_disk_set_options (ext, flags);
 	archive_write_disk_set_standard_lookup (ext);
 
-	fprintf (stdout, "\n"); /* make a newline for progress bar */
 	while (1) {
 
 		r = archive_read_next_header (arch, &entry);
@@ -290,11 +289,11 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 			snprintf (line_buf, w.ws_col+21, "\x1b[42m\x1b[30m[%c%3.2d%%]\x1b[49m\x1b[39m %-*.*s", _cda_bar(), 
 					(int)(100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize), 
 					w.ws_col+21, w.ws_col+21, archive_entry_pathname (entry));
-			fprintf (stdout, "\0337\033[%d;0f%s", w.ws_row, line_buf); /* save cursor, and print string */
+			fprintf (stdout, "\0337%s", line_buf); /* save cursor, and print string */
 			fsync (STDOUT_FILENO);
 			fprintf (stdout, "\0338"); /* restore cursor */
 			fsync (STDOUT_FILENO);
-			//usleep (2000); /* for debugging progress bar */
+			//usleep (20000); /* for debugging progress bar */
 		}
 
 		if (cda_action == CDA_LIST) {
@@ -320,7 +319,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 		}
 	}
 	/* terminate progress indicator */
-	fprintf (stdout, "\x1b[1A\x1b[2K\r");
+	fprintf (stdout, "\x1b[2K\r");
 
 	archive_read_close (arch);
 	archive_read_close (ext);
