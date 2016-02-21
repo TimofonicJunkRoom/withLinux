@@ -30,6 +30,7 @@ License: GPL-3.0+
 #include <sys/wait.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -50,90 +51,14 @@ License: GPL-3.0+
 #define CDA_COLOR_GREEN_B   ((const char *)"\x1B[32;1m")
 #define CDA_COLOR_YELLOW    ((const char *)"\x1B[33m")
 #define CDA_COLOR_YELLOW_B  ((const char *)"\x1B[33;1m")
+#define CDA_COLOR_BLUE      ((const char *)"\x1B[34m")
+#define CDA_COLOR_BLUE_B    ((const char *)"\x1B[34;1m")
+#define CDA_COLOR_PURPLE    ((const char *)"\x1B[35m")
+#define CDA_COLOR_PURPLE_B  ((const char *)"\x1B[35;1m")
+#define CDA_COLOR_CYAN      ((const char *)"\x1B[36m")
+#define CDA_COLOR_CYAN_B    ((const char *)"\x1B[36;1m")
+#define CDA_COLOR_WHITE     ((const char *)"\x1B[37m")
+#define CDA_COLOR_WHILE_B   ((const char *)"\x1B[37;1m")
 #define CDA_COLOR_RESET   ((const char *)"\x1B[m")
-
-/*
- * Wrapper functions 
- */
-
-char *
-Getcwd (char * buf, size_t size) {
-	char * ret = getcwd (buf, size);
-	if (NULL == ret) {
-		perror ("getcwd");
-		exit (EXIT_FAILURE);
-	}
-	return ret;
-}
-
-int
-Stat (char * pathname, struct stat * buf) {
-	int ret = stat (pathname, buf);
-	if (0 != ret) {
-		perror ("stat");
-		exit (EXIT_FAILURE);
-	}
-	return ret;
-}
-
-int
-Access (char * pathname, int mode) {
-	int ret = access (pathname, mode);
-	if (0 != ret) {
-		perror ("access");
-		exit (EXIT_FAILURE);
-	}
-	return ret;
-}
-
-char *
-Mkdtemp (char * template) {
-	char * ret = mkdtemp (template);
-	if (NULL == ret) {
-		perror ("mkdtemp");
-		exit (EXIT_FAILURE);
-	}
-	return ret;
-}
-
-int
-Chdir (const char *path) {
-	int ret = chdir (path);
-	if (0 != ret) {
-		perror ("chdir");
-		exit (EXIT_FAILURE);
-	}
-	return ret;
-}
-
-pid_t
-Fork (void) {
-	pid_t ret = fork ();
-	if (-1 == ret) {
-		perror ("fork");
-		exit (EXIT_FAILURE);
-	}
-	return ret;
-}
-
-pid_t
-Waitpid (pid_t pid, int *status, int options) {
-	pid_t ret = waitpid (pid, status, options);
-	if (-1 == ret) {
-		perror ("waitpid");
-		exit (EXIT_FAILURE);
-	}
-	return ret;
-}
-
-void *
-Malloc (size_t size) {
-	void * ret = malloc (size);
-	if (NULL == ret) {
-		perror ("malloc");
-		exit (EXIT_FAILURE);
-	}
-	return ret;
-}
 
 #endif /* CDA_H_ */
