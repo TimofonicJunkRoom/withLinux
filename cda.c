@@ -282,8 +282,8 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 
 		{ /* Progress indicator, borrowed some bit from Debian's APT */
 			ioctl (STDOUT_FILENO, TIOCGWINSZ, &w); /* get window size */
-			snprintf (line_buf, w.ws_col+21, 
-					"\x1b[42m\x1b[30m[%c%3.2d%%]\x1b[49m\x1b[39m %-*.*s", 
+			snprintf (line_buf, w.ws_col+26, 
+					"\x1b[42m\x1b[30m[%c%3.2d%%]\x1b[49m\x1b[39m \x1b[32m%-*.*s\x1b[m", 
 					_cda_bar(), 
 					(int)(100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize), 
 					w.ws_col+21,
