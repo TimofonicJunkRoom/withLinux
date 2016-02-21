@@ -138,7 +138,7 @@ main (int argc, char **argv, char **env)
 	}
 	{ /* Stat */
 		/* stat the target (archive)file/dir */
-		struct stat * stat_buf = malloc (sizeof(struct stat));
+		struct stat * stat_buf = Malloc (sizeof(struct stat));
 		Stat (archfname, stat_buf);
 		/* check whether target archive is a plain file */
 		if (!( stat_buf->st_mode & S_IFREG )) {
