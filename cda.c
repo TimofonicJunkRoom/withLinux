@@ -36,7 +36,7 @@ License: GPL-3.0+
 #include "cda_log.h"
 #include "cda_wrapper.h"
 
-static int debug = 1;
+static int debug = 1; /* debug level, 1 for normal, 2 for detail */
 
 /*
  * CDA functions
@@ -83,24 +83,22 @@ off_t archfilesize;
 int
 main (int argc, char **argv, char **env)
 {
-	/* important variables definition */
 	struct archive * arch; /* libarchive, for archive reading */
 
 	int cda_action = CDA_EXTRACT | CDA_SHELL; /* default action */
-	int flags;
+	int flags; /* flag for libarchive */
 
-	char * prefix = PREFIX;
-	char * shell = SHELL;
-	char * archfname;
-	char   template[] = TEMPLATE;
-	char * temp_dir;
+	char * prefix = PREFIX; /* tmp dir path prefix */
+	char * shell = SHELL; /* default shell */
+	char * archfname; /* archive file name */
+	char   template[] = TEMPLATE; /* used by mkdtemp */
+	char * temp_dir; /* store the temp dir name */
 
 	/* malloc buffers, check NULL  */
-	char * curdir   = (char *) Malloc (4096);
-	char * destdir  = (char *) Malloc (4096);
+	char * curdir   = (char *) Malloc (4096); /* current dir */
+	char * destdir  = (char *) Malloc (4096); /* tmp dir */
 	Getcwd (curdir, 4095);
 	cda_fetchenv (&env, &prefix, &shell);
-	//printf ("prefix %s shell %s\n", prefix, shell);
 
 	{ /* check and parse argument */
 		/* check argc */
@@ -142,32 +140,21 @@ main (int argc, char **argv, char **env)
 		/* stat the target (archive)file/dir */
 		struct stat * stat_buf = malloc (sizeof(struct stat));
 		Stat (archfname, stat_buf);
-		if (1<debug) {
-			perror ("stat");
-			printf ("* stat_buf: uid= %d; gid= %d; mode= %o;\n",
-					stat_buf -> st_uid,
-					stat_buf -> st_gid,
-					stat_buf -> st_mode);
-		}
 		/* check whether target archive is a plain file */
-		if ( stat_buf -> st_mode & S_IFREG ) {
-			LOG_INFOF ("entering into archive [%s]\n", archfname);
-		} else {
+		if (!( stat_buf->st_mode & S_IFREG )) {
 			LOG_ERROR ("only plain files could be processed.\n");
 			exit (EXIT_FAILURE);
 		}
 		archfilesize = stat_buf -> st_size;
 		free (stat_buf);
 	}
-	{ /* Access */
-		/* check mode of target */
+	{ /* Access -- check mode of target */
 		Access (archfname, R_OK);
-		LOG_INFOF ("access(\"%s\", R_OK) success.\n", archfname);
+		if (1<debug) LOG_DEBUGF ("access(\"%s\", R_OK) success.\n", archfname);
 	}
 	{ /* init libarchive settings, and open archive file*/
 		archfd = open (archfname, O_RDONLY);
 		posix_fadvise (archfd, 0, 0, POSIX_FADV_SEQUENTIAL);
-		//printf ("%ld\n", (long)lseek(archfd, (off_t)0, SEEK_CUR));
 		/* libarchive settings */
 		flags  = ARCHIVE_EXTRACT_TIME;
 		flags |= ARCHIVE_EXTRACT_PERM;
@@ -187,12 +174,12 @@ main (int argc, char **argv, char **env)
 	{ /* create temporary directory */
 		Chdir (prefix);
 		temp_dir = Mkdtemp (template);
-		LOG_INFOF ("create temporary directory [%s/%s]\n", prefix, temp_dir);
+		if (1<debug) LOG_DEBUGF ("create temporary directory [%s/%s]\n", prefix, temp_dir);
 		Chdir (temp_dir);
 		Getcwd (destdir, 4095);
 	}
 	{ /* do the CDA matter with the forked child */
-		LOG_INFO ("start libarchive handler ...\n");
+		LOG_INFOF ("Extracting Archive into [%s]...\n", destdir);
 		if (cda_action & (CDA_EXTRACT|CDA_LIST)) {
 			/* extract archive into temp_dir */
 			pid_t pid = Fork ();
@@ -206,16 +193,14 @@ main (int argc, char **argv, char **env)
 					LOG_ERRORF ("libarchive operations exited with error (%d).\n", status);
 					exit (EXIT_FAILURE);
 				}
-				LOG_INFOF ("libarchive operations are successful. (%d).\n", status);
+				if (1>debug) LOG_DEBUGF ("libarchive operations are successful. (%d).\n", status);
 			}
 		}
 	}
 	{ /* fork and execve() a shell in the cda environment */
 		if (cda_action & CDA_SHELL) {
-			LOG_INFOF ("fork and execve a shell for you, under [%s]\n", destdir);
-			LOG_INFO ("\n");
+			if (1<debug) LOG_DEBUGF ("fork and execve a shell for you, under [%s]\n", destdir);
 			LOG_WARNF ("-*- Please exit this shell when your operation is done -*-\n");
-			LOG_INFO ("\n");
 			int tmp;
 			pid_t pid = Fork ();
 			if (0 == pid) { /* child execve a shell */
@@ -228,10 +213,10 @@ main (int argc, char **argv, char **env)
 		}
 	}
 	{ /* remove the temporary stuff */
-		if (cda_action == CDA_EXTRACT) {
+		if (cda_action == CDA_EXTRACT) { /* extract only, i.e. keep */
 			LOG_INFOF ("keeping temp directory [%s]\n", destdir);
 		} else {
-			LOG_INFOF ("removing the temporary directory [%s]\n", destdir);
+			if (1<debug) LOG_DEBUGF ("removing the temporary directory [%s]\n", destdir);
 			remove_tmpdir (destdir, 1);
 		}
 	}
@@ -276,15 +261,13 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 	char line_buf[4096] = {0};
 
 	struct winsize w;
-	ioctl (STDOUT_FILENO, TIOCGWINSZ, &w);
-	//printf ("lines %d\n", w.ws_row);
-	//printf ("columns %d\n", w.ws_col);
+	ioctl (STDOUT_FILENO, TIOCGWINSZ, &w); /* get window size */
 
 	ext = archive_write_disk_new ();
 	archive_write_disk_set_options (ext, flags);
 	archive_write_disk_set_standard_lookup (ext);
 
-	fprintf (stdout, "\n"); /* prepare space for progress bar */
+	fprintf (stdout, "\n"); /* make a newline for progress bar */
 	while (1) {
 
 		r = archive_read_next_header (arch, &entry);
@@ -298,7 +281,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 		if (cda_action & CDA_LIST)
 			fprintf (stdout, "%s\n", archive_entry_pathname (entry));
 
-		{ /* Progress indicator */
+		{ /* Progress indicator, borrowed some bit from Debian's APT */
 			//fprintf (stdout, "\x1b[1A\x1b[2K\r");
 			//snprintf (line_buf, term_width, "\x1b[42m\x1b[30m[%c%3.2d%%]\x1b[49m\x1b[39m %*.*s", _cda_bar(), 
 			//		(int) (100*lseek (archfd, (off_t)0, SEEK_CUR)/archfilesize),
@@ -311,7 +294,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 			fsync (STDOUT_FILENO);
 			fprintf (stdout, "\0338"); /* restore cursor */
 			fsync (STDOUT_FILENO);
-			//usleep (2000);
+			//usleep (2000); /* for debugging progress bar */
 		}
 
 		if (cda_action == CDA_LIST) {
@@ -337,7 +320,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 		}
 	}
 	/* terminate progress indicator */
-	fprintf (stdout, "\x1b[1A\x1b[K\r\n");
+	fprintf (stdout, "\x1b[1A\x1b[2K\r");
 
 	archive_read_close (arch);
 	archive_read_close (ext);
@@ -398,17 +381,17 @@ remove_tmpdir (char * destdir, int force)
 		char * rmenv[]  = { NULL };
 		char * rmargv[] = { "rm", (0==force)?("-ri"):("-rf"), destdir, NULL };
 		{ /* dump the RM command line */
-			LOG_WARNF (" execve(): %s %s %s \n", rmargv[0], rmargv[1], rmargv[2]);
+			if (1<debug) LOG_WARNF (" execve(): %s %s %s \n", rmargv[0], rmargv[1], rmargv[2]);
 		}
 		execve ("/bin/rm", rmargv, rmenv);
 		perror ("execve"); /* execve only returns on error */
 		exit (EXIT_FAILURE);
 	} else {  /* fork : parent */
 		Waitpid (-1, &_tmp, 0);
-		LOG_INFOF ("removal status on [%s] (%d) - %s.\n", destdir, _tmp,
-			   (0==_tmp)?"Success":"Failure");
-		if (0 != _tmp) {
-			LOG_ERRORF ("failure removing temporary direcotry [%s] (%d)\n", destdir, _tmp);
+		if (0 == _tmp) {
+			LOG_INFOF ("Removal of [%s] (%d) : Success.\n", destdir, _tmp);
+		} else {
+			LOG_ERRORF ("Removal of [%s] (%d) : Success.\n", destdir, _tmp);
 			exit (EXIT_FAILURE);
 		}
 	}

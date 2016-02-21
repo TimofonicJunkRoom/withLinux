@@ -52,6 +52,7 @@ _CDA_LOG_CORE (char level,
 	fprintf (stderr, (level=='I')?CDA_COLOR_GREEN_B
 			:(level=='W')?CDA_COLOR_YELLOW_B
 			:(level=='E')?CDA_COLOR_RED_B
+			:(level=='D')?CDA_COLOR_CYAN_B
 			:CDA_COLOR_RESET);
 	fprintf (stderr, "%1c%02d%02d %02d:%02d:%02d.%03d %05d %s:%d] @%s() %s", level,
 		   	ptm->tm_mon, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec,
@@ -59,6 +60,10 @@ _CDA_LOG_CORE (char level,
 	fprintf (stderr, CDA_COLOR_RESET);
 	return;
 }
+
+#define LOG_DEBUG(_cda_msg) do { \
+	_CDA_LOG_CORE ('D', &timeb_s, getpid(), __FILE__, __LINE__, __FUNCTION__, ((_cda_msg))); \
+} while (0)
 
 #define LOG_INFO(_cda_msg) do { \
 	_CDA_LOG_CORE ('I', &timeb_s, getpid(), __FILE__, __LINE__, __FUNCTION__, ((_cda_msg))); \
@@ -70,7 +75,12 @@ _CDA_LOG_CORE (char level,
 
 #define LOG_ERROR(_cda_msg) do { \
 	_CDA_LOG_CORE ('E', &timeb_s, getpid(), __FILE__, __LINE__, __FUNCTION__, ((_cda_msg))); \
-	_CDA_BACKTRACE (); exit (EXIT_FAILURE); \
+	_CDA_BACKTRACE (); \
+} while (0)
+
+#define LOG_DEBUGF(...) do { \
+	snprintf (_cda_logbuf, 4095, ##__VA_ARGS__); \
+	LOG_DEBUG (_cda_logbuf); \
 } while (0)
 
 #define LOG_INFOF(...) do { \
@@ -86,15 +96,14 @@ _CDA_LOG_CORE (char level,
 #define LOG_ERRORF(...) do { \
 	snprintf (_cda_logbuf, 4095, ##__VA_ARGS__); \
 	LOG_ERROR (_cda_logbuf); \
-	_CDA_BACKTRACE (); exit (EXIT_FAILURE); \
 } while (0)
 
 /* see backtrace(3) */
+#define CDA_BT_SIZE 16
 void
 _CDA_BACKTRACE (void)
 {
 	int nptrs;
-#define CDA_BT_SIZE 16
 	void * bt_buffer[CDA_BT_SIZE];
 
 	nptrs = backtrace (bt_buffer, CDA_BT_SIZE);
@@ -103,6 +112,7 @@ _CDA_BACKTRACE (void)
 	backtrace_symbols_fd (bt_buffer, nptrs, STDERR_FILENO);
 	return;
 }
+#undef CDA_BT_SIZE
 
 #undef  CDA_BT_SIZE
 #endif /* CDA_LOG_H_ */
