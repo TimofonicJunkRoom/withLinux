@@ -267,6 +267,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 	archive_write_disk_set_options (ext, flags);
 	archive_write_disk_set_standard_lookup (ext);
 
+	fprintf (stdout, "\x1b[?25l"); /* hide cursor, see screen(1) */
 	while (1) {
 
 		r = archive_read_next_header (arch, &entry);
@@ -320,6 +321,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 	}
 	/* terminate progress indicator */
 	fprintf (stdout, "\x1b[2K\r");
+	fprintf (stdout, "\x1b[?25h"); /* unhive cursor, see screen(1) */
 
 	archive_read_close (arch);
 	archive_read_close (ext);
