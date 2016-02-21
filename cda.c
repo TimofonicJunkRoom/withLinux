@@ -153,7 +153,7 @@ main (int argc, char **argv, char **env)
 		if (1<debug) LOG_DEBUGF ("access(\"%s\", R_OK) success.\n", archfname);
 	}
 	{ /* init libarchive settings, and open archive file*/
-		archfd = open (archfname, O_RDONLY);
+		archfd = Open (archfname, O_RDONLY);
 		posix_fadvise (archfd, 0, 0, POSIX_FADV_SEQUENTIAL);
 		/* libarchive settings */
 		flags  = ARCHIVE_EXTRACT_TIME;
