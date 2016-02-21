@@ -390,7 +390,7 @@ remove_tmpdir (char * destdir, int force)
 		if (0 == _tmp) {
 			LOG_INFOF ("Removal of [%s] (%d) : Success.\n", destdir, _tmp);
 		} else {
-			LOG_ERRORF ("Removal of [%s] (%d) : Success.\n", destdir, _tmp);
+			LOG_ERRORF ("Removal of [%s] (%d) : Failed.\n", destdir, _tmp);
 			exit (EXIT_FAILURE);
 		}
 	}
