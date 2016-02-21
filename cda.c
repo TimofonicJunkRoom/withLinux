@@ -383,7 +383,7 @@ remove_tmpdir (char * destdir, int force)
 			if (1<debug) LOG_WARNF (" execve(): %s %s %s \n", rmargv[0], rmargv[1], rmargv[2]);
 		}
 		execve ("/bin/rm", rmargv, rmenv);
-		perror ("execve"); /* execve only returns on error */
+		LOG_ERRORF ("%s\n", strerror(errno));/* execve only returns on error */
 		exit (EXIT_FAILURE);
 	} else {  /* fork : parent */
 		Waitpid (-1, &_tmp, 0);
