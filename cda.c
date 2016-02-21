@@ -200,7 +200,7 @@ main (int argc, char **argv, char **env)
 	{ /* fork and execve() a shell in the cda environment */
 		if (cda_action & CDA_SHELL) {
 			if (1<debug) LOG_DEBUGF ("fork and execve a shell for you, under [%s]\n", destdir);
-			LOG_WARNF ("-*- Exit this shell when operations complete -*-\n");
+			LOG_WARNF ("-*- \x1b[4mExit this shell when operations complete\x1b[24m -*-\n");
 			int tmp;
 			pid_t pid = Fork ();
 			if (0 == pid) { /* child execve a shell */
