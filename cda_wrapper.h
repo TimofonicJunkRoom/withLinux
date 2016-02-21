@@ -28,6 +28,16 @@ License: GPL-3.0+
  * Wrapper functions 
  */
 
+int
+Open (const char *pathname, int flags) {
+	int ret = open (pathname, flags);
+	if (-1 == ret) {
+		LOG_ERRORF ("%s\n", strerror(errno));
+		exit (EXIT_FAILURE);
+	}
+	return ret;
+}
+
 char *
 Getcwd (char * buf, size_t size) {
 	char * ret = getcwd (buf, size);
