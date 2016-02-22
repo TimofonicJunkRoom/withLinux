@@ -34,8 +34,8 @@ $ python3 split.py annotations/train.json
 ```
 then start 2 processes to download
 ```
-$ python3 split.py annotations/train.json.left
-$ python3 split.py annotations/train.json.right
+$ python3 cocofetch.py annotations/train.json.left
+$ python3 cocofetch.py annotations/train.json.right
 ```
 Tip: you can split the json file for several times, so you can launch more processes.
 ```
@@ -46,6 +46,12 @@ $ ... cocofetch.py train.json.left.left &
 $ ... cocofetch.py train.json.left.right &
 $ ... cocofetch.py train.json.right.left &
 $ ... cocofetch.py train.json.right.right &
+```
+
+## check for broken jpeg
+
+```
+# python3 check_jpeg.py
 ```
 
 Happy hacking!
