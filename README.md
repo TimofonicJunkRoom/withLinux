@@ -2,7 +2,7 @@
 
 ## Usage
 
-1. download following 2 files from other places
+1. download following 2 files from other places e.g. https://github.com/karpathy/neuraltalk2
 ```
 captions_train2014.json
 captions_val2014.json
