@@ -1,5 +1,13 @@
 # MS CoCo Dataset Python Downloader
 
+COCO statistics
+```
+validation                 = 40504
+train                      = 82783
+Total = validation + train = 123287
+total size                 = 18881856 K
+```
+
 ## Usage
 
 #### download json file
