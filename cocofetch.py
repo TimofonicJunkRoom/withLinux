@@ -7,6 +7,11 @@ import os
 
 debug = 1
 
+coco_url_key = "coco_url"
+flickr_url_key = "flickr_url"
+#using_url = flickr_url_key
+using_url = coco_url_key
+
 def main ():
     if len(sys.argv) != 2:
         print ("missing argv[1]")
@@ -20,9 +25,9 @@ def main ():
         if debug: print (d["images"][0])
         for item in d["images"]:
             if os.path.exists("pool/" + item["file_name"]):
-                print ("skip", item["flickr_url"], ":", item["file_name"])
+                print ("skip", item[using_url], ":", item["file_name"])
             else:
-                print ("download", item["flickr_url"], "as", item["file_name"])
-                subprocess.call (["wget", item["flickr_url"], "-O", "pool/" + item["file_name"]])
+                print ("download", item[using_url], "as", item["file_name"])
+                subprocess.call (["wget", item[using_url], "-O", "pool/" + item["file_name"]])
 
 main ()
