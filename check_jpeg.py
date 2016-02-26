@@ -19,3 +19,6 @@ for jpg in jpeglist:
             if pic[-2]!=255 or pic[-1]!= 217: # EOI
                 count = count + 1
                 print ("%07d"%count, "EOI-MISSING:", jpg, "(%s,%s)"%(pic[-2], pic[-1]))
+    else:
+        count = count + 1
+        print ("%07d"%count, "EMPTY-FILE:", jpg)
