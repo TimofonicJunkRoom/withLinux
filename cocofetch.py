@@ -9,8 +9,8 @@ debug = 1
 
 coco_url_key = "coco_url"
 flickr_url_key = "flickr_url"
-#using_url = flickr_url_key
-using_url = coco_url_key
+using_url = flickr_url_key
+#using_url = coco_url_key
 
 def main ():
     if len(sys.argv) != 2:
