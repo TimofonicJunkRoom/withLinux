@@ -3,8 +3,17 @@
 
 import glob
 import hashlib
+import sys
 
-jpeglist = glob.glob('pool/*.jpg')
+def Usage():
+    print ('Usage:', sys.argv[0], '<IMG_DIR>')
+
+if len(sys.argv)!=2:
+    print ('missing arg: target directory')
+    Usage()
+    exit (1)
+
+jpeglist = glob.glob(sys.argv[1]+'/*.jpg')
 
 count = 0
 for jpg in jpeglist:
