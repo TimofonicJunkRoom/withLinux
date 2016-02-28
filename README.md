@@ -10,32 +10,38 @@ total size                 = 18881856 K
 
 ## Usage
 
-#### download json file
-
-download following 2 files from other places e.g. https://github.com/karpathy/neuraltalk2
+* download json file, then please extract it.
 ```
-captions_train2014.json
-captions_val2014.json
+$ bash download_annotation.sh
+$ unzip -d . captions_train-val2014.zip
 ```
 
-#### create resource pool
-```
-$ mkdir pool
-$ ls
-. .. cocofetch.py pool
-```
-
-#### method 1: single process download
-run the downloader
+* download using single process
 ```
 $ python3 cocofetch.py captions_train2014.json
-crunch, crunch, crunch...
+[crunch, crunch, crunch...]
 
-# python3 cocofetch.py captions_val2014.json
-crunch, crunch, crunch...
+$ python3 cocofetch.py captions_val2014.json
+[crunch, crunch, crunch...]
 ```
 
-#### method 2: multiple process download
+* scan for broken jpegs, delete them
+```
+$ python3 check_jpeg.py pool/ | tee junk
+$ cat junk | awk '{print $3}' | xargs rm # remove troublesome images
+```
+then you should switch download URL from flickr to mscoco in `cocofetch.py`, and download again. (existing images will be skipped, so this is fast.)
+
+* scan for missing files if any.
+```
+$ python3 scan_missing XXX.json
+```
+if it says nothing, no picture is missed.
+
+Happy hacking!
+
+#### trick: multiple process download
+
 first we split json files
 ```
 $ python3 split.py annotations/train.json
@@ -55,11 +61,3 @@ $ ... cocofetch.py train.json.left.right &
 $ ... cocofetch.py train.json.right.left &
 $ ... cocofetch.py train.json.right.right &
 ```
-
-## check for broken jpeg
-
-```
-# python3 check_jpeg.py
-```
-
-Happy hacking!
