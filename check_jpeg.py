@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-# reference: https://github.com/cdluminate/withlinux
+# reference: https://github.com/cdluminate/withlinux, jpeg integrity
+# Copyright (C) 2016 Lumin Zhou
+# MIT License
 
 import glob
 import hashlib

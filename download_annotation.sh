@@ -1,4 +1,7 @@
 #!/bin/sh
+# Copyright (C) 2016 Lumin Zhou
+# MIT License
+
 set -e
 
 url_base64="url_coco.base64"

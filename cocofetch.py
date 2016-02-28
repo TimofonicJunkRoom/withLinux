@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# Copyright (C) 2016 Lumin Zhou
+# MIT License
 
 import json
 import subprocess
