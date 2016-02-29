@@ -69,6 +69,30 @@ $
 * install dependency: `sudo apt install libarchive-dev`  
 * compile: `make` (recommended) or `cmake . ; make`  
 
+## Hack "cda" into the bash shell
+
+This is dirty hack. If we integrate this function into bash,
+we can avoid calling `fork()` and `execve()` to launch a new shell,
+and just do `chdir()` in bash itself.
+
+* make sure you have `cda` installed on your system, or you have to change some part in the following patch.
+* download the `bash 4.3` source, and apply following patch to `bash-4.3/builtins/cd.def`. The author uses source of `bash_4.3-11` from debian jessie.
+```
+bash_merge_cda_into_cd_builtin.patch
+```
+* then we compile bash and run it for a test
+```
+$ make
+$ ./bash
+$ cd ../bash_4.3.orig.tar.gz
+
+LUMIN: integrated 'cda' into 'cd', execve cda...
+I0129 08:37:18.536 00927 cda.c:182] @main() Extracting Archive into [/tmp/cda.DQlH35]...
+W0129 08:37:18.733 00927 cda.c:203] @main() -*- Exit this shell when operations complete -*-
+
+$ 
+```
+
 ##LICENSE
 ```
 GPL-3
