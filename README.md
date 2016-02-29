@@ -18,7 +18,8 @@ drwxr-xr-x 17 xxx xxx 4096 Jun 11  2015 foobar
 
 ### DESCRIPTION
 `cda` is a command line utility that helps you "enter into" or "chdir() into" an archive conveniently.  
-You can consider it as an Enhaced version of `cd` command in shell. It builds on [libarchive](https://github.com/libarchive/libarchive) so that it supports many types of archives.
+You can consider it as an Enhaced version of `cd` command in shell. It builds on [libarchive](https://github.com/libarchive/libarchive) so that it supports many types of archives. Surprisingly, one can really integrate `cda`'s functionality into
+a shell e.g. `bash`, and the patch is provided, see below for detail.
   
 `cda.sh` is a archivemount wrapper which implements cda in shell.  
 
@@ -28,6 +29,8 @@ The idea of cda is:
 3. `fork()` and then `execve()` a shell in the temporary directory  
 4. when the shell is quited, cda deletes the temporary directory recursively  
 Hence "change directory into archive" can be implemented.  
+
+### Options
 
 ```shell
 Synopsis:
