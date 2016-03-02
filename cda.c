@@ -77,6 +77,7 @@ static int remove_tmpdir (char * destdir, int force);
 static int cda_fetchenv (char *** env, char ** prefix, char ** shell);
 static int copy_data (struct archive *, struct archive *);
 static int cda_archive_handler (struct archive *, int, const int);
+static void cda_hook_exit (int status, void * arg);
 
 int archfd;
 off_t archfilesize;
@@ -181,6 +182,10 @@ main (int argc, char **argv, char **env)
 		if (1<debug) LOG_DEBUGF ("create temporary directory [%s/%s]\n", prefix, temp_dir);
 		Chdir (temp_dir);
 		Getcwd (destdir, 4095);
+	}
+	{ /* register on_exit hook, for removing the tmp dir */
+		on_exit (cda_hook_exit, (void *)destdir);
+		/* exit (1); for testing the hook */ 
 	}
 	{ /* do the CDA matter with the forked child */
 		LOG_INFOF ("Extracting Archive into [%s]...\n", destdir);
@@ -401,4 +406,23 @@ remove_tmpdir (char * destdir, int force)
 		}
 	}
 	return _tmp;
+}
+
+/* int on_exit(void (*function)(int , void *), void *arg); */
+static void cda_hook_exit (int status, void * arg)
+{
+	LOG_DEBUGF ("hook status %d\n", status);
+	/* on exit, we need to remove the temporary directory if it still exists. */
+	if (status != EXIT_SUCCESS) {
+		LOG_DEBUGF ("detecting residual temporary directory ...\n");
+		struct stat stat_buf_;
+		stat ((char *) arg, &stat_buf_); /* note: don't use wrapper here ! */
+		if ((stat_buf_.st_mode & S_IFMT) == S_IFDIR) {
+			LOG_DEBUGF ("remove tmpdir %s via on_exit hook\n", (char *)arg);
+			remove_tmpdir ((char *)arg, 1);
+		}
+	} else {
+		; /* nothing to do */
+	}
+	return;
 }
