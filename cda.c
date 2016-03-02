@@ -81,6 +81,7 @@ static int cda_fetchenv (char *** env, char ** prefix, char ** shell);
 static int copy_data (struct archive *, struct archive *);
 static int cda_archive_handler (struct archive *, int, const int);
 static void cda_hook_exit (int status, void * arg);
+static void cda_signal_handler (int signal);
 
 int archfd;
 off_t archfilesize;
@@ -104,6 +105,10 @@ main (int argc, char **argv, char **env)
 	char * destdir  = (char *) Malloc (4096); /* tmp dir */
 	Getcwd (curdir, 4095);
 	cda_fetchenv (&env, &prefix, &shell);
+
+	/* Signal action */
+	struct sigaction cda_signal_act;
+	struct sigaction cda_signal_old_act;
 
 	{ /* check and parse argument */
 		/* check argc */
@@ -193,6 +198,10 @@ main (int argc, char **argv, char **env)
 	{ /* register on_exit hook, for removing the tmp dir */
 		on_exit (cda_hook_exit, (void *)destdir);
 		/* exit (1); for testing the hook */ 
+	  /* prepare signal stuff */
+		cda_signal_act.sa_handler = cda_signal_handler;
+		cda_signal_act.sa_flags = SA_RESETHAND | SA_NODEFER;
+		sigaction (SIGINT, &cda_signal_act, &cda_signal_old_act);
 	}
 	{ /* do the CDA matter with the forked child */
 		LOG_INFOF ("Extracting Archive into [%s]...\n", destdir);
@@ -430,6 +439,21 @@ static void cda_hook_exit (int status, void * arg)
 		}
 	} else {
 		; /* nothing to do */
+	}
+	return;
+}
+
+static void
+cda_signal_handler (int signal)
+{
+	switch (signal) {
+	case SIGINT:
+		/* we need to delete temporary directory on interruption */
+		LOG_DEBUG ("Ctrl^C Triggered SIGINT handler\n");
+		exit (EXIT_FAILURE);
+		break;
+	default:
+		;
 	}
 	return;
 }

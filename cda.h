@@ -31,6 +31,7 @@ License: GPL-3.0+
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <signal.h>
 
 #include <archive.h>
 #include <archive_entry.h>
