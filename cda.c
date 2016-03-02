@@ -58,6 +58,7 @@ Usage (char *progname)
 "    -l        Also list archive components.\n"
 "    -L        Only list archive components.\n"
 "    -X        Only extract the archive.\n"
+"    -v        Debug (verbose) mode.\n"
 "Environment:\n"
 "    CDA       Set temp dir to use.  (current: %s)\n"
 "    CDASH     Set shell to use.     (current: %s)\n"
@@ -109,7 +110,7 @@ main (int argc, char **argv, char **env)
 		}
 		/* parse argument with getopt() */
 		int opt;
-		while ((opt = getopt(argc, argv, "d:lLX")) != -1) {
+		while ((opt = getopt(argc, argv, "d:lLXv")) != -1) {
 			switch (opt) {
 			case 'd': /* destination */
 				/* this will override CDA */
@@ -123,6 +124,9 @@ main (int argc, char **argv, char **env)
 				break;
 			case 'X': /* extract only */
 				cda_action = CDA_EXTRACT;
+				break;
+			case 'v': /* verbose */
+				debug = 2;
 				break;
 			default:
 				LOG_ERROR ("option not defined.\n");
