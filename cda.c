@@ -411,7 +411,7 @@ remove_tmpdir (char * destdir, int force)
 /* int on_exit(void (*function)(int , void *), void *arg); */
 static void cda_hook_exit (int status, void * arg)
 {
-	LOG_DEBUGF ("hook status %d\n", status);
+	if (1<debug) LOG_DEBUGF ("hook status %d\n", status);
 	/* on exit, we need to remove the temporary directory if it still exists. */
 	if (status != EXIT_SUCCESS) {
 		if (1<debug) LOG_DEBUGF ("detecting residual temporary directory ...\n");
