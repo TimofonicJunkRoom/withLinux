@@ -44,32 +44,34 @@ static int debug = 1; /* debug level, 1 for normal, 2 for detail */
 
 static void
 Usage (char *progname)
-{
+{	
+	fprintf (stderr, "------------------------------------------------------------------------\n");
+	fprintf (stderr, "  CDA %s -- built on %s %s \n", CDA_VERSION,
+			__DATE__, __TIME__);
+	fprintf (stderr, "------------------------------------------------------------------------\n");
 	fprintf (stderr, ""
 "Synopsis:\n"
 "    %s [options] ARCHIVE\n"
 "Description:\n"
-"    Extract the specified archive into a temporary directory,\n"
-"    where a shell will be opened for you. This temporary\n"
-"    directory will be removed in the exitting of shell.\n"
+"    Extract archive into a temporary directory, and a shell will be\n"
+"    be fired up for you. This temporary directory will be removed\n"
+"    on exit of shell.\n"
 "Options:\n"
-"    -d <DIR>  Specify the temp directory to use.\n"
+"    -d <DIR>  Specify base path of temp directory.\n"
 "              (would override the CDA env).\n"
-"    -l        Also list archive components.\n"
-"    -L        Only list archive components.\n"
-"    -X        Only extract the archive.\n"
-"    -v        Debug (verbose) mode.\n"
+"    -l        List archive components when extracting.\n"
+"    -L        List archive components only.\n"
+"    -X        Extract the archive and keep them, no shell.\n"
+"    -v        Toggle debug (verbose) mode.\n"
 "Environment:\n"
 "    CDA       Set temp dir to use.  (current: %s)\n"
 "    CDASH     Set shell to use.     (current: %s)\n"
-"Version:\n"
-"    CDA %s  <-  %s\n"
+"Lib Version:\n"
+"    %s\n"
 "", progname,
 	(NULL==getenv("CDA"))?("/tmp"):getenv("CDA"),
 	(NULL==getenv("CDASH"))?("/bin/bash"):getenv("CDASH"),
-	CDA_VERSION, archive_version_string());
-	fprintf (stderr, "    built on %s %s \n",
-			__DATE__, __TIME__);
+	archive_version_string());
 	return;
 }
 
