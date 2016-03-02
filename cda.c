@@ -414,11 +414,11 @@ static void cda_hook_exit (int status, void * arg)
 	LOG_DEBUGF ("hook status %d\n", status);
 	/* on exit, we need to remove the temporary directory if it still exists. */
 	if (status != EXIT_SUCCESS) {
-		LOG_DEBUGF ("detecting residual temporary directory ...\n");
+		if (1<debug) LOG_DEBUGF ("detecting residual temporary directory ...\n");
 		struct stat stat_buf_;
 		stat ((char *) arg, &stat_buf_); /* note: don't use wrapper here ! */
 		if ((stat_buf_.st_mode & S_IFMT) == S_IFDIR) {
-			LOG_DEBUGF ("remove tmpdir %s via on_exit hook\n", (char *)arg);
+			if (1<debug) LOG_DEBUGF ("remove tmpdir %s via on_exit hook\n", (char *)arg);
 			remove_tmpdir ((char *)arg, 1);
 		}
 	} else {
