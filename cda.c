@@ -63,6 +63,7 @@ Usage (char *progname)
 "    -L        List archive components only.\n"
 "    -X        Extract the archive and keep them, no shell.\n"
 "    -v        Toggle debug (verbose) mode.\n"
+"    -h        Show this help information.\n"
 "Environment:\n"
 "    CDA       Set temp dir to use.  (current: %s)\n"
 "    CDASH     Set shell to use.     (current: %s)\n"
@@ -113,7 +114,7 @@ main (int argc, char **argv, char **env)
 		}
 		/* parse argument with getopt() */
 		int opt;
-		while ((opt = getopt(argc, argv, "d:lLXv")) != -1) {
+		while ((opt = getopt(argc, argv, "d:lLXvh")) != -1) {
 			switch (opt) {
 			case 'd': /* destination */
 				/* this will override CDA */
@@ -130,6 +131,10 @@ main (int argc, char **argv, char **env)
 				break;
 			case 'v': /* verbose */
 				debug = 2;
+				break;
+			case 'h':
+				Usage (argv[0]);
+				exit (EXIT_SUCCESS);
 				break;
 			default:
 				LOG_ERROR ("option not defined.\n");
