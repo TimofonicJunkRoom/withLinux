@@ -37,6 +37,7 @@ License: GPL-3.0+
 #include "cda_wrapper.h"
 
 static int debug = 1; /* debug level, 1 for normal, 2 for detail */
+static int silent= 0; /* 1 for silent, i.e. no progress bar */
 
 /*
  * CDA functions
@@ -63,6 +64,7 @@ Usage (char *progname)
 "    -L        List archive components only.\n"
 "    -X        Extract the archive and keep them, no shell.\n"
 "    -v        Toggle debug (verbose) mode.\n"
+"    -s        Toggle silence mode, no progress bar.\n"
 "    -h        Show this help information.\n"
 "Environment:\n"
 "    CDA       Set temp dir to use.  (current: %s)\n"
@@ -119,11 +121,10 @@ main (int argc, char **argv, char **env)
 		}
 		/* parse argument with getopt() */
 		int opt;
-		while ((opt = getopt(argc, argv, "d:lLXvh")) != -1) {
+		while ((opt = getopt(argc, argv, "d:lLXvhs")) != -1) {
 			switch (opt) {
 			case 'd': /* destination */
-				/* this will override CDA */
-				prefix = optarg;
+				prefix = optarg; /* this will override the env CDA */
 				break;
 			case 'l': /* call cda_list_archive */
 				cda_action |= CDA_LIST;
@@ -137,9 +138,12 @@ main (int argc, char **argv, char **env)
 			case 'v': /* verbose */
 				debug = 2;
 				break;
-			case 'h':
+			case 'h': /* dump help info */
 				Usage (argv[0]);
 				exit (EXIT_SUCCESS);
+				break;
+			case 's': /* toggle silent flag */
+				silent = 1;
 				break;
 			default:
 				LOG_ERROR ("option not defined.\n");
@@ -292,7 +296,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 	archive_write_disk_set_options (ext, flags);
 	archive_write_disk_set_standard_lookup (ext);
 
-	fprintf (stdout, "\x1b[?25l"); /* hide cursor, see screen(1) */
+	if (!silent) fprintf (stdout, "\x1b[?25l"); /* hide cursor, see screen(1) */
 	while (1) {
 
 		r = archive_read_next_header (arch, &entry);
@@ -306,7 +310,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 		if (cda_action & CDA_LIST)
 			fprintf (stdout, "%s\n", archive_entry_pathname (entry));
 
-		{ /* Progress indicator, borrowed some bit from Debian's APT */
+		if (!silent) { /* Progress indicator, borrowed some bit from Debian's APT */
 			ioctl (STDOUT_FILENO, TIOCGWINSZ, &w); /* get window size */
 			snprintf (line_buf, w.ws_col+26, 
 					"\x1b[42m\x1b[30m[%c%3.2d%%]\x1b[49m\x1b[39m \x1b[32m%-*.*s\x1b[m", 
@@ -344,9 +348,10 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 				exit (EXIT_FAILURE);
 		}
 	}
-	/* terminate progress indicator */
-	fprintf (stdout, "\x1b[2K\r");
-	fprintf (stdout, "\x1b[?25h"); /* unhive cursor, see screen(1) */
+	if (!silent) {/* terminate progress indicator */
+		fprintf (stdout, "\x1b[2K\r");
+		fprintf (stdout, "\x1b[?25h"); /* unhive cursor, see screen(1) */
+	}
 
 	archive_read_close (arch);
 	archive_read_close (ext);
