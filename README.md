@@ -96,6 +96,25 @@ W0129 08:37:18.733 00927 cda.c:203] @main() -*- Exit this shell when operations 
 $ 
 ```
 
+## CDA's Logging functionality
+
+CDA's loggin functionality is to imitate google's `glog`, since there is no `glog` available in `C`.
+```
+$ cd lib/
+$ make demo
+$ ./demo_static 
+I0205 06:57:58.487 16388 demo.c:6] @main() hello, this is a demo of libcdalog
+W0205 06:57:58.488 16388 demo.c:7] @main() example of warning
+E0205 06:57:58.488 16388 demo.c:8] @main() example of error
+I0205 06:57:58.488 16388 libcdalog.c:64] @_CDA_BACKTRACE() backtrace depth 4
+./demo_static[0x400972]
+./demo_static[0x4007fb]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf5)[0x7fbcd4294b45]
+./demo_static[0x400689]
+D0205 06:57:58.488 16388 demo.c:9] @main() example of debug information
+```
+With reference to `lib/Makefile`, you can use CDA's loggin facility in your own programs.
+
 ##LICENSE
 ```
 GPL-3
