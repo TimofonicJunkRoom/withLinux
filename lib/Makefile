@@ -14,3 +14,10 @@ demo_shared: shared
 clean:
 	-$(RM) *.o *.so demo_static demo_shared
 all: demo_static demo_shared
+
+install: shared
+	install libcdalog.so /usr/lib/
+	install cdalog.h     /usr/include/
+uninstall:
+	rm /usr/lib/libcdalog.so
+	rm /usr/include/cdalog.h
