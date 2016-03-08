@@ -96,6 +96,10 @@ W0129 08:37:18.733 00927 cda.c:203] @main() -*- Exit this shell when operations 
 $ 
 ```
 
+## Replace /usr/share/vim/vim74/autoload/tar.vim with CDA
+
+TODO
+
 ## CDA's Logging functionality
 
 CDA's loggin functionality is to imitate google's `glog`, since there is no `glog` available in `C`.
