@@ -389,6 +389,7 @@ Artificial Intelegence / Mathematics
   1. [Wolfram Alpha (el)](http://www.wolframalpha.com/)  
   1. [Wolfram Mathworld (el)](http://mathworld.wolfram.com/)  
 1. [WikiCFP](http://www.wikicfp.com/cfp/)  
+1. [simple nn example : xor](./ai/nn-matlab/nn_xor.m)  
   
 ## LICENSE
 ```
