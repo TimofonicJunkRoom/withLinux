@@ -148,6 +148,7 @@ System Management / Server
 1. [multiple ssh connection at the same time](admin/multiple-ssh.txt)  
 1. [(el) WorldPress in Debian](https://wiki.debian.org/WordPress)  
 1. [prevent `resolv.conf` from being changed](admin/static_resolv_conf.md)  
+1. [Augment existing ext4 filesystem](./admin/ext4-extend-partition.md)  
 
 Linux Kernel Hacks / Operating System / Embedding  
 ---
