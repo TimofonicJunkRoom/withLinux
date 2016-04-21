@@ -277,7 +277,7 @@ Programming under Linux
   1. [Scipy/Numpy](./lang/py3/numpy.md)  
   1. [Lumin's Task Queue Daemon](./lang/py3/tq)  
 1. [Octave/Matlab](./lang/oct)  
-  1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/mytest.m)  
+  1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
 1. [Lua](http://www.lua.org/)  
   1. [learn lua in 15 minutes](http://tylerneylon.com/a/learn-lua/)  
   1. [My lua logging module](./lang/lua/logging/lumin_log.lua)[demo](./lang/lua/logging/demo.lua)  
