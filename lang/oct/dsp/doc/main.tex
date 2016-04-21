@@ -1,0 +1,284 @@
+\documentclass[12pt, a4paper]{article}
+
+% import packages
+\usepackage{MinionPro}
+\usepackage{listings}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+% configurations
+\lstset{%
+language=Matlab,%
+frame=single,%
+numbers=left,%
+stringstyle=\ttfamily,%
+keepspaces=true,%
+tabsize=4,%
+basicstyle=\ttfamily,%
+}
+
+% titlepage
+\begin{titlepage}
+\title{数字信号处理大作业}
+\author{Zhou Mo}
+\date{\today}
+\end{titlepage}
+
+% document
+\begin{document}
+\begin{CJK}{UTF8}{gkai}
+
+\maketitle
+
+在本报告中，DFT和FFT分别被用Matlab语言实现。
+为探究FFT相对于DFT的性能提升，一个长度为1024的随机序列
+被用于测试，发现FFT相对DFT快$58.1$倍。
+
+\begin{lstlisting}[caption={程序运行结果}]
+dft ...
+t0 =  22.038
+fft ...
+t1 =  0.37915
+fft reference
+t2 =  0.0045090
+
+myfft to dft acceleration ratio 58.125119
+fft to dft acceleration ratio 4887.593486
+fft is 84.087458 times faster than myfft
+\end{lstlisting}
+
+\section{Discrete Fourier Transform}
+离散Fourier变换及其逆变换如下：
+\begin{align}
+X(k) &= \sum_{n=0}^{N-1} x(n)W_N^{kn}, 0 \leq k \leq N-1 \\
+x(n) &= \frac{1}{N} \sum_{k=0}^{N-1} X(k)W_N^{-kn}, 0 \leq n \leq N-1
+\end{align}
+其中\[ W = e^{-j \frac{2\pi}{N}}\]
+
+DFT及IDFT的实现如下。其中，DFT和IDFT均使用迭代算法实现。
+\begin{lstlisting}[caption={DFT Program}]
+function y = dft (x)
+
+% argument
+len = length(x);
+
+% dft
+ret = zeros(1, len);
+for k = 1:len
+    xk = 0;
+    for n = 1:len
+        xk = xk + x(n) * ...
+            exp(j * (k-1) * (n-1) * (2 * pi)/ len);
+    end
+    ret(k) = xk;
+end
+y = ret;
+
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption={IDFT Program}]
+function y = idft (x)
+
+% argument
+len = length(x);
+
+ret = zeros(1, len);
+for k = 1:len
+    xk = 0;
+    for n = 1:len
+        xk = xk + x(n) * ...
+            exp(-j * (k-1) * (n-1) * (2 * pi)/ len)
+    end
+    ret(k) = xk
+end
+ret = ret / len
+
+y = ret
+end
+\end{lstlisting}
+
+\section{Fast Fourier Transform (DIT-FFT)}
+
+FFT实现分为三个模块：
+\begin{enumerate}
+\item 主程序\verb|myfft|。本模块封装了整个FFT算法，
+包括参数检查，奇偶次序调整和蝶形运算模块。
+\item 奇偶次序调整模块\verb|fftmap|。本模块将原始输入序列
+次序调整以便于作为蝶形运算模块的输入。
+\item 蝶形运算模块\verb|fftreduce|。本模块对调整过次序的
+序列进行一系列蝶形运算，并输出FFT结果。
+\end{enumerate}
+其中，奇偶次序调整模块及蝶形运算均使用了递归算法。
+\begin{lstlisting}[caption={myfft.m}]
+%!/usr/bin/octave
+% FFT implementation
+% 2016 Apr 19, Zhou Mo
+
+function X = myfft(x)
+
+%% stage 0, initialize
+
+   [I, J] = size(x);
+   X = [];
+
+%% stage 1, argument check
+
+   % I should be 1
+   if I ~= 1
+      disp('invalid input');
+      return;
+   end
+
+   % J should be 2^m
+   j = J;
+   while j > 1
+      j = j / 2;
+   end
+   if j ~= 1
+      disp('invalid input');
+      return;
+   end
+
+%% stage 2, map sequence
+
+   y = fftmap(x);
+   y = rot90(eye(length(y))) * y';
+   y = y'; % e.g. 04261537
+
+%% stage 3, reduce results
+
+   X = fftreduce(y);
+   
+   return;
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption={fftmap.m}]
+% myfft internal module
+% mapping util
+% note, the output is reversed.
+
+% fftmap(a) =
+%    [ fftmap(a'(1:n/2 -1)), fftmap(a'(n/2:n)) ]
+
+function y = fftmap(x)
+   if length(x) == 1
+      y = x;
+   else % length(x) > 1
+      % split
+      x1 = [];
+      x2 = [];
+      for i = 1:length(x)
+         if mod(i, 2) == 0
+            x1 = [ x1, x(i) ];
+         else
+            x2 = [ x2, x(i) ];
+         end
+      end
+      % recursive
+      y = [ fftmap(x1), fftmap(x2) ];
+   end
+   return;
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption={fftreduce.m}]
+% myfft internal helper
+% fft reduction util
+
+% fftreduce(x) = 
+%    [ fftreduce(1st half), fftreduce(2nd half) ]
+
+function y = fftreduce(x)
+   if length(x) == 1
+      y = x;
+   else
+      x1 = x(1:((length(x)/2))); % first half
+      x2 = x(length(x)/2+1:length(x)); % seconf half
+      x1 = fftreduce(x1);
+      x2 = fftreduce(x2);
+
+      p = 0:((length(x)/2)-1);
+      W = exp(-j * (2*pi)/(length(x)));
+      w = W .^ p;
+
+      y = [ x1+x2.*w, x1-x2.*w ];
+   end
+   return;
+end
+\end{lstlisting}
+
+\section{Experiment}
+
+\subsection{Experiment Setup}
+为测试FFT相对于DFT的性能提升，我们生成一个长度为1024的随机
+信号，并分别用本文的DFT实现，本文的FFT实现及Matlab内置的
+FFT实现对其进行变换，然后对比它们消耗的时间。
+\begin{lstlisting}[caption={main.m}]
+% fft benchmark
+
+x = rand(1, 1024);
+
+disp ('dft ...');
+tic;
+X1 = dft(x);
+t0 = toc
+
+disp ('fft ...');
+tic;
+X2 = myfft(x);
+t1 = toc
+
+disp ('fft reference');
+tic;
+X3 = fft(x);
+t2 = toc
+
+disp ('');
+disp(sprintf('myfft to dft acceleration ratio %f',
+    t0/t1));
+disp(sprintf('fft to dft acceleration ratio %f',
+    t0/t2));
+disp(sprintf('fft is %f times faster than myfft',
+    t1/t2));
+\end{lstlisting}
+
+\subsection{Result and Analysis}
+程序运行结果如下：
+\begin{lstlisting}[caption={程序运行结果}]
+dft ...
+t0 =  22.038
+fft ...
+t1 =  0.37915
+fft reference
+t2 =  0.0045090
+
+myfft to dft acceleration ratio 58.125119
+fft to dft acceleration ratio 4887.593486
+fft is 84.087458 times faster than myfft
+\end{lstlisting}
+从中可以看出，\verb|myfft|的速度比\verb|dft|快
+$58.1$倍，而\verb|fft|比\verb|dft|快$4887.6$倍。
+
+根据理论分析，DFT的计算需要约$2N^2-N$即
+$2\times 1024^2-1024 = 2096128$
+单位的计算时间，FFT的计算需要约$\frac{3}{2}N \log_2 N$即
+$1.5 \times 1024 \log_2 1024 = 15360$单位的计算时间。
+也就是说，当DFT的计算时间为$22.038$秒时，理想情况下FFT的计算
+时间应该接近
+\[ 22.038 \times \frac{15360}{2096128} = 0.16149\]
+秒。然而，实际运行消耗时间为$0.38$秒，离估计值还有一定
+差距，造成这种情况可能的影响因素包括：
+(1) FFT采用了递归算法而非迭代算法。
+
+\section{Conclusion}
+FFT相对于DFT有显著的性能提升。实际应用中建议用
+编译型语言实现FFT而非解释型语言。
+
+\begin{thebibliography}{9}
+\bibitem{bib:dsp} 史林，数字信号处理，科学出版社
+\end{thebibliography}
+
+\end{CJK}
+\end{document}
