@@ -179,6 +179,11 @@ Cluster / HighPerf
 1. [storm local setup ... apache inqubator, storm](./cluster/setup-local-storm.txt)  
 2. [PBS - Cluster Job Management](./cluster/pbs)  
 3. [parallel computing note](./cluster/parallel.intro.txt)  
+4. [(el) Debian wiki: High Performance Computing](https://wiki.debian.org/HighPerformanceComputing)  
+  1. Slurm  
+  2. SGE  
+  3. HTCondor (most convenient one in case to be ran on a single machine)   
+  4. Torque  
 
 Kali / Security / Penetration  
 ---
