@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 # Maintainer script for withlinux
 # COPYRIGHT (C) 2016 Lumin Zhou, MIT License
 set -e
+. lang/lumin_log.sh
 
 Usage () {
 printf "%s" "[m"
@@ -92,7 +93,9 @@ main () {
   # detect arg
   if [ -z $1 ]; then
     Usage
-	printf "\nGit status:\n"
+    info
+	info "Git status:"
+    info
     git status --short
     exit 1
   fi
