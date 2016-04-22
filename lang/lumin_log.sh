@@ -8,7 +8,7 @@ debug () {
   if [ -z "$@" ]; then
     printf "\n"
   else
-    printf "[36;1mI%s %s %s %s:%s] %s[m\n" \
+    printf "[36;1mD%s %s %s %s:%s] %s[m\n" \
       "$(date +%m%d)" \
       "$(date +%H:%M:%S)" \
       "$$" "$0" "$BASH_LINENO" \
@@ -32,7 +32,7 @@ warn () {
   if [ -z "$@" ]; then
     printf "\n"
   else
-    printf "[33;1mI%s %s %s %s:%s] %s[m\n" \
+    printf "[33;1mW%s %s %s %s:%s] %s[m\n" \
       "$(date +%m%d)" \
       "$(date +%H:%M:%S)" \
       "$$" "$0" "$BASH_LINENO" \
@@ -44,7 +44,7 @@ error () {
   if [ -z "$@" ]; then
     printf "\n"
   else
-    printf "[31;1mI%s %s %s %s:%s] %s[m\n" \
+    printf "[31;1mE%s %s %s %s:%s] %s[m\n" \
       "$(date +%m%d)" \
       "$(date +%H:%M:%S)" \
       "$$" "$0" "$BASH_LINENO" \
@@ -56,7 +56,7 @@ fatal () {
   if [ -z "$@" ]; then
     printf "\n"
   else
-    printf "[35;1mI%s %s %s %s:%s] %s[m\n" \
+    printf "[35;1mF%s %s %s %s:%s] %s[m\n" \
       "$(date +%m%d)" \
       "$(date +%H:%M:%S)" \
       "$$" "$0" "$BASH_LINENO" \
