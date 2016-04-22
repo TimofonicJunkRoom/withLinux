@@ -29,6 +29,7 @@ Installing Linux
 1. [Gentoo: Sakaki's EFI Install Guide (el) ](https://wiki.gentoo.org/wiki/Sakaki%27s_EFI_Install_Guide)  
 1. [Gentoo Prefix (el) ](https://wiki.gentoo.org/wiki/Project:Prefix)  
 1. [ArchLinux's application list (el) ](https://wiki.archlinux.org/index.php/List_of_applications)  
+1. [My dotfiles](./dotfile) and [its deploy script](./deploy)  
 
 Utilities / Miscellaneous  
 ---
