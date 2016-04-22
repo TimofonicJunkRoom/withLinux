@@ -308,6 +308,8 @@ Programming under Linux
 1. [GNU Plot]
   1. [visualizing data with gnu plot (el) ](http://www.ibm.com/developerworks/cn/linux/l-gnuplot/index.html)  
 1. [SQL](./lang/sql/main.md)    
+1. SHELL/BASH  
+  1. [Lumin's log lib in bash](./lang/lumin_log.sh)  
 1. [IBM CPlex]
 1. Online judges
   1. http://poj.org/  
