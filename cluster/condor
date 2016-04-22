@@ -4,8 +4,8 @@
 # MIT License
 
 Usage () {
+echo "Usage: $1 <ACT> <args> => condor_ACT <args>"
 cat << EOF
-Usage: argv0 <act> <arg> => condor_act <arg>
 Actions:
  q suspend continue qsub rm history hold run
  ping version status stats submit who
@@ -18,7 +18,7 @@ EOF
 }
 
 if [ -z "$1" ]; then
-  Usage
+  Usage $0
   exit 1
 fi
 
@@ -32,6 +32,9 @@ if [ -z "`which condor_$1`" ]; then
     ;;
   'st') # alias 'st' -> status
     shift; condor_status $@
+    ;;
+  'hi') # alias 'hi' -> history
+    shift; condor_history $@
     ;;
   *)
     echo 'Unkown command'
