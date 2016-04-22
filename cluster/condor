@@ -1,0 +1,45 @@
+#!/bin/sh
+# HTCondor Wrapper for convenience and preference
+# Copyright (C) 2016 Zhou Mo <cdluminate AT gmail DOT com>
+# MIT License
+
+Usage () {
+cat << EOF
+Usage: argv0 <act> <arg> => condor_act <arg>
+Actions:
+ q suspend continue qsub rm history hold run
+ ping version status stats submit who
+My Alias:
+ ls -> q
+ push -> qsub
+ commit -> submit
+ st -> stauts
+EOF
+}
+
+if [ -z "$1" ]; then
+  Usage
+  exit 1
+fi
+
+if [ -z "`which condor_$1`" ]; then
+  case "$1" in
+  'ls') # alias 'ls' -> 'q'
+    shift; condor_q $@
+    ;;
+  'push') # alias 'push' -> 'qsub'
+    shift; condor_qsub $@
+    ;;
+  'st') # alias 'st' -> status
+    shift; condor_status $@
+    ;;
+  *)
+    echo 'Unkown command'
+    exit 1
+    ;;
+  esac
+else
+  act=$1
+  shift
+  condor_$act $@
+fi

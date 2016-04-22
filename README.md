@@ -183,6 +183,7 @@ Cluster / HighPerf
   1. Slurm  
   2. SGE  
   3. HTCondor (most convenient one in case to be ran on a single machine)   
+    1. [My HTCondor wrapper script](./cluster/condor)  
   4. Torque  
 
 Kali / Security / Penetration  
