@@ -282,6 +282,7 @@ Programming under Linux
 1. [Python3](./lang/py3)  
   1. [convert list into string](./lang/py3/list2str.md)  
   1. [my logging example in py3](lang/py3/logging_example.py)  
+  1. [my glog-like logging lib in py3](./lang/py3/lumin_log_demo.py)  
   1. [HDF5 in python3: h5py demo](lang/py3/hdf5.py)  
   1. [Scipy/Numpy](./lang/py3/numpy.md)  
   1. [Lumin's Task Queue Daemon](./lang/py3/tq)  
