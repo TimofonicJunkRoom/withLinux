@@ -9,12 +9,13 @@ printf "%s" "[m"
 cat << EOF
 usage: $0 <action>
 actions:
-  scan  scan for files missing in README.md
-  stat  statistic lines in all plain files, also dumps all plain files
-  make  compile all programs
-  clean run the clean target of Makefile, clean all unnecessary files
-  undel undelete "deleted" files
-  help  print this help message
+  scan    scan for files missing in README.md
+  stat    statistic lines in all plain files, also dumps all plain files
+  make    compile all programs
+  clean   run the clean target of Makefile, clean all unnecessary files
+  undel   undelete "deleted" files
+  repack  conduct git repack
+  help    print this help message
 EOF
 echo
 printf "Project withlinux has %s%d%s files currently.\n" "[34;1m" $files "[;0m"
@@ -108,6 +109,7 @@ main () {
     clean  ) clean ;;
     purge  ) purge ;;
     undel  ) undelete ;;
+    repack ) git repack ;;
     help   ) Usage ;;
        *   ) echo "E: invalid action" ;;
   esac
