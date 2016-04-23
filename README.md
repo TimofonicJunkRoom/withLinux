@@ -65,7 +65,7 @@ Utilities / Miscellaneous
 24. [A long list of Linux utilities](util/util_list.md)  
 1. [GPG best practices (el) ](https://help.riseup.net/en/security/message-security/openpgp/best-practices#self-signatures-should-not-use-sha1)  
 1. [tmux / gnu screen note](./util/tmux.md)  
-1. Task .. command line todo manager  
+1. [(el) Task](http://taskwarrior.org) .. command line todo manager .. task-tutorial(5)  
 
 Graphical Interface Stuff (Xorg)  
 ---
