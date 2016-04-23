@@ -318,6 +318,12 @@ Programming under Linux
 1. Online judges
   1. http://poj.org/  
   1. https://leetcode.com  
+1. Collections  
+  1. My Logging Libraries  
+    1. [In C](https://github.com/CDLuminate/cda/tree/master/lib)  
+    1. [In Lua](./lang/lua/logging/lumin_log.lua)  
+    1. [In BASH Shell](./lang/lumin_log.sh)  
+    1. [In Python3](./lang/py3/lumin_log_demo.py)  
 
 My Personal Booknotes  
 ---
