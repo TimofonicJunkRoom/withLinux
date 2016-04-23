@@ -66,6 +66,7 @@ Utilities / Miscellaneous
 1. [GPG best practices (el) ](https://help.riseup.net/en/security/message-security/openpgp/best-practices#self-signatures-should-not-use-sha1)  
 1. [tmux / gnu screen note](./util/tmux.md)  
 1. [(el) Task](http://taskwarrior.org) .. command line todo manager .. task-tutorial(5)  
+  1. [nots on this task tool](./util/task.md)  
 
 Graphical Interface Stuff (Xorg)  
 ---
