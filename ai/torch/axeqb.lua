@@ -2,6 +2,8 @@ require 'torch'
 require 'nn'
 local log = require 'lumin_log.lua'
 
+--@reference http://torch.ch/docs/five-simple-examples.html
+
 log.warn('Solve Ax=b matrix equation')
 local lr = 0.1 --> learning rate
 
@@ -23,14 +25,18 @@ local crit = nn.MSECriterion()
 
 log.info('solve')
 local loss_initial = 0
+local losses = {}
+local iters = {}
 for i = 1, math.huge do
    log.info('iter '..tostring(i))
 
    --forward
    local netout = x:forward(A)
-   print(netout)
+   -- print(netout)
    local loss = crit:forward(netout, b)
-   print(loss)
+   print('  loss = ' .. tostring(loss))
+   table.insert(losses, loss)
+   table.insert(iters, iter)
    if loss_initial == 0 then loss_initial = loss end
 
    --backward
@@ -55,3 +61,16 @@ log.info('converged, dump solution')
 --print(x:getParameters())
 assert(x.bias == nil)
 print(x.weight)
+
+log.info('draw picture')
+losses = torch.Tensor(losses)
+require 'gnuplot'
+--gnuplot.figure(1)
+--gnuplot.title('CG loss minimisation over time')
+--gnuplot.plot(losses)
+
+gnuplot.pdffigure('junk.pdf')
+gnuplot.plot({'MSE',  losses, '-'})
+gnuplot.xlabel('Iteration')
+gnuplot.ylabel('Loss')
+gnuplot.plotflush()
