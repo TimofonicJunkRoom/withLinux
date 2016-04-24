@@ -392,16 +392,17 @@ Artificial Intelegence / Mathematics
 1. Machine Learning  
   1. [stanford:Ng's opencourse (el) ](http://openclassroom.stanford.edu/MainFolder/CoursePage.php?course=MachineLearning)  
 1. Deep Learning Frameworks  
-  1. [theano (python)](http://deeplearning.net/software/theano/)  
-    1. [my theano note](ai/theano/main.md)  
-    1. [theano trouble, no recursion is supported](./ai/theano/fac.py)  
   1. [caffe (cxx, python, matlab)](https://github.com/BVLC/caffe)  
   1. [torch7 (lua)](https://github.com/torch/distro)  
     1. [torch cheatsheet](https://github.com/torch/torch7/wiki/Cheatsheet)  
-  1. [mxnet (cxx, julia)](https://github.com/dmlc/mxnet)  
+  1. [theano (python)](http://deeplearning.net/software/theano/)  
+    1. [my theano note](ai/theano/main.md)  
+    1. [theano trouble, no recursion is supported](./ai/theano/fac.py)  
   1. [tensorflow (python)](https://github.com/tensorflow/tensorflow)  
+  1. [mxnet (cxx, julia)](https://github.com/dmlc/mxnet)  
   1. [leaf (rust)](https://github.com/autumnai/leaf)  
     1. [Deep learning frameworks benchmark by leaf](http://autumnai.com/deep-learning-benchmarks)  
+  1. [Chainer, Define-by-Run instead of Define-and-Run (python)](https://github.com/pfnet/chainer)  
 1. Datasets  
   1. [MS COCO](https://github.com/CDLuminate/cocofetch)  
   1. [Imagenet](http://image-net.org/index)  
