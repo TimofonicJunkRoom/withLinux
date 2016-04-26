@@ -17,9 +17,11 @@ EOF
 }
 
 howisitgoing () {
-  condor_q
+  condor_who
   split_line
   condor_status
+  split_line
+  condor_q
 }
 
 if [ -z "$1" ]; then
