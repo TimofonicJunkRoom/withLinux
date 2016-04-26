@@ -2,24 +2,29 @@
 # HTCondor Wrapper for convenience and preference
 # Copyright (C) 2016 Zhou Mo <cdluminate AT gmail DOT com>
 # MIT License
+set -e
+
+split_line () {
+printf "////////////////////////////////////////////////////////////////\n"
+}
 
 Usage () {
 echo "Usage: $1 <ACT> <args> => condor_ACT <args>"
 cat << EOF
-Actions:
- q suspend continue qsub rm history hold run
- ping version status stats submit who
 My Alias:
- ls -> q
- push -> qsub
- commit -> submit
- st -> stauts
+  ls -> q,  push -> qsub,  commit -> submit, st -> stauts
 EOF
 }
 
+howisitgoing () {
+  condor_q
+  split_line
+  condor_status
+}
+
 if [ -z "$1" ]; then
-  Usage $0
-  exit 1
+  howisitgoing
+  exit 0
 fi
 
 if [ -z "`which condor_$1`" ]; then
@@ -35,6 +40,9 @@ if [ -z "`which condor_$1`" ]; then
     ;;
   'hi') # alias 'hi' -> history
     shift; condor_history $@
+    ;;
+  '-h') # dump Usage
+    Usage
     ;;
   *)
     echo 'Unkown command'
