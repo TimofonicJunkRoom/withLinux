@@ -38,7 +38,7 @@ Utilities / Miscellaneous
 2. [bash tricks](./util/bash_tricks.txt)  
 3. [Commands for fun](./util/funny_commands.txt)  
 5. [conky, a system monitor, example rc file](./util/conkyrc.txt)[ another one](./util/conkyrc2.txt)    
-6. [GPG short note](./util/short_gpg.txt)  
+6. [GPG short note](./util/short_gpg.md)  
 7. [Data recovery tools](./util/data-recover.txt)  
 8. [Remove data safely](./util/remove-data-safely.txt)  
 9. [Encrypting disk with LUKS](./util/disk-crypt.txt)  
