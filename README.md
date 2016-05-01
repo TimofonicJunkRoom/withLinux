@@ -280,6 +280,7 @@ Programming under Linux
   4. [finding the right font](http://www.tug.dk/FontCatalogue/)  
   5. [insert svg picture in latex](lang/tex/tex_svg.md)  
   1. [(el) NASA: latex help](http://www.giss.nasa.gov/tools/latex/)  
+  1. [My presentation example](./lang/tex/presentation.tex)  
 1. [Python3](./lang/py3)  
   1. [convert list into string](./lang/py3/list2str.md)  
   1. [my logging example in py3](lang/py3/logging_example.py)  
