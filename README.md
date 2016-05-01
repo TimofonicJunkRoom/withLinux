@@ -184,11 +184,10 @@ Cluster / HighPerf
 2. [PBS - Cluster Job Management](./cluster/pbs)  
 3. [parallel computing note](./cluster/parallel.intro.txt)  
 4. [(el) Debian wiki: High Performance Computing](https://wiki.debian.org/HighPerformanceComputing)  
-  1. Slurm  
-  2. SGE  
-  3. HTCondor (most convenient one in case to be ran on a single machine)   
+  3. HTCondor (most convenient one in case to manage a single machine)   
     1. [My HTCondor wrapper script](./cluster/condor)  
-  4. Torque  
+    1. [my HTCondor note](/cluster/condor.md)  
+  4. Other: Torque, SGE (sub grid engine), Slurm  
 
 Kali / Security / Penetration  
 ---
