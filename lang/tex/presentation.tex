@@ -1,5 +1,6 @@
 \documentclass{beamer}
 \usepackage{times}
+\usepackage{CJKutf8}
 \usetheme{Berkeley}
 
 \title{Title of Your Presentation}
@@ -9,6 +10,7 @@
 \date{\today}
 
 \begin{document}
+\begin{CJK}{UTF8}{gkai}
 
 \begin{frame}
  \titlepage
@@ -28,6 +30,7 @@
   \item item1
   \item item2
  \end{enumerate}
+ \[ E = mc^2 \]
 \end{frame}
 
 \subsection{subsection}
@@ -37,17 +40,36 @@
  \framesubtitle{This is framesubtitle}
  \begin{itemize}
   \item item1
+   \[ v = \lambda f \]
   \item item2
  \end{itemize}
+\end{frame}
+
+\section{CJK Test}
+
+\begin{frame}
+ \frametitle{你好}
+ 再见
+\end{frame}
+
+\subsection{中文测试}
+
+\begin{frame}
+ 谢谢
 \end{frame}
 
 \section{Reference}
 
 \begin{frame}
- \frametitle{Thanks!}
+ \frametitle{Reference}
  \begin{thebibliography}{10}
   \bibitem{bib:beamer} Beamer package documentation
  \end{thebibliography}
 \end{frame}
 
+\begin{frame}
+ \centering \Huge Thanks!
+\end{frame}
+
+\end{CJK}
 \end{document}
