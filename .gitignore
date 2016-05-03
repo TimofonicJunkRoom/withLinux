@@ -1,2 +1,7 @@
 debian.log
 debian/
+
+experimental/
+sid/
+jessie/
+jessie-backports/
