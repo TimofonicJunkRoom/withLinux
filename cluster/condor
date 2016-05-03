@@ -4,6 +4,15 @@
 # MIT License
 set -e
 
+condor_detect () {
+if condor_status 2>&1 1>/dev/null; then
+  true
+else
+  echo "PLEASE START HTCondor Service!"
+  exit 1
+fi
+}
+
 split_line () {
 printf "////////////////////////////////////////////////////////////////\n"
 }
@@ -23,6 +32,8 @@ howisitgoing () {
   split_line
   condor_q
 }
+
+condor_detect
 
 if [ -z "$1" ]; then
   howisitgoing
