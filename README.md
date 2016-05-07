@@ -288,6 +288,7 @@ Programming under Linux
   1. [HDF5 in python3: h5py demo](lang/py3/hdf5.py)  
   1. [Scipy/Numpy](./lang/py3/numpy.md)  
   1. [Lumin's Task Queue Daemon](./lang/py3/tq)  
+  1. [flask hello world](./lang/py3/flask.hello.py)  
 1. [Octave/Matlab](./lang/oct)  
   1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
 1. [Lua](http://www.lua.org/)  
