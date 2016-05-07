@@ -7,7 +7,11 @@ Gitlab notes
 4. gitlab-ctl reconfigure  
 5. gitlab-ctl restart
 6. start your browser
-7. login with the default account `root`, password `5iveL!fe`.`
+7. login with the default account `root`, with password `5iveL!fe`.`.
+Note, with respect to gitlab-ce with version higher than `8.7.0`,
+when the first time you visit the index page you are asked to
+enter new password for `root` account directly, and there is
+no need to memorize the `5iveL!fe` password.
 
 ### Troubleshot
 
