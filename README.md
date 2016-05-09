@@ -68,6 +68,7 @@ Utilities / Miscellaneous
 1. [tmux / gnu screen note](./util/tmux.md)  
 1. [(el) Task](http://taskwarrior.org) .. command line todo manager .. task-tutorial(5)  
   1. [nots on this task tool](./util/task.md)  
+1. [GNU Utils - Powerful](./util/gnuutils.md)  
 
 Graphical Interface Stuff (Xorg)  
 ---
