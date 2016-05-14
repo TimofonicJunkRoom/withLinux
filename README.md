@@ -167,6 +167,7 @@ Linux Kernel Hacks / Operating System / Embedding
 3. [backlight](./kernel/backlight.txt)  
 1. [my OK6410 installation log](kernel/ok6410/main.pdf)  
 1. [OpenPOWER fundation](http://openpowerfoundation.org/)  
+1. cpuid -- dump cpu info
 
 Virtualization  
 ---
