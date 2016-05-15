@@ -31,6 +31,7 @@ Installing Linux
 1. [Gentoo Prefix (el) ](https://wiki.gentoo.org/wiki/Project:Prefix)  
 1. [ArchLinux's application list (el) ](https://wiki.archlinux.org/index.php/List_of_applications)  
 1. [My dotfiles](./dotfile) and [its deploy script](./deploy)  
+1. [(/boot + LUKS (LVM (/ + /home))) Linux installation](./install/lvm-over-luks.md)  
 
 Utilities / Miscellaneous  
 ---
