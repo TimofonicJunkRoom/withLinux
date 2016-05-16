@@ -308,7 +308,8 @@ Programming under Linux
 1. [Doxygen ... Automatic document generation for C++ code](./lang/doxygen/)  
 1. [Java]
   7. [java helloworld on linux](./lang/java)  
-1. [Maxima]  
+1. Maxima  
+  1. [My maxima Note](./lang/maxima.md)  
 1. [Go](./lang/go)  
 1. Rust  
   1. [Learn RUST by example](http://rustbyexample.com/)  
