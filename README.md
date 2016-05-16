@@ -156,6 +156,7 @@ System Management / Server
 1. [prevent `resolv.conf` from being changed](admin/static_resolv_conf.md)  
 1. [Augment existing ext4 filesystem](./admin/ext4-extend-partition.md)  
 1. [LVM simple note](./admin/lvm.md)  
+1. [systemd note](./admin/systemd.md)  
 
 Linux Kernel Hacks / Operating System / Embedding  
 ---
