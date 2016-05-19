@@ -179,6 +179,7 @@ Virtualization
   3. [make a docker image via bootstrap](./virt/docker.make.image.txt)  
 4. X86 dosbox emulator, (dosbox)  
 1. QEMU/KVM  
+  1. [QEMU/KVM -- nographic mode](./virt/qemu-nographic.md)  
 1. Fake Virtualizations  
   1. traditional chroots  
   1. schroot: [Archwiki:schroot](https://wiki.archlinux.org/index.php/Install_bundled_32-bit_system_in_64-bit_system)[ Debianwiki:Schroot](https://wiki.debian.org/Schroot)    
