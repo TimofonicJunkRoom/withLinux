@@ -1,7 +1,35 @@
 \documentclass{beamer}
 \usepackage{times}
 \usepackage{CJKutf8}
-\usetheme{Berkeley}
+
+% @reference /usr/share/doc/texlive-doc/latex/beamer/doc
+% /usr/share/doc/texlive-doc/latex/beamer/doc/beameruserguide.pdf
+
+%themes = AnnArbor Antibes Berkeley Berlin Bergen Boadilla Copenhagen \
+%  Darmstadt Dresden EastLansing Frankfurt Goettingen Hannover Ilmenau JuanLesPins \
+%  Luebeck Malmoe Madrid Marburg Montpellier PaloAlto Pittsburgh \
+%  Rochester Singapore Szeged Warsaw \
+%  CambridgeUS \
+%  default boxes
+\usetheme{default} %--> no sidebar
+%\usetheme{Berkeley} %--> has sidebar
+
+%fontthemes = default serif structurebold structureitalicserif structuresmallcapsserif 
+%\usefonttheme{serif}
+\usefonttheme{structuresmallcapsserif}
+
+%colorthemes = default crane albatross seahorse whale dolphin \
+%  rose orchid sidebartab lily structure dove seagull beetle fly wolverine spruce \
+%  beaver 
+\usecolortheme{default}
+%\usecolortheme{beaver}
+
+%innerthemes = default circles rectangles rounded inmargin
+\useinnertheme{default}
+
+%outerthemes = default infolines miniframes shadow sidebar smoothbars smoothtree split tree
+\useoutertheme{default}
+%\useoutertheme{sidebar}
 
 \title{Title of Your Presentation}
 \subtitle{You can also have a subtitle}
@@ -56,6 +84,7 @@
 
 \begin{frame}
  谢谢
+ $$ e^{i\pi} = -1 $$
 \end{frame}
 
 \section{Reference}
