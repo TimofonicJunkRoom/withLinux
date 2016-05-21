@@ -102,4 +102,68 @@ ev(eqn1,g(x,y)=x^2+y^2,f(x,y)=5*x+y^3,solve(eqn2=1,y),diff);
 ev(eqn1,g(x,y)=x^2+y^2,f(x,y)=5*x+y^3,solve(eqn2=1,y),diff,FLOAT);
 ```
 
-TODO page 37
+delete label
+```
+(%i1) A:7$
+
+(%i2) A;
+(%o2)                                  7
+(%i3) kill(A);
+(%o3)                                done
+```
+
+assignment
+```
+a:7;
+
+y(x):=x^2;
+```
+
+assignment
+```
+(%i1) y(x):=x^2;
+                                           2
+(%o1)                             y(x) := x
+(%i3) y(2);
+(%o3)                                  4
+```
+
+pointer `::`
+```
+A:3$
+B:5; -> 5
+C:'A; -> A
+C::B; -> 5
+C; -> A
+A; -> 5
+```
+
+factorial
+```
+8!;
+```
+
+double factorial operator (maxima)
+```
+8!!; --> 2*4*6*8
+```
+
+square root
+```
+sqrt(x^2)
+```
+
+### Chapter 4, trig through calculus
+
+
+### MORE example
+```
+(%i3) eq1:(1+x^2)*(2+x);
+                                         2
+(%o3)                          (x + 2) (x  + 1)
+(%i4) expand(eq1);
+                                3      2
+(%o4)                          x  + 2 x  + x + 2
+```
+
+`partfrac()` is for partial fraction expansion.
