@@ -324,6 +324,8 @@ Programming under Linux
 1. [SQL](./lang/sql/main.md)    
 1. SHELL/BASH  
   1. [Lumin's log lib in bash](./lang/lumin_log.sh)  
+1. CUDA  
+  1. [cuda example](./lang/cuda/)  
 1. [IBM CPlex]
 1. Online judges
   1. http://poj.org/  
