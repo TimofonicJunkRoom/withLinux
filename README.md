@@ -296,6 +296,7 @@ Programming under Linux
   1. [flask hello world](./lang/py3/flask.hello.py)  
   1. [simple parallelization in python3](./lang/py3/para.py)  
   1. [python3 tutorial note](./lang/py3/tutorial/main.md)  
+  1. [extend python3 with C lib](./lang/py3/extend/)  
 1. [Octave/Matlab](./lang/oct)  
   1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
 1. [Lua](http://www.lua.org/)  
