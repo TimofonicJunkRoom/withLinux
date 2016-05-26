@@ -7,8 +7,8 @@
 static PyObject *
 my_hello (PyObject *self, PyObject *args)
 {
-  const char *message = "my_hello\n";
-  int status = printf(message);
+  const char *message = "my_hello()";
+  int status = printf("%s\n", message);
   return PyLong_FromLong(status);
 }
 
@@ -20,7 +20,7 @@ my_echo (PyObject *self, PyObject *args)
 
   if (!PyArg_ParseTuple(args, "s", &command))
     return NULL;
-  status = printf(command);
+  status = printf("%s\n", command);
   return PyLong_FromLong(status);
 }
 
@@ -28,7 +28,7 @@ static PyMethodDef MyMethods[] = {
   {"hello", my_hello, METH_VARARGS, "print a msg"},
   {"echo", my_echo, METH_VARARGS, "echo a msg"},
   {NULL, NULL, 0, NULL} /* Sentinel */
-}
+};
 
 static struct PyModuleDef mymodule = {
   PyModuleDef_HEAD_INIT,
