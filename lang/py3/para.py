@@ -56,4 +56,11 @@ pool2.close()
 pool2.join()
 timer.stop()
 
-print('I: done')
+print('I: this technique is awesome!')
+'''
+def convert_image(imagepath):
+  subprocess.call(['convert', '-resize', '64x64',
+    imagepath, imagepath + '_'])
+
+task = [ str(i)+'.jpg' for i in range(1, 2000+1)]
+'''
