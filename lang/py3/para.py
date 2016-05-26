@@ -26,12 +26,14 @@ timer.set()
 result1 = []
 for i in task:
   result1.append(math.sin(i))
+result1 = None
 timer.stop()
 #print(result1)
 
 print('I: using map()')
 timer.set()
-result2 = map(math.sin, task)
+result2 = list(map(math.sin, task))
+result2 = None
 timer.stop()
 #print(result2)
 
@@ -42,6 +44,7 @@ from multiprocessing.dummy import Pool as ThreadPool
 timer.set()
 pool = ThreadPool()
 result3 = pool.map(math.sin, task)
+result3 = None
 pool.close()
 pool.join()
 timer.stop()
@@ -52,6 +55,7 @@ from multiprocessing import Pool
 timer.set()
 pool2 = Pool()
 result4 = pool2.map(math.sin, task)
+result4 = None
 pool2.close()
 pool2.join()
 timer.stop()
