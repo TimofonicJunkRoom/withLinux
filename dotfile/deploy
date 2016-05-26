@@ -3,7 +3,7 @@
 # Copyright (C) 2016 Zhou Mo <cdluminate AT gmail DOT com>
 # MIT License
 set -e
-. lang/lumin_log.sh
+. ../lang/lumin_log.sh
 
 warn "---------------------------------------------------------------"
 warn "This script just installs/restores personal working environment"
