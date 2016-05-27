@@ -18,8 +18,10 @@ class Timer:
     self.interval = self.end - self.start
     print('costs time %f s' % self.interval)
 
+number_tasks = 20000000
+
 timer = Timer()
-task = range(20000000)
+task = range(number_tasks)
 
 print('I: using for-loop')
 timer.set()
@@ -58,6 +60,11 @@ result4 = pool2.map(math.sin, task)
 result4 = None
 pool2.close()
 pool2.join()
+timer.stop()
+
+print('I: using one-line for')
+timer.set()
+result0 = [ math.sin(i) for i in range(number_tasks) ]
 timer.stop()
 
 print('I: this technique is awesome!')
