@@ -50,6 +50,7 @@ scanner () {
   if (! test -e $2)&&(test -e $1); then
      warn "  target file $2 doesn't exist, use following command to fix this:";
      echo "$ ln -s $(pwd)/$1 $2"
+     return
   fi
   if test "$(stat -c %F $2)" = "symbolic link"; then
     debug "  target is symbolic link"
