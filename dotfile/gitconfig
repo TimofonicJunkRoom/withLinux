@@ -1,0 +1,10 @@
+[user]
+	name = Zhou Mo
+	email = cdluminate@gmail.com
+[push]
+	default = simple
+[alias]
+	co = checkout
+	br = branch
+	st = status
+	hist = log --oneline --graph --show-signature

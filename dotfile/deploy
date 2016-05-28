@@ -5,8 +5,64 @@
 set -e
 . ../lang/lumin_log.sh
 
-warn "---------------------------------------------------------------"
-warn "This script just installs/restores personal working environment"
-warn "---------------------------------------------------------------"
+# parse arguments
+if test "$1" = "-v"; then
+  verbose=1
+else
+  verbose=0
+fi
 
+# welcome banner
+info "--------------------------------------"
+info "Scanning personal working environment"
+info "--------------------------------------"
 error 'WIP: this is a work in progress'
+
+# settings
+home=${HOME}
+
+# functions
+
+# definition of scans
+tempfile=$(mktemp)
+cat > $tempfile <<EOF
+ gitconfig $home/.gitconfig
+EOF
+sources=( $(cat $tempfile | awk '{print $1}') )
+targets=( $(cat $tempfile | awk '{print $2}') )
+
+# check
+if ! test ${#sources[@]} -eq ${#targets[@]}; then
+  fatal "len(source) not equal to len(targets)"
+  exit 1
+fi
+
+# utility
+scanner () {
+  if ( test -z $1 ) || ( test -z $2); then
+    fatal "scanner(): missing argument"
+  fi
+  info "scanning $1 -> $2"
+  if test "$(stat -c %F $2)" = "symbolic link"; then
+    debug "  target is symbolic link"
+  fi
+  debug "  comparing..."
+  if test $verbose -eq 1; then
+    outputfile=/dev/stdout
+  else
+    outputfile=/dev/null
+  fi
+  if diff -ru $1 $2 1>$outputfile 2>&1; then
+    info "  => [Identical]"
+  else
+    warn "  => [Different]"
+  fi
+}
+
+# start scan
+info "These files are to be scaned"
+echo ${targets[@]}
+for (( i=0; i<${#targets[@]}; i++ )); do
+  scanner "${sources[i]}" "${targets[i]}"
+done
+info "All scans are finished."
