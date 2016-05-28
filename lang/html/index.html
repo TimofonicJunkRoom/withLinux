@@ -136,7 +136,8 @@
   }
 
   div.table_of_contents_item a:hover {
-    background-color: #000000;
+    /* background-color:  #000000; original */
+    background-color: cyan; /* lumin */
     color: #FFFFFF;
   }
 
@@ -144,11 +145,11 @@
   div.content_section_text a:visited,
    div.content_section_text a:active {
     background-color: #DCDFE6;
-    color: #000000;
+    color: #CC0066;
   }
 
   div.content_section_text a:hover {
-    background-color: #000000;
+    background-color: #CC0066;
     color: #DCDFE6;
   }
 
@@ -156,14 +157,17 @@
   }
     </style>
   </head>
+<!-- #################### BODY PART #################### -->
   <body>
     <div class="main_page">
+
       <div class="page_header floating_element">
 <!--  <img src="/icons/openlogo-75.png" alt="Debian Logo" class="floating_element"/> -->
         <span class="floating_element">
           Modified Apache2 Debian Default Page
         </span>
       </div>
+
       <div class="table_of_contents floating_element">
         <div class="section_header section_header_grey">
           TABLE OF CONTENTS
@@ -244,12 +248,12 @@ if __name__ == "__main__":
           <div align="center">
             <table border="1px" cellspacing="0px" style="border-collapse:collapse">
             <tr>
-              <td>Some text</td>
-              <td>Some text</td>
+              <td>&nbsp Some text &nbsp</td>
+              <td>&nbsp Some text &nbsp</td>
             </tr>
             <tr>
               <td></td>
-              <td>Some text and a <a href="/">link</a></td>
+              <td>&nbsp Some text and a <a href="/">link</a> &nbsp</td>
             </tr>
             </table>
            </div>
