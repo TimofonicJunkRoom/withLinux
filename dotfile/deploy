@@ -31,6 +31,7 @@ cat > $tempfile <<EOF
  gbp.conf $home/.gbp.conf
  xsession $home/.xsession
  xinitrc $home/.xinitrc
+ vimrc $home/.vimrc
  ../lang/py3/tq $home/bin/tq # my task queue daemon for async task processing
  ../cluster/condor $home/bin/con # my HTCondor wrapper
  ../lang/py3/ydtrans/t.py $home/bin/t # my youdao translation script
