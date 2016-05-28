@@ -17,6 +17,7 @@ actions:
   repack  conduct git repack
   log     show one-line log
   help    print this help message
+  deploy  call the dotfile deploy script
 EOF
 echo
 printf "Project withlinux has %s%d%s files currently.\n" "[34;1m" $files "[;0m"
@@ -114,6 +115,7 @@ main () {
     repack ) git repack ;;
     log    ) git log --oneline --graph --show-signature; printf "Commits Count %d\n" $commits;;
     help   ) Usage ;;
+    deploy ) cd dotfile; ./deploy ;;
        *   ) echo "E: invalid action" ;;
   esac
 }
