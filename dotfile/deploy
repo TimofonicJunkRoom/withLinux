@@ -25,8 +25,9 @@ home=${HOME}
 # definition of scans
 tempfile=$(mktemp)
 cat > $tempfile <<EOF
- gitconfig $home/.gitconfig
- ../lang/py3/tq $home/bin/tq
+ gitconfig $home/.gitconfig # git configuration
+ ../lang/py3/tq $home/bin/tq # my task queue daemon for async task processing
+ ../cluster/condor $home/bin/con # my HTCondor wrapper
 EOF
 sources=( $(cat $tempfile | awk '{print $1}') )
 targets=( $(cat $tempfile | awk '{print $2}') )
@@ -52,6 +53,7 @@ scanner () {
   fi
   if test "$(stat -c %F $2)" = "symbolic link"; then
     debug "  target is symbolic link"
+    if test 1 -eq $verbose; then ls -l $2; fi
   fi
   debug "  comparing..."
   if test $verbose -eq 1; then
