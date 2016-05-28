@@ -1,0 +1,42 @@
+# bashrc.lumin
+# append this line to .bashrc
+# + . .bashrc.lumin
+
+HISTSIZE=9999999
+HISTFILESIZE=9999999
+
+alias ls='ls --color=auto'
+alias ll='ls -lhF'
+alias grep='grep --color=auto'
+alias grepc='grep --color=always'
+alias less='less -R'
+alias octave='octave -q'
+#alias apt="LANGUAGE=zh_CN.UTF-8 apt"
+#alias dpkg="LANGUAGE=zh_CN.UTF-8 dpkg"
+
+# https://bbs.archlinux.org/viewtopic.php?pid=1068202#p1068202
+PS1="\[\e[0;37m\]\342\224\214\342\224\200[\[\e[31m\]\$?\[\e[37m\]]-[\[\e[1;34m\]\u\[\e[0;37m\]@\[\e[35m\]\h\[\e[37m\]]-[\[\e[1;36m\]\t\[\e[0;37m\]]-[\[\e[1;33m\]\w\[\e[0;37m\]]\n\[\e[37m\]\342\224\224\342\224\200\342\224\200\342\225\274\[\e[1;32m\]\$\[\e[0;32m\] "
+
+# silent the terminal
+if [ $TERM = "linux" ];then setterm -blength 0;fi
+
+G4="8.8.8.8"
+G6="2001:4860:4860::8888"
+
+# packaging
+export DEBEMAIL="cdluminate@gmail.com"
+export DEBFULLNAME="Zhou Mo"
+export DEB_BUILD_OPTIONS=parallel=4
+alias dquilt="quilt --quiltrc=${HOME}/.quiltrc-dpkg"
+complete -F _quilt_completion $_quilt_complete_opt dquilt
+export BUILDER=pbuilder
+
+PATH=${PATH}:~lumin/.linuxbrew/bin
+
+powerline(){
+  . /usr/share/powerline/bindings/bash/powerline.sh
+}
+
+# welcome message
+fortune-zh
+cowsay 'Fiat lux'
