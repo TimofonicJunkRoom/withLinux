@@ -27,6 +27,7 @@ home=${HOME}
 tempfile=$(mktemp)
 cat > $tempfile <<EOF
  gitconfig $home/.gitconfig
+ ../lang/py3/tq $home/bin/tq
 EOF
 sources=( $(cat $tempfile | awk '{print $1}') )
 targets=( $(cat $tempfile | awk '{print $2}') )
@@ -39,10 +40,17 @@ fi
 
 # utility
 scanner () {
-  if ( test -z $1 ) || ( test -z $2); then
+  # argument check
+  if ( test -z $1 ) || ( test -z $2 ); then
     fatal "scanner(): missing argument"
   fi
+  # start scan
   info "scanning $1 -> $2"
+  if ! test -e $1; then fatal "  source file $1 doesn't exist"; return; fi
+  if (! test -e $2)&&(test -e $1); then
+     warn "  target file $2 doesn't exist, use following command to fix this:";
+     echo "$ ln -s $(pwd)/$1 $2"
+  fi
   if test "$(stat -c %F $2)" = "symbolic link"; then
     debug "  target is symbolic link"
   fi
