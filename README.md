@@ -323,6 +323,7 @@ Programming under Linux
   1. [C# hello world](lang/csharp/hello.cs)  
 1. [HTML/CSS/JS]
   1. [hello world html sample](./lang/sample.html)  
+  2. [My html template, based on Debian apache default page](./lang/html/index.html)  
 1. [GNU Plot]
   1. [visualizing data with gnu plot (el) ](http://www.ibm.com/developerworks/cn/linux/l-gnuplot/index.html)  
 1. [SQL](./lang/sql/main.md)    
