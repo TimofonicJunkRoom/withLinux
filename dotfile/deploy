@@ -13,10 +13,9 @@ else
 fi
 
 # welcome banner
-info "--------------------------------------"
+info "----------------------------------------------------------------"
 info "Scanning personal working environment"
-info "--------------------------------------"
-error 'WIP: this is a work in progress'
+info "----------------------------------------------------------------"
 
 # settings
 home=${HOME}
@@ -68,8 +67,10 @@ scanner () {
 }
 
 # start scan
-info "These files are to be scaned"
-echo ${targets[@]}
+if test 1 -eq $verbose; then
+  info "These files are to be scaned"
+  echo ${targets[@]}
+fi
 for (( i=0; i<${#targets[@]}; i++ )); do
   scanner "${sources[i]}" "${targets[i]}"
 done
