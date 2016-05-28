@@ -1,0 +1,6 @@
+# lumin's xinitrc
+# referece: arch wiki
+xset r rate 190 60
+xset -b
+exec i3
+#xsetroot -solid "#333333"
