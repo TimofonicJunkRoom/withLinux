@@ -27,6 +27,7 @@ tempfile=$(mktemp)
 cat > $tempfile <<EOF
  gitconfig $home/.gitconfig # git configuration
  bashrc.lumin $home/.bashrc.lumin
+ devscripts $home/.devscripts
  ../lang/py3/tq $home/bin/tq # my task queue daemon for async task processing
  ../cluster/condor $home/bin/con # my HTCondor wrapper
  ../lang/py3/ydtrans/t.py $home/bin/t # my youdao translation script
