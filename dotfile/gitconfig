@@ -1,6 +1,7 @@
 [user]
 	name = Zhou Mo
 	email = cdluminate@gmail.com
+	editor = vim
 [push]
 	default = simple
 [alias]
