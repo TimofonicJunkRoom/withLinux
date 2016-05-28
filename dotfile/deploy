@@ -32,6 +32,7 @@ cat > $tempfile <<EOF
  xsession $home/.xsession
  xinitrc $home/.xinitrc
  vimrc $home/.vimrc
+ octaverc $home/.octaverc
  ../lang/py3/tq $home/bin/tq # my task queue daemon for async task processing
  ../cluster/condor $home/bin/con # my HTCondor wrapper
  ../lang/py3/ydtrans/t.py $home/bin/t # my youdao translation script
