@@ -1,0 +1,6 @@
+# lumin's xsession
+
+xset r rate 190 60
+xset -b
+
+xsetroot -solid "#333333"
