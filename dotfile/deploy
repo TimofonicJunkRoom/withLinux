@@ -34,6 +34,7 @@ cat > $tempfile <<EOF
  vimrc $home/.vimrc
  octaverc $home/.octaverc
  gpg.conf $home/.gnupg/gpg.conf
+ conkyrc $home/.conkyrc
  ../lang/py3/tq $home/bin/tq # my task queue daemon for async task processing
  ../cluster/condor $home/bin/con # my HTCondor wrapper
  ../lang/py3/ydtrans/t.py $home/bin/t # my youdao translation script
