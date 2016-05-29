@@ -71,6 +71,32 @@
     margin: 6px 0px 0px 6px;
   }
 
+  div.top_bar ul {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+  div.top_bar a {
+    transition: background-color 0.32s;
+    float: left;
+    width: 7em;
+    text-decoration: none;
+    color: white;
+    background-color: #8E9CB2;
+    padding: 0.2em 0.6em;
+    border-right: 1px solid white;
+    margin: 1px 0px 0px 0px;
+  }
+  div.top_bar a:hover {
+    transition: background-color 0.32s;
+    background-color: #CC0066;
+  }
+  div.top_bar li {
+    display: inline;
+  }
+
   div.content_section {
     margin: 3px 3px 3px 3px;
     background-color: #FFFFFF;
@@ -137,6 +163,7 @@
 
   div.table_of_contents_item a:hover {
     /* background-color:  #000000; original */
+    transition: background-color 0.32s;
     background-color: cyan; /* lumin */
     color: #FFFFFF;
   }
@@ -144,11 +171,13 @@
   div.content_section_text a:link,
   div.content_section_text a:visited,
    div.content_section_text a:active {
+    transition: background-color 0.32s;
     background-color: #DCDFE6;
     color: #CC0066;
   }
 
   div.content_section_text a:hover {
+    transition: background-color 0.32s;
     background-color: #CC0066;
     color: #DCDFE6;
   }
@@ -163,11 +192,20 @@
 
       <div class="page_header floating_element">
 <!--  <img src="/icons/openlogo-75.png" alt="Debian Logo" class="floating_element"/> -->
+        <div class="top_bar">
+           <ul>
+             <li><a href="#introduction">Introduction</a></li>
+             <li><a href="#examples">Examples</a></li>
+             <li><a href="#reference">Reference</a></li>
+           </ul>
+        </div>
         <span class="floating_element">
           Modified Apache2 Debian Default Page
         </span>
+
       </div>
 
+<!--
       <div class="table_of_contents floating_element">
         <div class="section_header section_header_grey">
           TABLE OF CONTENTS
@@ -182,6 +220,7 @@
           <a href="#reference">Reference</a>
         </div>
       </div>
+-->
 
       <div class="content_section floating_element">
 
@@ -191,7 +230,7 @@
         </div>
         <div class="content_section_text">
           <p>
-            This HTML file is based on Debian's defaultl apache2 page.
+            This HTML (Containing CSS) file is based on Debian's defaultl apache2 page.
             Its original version can be found under the <tt>/usr/share/apache2/default-site/</tt>
             directory of your Debian system installed <b>apache2</b>.
           </p>
@@ -225,12 +264,6 @@ if __name__ == "__main__":
   main()
           </pre>
           
-          <p>
-            Following is example item list:
-          </p>
-          <li>item 1</li>
-          <li>item 2</li>
-
           <p>
             Following is unindented item list:
           </p>
