@@ -63,17 +63,18 @@ scanner () {
      return
   fi
   if test "$(stat -c %F $2)" = "symbolic link"; then
-    debug "  target is symbolic link"
+    #debug "  target is symbolic link"
     if test 1 -eq $verbose; then ls -l $2; fi
   fi
-  debug "  comparing..."
+  #debug "  comparing..."
   if test $verbose -eq 1; then
     outputfile=/dev/stdout
   else
     outputfile=/dev/null
   fi
   if diff -ru $1 $2 1>$outputfile 2>&1; then
-    info "  => [Identical]"
+    true
+    #debug "  => [Identical]"
   else
     warn "  => [Different]"
   fi
