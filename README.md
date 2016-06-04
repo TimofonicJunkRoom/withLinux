@@ -70,6 +70,7 @@ Utilities / Miscellaneous
 1. [(el) Task](http://taskwarrior.org) .. command line todo manager .. task-tutorial(5)  
   1. [nots on this task tool](./util/task.md)  
 1. [GNU Utils - Powerful](./util/gnuutils.md)  
+1. [Encrypt directory with ECryptfs](./util/ecryptfs.md)  
 
 Graphical Interface Stuff (Xorg)  
 ---
