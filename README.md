@@ -304,6 +304,7 @@ Programming under Linux
   1. [(el) cython3 document](http://docs.cython.org/index.html)  
 1. [Octave/Matlab](./lang/oct)  
   1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
+  1. [Notable differences between Octave and Matlab](./lang/oct/diff.md)  
 1. [Lua](http://www.lua.org/)  
   1. [learn lua in 15 minutes](http://tylerneylon.com/a/learn-lua/)  
   1. [My lua logging module](./lang/lua/logging/lumin_log.lua)[demo](./lang/lua/logging/demo.lua)  
