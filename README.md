@@ -300,6 +300,7 @@ Programming under Linux
   1. [extend python3 with C lib](./lang/py3/extend/)  
   1. [my YouDao translation in terminal](./lang/py3/ydtrans/README.md)  
   1. [Decorator simple example](./lang/py3/decorator.py)  
+  1. [simple use of cython3](./lang/py3/cython3/demo.py)  
 1. [Octave/Matlab](./lang/oct)  
   1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
 1. [Lua](http://www.lua.org/)  
