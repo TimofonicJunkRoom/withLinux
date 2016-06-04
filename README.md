@@ -71,6 +71,7 @@ Utilities / Miscellaneous
   1. [nots on this task tool](./util/task.md)  
 1. [GNU Utils - Powerful](./util/gnuutils.md)  
 1. [Encrypt directory with ECryptfs](./util/ecryptfs.md)  
+1. Document converter: pandoc
 
 Graphical Interface Stuff (Xorg)  
 ---
