@@ -32,6 +32,7 @@ Installing Linux
 1. [ArchLinux's application list (el) ](https://wiki.archlinux.org/index.php/List_of_applications)  
 1. [My dotfiles](./dotfile) and [its deploy script](./deploy)  
 1. [(/boot + LUKS (LVM (/ + /home))) Linux installation](./install/lvm-over-luks.md)  
+1. [Alpine linux note](./install/alpine.md)  
 
 Utilities / Miscellaneous  
 ---
@@ -186,7 +187,9 @@ Virtualization
 1. Fake Virtualizations  
   1. traditional chroots  
   1. schroot: [Archwiki:schroot](https://wiki.archlinux.org/index.php/Install_bundled_32-bit_system_in_64-bit_system)[ Debianwiki:Schroot](https://wiki.debian.org/Schroot)    
-1. [Virtualbox Shared Directory](./virt/vbox-shared-dir.md)  
+1. Virtualbox  
+  1. [Extremely slow network transmission speed within loop between host and guest](./virt/virt-slow-transmission.md)  
+  1. [Virtualbox Shared Directory](./virt/vbox-shared-dir.md)  
 
 Cluster / HighPerf  
 ---
@@ -231,6 +234,7 @@ Kali / Security / Penetration
   1. [rpath issue](https://wiki.debian.org/RpathIssue)  
   1. [library packaging guide](https://www.netfort.gr.jp/~dancer/column/libpkg-guide/libpkg-guide.html)  
   1. [Debian Python Policy (el)](https://www.debian.org/doc/packaging-manuals/python-policy/)  
+  1. [(el) Upstream Guide](https://wiki.debian.org/UpstreamGuide)  
 1. [Computer language benchmark Game (el)](http://benchmarksgame.alioth.debian.org/)[ its conclusion](http://benchmarksgame.alioth.debian.org/dont-jump-to-conclusions.html)    
 
 [Looking For Help](http://google.com)  
