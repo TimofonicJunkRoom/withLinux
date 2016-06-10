@@ -72,6 +72,7 @@ Utilities / Miscellaneous
 1. [GNU Utils - Powerful](./util/gnuutils.md)  
 1. [Encrypt directory with ECryptfs](./util/ecryptfs.md)  
 1. Document converter: pandoc
+1. [Flash Solution for Debian](./util/flash.md)  
 
 Graphical Interface Stuff (Xorg)  
 ---
