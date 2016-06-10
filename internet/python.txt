@@ -7,4 +7,4 @@ For python 2.*
 	python2 -m SimpleHTTPServer
 
 For python 3.*
-	python3 -m http.server
+	python3 -m http.server [ --bind ADDRESS ] [port]
