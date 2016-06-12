@@ -36,5 +36,13 @@ toilet -f mono12 -F metal message
 15. aafire
 
 16. apt
+```
+apt moo
+aptitude moo -v
+aptitude moo -vv
+aptitude moo -vvv
+aptitude moo -vvvv
+...
+```
 
 17. vrms , the virtual Richard.M.Stallman
