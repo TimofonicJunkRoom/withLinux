@@ -3,5 +3,5 @@ main:clean
 	make clean
 .PHONY : clean
 clean:
-	-rm *.aux *.log
+	-rm *.aux *.log *.pdf
 
