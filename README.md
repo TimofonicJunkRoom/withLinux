@@ -309,6 +309,7 @@ Programming under Linux
   1. [Decorator simple example](./lang/py3/decorator.py)  
   1. [simple use of cython3](./lang/py3/cython3/demo.py)  
   1. [(el) cython3 document](http://docs.cython.org/index.html)  
+  1. [Curses hello world in python3](./lang/py3/pycurses.py)  
 1. [Octave/Matlab](./lang/oct)  
   1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
   1. [Notable differences between Octave and Matlab](./lang/oct/diff.md)  
