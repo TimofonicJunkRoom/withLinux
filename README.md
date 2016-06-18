@@ -332,8 +332,9 @@ Programming under Linux
 1. Rust  
   1. [Learn RUST by example](http://rustbyexample.com/)  
 1. [Julia]  
+  1. [start.jl](./lang/jl/start.jl)  
 1. [C#/Mono]  
-  1. [C# hello world](lang/csharp/hello.cs)  
+  1. [C# hello world](./lang/csharp/hello.cs)  
 1. [HTML/CSS/JS]
   1. [hello world html sample](./lang/sample.html)  
   2. [My html template, based on Debian apache default page](./lang/html/index.html)  
