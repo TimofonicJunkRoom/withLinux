@@ -27,6 +27,7 @@ tempfile=$(mktemp)
 cat > $tempfile <<EOF
  gitconfig $home/.gitconfig # git configuration
  bashrc.lumin $home/.bashrc.lumin
+ bashrc.system $home/.bashrc.system
  devscripts $home/.devscripts
  gbp.conf $home/.gbp.conf
  xsession $home/.xsession
