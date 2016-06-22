@@ -13,9 +13,9 @@ else
 fi
 
 # welcome banner
-info "----------------------------------------------------------------"
+info "-------------------------------------"
 info "Scanning personal working environment"
-info "----------------------------------------------------------------"
+info "-------------------------------------"
 
 # settings
 home=${HOME}
@@ -57,10 +57,10 @@ scanner () {
     fatal "scanner(): missing argument"
   fi
   # start scan
-  info "scanning $1 -> $2"
+  info "scan $1 -> $2"
   if ! test -e $1; then fatal "  source file $1 doesn't exist"; return; fi
   if (! test -e $2)&&(test -e $1); then
-     warn "  target file $2 doesn't exist, fix this with:";
+     warn "  file $2 doesn't exist, fix this with:";
      echo "$ ln -s $(pwd)/$1 $2"
      return
   fi
