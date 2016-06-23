@@ -239,7 +239,7 @@ Kali / Security / Penetration
 
 [Looking For Help](http://google.com)  
 ---
-wiki, doc, tutorial.
+wiki, doc, tutorial, and some interesting sites.
 
 1. [Wikipedia](http://wikipedia.org)  
 8. [Linux kernel document](https://www.kernel.org/doc), also shiped within kernel.tar.xz:/doc  
@@ -259,6 +259,7 @@ wiki, doc, tutorial.
   2. shodan  
   3. [Baidu Yun Search](http://www.zhihu.com/question/24263185#answer-7880704)  
 1. [Awesome List](https://github.com/sindresorhus/awesome)  
+1. [Matrix67 blog](http://www.matrix67.com/blog/)  
 
 Open Source Licenses
 ---
