@@ -52,21 +52,21 @@ class Tnode(object):
       for each in self.content_:
         num = num + each.treesize()
       return num
-  def _dfscfdump(self, traj):
+  def _dfsplrdump(self, tl, tr):
     assert(self.content_)
     if self.isleaf():
-      #print('%s: %s'%(self.attr_, self.content_))
-      traj.append(self)
+      tl.append(self)
     elif self.iscomposer():
+      tr.insert(0, self)
       for each in self.content_:
-        each._dfscfdump(traj)
-      #print('%s: composer'%(self.attr_))
-      traj.append(self)
-  def dfscfdump(self):
-    # depth first search + child first
-    traj = [ ]
-    self._dfscfdump(traj)
-    #print(traj)
+        each._dfsplrdump(tl, tr)
+  def dfsplrdump(self):
+    tl = []
+    tr = []
+    # depth first search + parent left right order
+    self._dfsplrdump(tl, tr)
+    traj = tl+tr
+    # trace back for the real trajectory
     trajectory = []
     for i in range(self.treesize()):
       trajectory.append(None)
@@ -89,10 +89,11 @@ def unit_Tnode():
   a = Tnode('ROOT', 'hello')
   a.dump()
   assert(a.treesize() == 1)
+  a.dfsplrdump()
   a = Tnode('ROOT', [ Tnode('NN', 'nn1'), Tnode('NP', 'np2'),
     Tnode('XX', [ Tnode('x1', 'x1'), Tnode('x2', 'x2') ]) ])
   a.dump()
-  a.dfscfdump()
+  a.dfsplrdump()
   assert(a.treesize() == 6)
   a = None
   log.debug('unit test: OK')
@@ -227,6 +228,25 @@ def unit_yyparse():
   log.debug('unit test: OK')
 if debug: unit_yyparse()
 
+def unit_coco_tree():
+  # test algorithm with the tree from coco
+  tree_raw = '''
+(ROOT
+  (NP
+    (NP (DT a) (NN person) (NN standing))
+    (PP (IN inside))
+    (PP (IN of)
+      (NP (DT a) (NN phone) (NN booth)))
+    (. .)))
+'''
+  lexout = lex(tree_raw)
+  print(lexout)
+  tree = yyparse(lexout)[0]
+  tree.dfsplrdump()
+
+log.debug('unit test: coco tree test')
+unit_coco_tree()
+
 log.debug('check argv')
 if len(sys.argv) != 2:
   print('illegal argument list')
@@ -263,6 +283,6 @@ for each in trees:
 
 log.info('dump parent pointer tree of parsed trees')
 for each in trees:
-  each.dfscfdump()
+  each.dfsplrdump()
 
 log.warn('parse complete')
