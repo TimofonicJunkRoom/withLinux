@@ -221,6 +221,7 @@ Kali / Security / Penetration
 
 [Debian GNU/Linux Specific](https://www.debian.org/)  
 ---
+1. [(el) Bits from Debian](https://bits.debian.org/)  
 1. [setup unofficial debian archive](./debian/unofficial_archive.txt)  
 2. [setup debian mirror (el) ](https://www.debian.org/mirror/ftpmirror)  
 1. Packaging and Policy  
