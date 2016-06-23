@@ -440,7 +440,8 @@ Artificial Intelegence / Mathematics
     1. [Deep learning frameworks benchmark by leaf](http://autumnai.com/deep-learning-benchmarks)  
   1. [Chainer, Define-by-Run instead of Define-and-Run (python)](https://github.com/pfnet/chainer)  
 1. Deep learning
-  1. http://deeplearning.stanford.edu/
+  1. http://deeplearning.stanford.edu/  
+  1. https://devblogs.nvidia.com/parallelforall/deep-learning-nutshell-core-concepts/  
 1. Preprint
   1. [Arxiv](http://arxiv.org/)  
 1. Datasets  
