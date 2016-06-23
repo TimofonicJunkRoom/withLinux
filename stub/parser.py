@@ -8,7 +8,7 @@ Parser in the lex + yacc manner.
 import sys
 import lumin_log as log
 
-debug = 0
+debug = 1
 log.info('Tree parser and converter, debug = %d' % debug)
 
 yaccspec='''
@@ -152,8 +152,8 @@ def lex(raw):
   while cur < len(raw):
     cur = seeknext(cur, raw)
     token = ''
-    if raw[cur].isalnum():
-      while raw[cur].isalnum():
+    if raw[cur].isalnum() or raw[cur]=='$' or raw[cur]=='-':
+      while raw[cur].isalnum() or raw[cur]=='$' or raw[cur]=='-':
         token = token+raw[cur]
         cur = cur + 1
     elif raw[cur] in [ ')', '(', '.' ]:
@@ -163,9 +163,13 @@ def lex(raw):
       char = raw[cur]
       if char in [ '\n' ]:
         cur = cur + 1
+        continue
       else:
         print('what is [%s][%s]?'%(bytes(char.encode()), char[0]))
-        cur = seeknext(cur, raw)
+        #cur = cur + 1
+        #cur = seeknext(cur, raw)
+        #token = char
+        assert(None)
     lexout.append(token)
   return lexout
 
@@ -274,6 +278,13 @@ with open(sys.argv[1], 'r') as f:
   trees_raw = f.read()
 log.debug('file size %d'% len(trees_raw))
 
+log.info('dump file chars')
+chars = []
+for char in trees_raw:
+  if not char in chars:
+    chars.append(char)
+print(chars)
+
 log.info('lexical analysis')
 lexout = lex(trees_raw)
 log.debug('lexical output length %d'% len(lexout))
@@ -285,11 +296,13 @@ trees = []
 yyout = yyparse(lexout, cur)
 trees.append(yyout[0])
 cur   = yyout[1]
+print(len(trees))
 while cur < len(lexout)-1:
   yyout = yyparse(lexout, cur)
   tnode = yyout[0]
   cur   = yyout[1]
   trees.append(tnode)
+  print(len(trees))
 log.debug('parsed %d trees'% len(trees))
 
 if debug:
