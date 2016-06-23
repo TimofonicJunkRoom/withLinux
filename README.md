@@ -437,6 +437,8 @@ Artificial Intelegence / Mathematics
   1. [leaf (rust)](https://github.com/autumnai/leaf)  
     1. [Deep learning frameworks benchmark by leaf](http://autumnai.com/deep-learning-benchmarks)  
   1. [Chainer, Define-by-Run instead of Define-and-Run (python)](https://github.com/pfnet/chainer)  
+1. Deep learning
+  1. http://deeplearning.stanford.edu/
 1. Datasets  
   1. [MS COCO](https://github.com/CDLuminate/cocofetch)  
   1. [Imagenet](http://image-net.org/index)  
