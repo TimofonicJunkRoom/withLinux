@@ -74,6 +74,7 @@ Utilities / Miscellaneous
 1. [Encrypt directory with ECryptfs](./util/ecryptfs.md)  
 1. Document converter: pandoc
 1. [Flash Solution for Debian](./util/flash.md)  
+1. [package:fbi -- frame buffer image viewer, pdf is also browsable in FB]
 
 Graphical Interface Stuff (Xorg)  
 ---
