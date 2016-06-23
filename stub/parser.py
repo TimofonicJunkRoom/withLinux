@@ -8,7 +8,8 @@ Parser in the lex + yacc manner.
 import sys
 import lumin_log as log
 
-debug = 1
+debug = 0
+log.info('Tree parser and converter, debug = %d' % debug)
 
 yaccspec='''
 tnode:
@@ -17,8 +18,9 @@ tnode:
 ;
 '''
 
-log.info('dump language spec')
-print(yaccspec)
+if debug:
+  log.info('dump language spec')
+  print(yaccspec)
 
 if debug: log.debug('initialize Tnode')
 class Tnode(object):
@@ -82,17 +84,29 @@ class Tnode(object):
               trajectory[i] = j
     # index correction
     trajectory = list(map(lambda x: x+1, trajectory))
-    print(trajectory)
+    return trajectory
+  def sosdump(self):
+    words = []
+    self._sosdump(words)
+    return words
+  def _sosdump(self, words):
+    if self.isleaf():
+      words.append(self.content_)
+    elif self.iscomposer():
+      for each in self.content_:
+        each._sosdump(words)
 
 def unit_Tnode():
   log.debug('unit test: Tnode')
   a = Tnode('ROOT', 'hello')
   a.dump()
+  print(a.sosdump())
   assert(a.treesize() == 1)
   a.dfsplrdump()
   a = Tnode('ROOT', [ Tnode('NN', 'nn1'), Tnode('NP', 'np2'),
     Tnode('XX', [ Tnode('x1', 'x1'), Tnode('x2', 'x2') ]) ])
   a.dump()
+  print(a.sosdump())
   a.dfsplrdump()
   assert(a.treesize() == 6)
   a = None
@@ -244,8 +258,9 @@ def unit_coco_tree():
   tree = yyparse(lexout)[0]
   tree.dfsplrdump()
 
-log.debug('unit test: coco tree test')
-unit_coco_tree()
+if debug: 
+  log.debug('unit test: coco tree test')
+  unit_coco_tree()
 
 log.debug('check argv')
 if len(sys.argv) != 2:
@@ -277,12 +292,32 @@ while cur < len(lexout)-1:
   trees.append(tnode)
 log.debug('parsed %d trees'% len(trees))
 
-log.info('dump parsed trees')
-for each in trees:
-  each.dump()
+if debug:
+  log.info('dump parsed trees')
+  for each in trees:
+    each.dump()
 
 log.info('dump parent pointer tree of parsed trees')
+ppts = []
 for each in trees:
-  each.dfsplrdump()
+  ppt = each.dfsplrdump()
+  print(ppt)
+  ppts.append(map(str, ppt))
+
+log.info('write result into %s'%(sys.argv[1]+'.ppts'))
+pptst = ''
+for each in ppts:
+  pptst = pptst + '|'.join(each) + '\n'
+print(pptst, end='')
+with open(sys.argv[1]+'.ppts', 'w+') as f:
+  f.write(pptst)
+
+log.info('dump sostree and write them to %s'%(sys.argv[1]+'.soss'))
+soss = ''
+for each in trees:
+  soss = soss + '|'.join(each.sosdump()) + '\n'
+print(soss, end='')
+with open(sys.argv[1]+'.soss', 'w+') as f:
+  f.write(soss)
 
 log.warn('parse complete')
