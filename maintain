@@ -65,6 +65,7 @@ clean () {
   find . -type f -name 'junk.*' -exec rm {} +
   find . -name 'tq.err' -exec rm {} +
   find . -name 'tq.out' -exec rm {} +
+  find . -type d -name '__pycache__' -exec rm -rf {} +
 }
 
 purge () {
