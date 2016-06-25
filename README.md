@@ -74,6 +74,7 @@ Utilities / Miscellaneous
 1. [Encrypt directory with ECryptfs](./util/ecryptfs.md)  
 1. Document converter: pandoc
 1. [Flash Solution for Debian](./util/flash.md)  
+1. [package:fbi -- frame buffer image viewer, pdf is also browsable in FB]
 
 Graphical Interface Stuff (Xorg)  
 ---
@@ -221,6 +222,7 @@ Kali / Security / Penetration
 
 [Debian GNU/Linux Specific](https://www.debian.org/)  
 ---
+1. [(el) Bits from Debian](https://bits.debian.org/)  
 1. [setup unofficial debian archive](./debian/unofficial_archive.txt)  
 2. [setup debian mirror (el) ](https://www.debian.org/mirror/ftpmirror)  
 1. Packaging and Policy  
@@ -239,7 +241,7 @@ Kali / Security / Penetration
 
 [Looking For Help](http://google.com)  
 ---
-wiki, doc, tutorial.
+wiki, doc, tutorial, and some interesting sites.
 
 1. [Wikipedia](http://wikipedia.org)  
 8. [Linux kernel document](https://www.kernel.org/doc), also shiped within kernel.tar.xz:/doc  
@@ -259,6 +261,8 @@ wiki, doc, tutorial.
   2. shodan  
   3. [Baidu Yun Search](http://www.zhihu.com/question/24263185#answer-7880704)  
 1. [Awesome List](https://github.com/sindresorhus/awesome)  
+1. [Matrix67 blog](http://www.matrix67.com/blog/)  
+1. [TUNA Wiki](https://wiki.tuna.tsinghua.edu.cn/Homepage)  
 
 Open Source Licenses
 ---
@@ -310,6 +314,7 @@ Programming under Linux
   1. [simple use of cython3](./lang/py3/cython3/demo.py)  
   1. [(el) cython3 document](http://docs.cython.org/index.html)  
   1. [Curses hello world in python3](./lang/py3/pycurses.py)  
+  1. [PLY - python lex yacc](./lang/py3/plytest.py)  
 1. [Octave/Matlab](./lang/oct)  
   1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
   1. [Notable differences between Octave and Matlab](./lang/oct/diff.md)  
@@ -435,6 +440,11 @@ Artificial Intelegence / Mathematics
   1. [leaf (rust)](https://github.com/autumnai/leaf)  
     1. [Deep learning frameworks benchmark by leaf](http://autumnai.com/deep-learning-benchmarks)  
   1. [Chainer, Define-by-Run instead of Define-and-Run (python)](https://github.com/pfnet/chainer)  
+1. Deep learning
+  1. http://deeplearning.stanford.edu/  
+  1. https://devblogs.nvidia.com/parallelforall/deep-learning-nutshell-core-concepts/  
+1. Preprint
+  1. [Arxiv](http://arxiv.org/)  
 1. Datasets  
   1. [MS COCO](https://github.com/CDLuminate/cocofetch)  
   1. [Imagenet](http://image-net.org/index)  

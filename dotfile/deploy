@@ -13,9 +13,9 @@ else
 fi
 
 # welcome banner
-info "----------------------------------------------------------------"
+info "-------------------------------------"
 info "Scanning personal working environment"
-info "----------------------------------------------------------------"
+info "-------------------------------------"
 
 # settings
 home=${HOME}
@@ -27,6 +27,7 @@ tempfile=$(mktemp)
 cat > $tempfile <<EOF
  gitconfig $home/.gitconfig # git configuration
  bashrc.lumin $home/.bashrc.lumin
+ bashrc.system $home/.bashrc.system
  devscripts $home/.devscripts
  gbp.conf $home/.gbp.conf
  xsession $home/.xsession
@@ -35,6 +36,7 @@ cat > $tempfile <<EOF
  octaverc $home/.octaverc
  gpg.conf $home/.gnupg/gpg.conf
  conkyrc $home/.conkyrc
+ quiltrc-dpkg $home/.quiltrc-dpkg
  ../lang/py3/tq $home/bin/tq # my task queue daemon for async task processing
  ../cluster/condor $home/bin/con # my HTCondor wrapper
  ../lang/py3/ydtrans/t.py $home/bin/t # my youdao translation script
@@ -55,10 +57,10 @@ scanner () {
     fatal "scanner(): missing argument"
   fi
   # start scan
-  info "scanning $1 -> $2"
+  info "scan $1 -> $2"
   if ! test -e $1; then fatal "  source file $1 doesn't exist"; return; fi
   if (! test -e $2)&&(test -e $1); then
-     warn "  target file $2 doesn't exist, fix this with:";
+     warn "  file $2 doesn't exist, fix this with:";
      echo "$ ln -s $(pwd)/$1 $2"
      return
   fi

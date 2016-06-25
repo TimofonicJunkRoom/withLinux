@@ -26,3 +26,7 @@ in admin area.
 #### Reference
 1. Gitlab official doc
 2. archwiki gitlab
+
+### See Also
+
+Gogs -- gitlab alternative
