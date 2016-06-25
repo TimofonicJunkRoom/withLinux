@@ -77,6 +77,9 @@ scanner () {
     #debug "  => [Identical]"
   else
     warn "  => [Different]"
+    if test 1 -eq $verbose; then
+      git diff $1 $2 || true
+    fi
   fi
 }
 
