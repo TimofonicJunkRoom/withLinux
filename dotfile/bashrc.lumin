@@ -1,6 +1,7 @@
 # bashrc.lumin
 # append this line to .bashrc
-# + . .bashrc.lumin
+# + . ~/.bashrc.lumin
+# reference: https://wiki.archlinux.org/index.php/Bash#Configuration_files
 
 HISTSIZE=9999999
 HISTFILESIZE=9999999
@@ -26,6 +27,9 @@ if [ $TERM = "linux" ];then setterm -blength 0;fi
 
 G4="8.8.8.8"
 G6="2001:4860:4860::8888"
+
+# autocd man bash
+shopt -s autocd
 
 # packaging
 export DEBEMAIL="cdluminate@gmail.com"
