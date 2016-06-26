@@ -5,17 +5,18 @@ set -e
 # packages
 packages="
   command-not-found
+  unar
 "
 
 # start scanning
 for pkg in $packages; do
   if (dpkg -s $pkg 1>/dev/null 2>&1); then
     if (dpkg -s $pkg | grep ^Status | grep 'install ok installed' 1>/dev/null); then
-      info "scan pkg:$pkg install ok"
+      info "scan pkg:$pkg ... install ok"
     else
-      warn "scan pkg:$pkg missing"
+      warn "scan pkg:$pkg ... missing"
     fi
   else
-    error "scan pkg:$pkg missing or invalid"
+    error "scan pkg:$pkg ... missing or invalid"
   fi
 done
