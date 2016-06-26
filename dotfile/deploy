@@ -93,4 +93,5 @@ fi
 for (( i=0; i<${#targets[@]}; i++ )); do
   scanner "${sources[i]}" "${targets[i]}"
 done
-info "All scans are finished."
+debug "All config scans are finished, now scan package..."
+./packages

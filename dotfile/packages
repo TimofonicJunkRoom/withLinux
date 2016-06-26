@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+. ../lang/lumin_log.sh
+
+# packages
+packages="
+  command-not-found
+"
+
+# start scanning
+for pkg in $packages; do
+  if (dpkg -s $pkg 1>/dev/null 2>&1); then
+    if (dpkg -s $pkg | grep ^Status | grep 'install ok installed' 1>/dev/null); then
+      info "scan pkg:$pkg install ok"
+    else
+      warn "scan pkg:$pkg missing"
+    fi
+  else
+    error "scan pkg:$pkg missing or invalid"
+  fi
+done
