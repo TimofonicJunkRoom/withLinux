@@ -1,12 +1,17 @@
 #!/usr/bin/python3
 '''
-automatic image downloader, no js and async
+automatic image downloader
 
 1. demand analysis
 2. regex design
 3. write python
 
 @reference http://urllib3.readthedocs.io/en/latest/
+
+TODO:
+
+* fix filename extension with python3-magic
+*  upgrade and use webdriver
 '''
 import urllib.parse
 import urllib3
