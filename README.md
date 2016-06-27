@@ -319,6 +319,7 @@ Programming under Linux
   1. [Curses hello world in python3](./lang/py3/pycurses.py)  
   1. [PLY - python lex yacc](./lang/py3/plytest.py)  
   1. [Python3 spider for image downloading](./lang/py3/spider/spider.py)  
+  1. [Python3 advanced (webdriver) scrapper for image downloading](./lang/py3/spider/xpider.py)  
 1. [Octave/Matlab](./lang/oct)  
   1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
   1. [Notable differences between Octave and Matlab](./lang/oct/diff.md)  
