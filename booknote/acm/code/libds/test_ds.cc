@@ -1,22 +1,24 @@
 #include "ds.hpp"
 #include <string>
+#include <cassert>
 
 using namespace std;
 
 string _msg_;
 
 #define TEST(msg) do { \
-  cout << endl << msg << endl; \
+  cout << endl << msg << " ... [ -- ]" << endl; \
   _msg_ = msg; \
  } while (0)
 
 #define OK do { \
-  cout << _msg_ << " ... OK " << endl; \
+  cout << _msg_ << " ... [ OK ]" << endl; \
  } while (0)
 
 int
 main (void)
 {
+  // _list_node tests
 
   TEST ("_list_node constructor");
     DS::_list_node<int> a (100);
@@ -25,13 +27,22 @@ main (void)
 
   TEST ("_list_node setnext and dump");
     a.setnext(&b);
+    assert(a.next() != NULL);
     a.dump();
   OK;
 
   TEST ("_list_node setprev and dump");
     b.setprev(&a);
+    assert(b.prev() != NULL);
     b.dump();
   OK;
+
+  TEST ("_list_node data");
+    assert(a.data());
+    assert(b.data());
+  OK;
+
+  // list tests
 
   TEST ("list constructor and dump");
     DS::list<int> l;
@@ -48,7 +59,13 @@ main (void)
   OK;
 
   TEST ("list insert");
-    l.insert(1);
+    assert(l.insert(1));
+    assert(l.get(0) != NULL);
+    assert(l.insert(2, 0));
+    assert(l.insert(5, 1));
+    assert(l.insert(10, -1));
+    assert(l.size() == 4);
+    l.dump(1);
   OK;
   
   TEST ("list dump and get");
@@ -57,21 +74,9 @@ main (void)
     cout << l.get(1) << endl;;
   OK;
 
-  TEST ("list insert more and dump");
-    l.insert(2);
-    l.dump(1);
-    l.insert(3);
-    l.dump(1);
-    l.insert(4, 0);
-    l.dump(1);
-    l.insert(5, 2);
-    l.dump(1);
-  OK;
-
   TEST ("list append");
-    l.append(6);
-    l.append(7);
-    l.append(8, 0);
+    assert(l.append(6, -1));
+    assert(l.append(8, 0));
     l.dump(1);
   OK;
 
@@ -80,9 +85,33 @@ main (void)
     l.dump(1);
   OK;
 
+  TEST ("list remove by negative index");
+    l.remove(-1);
+    l.dump(1);
+  OK;
+
   TEST ("list purge");
     l.purge();
     l.dump();
+  OK;
+
+  // stack tests
+
+  TEST ("stack create");
+    DS::stack<int> s;
+  OK;
+
+  TEST ("stack push and dump");
+    for (int i = 1; i <= 5; i++) s.push(i);
+    s.dump(1);
+    assert(s.top());
+  OK;
+
+  TEST ("stack pop");
+    for (int i = 1; i <= 5; i++) {
+      cout << s.pop() << endl;
+      s.dump(1);
+    }
   OK;
 
   return 0;

@@ -1,9 +1,7 @@
 /**
  @file ds.hpp
- @author Zhou Mo
-   Copyright (C) 2016 Zhou Mo
- @reference GNU GCC: G++ STL Souce Code
-   * stl_list.h
+ @author Copyright (C) 2016 Zhou Mo
+ @reference GNU GCC: G++ STL Souce Code (stl_list.h)
  */
 #ifndef _DS_H
 #define _DS_H
@@ -34,6 +32,7 @@ class _list_node {
     _list_node<Tp> * next() const;
     void setprev (_list_node<Tp> * newprev);
     void setnext (_list_node<Tp> * newnext);
+    Tp data (void) const;
 }; // class _list_node
 
 template <typename Tp>
@@ -69,6 +68,10 @@ template <typename Tp> void
 _list_node<Tp>::setnext (_list_node<Tp> * newnext)
 { next_ = newnext; }
 
+template <typename Tp> Tp
+_list_node<Tp>::data (void) const
+{ return data_; }
+
 // --- class list ---
 
 template <typename Tp>
@@ -88,7 +91,8 @@ class list {
     _list_node<Tp> * append (Tp data, long index);
     void remove (long index);
     void purge (void); // remove all nodes
-    // insert append remove get
+    _list_node<Tp> * head (void) const;
+    _list_node<Tp> * tail (void) const;
 }; // class list
 
 template <typename Tp>
@@ -235,8 +239,10 @@ list<Tp>::remove (long index)
     std::cout << "warn: remove nothing from empty list" << std::endl;
     return;
   }
-  // surgery
+  // surgery and update
   --size_;
+  if (cursor->prev() == NULL) head_ = cursor->next();
+  if (cursor->next() == NULL) tail_ = cursor->prev();
   if (cursor->prev() != NULL) cursor->prev()->setnext(cursor->next());
   if (cursor->next() != NULL) cursor->next()->setprev(cursor->prev());
   delete cursor;
@@ -257,6 +263,60 @@ list<Tp>::purge (void)
   tail_ = NULL;
 }
 
+template <typename Tp> _list_node<Tp> *
+list<Tp>::head (void) const
+{ return head_; }
+
+template <typename Tp> _list_node<Tp> *
+list<Tp>::tail (void) const
+{ return tail_; }
+
+// --- class stack --- stimulate with list
+
+template <typename Tp>
+class stack {
+  private:
+    list<Tp> s_;
+  public:
+    stack (void);
+    _list_node<Tp> * push (Tp data);
+    Tp pop (void);
+    size_t size(void) const;
+    _list_node<Tp> * top (void) const;
+    void dump (bool all = 0) const;
+}; // class stack
+
+template <typename Tp>
+stack<Tp>::stack (void)
+{ list<Tp> s_; }
+
+template <typename Tp> _list_node<Tp> *
+stack<Tp>::push (Tp data)
+{ return s_.append(data); }
+
+template <typename Tp> Tp
+stack<Tp>::pop (void)
+{
+  if (s_.size() == 0) {
+    std::cout << "warn: pop nothing from empty stack" << std::endl;
+    return (Tp) NULL;
+  }
+  Tp ret = s_.tail()->data();
+  s_.remove(-1);
+  return ret;
+}
+
+template <typename Tp> size_t
+stack<Tp>::size (void) const
+{ return s_.size(); }
+
+template <typename Tp> _list_node<Tp> *
+stack<Tp>::top (void) const
+{ return s_.tail(); }
+
+template <typename Tp> void
+stack<Tp>::dump (bool all) const
+{ s_.dump(all); }
  
 } // namespace DS
 
