@@ -356,6 +356,90 @@ template <typename Tp> void
 queue<Tp>::dump (bool all) const
 { q_.dump(all); }
 
+// --- class _btree_node ---
+
+template <typename Tp>
+class _btree_node {
+  private:
+    Tp data_;
+    _btree_node<Tp> * left_;
+    _btree_node<Tp> * right_;
+  public:
+    _btree_node (Tp data = (Tp) NULL);
+    void dump (int indent = 0) const; // dfs, parent left right order
+    void pdump (int indent = 0) const; // pretty dump, dfs, parent left right order
+    Tp data (void);
+    _btree_node<Tp> * left  (void);
+    _btree_node<Tp> * right (void);
+    void setleft (_btree_node<Tp> * node);
+    void setright (_btree_node<Tp> * node);
+    bool isleaf (void) {
+      return (left_ == NULL && right_ == NULL);
+    }
+}; // class _btree_node
+
+template <typename Tp>
+_btree_node<Tp>::_btree_node (Tp data)
+{
+  data_ = data;
+  left_ = NULL;
+  right_= NULL;
+}
+
+template <typename Tp> void
+_btree_node<Tp>::dump (int indent) const
+{
+  for (int i = 0; i < indent; i++) std::cout << " ";
+  std::cout << this << " _btree_node: data " << data_ << " with left "
+    << left_ << " and right " << right_ << std::endl;
+  if (left_ != NULL) left_->dump(indent+2);
+  if (right_ != NULL) right_->dump(indent+2);
+}
+
+template <typename Tp> void
+_btree_node<Tp>::pdump (int indent) const
+{
+  for (int i = 0; i < indent; i++) std::cout << " ";
+  if (left_ == NULL && right_ == NULL) {
+    std::cout << "(" << this << " " << data_ << ")" << std::endl;
+  } else {
+    std::cout << "(" << this << " " << data_ << std::endl;
+    if (left_  != NULL) left_ ->pdump(indent+2);
+    if (right_ != NULL) right_->pdump(indent+2);
+    for (int i = 0; i < indent; i++) std::cout << " ";
+    std::cout << ")" << std::endl;
+  }
+}
+
+template <typename Tp> void
+_btree_node<Tp>::setleft (_btree_node<Tp> * node)
+{ left_ = node; }
+
+template <typename Tp> void
+_btree_node<Tp>::setright (_btree_node<Tp> * node)
+{ right_ = node; }
+
+// --- class btree ---
+
+template <typename Tp>
+class btree {
+  private:
+    _btree_node<Tp> root_;
+  public:
+    btree (void) {
+      _btree_node<Tp> root_;
+    }
+    btree (_btree_node<Tp> * node) {
+      root_ = node;
+    }
+    _btree_node<Tp> * root (void) const {
+      return root_;
+    }
+    void dump (void) const {
+      
+    }
+    size_t size (void);
+}; // class btree
 
 } // namespace DS
 

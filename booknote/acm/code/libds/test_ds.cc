@@ -133,5 +133,35 @@ main (void)
     }
   OK;
 
+  // _btree_node tests
+
+  TEST ("_btree_node constructor");
+    DS::_btree_node<int> root (999);
+    DS::_btree_node<int> left (1);
+    DS::_btree_node<int> right (2);
+    DS::_btree_node<int> ll (11);
+    DS::_btree_node<int> rl (21);
+  OK;
+
+  TEST ("_btree_node dump");
+    root.dump();
+    left.dump();
+    right.dump();
+    ll.dump();
+    rl.dump();
+  OK;
+
+  TEST ("_btree_node setleft and setright and dump");
+    root.setleft(&left);
+    root.setright(&right);
+    left.setleft(&ll);
+    right.setleft(&rl);
+    root.dump();
+  OK;
+
+  TEST ("_btree_node pdump, pretty dump");
+    root.pdump();
+  OK;
+
   return 0;
 }
