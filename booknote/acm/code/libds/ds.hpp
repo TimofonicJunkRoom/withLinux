@@ -317,7 +317,46 @@ stack<Tp>::top (void) const
 template <typename Tp> void
 stack<Tp>::dump (bool all) const
 { s_.dump(all); }
- 
+
+// --- class queue
+
+template <typename Tp>
+class queue {
+  private:
+    list<Tp> q_;
+  public:
+    queue (void);
+    _list_node<Tp> * push (Tp data);
+    Tp pop (void);
+    size_t size (void) const;
+    void dump (bool all = 0) const;
+}; // class queue
+
+template <typename Tp>
+queue<Tp>::queue (void)
+{ list<Tp> q_; }
+
+template <typename Tp> _list_node<Tp> *
+queue<Tp>::push (Tp data)
+{ return q_.append(data); }
+
+template <typename Tp> Tp
+queue<Tp>::pop (void)
+{
+  Tp ret = q_.head()->data();
+  q_.remove(0);
+  return ret;
+}
+
+template <typename Tp> size_t
+queue<Tp>::size (void) const
+{ return q_.size(); }
+
+template <typename Tp> void
+queue<Tp>::dump (bool all) const
+{ q_.dump(all); }
+
+
 } // namespace DS
 
 #endif /* _DS_H */

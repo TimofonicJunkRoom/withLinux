@@ -114,5 +114,24 @@ main (void)
     }
   OK;
 
+  // queue tests
+
+  TEST ("queue constructor");
+    DS::queue<int> q;
+  OK;
+
+  TEST ("queue push and dump");
+    for (int i = 1; i < 5; i++) q.push(i);
+    assert(q.size() == 4);
+    q.dump(1);
+  OK;
+
+  TEST ("queue pop");
+    for (int i = 1; i < 5; i++) {
+      cout << q.pop() << endl;
+      q.dump(1);
+    }
+  OK;
+
   return 0;
 }
