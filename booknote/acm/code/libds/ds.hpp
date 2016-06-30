@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include <cassert>
-#include <string>
 
 namespace DS {
 
@@ -26,51 +25,24 @@ class _list_node {
     _list_node<Tp> * prev_;
     _list_node<Tp> * next_;
   public:
-    _list_node (Tp data, _list_node<Tp> * next = NULL, _list_node<Tp> * prev = NULL);
-    void dump (void) const;
-    _list_node<Tp> * prev() const;
-    _list_node<Tp> * next() const;
-    void setprev (_list_node<Tp> * newprev);
-    void setnext (_list_node<Tp> * newnext);
-    Tp data (void) const;
+    _list_node (Tp data,
+                _list_node<Tp> * next = NULL,
+                _list_node<Tp> * prev = NULL)
+    {
+      data_ = data;
+      prev_ = prev;
+      next_ = next;
+    }
+    void dump (void) const {
+      std::cout << this << " _list_node: data " << data_ << " prev "
+        << prev_ << " next " << next_ << std::endl;
+    }
+    _list_node<Tp> * prev() const { return prev_; }
+    _list_node<Tp> * next() const { return next_; }
+    void setprev (_list_node<Tp> * newprev) { prev_ = newprev; }
+    void setnext (_list_node<Tp> * newnext) { next_ = newnext; }
+    Tp data (void) const { return data_; }
 }; // class _list_node
-
-template <typename Tp>
-_list_node<Tp>::_list_node (Tp data,
-       _list_node<Tp> * next,
-       _list_node<Tp> * prev)
-{
-  data_ = data;
-  prev_ = prev;
-  next_ = next;
-}
-
-template <typename Tp> void
-_list_node<Tp>::dump(void) const
-{
-  std::cout << this << " _list_node: data " << data_ << " prev " << prev_
-    << " next " << next_ << std::endl;
-}
-
-template <typename Tp> _list_node<Tp> *
-_list_node<Tp>::prev(void) const
-{ return prev_; }
-
-template <typename Tp> _list_node<Tp> *
-_list_node<Tp>::next(void) const
-{ return next_; }
-
-template <typename Tp> void
-_list_node<Tp>::setprev (_list_node<Tp> * newprev)
-{ prev_ = newprev; }
-
-template <typename Tp> void
-_list_node<Tp>::setnext (_list_node<Tp> * newnext)
-{ next_ = newnext; }
-
-template <typename Tp> Tp
-_list_node<Tp>::data (void) const
-{ return data_; }
 
 // --- class list ---
 
@@ -81,31 +53,19 @@ class list {
     _list_node<Tp> * tail_;
     size_t size_;
   public:
-    list (void);
-    size_t size (void) const;
+    list (void) { head_ = NULL; tail_ = NULL; size_ = 0; }
+    size_t size (void) const { return size_; }
     size_t _checklink (void) const;
     void dump (bool all = 0) const;
     _list_node<Tp> * get (long index = 0) const; // index starts from 0
     _list_node<Tp> * insert (Tp data, long index = 0);
-    _list_node<Tp> * append (Tp data);
+    _list_node<Tp> * append (Tp data) { return append(data, size_-1); }
     _list_node<Tp> * append (Tp data, long index);
     void remove (long index);
     void purge (void); // remove all nodes
-    _list_node<Tp> * head (void) const;
-    _list_node<Tp> * tail (void) const;
+    _list_node<Tp> * head (void) const { return head_; }
+    _list_node<Tp> * tail (void) const { return tail_; }
 }; // class list
-
-template <typename Tp>
-list<Tp>::list (void)
-{
-  head_ = NULL;
-  tail_ = NULL;
-  size_ = 0;
-}
-
-template <typename Tp> size_t
-list<Tp>::size (void) const
-{ return size_; }
 
 template <typename Tp> size_t
 list<Tp>::_checklink (void) const
@@ -227,10 +187,6 @@ list<Tp>::append (Tp data, long index)
   return node;
 }
 
-template <typename Tp> _list_node<Tp> *
-list<Tp>::append (Tp data)
-{ return append(data, size_-1); }
-
 template <typename Tp> void
 list<Tp>::remove (long index)
 {
@@ -263,14 +219,6 @@ list<Tp>::purge (void)
   tail_ = NULL;
 }
 
-template <typename Tp> _list_node<Tp> *
-list<Tp>::head (void) const
-{ return head_; }
-
-template <typename Tp> _list_node<Tp> *
-list<Tp>::tail (void) const
-{ return tail_; }
-
 // --- class stack --- stimulate with list
 
 template <typename Tp>
@@ -278,21 +226,13 @@ class stack {
   private:
     list<Tp> s_;
   public:
-    stack (void);
-    _list_node<Tp> * push (Tp data);
+    stack (void) { list<Tp> s_; }
+    _list_node<Tp> * push (Tp data) { return s_.append(data); }
     Tp pop (void);
-    size_t size(void) const;
-    _list_node<Tp> * top (void) const;
-    void dump (bool all = 0) const;
+    size_t size(void) const { return s_.size(); }
+    _list_node<Tp> * top (void) const { return s_.tail(); }
+    void dump (bool all = 0) const { s_.dump(all); }
 }; // class stack
-
-template <typename Tp>
-stack<Tp>::stack (void)
-{ list<Tp> s_; }
-
-template <typename Tp> _list_node<Tp> *
-stack<Tp>::push (Tp data)
-{ return s_.append(data); }
 
 template <typename Tp> Tp
 stack<Tp>::pop (void)
@@ -306,18 +246,6 @@ stack<Tp>::pop (void)
   return ret;
 }
 
-template <typename Tp> size_t
-stack<Tp>::size (void) const
-{ return s_.size(); }
-
-template <typename Tp> _list_node<Tp> *
-stack<Tp>::top (void) const
-{ return s_.tail(); }
-
-template <typename Tp> void
-stack<Tp>::dump (bool all) const
-{ s_.dump(all); }
-
 // --- class queue
 
 template <typename Tp>
@@ -325,36 +253,24 @@ class queue {
   private:
     list<Tp> q_;
   public:
-    queue (void);
-    _list_node<Tp> * push (Tp data);
+    queue (void) { list<Tp> q_; }
+    _list_node<Tp> * push (Tp data) { return q_.append(data); }
     Tp pop (void);
-    size_t size (void) const;
-    void dump (bool all = 0) const;
+    size_t size (void) const { return q_.size(); }
+    void dump (bool all = 0) const { q_.dump(all); }
 }; // class queue
-
-template <typename Tp>
-queue<Tp>::queue (void)
-{ list<Tp> q_; }
-
-template <typename Tp> _list_node<Tp> *
-queue<Tp>::push (Tp data)
-{ return q_.append(data); }
 
 template <typename Tp> Tp
 queue<Tp>::pop (void)
 {
+  if (q_.size() == 0) {
+    std::cout << "warn: pop nothing from empty queue" << std::endl;
+    return (Tp) NULL;
+  }
   Tp ret = q_.head()->data();
   q_.remove(0);
   return ret;
 }
-
-template <typename Tp> size_t
-queue<Tp>::size (void) const
-{ return q_.size(); }
-
-template <typename Tp> void
-queue<Tp>::dump (bool all) const
-{ q_.dump(all); }
 
 // --- class _btree_node ---
 
@@ -371,8 +287,8 @@ class _btree_node {
     Tp data (void);
     _btree_node<Tp> * left  (void);
     _btree_node<Tp> * right (void);
-    void setleft (_btree_node<Tp> * node);
-    void setright (_btree_node<Tp> * node);
+    void setleft (_btree_node<Tp> * node) { left_ = node; }
+    void setright (_btree_node<Tp> * node) { right_ = node; }
     bool isleaf (void) {
       return (left_ == NULL && right_ == NULL);
     }
@@ -411,14 +327,6 @@ _btree_node<Tp>::pdump (int indent) const
   }
 }
 
-template <typename Tp> void
-_btree_node<Tp>::setleft (_btree_node<Tp> * node)
-{ left_ = node; }
-
-template <typename Tp> void
-_btree_node<Tp>::setright (_btree_node<Tp> * node)
-{ right_ = node; }
-
 // --- class btree ---
 
 template <typename Tp>
@@ -426,18 +334,10 @@ class btree {
   private:
     _btree_node<Tp> root_;
   public:
-    btree (void) {
-      _btree_node<Tp> root_;
-    }
-    btree (_btree_node<Tp> * node) {
-      root_ = node;
-    }
-    _btree_node<Tp> * root (void) const {
-      return root_;
-    }
-    void dump (void) const {
-      
-    }
+    btree (void) { _btree_node<Tp> root_; }
+    btree (_btree_node<Tp> * node) { root_ = node; }
+    _btree_node<Tp> * root (void) const { return root_; }
+    void dump (void) const { }
     size_t size (void);
 }; // class btree
 
