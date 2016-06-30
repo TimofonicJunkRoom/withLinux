@@ -65,6 +65,7 @@ class list {
     void purge (void); // remove all nodes
     _list_node<Tp> * head (void) const { return head_; }
     _list_node<Tp> * tail (void) const { return tail_; }
+    _list_node<Tp> * locate (Tp data) const;
 }; // class list
 
 template <typename Tp> size_t
@@ -217,6 +218,16 @@ list<Tp>::purge (void)
   size_ = 0;
   head_ = NULL;
   tail_ = NULL;
+}
+
+template <typename Tp> _list_node<Tp> *
+list<Tp>::locate (Tp data) const
+{
+  _list_node<Tp> * cursor = head_;
+  if (cursor == NULL) return NULL;
+  while (cursor->data() != data && cursor->next() != NULL)
+    cursor = cursor->next();
+  return cursor;
 }
 
 // --- class stack --- stimulate with list

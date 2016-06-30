@@ -80,6 +80,11 @@ main (void)
     l.dump(1);
   OK;
 
+  TEST ("list locate");
+    assert(l.locate(10));
+    assert(l.locate(10) == l.get(3));
+  OK;
+
   TEST ("list remove");
     l.remove(1);
     l.dump(1);
