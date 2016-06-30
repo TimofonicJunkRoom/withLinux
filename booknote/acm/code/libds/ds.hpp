@@ -295,14 +295,13 @@ class _btree_node {
     _btree_node (Tp data = (Tp) NULL);
     void dump (int indent = 0) const; // dfs, parent left right order
     void pdump (int indent = 0) const; // pretty dump, dfs, parent left right order
+    void itdump (int indent = 0); // non-recursive dump, bfs
     Tp data (void);
-    _btree_node<Tp> * left  (void);
-    _btree_node<Tp> * right (void);
+    _btree_node<Tp> * left  (void) { return left_; };
+    _btree_node<Tp> * right (void) { return right_; };
     void setleft (_btree_node<Tp> * node) { left_ = node; }
     void setright (_btree_node<Tp> * node) { right_ = node; }
-    bool isleaf (void) {
-      return (left_ == NULL && right_ == NULL);
-    }
+    bool isleaf (void) { return (left_ == NULL && right_ == NULL); }
 }; // class _btree_node
 
 template <typename Tp>
@@ -336,6 +335,20 @@ _btree_node<Tp>::pdump (int indent) const
     for (int i = 0; i < indent; i++) std::cout << " ";
     std::cout << ")" << std::endl;
   }
+}
+
+template <typename Tp> void
+_btree_node<Tp>::itdump (int indent)
+{
+  queue<_btree_node<Tp> *> q;
+  _btree_node<Tp> * cursor = this;
+  q.push(cursor);
+  do {
+    cursor = q.pop();
+    std::cout << cursor << std::endl;
+    if (cursor->left() != NULL) q.push(cursor->left());
+    if (cursor->right() != NULL) q.push(cursor->right());
+  } while (q.size() != 0 && cursor != NULL);
 }
 
 // --- class btree ---
