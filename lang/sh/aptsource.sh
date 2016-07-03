@@ -11,11 +11,11 @@ trap "rm -f $tempfile" 0 0 1 2 3 9 15
 
 # open dialog
 # --[ select mirror with radiolist
-dialog --stdout \
+dialog --stdout --no-lines --no-shadow \
   --title "Select Mirror" \
   --clear "$@" \
   --radiolist "Select a mirror:" \
-    20 72 5 \
+    16 72 0 \
     "ftp.cn.debian.org" "" on \
     "mirror.tuna.tsinghua.edu.cn" "" off \
     "ftp.xdlinux.info" "" off \
