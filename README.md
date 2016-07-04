@@ -33,6 +33,7 @@ Installing Linux
 1. [My dotfiles](./dotfile) and [its deploy script](./deploy)  
 1. [(/boot + LUKS (LVM (/ + /home))) Linux installation](./install/lvm-over-luks.md)  
 1. [Alpine linux note](./install/alpine.md)  
+1. [OpenBSD note](./install/openbsd.md)  
 
 Utilities / Miscellaneous  
 ---
