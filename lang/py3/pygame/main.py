@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 # reference: pygame tutorial, including chimp
 # reference: pygame examples
+# reference: pygame/docs/tut/DisplayModes.html
+'''
+pygame.display.set_mode((width, height), flags, depth)
+'''
 
 import os
 import sys
@@ -8,6 +12,31 @@ import sys
 import pygame as pg
 from pygame.locals import *
 assert(pg.font)
+
+arrow = ( "xX                      ",
+          "X.X                     ",
+          "X..X                    ",
+          "X...X                   ",
+          "X....X                  ",
+          "X.....X                 ",
+          "X......X                ",
+          "X.......X               ",
+          "X........X              ",
+          "X.........X             ",
+          "X......XXXXX            ",
+          "X...X..X                ",
+          "X..XX..X                ",
+          "X.X XX..X               ",
+          "XX   X..X               ",
+          "X     X..X              ",
+          "      X..X              ",
+          "       X..X             ",
+          "       X..X             ",
+          "        XX              ",
+          "                        ",
+          "                        ",
+          "                        ",
+          "                        ")
 
 def load_image(name, colorkey=None):
   fullname = os.path.join('data',name)
@@ -75,8 +104,10 @@ class Chimp(pg.sprite.Sprite):
 def main():
   print('my pygame ...')
   pg.init()
+  pg.font.init()
   wsize = width, height = 1280, 720
   os.environ['SDL_VIDEO_CENTERED'] = '1'
+  # flags: NOFRAME, FULLSCREEN
   screen = pg.display.set_mode(wsize, NOFRAME, 0)
   pg.display.set_caption('my Pygame')
   #pg.mouse.set_visible(0)
@@ -101,6 +132,23 @@ def main():
   chimp = Chimp()
   allsprites = pg.sprite.RenderPlain((fist,chimp,ball))
   clock = pg.time.Clock()
+
+  print('set mouse')
+  hotspot = None
+  for y in range(len(arrow)):
+    for x in range(len(arrow)):
+      if arrow[y][x] in ['x', ',', 'O']:
+        hotspot = x, y
+        break
+    if hotspot != None:
+      break
+  assert(hotspot)
+  s2 = []
+  for line in arrow:
+    s2.append(line.replace('x','X').replace(',','.').replace('O','o'))
+  cursor, mask = pg.cursors.compile(s2, 'X', '.', 'o')
+  cursize = len(arrow[0]), len(arrow)
+  pg.mouse.set_cursor(cursize, hotspot, cursor, mask)
 
   print('main loop ...')
   running = True
