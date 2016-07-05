@@ -15,3 +15,9 @@ http://anonscm.debian.org/gitweb/?p=mirrorer/reprepro.git;a=blob_plain;f=docs/sh
 https://www.debian-administration.org/
 
 http://askubuntu.com/questions/71510/how-do-i-create-a-ppa
+
+```shell
+#!/bin/sh
+dpkg-scanpackages . | gzip > Packages.gz
+```
+
