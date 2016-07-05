@@ -49,6 +49,8 @@ op.set_nB (xxx);
 double result = op.GetResult();
 ```
 
+see [code](./simple-factory.cc)  
+
 UML图
 
 ## 策略模式
