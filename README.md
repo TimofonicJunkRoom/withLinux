@@ -77,6 +77,7 @@ Utilities / Miscellaneous
 1. [Flash Solution for Debian](./util/flash.md)  
 1. [package:fbi -- frame buffer image viewer, pdf is also browsable in FB]
 1. zhcon -- Chinese character in tty
+1. [cpio note](./util/cpio.md)  
 
 Graphical Interface Stuff (Xorg)  
 ---
