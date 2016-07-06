@@ -10,7 +10,11 @@ using namespace std;
 
 class CashSuper {
 public:
-  double acceptCash (double money) { return money; }
+  virtual double acceptCash (double money) {
+    // set it to virtual, so the Variant classes
+    // are able to override this method.
+    return money;
+  }
 };
 
 class CashNormal : public CashSuper {
@@ -85,4 +89,3 @@ main (void)
   cout << cs3->GetResult(price) << endl;
   return 0;
 }
-//FIXME: there is bug but I don't know where it is.
