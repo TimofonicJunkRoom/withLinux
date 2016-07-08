@@ -17,6 +17,10 @@ and there is no notable difference in grub config, either.
 ```
 linux /vmlinuz root=/dev/mapper/debian-vg-root ro quiet
 ```
+but note something should appear in file `/etc/crypttab`, e.g.
+```
+cdisk0 UUID=12345678-9abc-def012345-6789abcdef01 none luks
+```
 
 LVM over LUKS for ArchLinux
 ---
