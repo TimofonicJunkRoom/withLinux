@@ -2,6 +2,7 @@
 # reference: pygame tutorial, including chimp
 # reference: pygame examples
 # reference: pygame/docs/tut/DisplayModes.html
+# reference: Beginning Game Development with Python and Pygame –From Novice to Professional
 '''
 pygame.display.set_mode((width, height), flags, depth)
 '''
