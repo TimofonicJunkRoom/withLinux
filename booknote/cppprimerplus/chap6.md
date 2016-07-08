@@ -13,7 +13,11 @@ C++ can use them without including that header.
 ## cctype library
 ```
 isalpha()
+isspace()
+isdigit()
+ispunct()
 ```
+`include <cctype>`
 
 ## the ?: operator
 ...
