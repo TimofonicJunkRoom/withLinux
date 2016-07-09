@@ -46,3 +46,13 @@ aptitude moo -vvvv
 ```
 
 17. vrms , the virtual Richard.M.Stallman
+
+18. fbi, framebuffer image viewer; fbgs, framebuffer pdf reader
+
+19. tpp, text presentation
+
+20. slurm
+
+21. iftop, iptraf
+
+22. cacafire, from caca-utils pacakge
