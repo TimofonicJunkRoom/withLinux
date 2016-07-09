@@ -1,6 +1,9 @@
 C++ Primer Plus
 ===
 
+Chaper reviews at the end of each chaper are good material for reviewing
+c++.
+
 Table of Contents
 ---
 
