@@ -1,0 +1,50 @@
+(ROOT
+  (S
+    (NP
+      (NP (DT a) (JJ big) (JJ red) (NN telephone) (NN booth))
+      (PP (IN that)
+        (NP (DT a) (NN man))))
+    (VP (VBZ is)
+      (VP (VBG standing)
+        (PP (IN in))))
+    (. .)))
+
+(ROOT
+  (NP
+    (NP (DT a) (NN person) (NN standing))
+    (PP (IN inside))
+    (PP (IN of)
+      (NP (DT a) (NN phone) (NN booth)))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT this))
+    (VP (VBZ is)
+      (NP
+        (NP (DT an) (NN image))
+        (PP (IN of)
+          (NP
+            (NP (DT a) (NN man))
+            (PP (IN in)
+              (NP (DT a) (NN phone) (NN booth)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT A) (NN man))
+    (VP (VBZ is)
+      (VP (VBG standing)
+        (PP (IN in)
+          (NP (DT a) (JJ red) (NN phone) (NN booth)))))
+    (. .)))
+
+(ROOT
+  (NP
+    (NP (DT A) (NN man))
+    (VP (VBG using)
+      (NP
+        (NP (DT a) (NN phone))
+        (PP (IN in)
+          (NP (DT a) (NN phone) (NN booth)))))
+    (. .)))
