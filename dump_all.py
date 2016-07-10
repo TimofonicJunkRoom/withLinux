@@ -43,10 +43,20 @@ with open('coco_all_sents.txt', 'w+') as f:
       #print ('%s: %s'%(eachkey, eachsent))
       f.write('%s: %s\n'%(eachkey, eachsent.strip()))
 
-print('validation: out-of-order raw sents')
+print('stage3: validation: out-of-order raw sents')
 with open('coco_all_sents.val.txt', 'w+') as f:
   for eachsent in annotationsall:
     f.write('%s: %s\n'%(eachsent['image_id'], eachsent['caption'].strip()))
 
 os.system('''nl coco_all_sents.txt | tail -n1 ''')
 os.system('''nl coco_all_sents.val.txt | tail -n1 ''')
+
+print('stage4: strip image_num')
+with open('coco_all_sents.txt', 'r') as fi:
+  with open('coco_all_sents-n.txt', 'w+') as fo:
+    lines = fi.readlines()
+    for line in lines:
+      line = line.strip().split(' ')[1:] # remove heading image_num
+      fo.write('%s\n'%(' '.join(line)))
+
+os.system('''nl coco_all_sents-n.txt | tail -n1 ''')
