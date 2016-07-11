@@ -2,12 +2,13 @@
 ''' Split and parse all output from dump_all.py '''
 
 import os
+import sys
 
 CP='../stanford-corenlp-full-2015-12-09/*'
 command='java -cp "' + CP + '" -Xmx3g edu.stanford.nlp.pipeline.StanfordCoreNLP \
  -annotators tokenize,ssplit,pos,lemma,ner,parse,dcoref \
  -file %s \
- -outputFormat text'
+ -outputFormat text 1>/dev/null 2>/dev/null'
 
 destdir='coco_all_sents.st5.split'
 
@@ -38,11 +39,14 @@ with open(destdir + '/part' + str(part), 'w+') as f:
   print(part+1, '/', len(lines)/1000)
 
 os.sync()
+sys.stdout.flush()
 
 import math
 from multiprocessing import Pool
 def parse(part):
   os.system(command%(destdir+'/part'+str(part)))
+  print('done part', part)
+  sys.stdout.flush()
 parts = list(range(math.ceil(len(lines)/1000)))
 print(len(parts), 'parts', parts[0], parts[-1])
 print('mapping', len(parts), 'tasks to process pool')
