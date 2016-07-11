@@ -48,10 +48,11 @@ with open('coco_all_sents.st2.txt', 'w+') as f:
         tmp = list(eachsent)
         tmp[-1] = ' '
         eachsent = ''.join(tmp)
-      eachsent = eachsent.strip().replace('.', ',').strip().replace('?',',').strip()
-      eachsent = eachsent.strip() + ' .'
-      if eachsent[-1] != '.':
-        eachsent = eachsent + '.'
+      eachsent = eachsent.strip().replace('.', ',').strip()
+      if eachsent[-1] == '?':
+        pass
+      else:
+        eachsent = eachsent.strip() + ' .'
       f.write('%s: %s\n'%(eachkey, eachsent))
 
 os.system('''nl coco_all_sents.st2.txt | tail -n1 ''')
