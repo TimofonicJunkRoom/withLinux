@@ -44,15 +44,13 @@ with open('coco_all_sents.st2.txt', 'w+') as f:
       if len(eachsent.strip()) == 0:
         continue
       eachsent = eachsent.strip().replace('\n', ' ').strip()
-      if eachsent[-1] == '.':
+      if eachsent[-1] == '.' or eachsent[-1] == '?':
         tmp = list(eachsent)
         tmp[-1] = ' '
         eachsent = ''.join(tmp)
       eachsent = eachsent.strip().replace('.', ',').strip()
-      if eachsent[-1] == '?':
-        pass
-      else:
-        eachsent = eachsent.strip() + ' .'
+      eachsent = eachsent.strip().replace('?', ',').strip()
+      eachsent = eachsent.strip() + ' .'
       f.write('%s: %s\n'%(eachkey, eachsent))
 
 os.system('''nl coco_all_sents.st2.txt | tail -n1 ''')
@@ -62,7 +60,7 @@ with open('coco_all_sents.st2.txt', 'r') as f:
   #print(type(buf))
   count = 0
   for char in buf:
-    if char == '.':
+    if char == '.' or char == '?':
       count = count + 1
     if not char in d:
       d[char] = 0
