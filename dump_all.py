@@ -41,11 +41,15 @@ print('stage2: writing text file')
 with open('coco_all_sents.st2.txt', 'w+') as f:
   for eachkey in d.keys():
     for eachsent in d[eachkey]:
-      eachsent = eachsent.strip().replace('\n', ' ').strip()
-      eachsent = eachsent.strip().replace('.', ',').strip()
-      eachsent = eachsent.strip() + '.'
       if len(eachsent.strip()) == 0:
         continue
+      eachsent = eachsent.strip().replace('\n', ' ').strip()
+      if eachsent[-1] == '.':
+        tmp = list(eachsent)
+        tmp[-1] = ' '
+        eachsent = ''.join(tmp)
+      eachsent = eachsent.strip().replace('.', ',').strip().replace('?',',').strip()
+      eachsent = eachsent.strip() + '.'
       if eachsent[-1] != '.':
         eachsent = eachsent + '.'
       f.write('%s: %s\n'%(eachkey, eachsent))
@@ -53,12 +57,17 @@ with open('coco_all_sents.st2.txt', 'w+') as f:
 os.system('''nl coco_all_sents.st2.txt | tail -n1 ''')
 with open('coco_all_sents.st2.txt', 'r') as f:
   buf = f.read()
+  d = {}
   #print(type(buf))
   count = 0
   for char in buf:
     if char == '.':
       count = count + 1
+    if not char in d:
+      d[char] = 0
+    d[char] = d[char] + 1
   print('note:', count, 'dots found')
+  print(d.keys())
   assert(count == 616767)
 
 print('stage3: strip coco_all_sents.txt')
