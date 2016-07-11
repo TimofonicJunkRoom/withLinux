@@ -11,7 +11,7 @@ command='java -cp "' + CP + '" -Xmx3g edu.stanford.nlp.pipeline.StanfordCoreNLP 
  -outputFormat text 1>/dev/null 2>/dev/null'
 
 destdir='coco_all_sents.st5.split'
-partnum=100
+partnum=5000
 
 with open('coco_all_sents.st5.txt', 'r') as f:
   lines = f.readlines()
