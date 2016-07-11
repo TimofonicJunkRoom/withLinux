@@ -52,6 +52,7 @@ with open('coco_all_sents.st2.txt', 'w+') as f:
       eachsent = eachsent.strip() + '.'
       eachsent = eachsent.replace('St.','St .').replace('st.','st .') # fix merger triggered by St. (part1286)
       eachsent = eachsent.replace('Dr.','Dr .').replace('dr.','dr .') # fix merger triggered by Dr. (part282)
+      eachsent = eachsent.replace('m.','m .').replace('M.','M .') # fix merger triggered by m. (part531)
       if eachsent[-1] != '.':
         eachsent = eachsent + '.'
       f.write('%s: %s\n'%(eachkey, eachsent))
