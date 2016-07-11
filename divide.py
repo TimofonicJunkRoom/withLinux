@@ -28,14 +28,16 @@ while (cursor < len(lines)):
   if count >= 1000:
     with open(destdir + '/part' + str(part), 'w+') as f:
       f.write(''.join(buf))
+      os.sync()
       print(part+1, '/', len(lines)/1000)
+    os.system(command%(destdir+'/part'+str(part)))
     count = 0
     part = part + 1
     buf.clear()
-    os.system(command%(destdir+'/part'+str(part)))
 
 with open(destdir + '/part' + str(part), 'w+') as f:
   f.write(''.join(buf))
+  os.sync()
   print(part+1, '/', len(lines)/1000)
 os.system(command%(destdir+'/part'+str(part)))
 
