@@ -20,7 +20,7 @@ Table of Contents
 11. [working with classes](./chap11.md)  
 12. [classes and dynamic memory allocation](./chap12.md)  
 13. [class inheritance](./chap13.md)  
-14. [reusing code in c++]
+14. [reusing code in c++](./chap14.md)  
 15. [friends, exceptions, and more]
 16. [the string calss and the standard template library]
 17. [input, output, and files]
