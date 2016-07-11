@@ -17,6 +17,14 @@ Terminal
 ---
 1. `uxterm`  
 
+> note, both `Ctrl^LeftClick` and `Ctrl^RightClick` will trigger menu.  
+> note, change font with this:  
+```
+$ cat .Xdefaults
+XTerm*faceName: Ubuntu Mono
+```
+> note, download ubuntu font here `ubuntu/pool/main/u/ubuntu-font-family-sources/`  
+
 System Monitoring
 ---
 1. `conky`  
