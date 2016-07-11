@@ -22,6 +22,9 @@ Terminal
 ```
 $ cat .Xdefaults
 XTerm*faceName: Ubuntu Mono
+XTerm*faceSize: 13
+XTerm*background: black
+XTerm*foreground: green
 ```
 > note, download ubuntu font here `ubuntu/pool/main/u/ubuntu-font-family-sources/`  
 
