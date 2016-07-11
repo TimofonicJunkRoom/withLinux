@@ -3,8 +3,8 @@
 
 import os
 
-CP='../../treelstm/data/stanford-corenlp-full-2015-12-09/*'
-command='java -cp "' + CP + '" -Xmx4g edu.stanford.nlp.pipeline.StanfordCoreNLP \
+CP='../stanford-corenlp-full-2015-12-09/*'
+command='java -cp "' + CP + '" -Xmx3g edu.stanford.nlp.pipeline.StanfordCoreNLP \
  -annotators tokenize,ssplit,pos,lemma,ner,parse,dcoref \
  -file %s \
  -outputFormat text'
@@ -28,7 +28,6 @@ while (cursor < len(lines)):
   if count >= 1000:
     with open(destdir + '/part' + str(part), 'w+') as f:
       f.write(''.join(buf))
-      os.sync()
       print(part+1, '/', len(lines)/1000)
     count = 0
     part = part + 1
@@ -36,18 +35,19 @@ while (cursor < len(lines)):
 
 with open(destdir + '/part' + str(part), 'w+') as f:
   f.write(''.join(buf))
-  os.sync()
   print(part+1, '/', len(lines)/1000)
+
+os.sync()
 
 import math
 from multiprocessing import Pool
-pool = Pool()
+def parse(part):
+  os.system(command%(destdir+'/part'+str(part)))
 parts = list(range(math.ceil(len(lines)/1000)))
 print(len(parts), 'parts', parts[0], parts[-1])
 print('mapping', len(parts), 'tasks to process pool')
 
-def parse(part):
-  os.system(command%(destdir+'/part'+str(part)))
+pool = Pool(6)
 pool.map(parse, parts)
 pool.close()
 pool.join()
