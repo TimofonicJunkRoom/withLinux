@@ -42,6 +42,8 @@ with open('coco_all_sents.st2.txt', 'w+') as f:
   for eachkey in d.keys():
     for eachsent in d[eachkey]:
       eachsent = eachsent.strip().replace('\n', ' ').strip()
+      eachsent = eachsent.strip().replace('.', ',').strip()
+      eachsent = eachsent.strip() + '.'
       if len(eachsent.strip()) == 0:
         continue
       if eachsent[-1] != '.':
@@ -49,6 +51,15 @@ with open('coco_all_sents.st2.txt', 'w+') as f:
       f.write('%s: %s\n'%(eachkey, eachsent))
 
 os.system('''nl coco_all_sents.st2.txt | tail -n1 ''')
+with open('coco_all_sents.st2.txt', 'r') as f:
+  buf = f.read()
+  #print(type(buf))
+  count = 0
+  for char in buf:
+    if char == '.':
+      count = count + 1
+  print('note:', count, 'dots found')
+  assert(count == 616767)
 
 print('stage3: strip coco_all_sents.txt')
 with open('coco_all_sents.st2.txt', 'r') as fi:
