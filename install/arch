@@ -134,3 +134,11 @@ exec gnome-session
    exec startkde
    exec gnome-session
 
+## On Error
+
+* pacman GPG error
+```
+error: GPGME error: No data
+error: failed to update community (invalid or corrupted database (PGP signature))
+```
+set `SigLevel = Never` for `[community]` in this case. Note, this is a bad solution.
