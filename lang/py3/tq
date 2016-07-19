@@ -94,7 +94,8 @@ def daemonize(*,
         os.dup2(f.fileno(), sys.stderr.fileno())
 
     # Write the PID file
-    with open(pidfile,'w') as f:
+    os.system('touch {}'.format(PIDFILE))
+    with open(pidfile,'w+') as f:
         print(os.getpid(),file=f)
 
     # Arrange to have the PID file removed on exit/signal
@@ -214,7 +215,7 @@ def Usage (argv0):
     print('  purge   -> remove log file and sqlite3 db file')
     print('  -- TASK -> assign TASK (a command line)')
     print()
-    print('tq version: 0.0d')
+    print('tq version: 0.0e')
 
 def tqd_start(uid, pidfile, logfile, sqlite):
     log.info('starting Tqd ...')
@@ -231,9 +232,10 @@ def tqd_start(uid, pidfile, logfile, sqlite):
 if __name__ == '__main__':
 
     UID = os.getuid()
-    PIDFILE = '/tmp/tqd_{}.pid'.format(str(UID))
-    LOGFILE = '/tmp/tqd_{}.log'.format(str(UID))
-    SQLITE  = '/tmp/tqd_{}.db'.format(str(UID))
+    HOME = os.getenv('HOME')
+    PIDFILE = os.path.join(HOME, '.tqd_{}.pid'.format(str(UID)))
+    LOGFILE = os.path.join(HOME, '.tqd_{}.log'.format(str(UID)))
+    SQLITE  = os.path.join(HOME, '.tqd_{}.db'.format(str(UID)))
 
     if len(sys.argv) < 2:
         Usage(sys.argv[0])
