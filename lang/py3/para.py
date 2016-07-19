@@ -62,6 +62,12 @@ pool2.close()
 pool2.join()
 timer.stop()
 
+print('I: create Pool with \'with\'')
+timer.set()
+with Pool() as pool6:
+  result6 = pool6.map(math.sin, task)
+timer.stop()
+
 print('I: using one-line for')
 timer.set()
 result0 = [ math.sin(i) for i in range(number_tasks) ]
