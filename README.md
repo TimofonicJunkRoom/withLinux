@@ -345,6 +345,8 @@ Programming under Linux
 1. Maxima  
   1. [My maxima Note](./lang/maxima.md)  
 1. [Go](./lang/go)  
+1. [Perl](./lang/perl)  
+  1. [Perl introduction](./lang/perl/intro.pl)  
 1. Rust  
   1. [Learn RUST by example](http://rustbyexample.com/)  
 1. [Julia]  
