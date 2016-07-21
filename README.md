@@ -274,7 +274,7 @@ Open Source Licenses
 ---
 1. [gpl-faq](http://www.gnu.org/licenses/gpl-faq.html#NoticeInSourceFile)  
 
-Programming under Linux  
+Programming, including Tool Languages  
 ---
 1. Overview  
   1. [Osamu Aoki's Fun to Program](https://people.debian.org/~osamu/fun2prog.html)  
