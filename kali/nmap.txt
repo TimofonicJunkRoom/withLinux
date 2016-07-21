@@ -72,3 +72,5 @@ Key stroke
 
  p: enable packet trace
  n: report status
+ <space>: show current progress
+ vVdD:...
