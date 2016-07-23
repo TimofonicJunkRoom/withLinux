@@ -53,7 +53,7 @@ set number		" Line number
 set ts=4
 set shiftwidth=4
 set scrolloff=7
-set cc=80 " setting right margin to 80 characters
+set cc=80 " setting right margin to 80 characters, cc==colorcolumn
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
