@@ -369,7 +369,7 @@ Programming, including Tool Languages
   1. http://poj.org/  
   1. https://leetcode.com  
 1. Collections  
-  1. My Logging Libraries  
+  1. My Logging Libraries, see [Rainbowlog](https://github.com/CDLuminate/rainbowlog)  
     1. [In C](https://github.com/CDLuminate/cda/tree/master/lib)  
     1. [In Lua](./lang/lua/logging/lumin_log.lua)  
     1. [In BASH Shell](./lang/lumin_log.sh)  
