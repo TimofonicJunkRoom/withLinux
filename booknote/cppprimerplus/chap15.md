@@ -33,4 +33,48 @@ class Coach { ... };
 ```
 
 * Exceptions
+```
+#include <cstdlib>
+void abort(void);
+```
+
+try-catch
+```
+double x, z;
+while (std::cin >> x) {
+  try {
+    z = test(x);
+  } catch (const char * s) {
+    std::cout << s << std::endl;
+    continue;
+  }
+}
+double test (double x) {
+  if (x == 0.) {
+    throw "0 is not allowed"; 
+  }
+  return x;
+}
+```
+
+* Run-time Type Identification (RTTI)
+
+`dynamic_cast` operator
+```
+// if this pointer type is not safe, pm will recieve NULL
+Superb * pm = dynamic_cast<Superb *> (pg);
+// general form
+dynamic_cast<Type *> (pt)
+```
+
+`typeid` operator
+```
 TODO
+```
+
+`static_cast` operator
+
+`const_cast` operator
+
+`reinterpret_cast` operator
+
