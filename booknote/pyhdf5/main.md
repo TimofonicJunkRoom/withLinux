@@ -234,4 +234,94 @@ array([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
 ValueError: Step must be >= 1 (got -1)
 ```
 
-# TODO: page 30
+multidimentional and scalar slicing
+```
+>>> dset = f.create_dataset('4d', shape=(100, 80, 50, 20))
+>>> dset[0,...,0].shape
+(80, 50)
+
+>>> dset[...].shape
+(100, 80, 50, 20)
+
+>>> dset = f.create_dataset('1d', shape=(1,), data=42)
+>>> dset.shape
+(1,)
+>>> dset[0]
+42
+>>> dset[...]
+array([42])
+
+>>> dset = f.create_dataset('0d', data=42)
+>>> dset.shape
+()
+>>> dset[0]
+ValueError: Illegal slicing argument for scalar dataspace
+>>> dset[...]
+array(42)
+
+>>> dset[()]
+42
+```
+
+boolean indexing
+```
+>>> data = np.random.random(10)*2 - 1
+>>> data
+array([ 0.98885498, -0.28554781, -0.17157685, -0.05227003, 0.66211931,
+0.45692186, 0.07123649, -0.40374417, 0.22059144, -0.82367672])
+>>> dset = f.create_dataset('random', data=data)
+
+>>> dset[data<0] = 0
+>>> dset[...]
+array([ 0.98885498, 0.45692186, 0.  , 0.07123649, 0.  0.  ,
+, 0.  , 0.22059144, 0.66211931, 0.  ])
+
+>>> dset[data<0] = -1*data[data<0]
+>>> dset[...]
+array([ 0.98885498, 0.28554781, 0.17157685, 0.05227003, 0.66211931,
+0.45692186, 0.07123649, 0.40374417, 0.22059144, 0.82367672])
+```
+
+coordinate lists
+```
+>>> dset = f['range']
+>>> dset[...]
+array([0,1,2,3,4,5,6,7,8,9])
+
+>>> dset[ [1,2,7] ]
+array([1,2,7])
+```
+
+automatic broadcasting
+```
+>>> dset = f2['big']
+>>> dset.shape
+(100, 1000)
+
+>>> data = dset[0,:]
+>>> for idx in xrange(100):
+...  dset[idx,:] = data
+
+>>> dset[:,:] = dset[0,:]
+```
+
+reading directly to and existing array
+
+*TODO: page 34*
+
+# Chunking and Compression
+
+TODO
+
+compression filters
+```
+>>> dset = f.create_dataset("BigDataset",(1000,1000), dtype='f', compression="gzip")
+>>> dset.compression
+'gzip'
+```
+
+TODO
+
+# Group, link, iteration
+
+TODO
