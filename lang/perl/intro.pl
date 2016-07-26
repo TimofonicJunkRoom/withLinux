@@ -29,5 +29,53 @@ print "\n";
 if (@animals < 5) {
   print "array @animals < 5\n";
 }
+print @animals[0,1], "\n";
+print @animals[0..2], "\n";
+print @animals[1..$#animals], "\n"; # slicing operation
 
-print "TODO\\nn";
+my @sorted = sort @animals;
+my @backwards = reverse @numbers;
+print @sorted, "\n";
+print @backwards, "\n";
+
+my %fruit_color_simple = ("apple", "red", "banana", "yellow"); # hashes
+my %fruit_color = (
+  apple => "red",
+  banana => "yellow",
+);
+print %fruit_color, "\n";
+print $fruit_color{"apple"}, "\n";
+my @fruits = keys %fruit_color; # get keys of the hash table
+my @colors = values %fruit_color; # get values from the hash table
+
+# variable scoping
+## my $var = "value"; # create a local variable
+## $var = "value";    # create a global variable
+
+# conditional and loop constructs
+
+##if ( condition ) {
+##  ...
+##} elsif ( condition2 ) {
+##  ...
+##} else {
+##  ...
+##}
+
+##unless ( condition ) {
+##  ... 
+##}
+##equivalant to 
+##if (! condition ) { ... }
+
+## if ($zippy) {
+##     print "Yow!"; // traditional way
+## }
+## print "Yow!" if $zippy; // perlish
+## print "We have no bananas" unless $bananas; // perlish
+
+## while (condition) { ... }
+## until (condition) { ... }
+## print "hello" while 1;
+
+print "TODO\n";
