@@ -193,6 +193,7 @@ Virtualization
 1. Fake Virtualizations  
   1. traditional chroots  
   1. schroot: [Archwiki:schroot](https://wiki.archlinux.org/index.php/Install_bundled_32-bit_system_in_64-bit_system)[ Debianwiki:Schroot](https://wiki.debian.org/Schroot)    
+    1. [schroot note](./virt/schroot.md)  
 1. Virtualbox  
   1. [Extremely slow network transmission speed within loop between host and guest](./virt/virt-slow-transmission.md)  
   1. [Virtualbox Shared Directory](./virt/vbox-shared-dir.md)  
