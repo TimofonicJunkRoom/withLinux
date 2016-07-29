@@ -365,6 +365,7 @@ Programming, including Tool Languages
   1. [BLAS Selector script using dialog](./lang/sh/blasselector.sh)  
 1. CUDA  
   1. [cuda example](./lang/cuda/)  
+  1. [cuda intro cu](./lang/cuda/src/intro.cu)  
 1. [IBM CPlex]
 1. Online judges
   1. http://poj.org/  
