@@ -5,6 +5,8 @@
  * @author Lumin <cdluminate@gmail.com>
  */
 
+#define USE_CUDA
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,6 +14,10 @@
 #include <omp.h>
 #include <sys/time.h> // high precision timer, gettimeofday()
 #include <assert.h>
+
+#ifdef USE_CUDA
+  #include "cudabench.h" // cuda benchmarks
+#endif
 
 /**
  * @brief flag, set 1 to dump all debug information
@@ -493,6 +499,16 @@ main (int argc, char ** argv, char ** envp)
 
 		if (debug) dump_vector(A, VLEN);
 		if (debug) dump_vector(C, VLEN);
+
+#ifdef USE_CUDA
+		// cuda copy
+		gettimeofday(&tvs, NULL);
+		dcopy_cuda (A, C, VLEN);
+		gettimeofday(&tve, NULL);
+		timediff (tvs, tve, "dcopy in cuda");
+		if (debug) dump_vector(A, VLEN);
+		if (debug) dump_vector(C, VLEN);
+#endif
 
 		// post-test
 		del_vector(A);
