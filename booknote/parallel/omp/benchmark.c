@@ -680,6 +680,10 @@ main (int argc, char ** argv, char ** envp)
     benchmark_dscal (dscal_serial);
     printf ("I: [dscal_parallel] test series\n");
     benchmark_dscal (dscal_parallel);
+#ifdef USE_CUDA
+    printf ("I: [dscal_cuda] test series\n");
+    benchmark_dscal (dscal_cuda);
+#endif // USE_CUDA
 
   }
 	hrulefill();
