@@ -131,6 +131,20 @@ dasum_parallel (const double * a, size_t n)
 }
 
 /**
+ * @brief tester for dasum
+ */
+void
+test_dasum (double (* dasum)(const double * a, size_t n))
+{
+  printf("[ .. ] test dasum@%p\n", dasum);
+  double * A = new_vector(128);
+  fill_vector(A, 128, 1.);
+  double ret = dasum (A, 128);
+  assert(fabs(ret - 128.) < 1e-5);
+  printf("[ OK ] test dcopy@%p\n", dasum);
+}
+
+/**
  * @brief dscal, L-1 BLAS, serial
  */
 void
@@ -651,7 +665,12 @@ main (int argc, char ** argv, char ** envp)
   }
   hrulefill();
   { // asum test
-    // FIXME: unit tests for asum
+    // unit tests
+    test_dasum(dasum_serial);
+    test_dasum(dasum_parallel);
+#ifdef USE_CUDA
+    test_dasum(dasum_cuda);
+#endif
 
     // run benchmarks
     printf ("I: [dasum_serial] test series\n");
