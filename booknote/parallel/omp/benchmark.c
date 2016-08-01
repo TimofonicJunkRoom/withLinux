@@ -6,7 +6,7 @@
  */
 
 #define USE_CUDA
-//#undef USE_CUDA
+#undef USE_CUDA
 
 #include <math.h>
 #include <stdio.h>
@@ -643,16 +643,24 @@ main (int argc, char ** argv, char ** envp)
   fprintf(stdout, "[OK]\n");
 
   hrulefill();
-  { // copy test
+  { // start unit tests
 
-    // unit tests
     test_dcopy(dcopy_serial);
     test_dcopy(dcopy_parallel);
 #ifdef USE_CUDA
     test_dcopy(dcopy_cuda);
 #endif // USE_CUDA
 
-    // run benchmarks
+    test_dasum(dasum_serial);
+    test_dasum(dasum_parallel);
+#ifdef USE_CUDA
+    test_dasum(dasum_cuda);
+#endif
+
+  } // end unit tests
+  hrulefill();
+  { // copy test
+
     printf ("I: [dcopy_serial] test series\n");
     benchmark_dcopy (dcopy_serial);
     printf ("I: [dcopy_parallel] test series\n");
@@ -665,14 +673,7 @@ main (int argc, char ** argv, char ** envp)
   }
   hrulefill();
   { // asum test
-    // unit tests
-    test_dasum(dasum_serial);
-    test_dasum(dasum_parallel);
-#ifdef USE_CUDA
-    test_dasum(dasum_cuda);
-#endif
 
-    // run benchmarks
     printf ("I: [dasum_serial] test series\n");
     benchmark_dasum (dasum_serial);
     printf ("I: [dasum_parallel] test series\n");
