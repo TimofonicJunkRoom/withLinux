@@ -6,8 +6,9 @@
  */
 
 #define USE_CUDA
-#undef USE_CUDA
+//#undef USE_CUDA
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,7 +58,9 @@ void
 check_vector_eq (const double * src, const double * dest, size_t n)
 {
   for (size_t i = 0; i < n; i++) {
-    assert(src[i] == dest[i]);
+    if (fabs(src[i] - dest[i]) > 1e-5) {
+      fprintf (stderr, "E: check_vector_eq failure at element %ld\n", i);
+    }
   }
 }
 
@@ -94,6 +97,7 @@ test_dcopy (void (* dcopy)(const double * src, double * dest, size_t n))
   double * A = new_vector(128);
   double * C = new_vector(128);
   fill_vector(A, 128, 1.);
+  fill_vector(C, 128, 0.);
   dcopy (A, C, 128);
   check_vector_eq (A, C, 128);
   printf("[ OK ] test dcopy@%p\n", dcopy);
@@ -578,6 +582,33 @@ void benchmark_ddot (double (* ddot)(const double * a, const double * b, size_t 
   printf ("|\n");
 }
 
+// benchmark for dscal
+void benchmark_dscal (void (* dscal)(double * x, const double a, size_t n))
+{
+  struct timeval tvs;
+  struct timeval tve;
+  long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
+  double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
+  // print table header
+  for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
+  printf ("|\n");
+  for (int i = 0; i < 8; i++) {
+    // prepare memory for data
+    double * A = new_vector(sizes[i]);
+    fill_vector (A, sizes[i], 1.);
+    // calculate
+    gettimeofday (&tvs, NULL);
+    dscal (A, 0.5, sizes[i]); // discard the summary
+    gettimeofday (&tve, NULL);
+    // store result
+    results[i] = gettimediff (tvs, tve);
+    del_vector (A);
+  }
+  // print results
+  for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
+  printf ("|\n");
+}
+
 /**
  * @brief Lumin's benchmark
  */
@@ -640,33 +671,17 @@ main (int argc, char ** argv, char ** envp)
     benchmark_ddot (ddot_parallel);
 
   }
-	hrulefill();
-	{ // scal test
+  hrulefill();
+  { // scal test
+    // FIXME: add unit tests
 
-		// data
-		double * A = new_vector(VLEN);
-		fill_vector(A, VLEN, 1.);
+    // run benchmarks
+    printf ("I: [dscal_serial] test series\n");
+    benchmark_dscal (dscal_serial);
+    printf ("I: [dscal_parallel] test series\n");
+    benchmark_dscal (dscal_parallel);
 
-		// serial
-		gettimeofday(&tvs, NULL);
-		dscal_serial (A, 0.5, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "dscal in serial");
-
-		if (debug) dump_vector(A, VLEN);
-
-		// parallel
-		gettimeofday(&tvs, NULL);
-		dscal_parallel (A, 0.5, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "dscal in parallel");
-
-		if (debug) dump_vector(A, VLEN);
-
-		// post-test
-		del_vector(A);
-
-	}
+  }
 	hrulefill();
 	{ // axpby test
 

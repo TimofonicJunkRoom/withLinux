@@ -3,10 +3,10 @@
 #include "cudabench.h"
 
 __global__ void
-_dcopy_cuda (const double * S, double * D)
+_dcopy_cuda (const double * S, double * D, size_t length)
 {
-  int i = threadIdx.x;
-  D[i] = S[i];
+  int tid = blockDim.x * blockIdx.x + threadIdx.x;
+  if (tid < length) D[tid] = S[tid];
 }
 
 void
@@ -20,7 +20,9 @@ dcopy_cuda (const double * A, double * B, size_t length)
   // transter H -> D
   cudaMemcpy (d_A, A, size, cudaMemcpyHostToDevice);
   // apply kernel
-  _dcopy_cuda <<<1, length>>> (A, B);
+  int threadsperblock = 256;
+  int blockspergrid = (length + threadsperblock - 1)/threadsperblock;
+  _dcopy_cuda <<<blockspergrid, threadsperblock>>> (d_A, d_B, length);
   // transter D -> H
   cudaMemcpy (B, d_B, size, cudaMemcpyDeviceToHost);
   // free
