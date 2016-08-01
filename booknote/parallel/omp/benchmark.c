@@ -491,6 +491,93 @@ fill_matrix (double * m, size_t row, size_t col, double val)
 	return;
 }
 
+// benchmark for dcopy
+void benchmark_dcopy (void (* dcopy)(const double * src, double * dest, size_t n))
+{
+  struct timeval tvs;
+  struct timeval tve;
+  long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
+  double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
+  // print table header
+  for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
+  printf ("|\n");
+  for (int i = 0; i < 8; i++) {
+    // prepare memory for data
+    double * A = new_vector(sizes[i]);
+    double * C = new_vector(sizes[i]);
+    fill_vector (A, sizes[i], 1.);
+    fill_vector (C, sizes[i], 0.);
+    // calculate
+    gettimeofday (&tvs, NULL);
+    dcopy (A, C, sizes[i]);
+    gettimeofday (&tve, NULL);
+    // store result
+    results[i] = gettimediff (tvs, tve);
+    del_vector (A);
+    del_vector (C);
+  }
+  // print results
+  for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
+  printf ("|\n");
+}
+
+// benchmark for dasum
+void benchmark_dasum (double (* dasum)(const double * src, size_t n))
+{
+  struct timeval tvs;
+  struct timeval tve;
+  long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
+  double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
+  // print table header
+  for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
+  printf ("|\n");
+  for (int i = 0; i < 8; i++) {
+    // prepare memory for data
+    double * A = new_vector(sizes[i]);
+    fill_vector (A, sizes[i], 1.);
+    // calculate
+    gettimeofday (&tvs, NULL);
+    (void) dasum (A, sizes[i]); // discard the summary
+    gettimeofday (&tve, NULL);
+    // store result
+    results[i] = gettimediff (tvs, tve);
+    del_vector (A);
+  }
+  // print results
+  for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
+  printf ("|\n");
+}
+
+// benchmark for ddot
+void benchmark_ddot (double (* ddot)(const double * a, const double * b, size_t n))
+{
+  struct timeval tvs;
+  struct timeval tve;
+  long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
+  double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
+  // print table header
+  for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
+  printf ("|\n");
+  for (int i = 0; i < 8; i++) {
+    // prepare memory for data
+    double * A = new_vector(sizes[i]);
+    double * B = new_vector(sizes[i]);
+    fill_vector (A, sizes[i], 1.);
+    fill_vector (B, sizes[i], 1.);
+    // calculate
+    gettimeofday (&tvs, NULL);
+    (void) ddot (A, B, sizes[i]); // discard the summary
+    gettimeofday (&tve, NULL);
+    // store result
+    results[i] = gettimediff (tvs, tve);
+    del_vector (A);
+    del_vector (B);
+  }
+  // print results
+  for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
+  printf ("|\n");
+}
+
 /**
  * @brief Lumin's benchmark
  */
@@ -520,42 +607,14 @@ main (int argc, char ** argv, char ** envp)
     test_dcopy(dcopy_cuda);
 #endif // USE_CUDA
 
-    // define benchmark for dcopy
-    void benchmark (void (* dcopy)(const double * src, double * dest, size_t n))
-    {
-      long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
-      double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
-      // print table header
-      for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
-      printf ("|\n");
-      for (int i = 0; i < 8; i++) {
-        // prepare memory for data
-        double * A = new_vector(sizes[i]);
-        double * C = new_vector(sizes[i]);
-        fill_vector (A, sizes[i], 1.);
-        fill_vector (C, sizes[i], 0.);
-        // calculate
-        gettimeofday (&tvs, NULL);
-        dcopy (A, C, sizes[i]);
-        gettimeofday (&tve, NULL);
-        // store result
-        results[i] = gettimediff (tvs, tve);
-        del_vector (A);
-        del_vector (C);
-      }
-      // print results
-      for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
-      printf ("|\n");
-    }
-
     // run benchmarks
     printf ("I: [dcopy_serial] test series\n");
-    benchmark (dcopy_serial);
+    benchmark_dcopy (dcopy_serial);
     printf ("I: [dcopy_parallel] test series\n");
-    benchmark (dcopy_parallel);
+    benchmark_dcopy (dcopy_parallel);
 #ifdef USE_CUDA
     printf ("I: [dcopy_cuda] test series\n");
-    benchmark (dcopy_cuda);
+    benchmark_dcopy (dcopy_cuda);
 #endif // USE_CUDA
 
   }
@@ -563,75 +622,22 @@ main (int argc, char ** argv, char ** envp)
   { // asum test
     // FIXME: unit tests for asum
 
-    // define benchmark for dasum
-    void benchmark (double (* dasum)(const double * src, size_t n))
-    {
-      long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
-      double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
-      // print table header
-      for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
-      printf ("|\n");
-      for (int i = 0; i < 8; i++) {
-        // prepare memory for data
-        double * A = new_vector(sizes[i]);
-        fill_vector (A, sizes[i], 1.);
-        // calculate
-        gettimeofday (&tvs, NULL);
-        (void) dasum (A, sizes[i]); // discard the summary
-        gettimeofday (&tve, NULL);
-        // store result
-        results[i] = gettimediff (tvs, tve);
-        del_vector (A);
-      }
-      // print results
-      for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
-      printf ("|\n");
-    }
-
     // run benchmarks
     printf ("I: [dasum_serial] test series\n");
-    benchmark (dasum_serial);
+    benchmark_dasum (dasum_serial);
     printf ("I: [dasum_parallel] test series\n");
-    benchmark (dasum_parallel);
+    benchmark_dasum (dasum_parallel);
 
   }
   hrulefill();
   { // dot test
     // FIXME: add unit tests for ddot
 
-    // define benchmark for dasum
-    void benchmark (double (* ddot)(const double * a, const double * b, size_t n))
-    {
-      long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
-      double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
-      // print table header
-      for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
-      printf ("|\n");
-      for (int i = 0; i < 8; i++) {
-        // prepare memory for data
-        double * A = new_vector(sizes[i]);
-        double * B = new_vector(sizes[i]);
-        fill_vector (A, sizes[i], 1.);
-        fill_vector (B, sizes[i], 1.);
-        // calculate
-        gettimeofday (&tvs, NULL);
-        (void) ddot (A, B, sizes[i]); // discard the summary
-        gettimeofday (&tve, NULL);
-        // store result
-        results[i] = gettimediff (tvs, tve);
-        del_vector (A);
-        del_vector (B);
-      }
-      // print results
-      for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
-      printf ("|\n");
-    }
-
     // run benchmarks
     printf ("I: [ddot_serial] test series\n");
-    benchmark (ddot_serial);
+    benchmark_ddot (ddot_serial);
     printf ("I: [ddot_parallel] test series\n");
-    benchmark (ddot_parallel);
+    benchmark_ddot (ddot_parallel);
 
   }
 	hrulefill();

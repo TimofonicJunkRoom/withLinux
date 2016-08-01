@@ -3,14 +3,14 @@
 #include "cudabench.h"
 
 __global__ void
-_dcopy_cuda (double * S, double * D)
+_dcopy_cuda (const double * S, double * D)
 {
   int i = threadIdx.x;
   D[i] = S[i];
 }
 
 void
-dcopy_cuda (double * A, double * B, size_t length)
+dcopy_cuda (const double * A, double * B, size_t length)
 {
   size_t size = sizeof(double) * length;
   // malloc

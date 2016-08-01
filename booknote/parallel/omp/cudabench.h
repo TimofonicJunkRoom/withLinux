@@ -10,10 +10,10 @@
 
 // kernel functions
 
-__global__ void _dcopy_cuda (double * S, double * D); // double vector copy
+__global__ void _dcopy_cuda (const double * S, double * D); // double vector copy
 
 // wrapper functions
 
-void dcopy_cuda (double * A, double * B, size_t length);
+void dcopy_cuda (const double * A, double * B, size_t length);
 
 #endif // CUDABENCH_H_
