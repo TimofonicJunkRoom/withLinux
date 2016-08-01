@@ -658,6 +658,10 @@ main (int argc, char ** argv, char ** envp)
     benchmark_dasum (dasum_serial);
     printf ("I: [dasum_parallel] test series\n");
     benchmark_dasum (dasum_parallel);
+#ifdef USE_CUDA
+    printf ("I: [dasum_cuda] test series\n");
+    benchmark_dasum (dasum_cuda);
+#endif // USE_CUDA
 
   }
   hrulefill();
