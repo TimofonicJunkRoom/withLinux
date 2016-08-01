@@ -380,6 +380,14 @@ timediff (struct timeval tvs, struct timeval tve, char * msg)
 	fprintf (stdout, "I: [%s] time cost is %1.6f seconds.\n",
 		(msg==NULL)?"":msg, dtime);
 }
+/**
+ * @brief find the time difference in second
+ */
+double
+gettimediff (struct timeval tvs, struct timeval tve)
+{
+  return ((tve.tv_sec - tvs.tv_sec) + (tve.tv_usec - tvs.tv_usec)/1e+6);
+}
 
 /**
  * @brief print a spliting line on screen
@@ -489,68 +497,70 @@ fill_matrix (double * m, size_t row, size_t col, double val)
 int
 main (int argc, char ** argv, char ** envp)
 {
-	fprintf (stdout, "Lumin's serial/parallel benchmark\nI: init ... ");
-	fflush(stdout);
+  fprintf (stdout, "Lumin's serial/parallel/cuda benchmark\nI: initializing ... ");
+  fflush(stdout);
 
-	struct timeval tvs; // tv_s, for starting point
-	struct timeval tve; // tv_e, for ending point
+  struct timeval tvs; // tv_s, for starting point
+  struct timeval tve; // tv_e, for ending point
 
-	// init times
-	struct timeval tvi; // tv_init
-	struct timeval tvt; // tv_terminate
+  // init times
+  struct timeval tvi; // tv_init
+  struct timeval tvt; // tv_terminate
 
-	gettimeofday(&tvi, NULL);
-	fprintf(stdout, "[OK]\n");
+  gettimeofday(&tvi, NULL);
+  fprintf(stdout, "[OK]\n");
 
-	hrulefill();
-	{ // copy test
-		test_dcopy(dcopy_serial);
-		test_dcopy(dcopy_parallel);
+  hrulefill();
+  { // copy test
+
+    // unit tests
+    test_dcopy(dcopy_serial);
+    test_dcopy(dcopy_parallel);
 #ifdef USE_CUDA
-		test_dcopy(dcopy_cuda);
+    test_dcopy(dcopy_cuda);
 #endif // USE_CUDA
 
-		// data
-		double * A = new_vector(VLEN);
-		double * C = new_vector(VLEN);
-		fill_vector(A, VLEN, 1.);
-		fill_vector(C, VLEN, 0.);
+    // define benchmark for dcopy
+    void benchmark (void (* dcopy)(const double * src, double * dest, size_t n))
+    {
+      long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
+      double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
+      // print table header
+      for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
+      printf ("|\n");
+      for (int i = 0; i < 8; i++) {
+        // prepare memory for data
+        double * A = new_vector(sizes[i]);
+        double * C = new_vector(sizes[i]);
+        fill_vector (A, sizes[i], 1.);
+        fill_vector (C, sizes[i], 0.);
+        // calculate
+        gettimeofday (&tvs, NULL);
+        dcopy (A, C, sizes[i]);
+        gettimeofday (&tve, NULL);
+        // store result
+        results[i] = gettimediff (tvs, tve);
+        del_vector (A);
+        del_vector (C);
+      }
+      // print results
+      for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
+      printf ("|\n");
+    }
 
-		// serial
-		gettimeofday(&tvs, NULL);
-		dcopy_serial (A, C, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "dcopy in serial");
-
-		if (debug) dump_vector(A, VLEN);
-		if (debug) dump_vector(C, VLEN);
-
-		// parallel
-		gettimeofday(&tvs, NULL);
-		dcopy_parallel (A, C, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "dcopy in parallel");
-
-		if (debug) dump_vector(A, VLEN);
-		if (debug) dump_vector(C, VLEN);
-
+    // run benchmarks
+    printf ("I: [dcopy_serial] test series\n");
+    benchmark (dcopy_serial);
+    printf ("I: [dcopy_parallel] test series\n");
+    benchmark (dcopy_parallel);
 #ifdef USE_CUDA
-		// cuda copy
-		gettimeofday(&tvs, NULL);
-		dcopy_cuda (A, C, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "dcopy in cuda");
-		if (debug) dump_vector(A, VLEN);
-		if (debug) dump_vector(C, VLEN);
+    printf ("I: [dcopy_cuda] test series\n");
+    benchmark (dcopy_cuda);
 #endif // USE_CUDA
 
-		// post-test
-		del_vector(A);
-		del_vector(C);
-
-	}
-	hrulefill();
-	{ // asum test
+    }
+    hrulefill();
+    { // asum test
 
 		// data
 		double * A = new_vector(VLEN);
