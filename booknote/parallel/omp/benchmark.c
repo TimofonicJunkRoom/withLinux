@@ -558,38 +558,43 @@ main (int argc, char ** argv, char ** envp)
     benchmark (dcopy_cuda);
 #endif // USE_CUDA
 
+  }
+  hrulefill();
+  { // asum test
+    // FIXME: unit tests for asum
+
+    // define benchmark for dasum
+    void benchmark (double (* dasum)(const double * src, size_t n))
+    {
+      long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
+      double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
+      // print table header
+      for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
+      printf ("|\n");
+      for (int i = 0; i < 8; i++) {
+        // prepare memory for data
+        double * A = new_vector(sizes[i]);
+        fill_vector (A, sizes[i], 1.);
+        // calculate
+        gettimeofday (&tvs, NULL);
+        (void) dasum (A, sizes[i]); // discard the summary
+        gettimeofday (&tve, NULL);
+        // store result
+        results[i] = gettimediff (tvs, tve);
+        del_vector (A);
+      }
+      // print results
+      for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
+      printf ("|\n");
     }
-    hrulefill();
-    { // asum test
 
-		// data
-		double * A = new_vector(VLEN);
-		fill_vector(A, VLEN, 1.);
+    // run benchmarks
+    printf ("I: [dasum_serial] test series\n");
+    benchmark (dasum_serial);
+    printf ("I: [dasum_parallel] test series\n");
+    benchmark (dasum_parallel);
 
-		// serial
-		double resA;
-		gettimeofday(&tvs, NULL);
-		resA = dasum_serial (A, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "dasum serial");
-
-		if (debug) dump_vector(A, VLEN);
-		if (debug) fprintf (stdout, " dasum(A) = %lf\n", resA);
-
-		// parallel
-		double resB;
-		gettimeofday(&tvs, NULL);
-		resB = dasum_parallel (A, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "dasum parallel");
-
-		if (debug) dump_vector(A, VLEN);
-		if (debug) fprintf (stdout, " dasum(A) = %lf\n", resB);
-
-		// post-test
-		del_vector(A);
-
-	}
+  }
 	hrulefill();
 	{ // dot test
 
