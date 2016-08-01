@@ -6,6 +6,7 @@
  */
 
 #define USE_CUDA
+#undef USE_CUDA
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +19,9 @@
 #ifdef USE_CUDA
   #include "cudabench.h" // cuda benchmarks
 #endif
+
+double * new_vector (size_t len);
+void fill_vector (double * v, size_t len, double val);
 
 /**
  * @brief flag, set 1 to dump all debug information
@@ -47,6 +51,17 @@ int debug = 0;
 #define FLEN(im,k) ((im-k+1))
 
 /**
+ * @brief helper function for tester
+ */
+void
+check_vector_eq (const double * src, const double * dest, size_t n)
+{
+  for (size_t i = 0; i < n; i++) {
+    assert(src[i] == dest[i]);
+  }
+}
+
+/**
  * @breif dcopy, L-1 BLAS, serial
  */
 void
@@ -67,6 +82,21 @@ dcopy_parallel (const double * src, double * dest, size_t n)
 	for (long i = 0; i < n; i++)
 		dest[i] = src[i];
 	return;
+}
+
+/**
+ * @brief tester for dcopy
+ */
+void
+test_dcopy (void (* dcopy)(const double * src, double * dest, size_t n))
+{
+  printf("[ .. ] test dcopy@%p\n", dcopy);
+  double * A = new_vector(128);
+  double * C = new_vector(128);
+  fill_vector(A, 128, 1.);
+  dcopy (A, C, 128);
+  check_vector_eq (A, C, 128);
+  printf("[ OK ] test dcopy@%p\n", dcopy);
 }
 
 /**
@@ -465,7 +495,6 @@ main (int argc, char ** argv, char ** envp)
 	struct timeval tvs; // tv_s, for starting point
 	struct timeval tve; // tv_e, for ending point
 
-
 	// init times
 	struct timeval tvi; // tv_init
 	struct timeval tvt; // tv_terminate
@@ -475,6 +504,11 @@ main (int argc, char ** argv, char ** envp)
 
 	hrulefill();
 	{ // copy test
+		test_dcopy(dcopy_serial);
+		test_dcopy(dcopy_parallel);
+#ifdef USE_CUDA
+		test_dcopy(dcopy_cuda);
+#endif // USE_CUDA
 
 		// data
 		double * A = new_vector(VLEN);
@@ -508,7 +542,7 @@ main (int argc, char ** argv, char ** envp)
 		timediff (tvs, tve, "dcopy in cuda");
 		if (debug) dump_vector(A, VLEN);
 		if (debug) dump_vector(C, VLEN);
-#endif
+#endif // USE_CUDA
 
 		// post-test
 		del_vector(A);
