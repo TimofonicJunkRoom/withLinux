@@ -595,42 +595,45 @@ main (int argc, char ** argv, char ** envp)
     benchmark (dasum_parallel);
 
   }
-	hrulefill();
-	{ // dot test
+  hrulefill();
+  { // dot test
+    // FIXME: add unit tests for ddot
 
-		// data
-		double * A = new_vector(VLEN);
-		double * C = new_vector(VLEN);
-		fill_vector(A, VLEN, 1.);
-		fill_vector(C, VLEN, 1.);
+    // define benchmark for dasum
+    void benchmark (double (* ddot)(const double * a, const double * b, size_t n))
+    {
+      long   sizes[8]  ={ 1, 16, 256, 4096, 65536, 1048576, 16777216, 33554432 };
+      double results[8]={ 0.,0.,  0.,   0.,    0.,      0.,       0.,       0. };
+      // print table header
+      for (int i = 0; i < 8; i++) printf ("|%8ld", sizes[i]);
+      printf ("|\n");
+      for (int i = 0; i < 8; i++) {
+        // prepare memory for data
+        double * A = new_vector(sizes[i]);
+        double * B = new_vector(sizes[i]);
+        fill_vector (A, sizes[i], 1.);
+        fill_vector (B, sizes[i], 1.);
+        // calculate
+        gettimeofday (&tvs, NULL);
+        (void) ddot (A, B, sizes[i]); // discard the summary
+        gettimeofday (&tve, NULL);
+        // store result
+        results[i] = gettimediff (tvs, tve);
+        del_vector (A);
+        del_vector (B);
+      }
+      // print results
+      for (int i = 0; i < 8; i++) printf ("|%8.6lf", results[i]);
+      printf ("|\n");
+    }
 
-		// serial
-		double resA;
-		gettimeofday(&tvs, NULL);
-		resA = ddot_serial (A, C, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "ddot in serial");
+    // run benchmarks
+    printf ("I: [ddot_serial] test series\n");
+    benchmark (ddot_serial);
+    printf ("I: [ddot_parallel] test series\n");
+    benchmark (ddot_parallel);
 
-		if (debug) dump_vector(A, VLEN);
-		if (debug) dump_vector(C, VLEN);
-		if (debug) fprintf (stdout, " ddot(A, C) = %lf\n", resA);
-
-		// parallel
-		double resB;
-		gettimeofday(&tvs, NULL);
-		resB = ddot_parallel (A, C, VLEN);
-		gettimeofday(&tve, NULL);
-		timediff (tvs, tve, "ddot in parallel");
-
-		if (debug) dump_vector(A, VLEN);
-		if (debug) dump_vector(C, VLEN);
-		if (debug) fprintf (stdout, " ddot(A, C) = %lf\n", resB);
-
-		// post-test
-		del_vector(A);
-		del_vector(C);
-
-	}
+  }
 	hrulefill();
 	{ // scal test
 
