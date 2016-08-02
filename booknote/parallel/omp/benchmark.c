@@ -97,15 +97,25 @@ void
 test_dcopy (void (* dcopy)(const double * src, double * dest, size_t n))
 {
   printf("[ .. ] test dcopy@%p\n", dcopy);
+  // short vector
   double * A = new_vector(128);
   double * C = new_vector(128);
   fill_vector(A, 128, 1.);
   fill_vector(C, 128, 0.);
   dcopy (A, C, 128);
   check_vector_eq (A, C, 128);
-  printf("[ OK ] test dcopy@%p\n", dcopy);
   del_vector(A);
   del_vector(C);
+  // long vector
+  double * B = new_vector(65536);
+  double * D = new_vector(65536);
+  fill_vector(B, 65536, 2.);
+  fill_vector(D, 65536, 0.);
+  dcopy (B, D, 65536);
+  check_vector_eq (B, D, 65536);
+  del_vector (B);
+  del_vector (D);
+  printf("[ OK ] test dcopy@%p\n", dcopy);
 }
 
 /**
@@ -147,14 +157,14 @@ test_dasum (double (* dasum)(const double * a, size_t n))
   fill_vector(A, 1280, 1.); //dump_vector (A, 128);
   double ret = dasum (A, 1280); //printf ("%lf\n", ret);
   assert(fabs(ret - 1280.) < 1e-5);
-  // short vector // FIXME: BUG: wrong result dasum_cuda when size 128
-  //double * B = new_vector(128);
-  //fill_vector(B, 128, 1.0);
-  //ret = dasum(B, 128);
-  //assert(fabs(ret - 128.) < 1e-5);
-  printf("[ OK ] test dasum@%p\n", dasum);
   del_vector (A);
-  //del_vector (B);
+  // short vector // FIXME: BUG: wrong result dasum_cuda when size 128
+  double * B = new_vector(128);
+  fill_vector(B, 128, 1.0);
+  ret = dasum(B, 128);
+  assert(fabs(ret - 128.) < 1e-5);
+  del_vector (B);
+  printf("[ OK ] test dasum@%p\n", dasum);
 }
 
 /**
