@@ -164,6 +164,12 @@ test_dasum (double (* dasum)(const double * a, size_t n))
   ret = dasum(B, 128);
   assert(fabs(ret - 128.) < 1e-5);
   del_vector (B);
+  // another long vector
+  double * C = new_vector(1200);
+  fill_vector(C, 1200, 1.); //dump_vector (A, 128);
+  ret = dasum (C, 1200); //printf ("%lf\n", ret);
+  assert(fabs(ret - 1200.) < 1e-5);
+  del_vector (C);
   printf("[ OK ] test dasum@%p\n", dasum);
 }
 
