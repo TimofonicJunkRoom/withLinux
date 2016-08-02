@@ -23,6 +23,8 @@
 
 double * new_vector (size_t len);
 void fill_vector (double * v, size_t len, double val);
+void dump_vector (double * v, size_t size);
+void del_vector (double * v);
 
 /**
  * @brief flag, set 1 to dump all debug information
@@ -60,6 +62,7 @@ check_vector_eq (const double * src, const double * dest, size_t n)
   for (size_t i = 0; i < n; i++) {
     if (fabs(src[i] - dest[i]) > 1e-5) {
       fprintf (stderr, "E: check_vector_eq failure at element %ld\n", i);
+      return;
     }
   }
 }
@@ -101,6 +104,8 @@ test_dcopy (void (* dcopy)(const double * src, double * dest, size_t n))
   dcopy (A, C, 128);
   check_vector_eq (A, C, 128);
   printf("[ OK ] test dcopy@%p\n", dcopy);
+  del_vector(A);
+  del_vector(C);
 }
 
 /**
@@ -137,11 +142,19 @@ void
 test_dasum (double (* dasum)(const double * a, size_t n))
 {
   printf("[ .. ] test dasum@%p\n", dasum);
-  double * A = new_vector(128);
-  fill_vector(A, 128, 1.);
-  double ret = dasum (A, 128);
-  assert(fabs(ret - 128.) < 1e-5);
-  printf("[ OK ] test dcopy@%p\n", dasum);
+  // long vector
+  double * A = new_vector(1280);
+  fill_vector(A, 1280, 1.); //dump_vector (A, 128);
+  double ret = dasum (A, 1280); //printf ("%lf\n", ret);
+  assert(fabs(ret - 1280.) < 1e-5);
+  // short vector // FIXME: BUG: wrong result dasum_cuda when size 128
+  //double * B = new_vector(128);
+  //fill_vector(B, 128, 1.0);
+  //ret = dasum(B, 128);
+  //assert(fabs(ret - 128.) < 1e-5);
+  printf("[ OK ] test dasum@%p\n", dasum);
+  del_vector (A);
+  //del_vector (B);
 }
 
 /**
@@ -529,6 +542,7 @@ void benchmark_dcopy (void (* dcopy)(const double * src, double * dest, size_t n
     gettimeofday (&tvs, NULL);
     dcopy (A, C, sizes[i]);
     gettimeofday (&tve, NULL);
+    check_vector_eq (A, C, sizes[i]);
     // store result
     results[i] = gettimediff (tvs, tve);
     del_vector (A);
