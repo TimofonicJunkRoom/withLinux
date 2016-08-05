@@ -135,5 +135,42 @@ fn syntax () {
       println!("{}: {}", linenumber, line);
     }
     // break and continue are available for rust
+    'outer: for x in 0..6 { // loop labels
+      'inner: for y in 0..6 { // loop labels
+        if x % 2 == 0 { continue 'outer; } // continues the loop over x
+        if y % 2 == 0 { continue 'inner; } // continues the loop over y
+        println!("x: {}, y: {}", x, y);
+      }
+    }
   }
-}
+  { // 4.7 vectors
+    let v = vec![1,2,3,4,5]; // v: Vec<i32>
+    let v = vec!(1,2,3,4,5); // v: Vec<i32>
+    let mut v = vec![0; 10]; // zeros(1, 10);
+    println!("v[0]={}", v[0]);
+    let idx: usize = 0; // vector index must be usize type, and i32 type won't work
+    println!("v[{}]={}", idx, v[idx]);
+    for i in 9..12 { // handling errors
+      match v.get(i) {
+        Some(x) => println!("{}", x),
+        None    => println!("idx out of bound"),
+      }
+    }
+    for i in &v { // iterate over a reference to vector
+      print!("{} ", i);
+    }
+    println!("");
+    for i in &mut v { // mutable reference
+      *i += 1;
+      print!("{} ", i);
+    }
+    println!("");
+    for i in v { // take ownership of the vector and its elements
+      print!("{} ", i);
+    }
+    println!("");
+  }
+  { // 4.8 ownership
+    // FIXME
+  }
+} // fn syntax()
