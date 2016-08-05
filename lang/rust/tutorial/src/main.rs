@@ -170,7 +170,70 @@ fn syntax () {
     }
     println!("");
   }
-  { // 4.8 ownership
+  { // 4.8 ownership | * Key feature of Rust
+    // FIXME
+  }
+  { // 4.9 borrowing | * Key feature of Rust
+    // FIXME
+  }
+  { // 4.10 lifetimes | * Key features of Rust
+    // FIXME
+  }
+  { // 4.11 mutability
+    let x = 5; // x = 6; // will trigger a failure.
+    let mut x = 5; x = 6; // ok
+    //let y: &mut i32 = &mut x; // note, y is immutable here
+    let mut y = &mut x; // now y is mutable
+    let (mut x, y) = (8, 9); // `mut` is a part of pattern
+    fn foo(mut x: i32) { ; }
+    // * Interior vs. Exterior Mutability
+    use std::sync::Arc;
+    let x = Arc::new(5);
+    let y = x.clone(); // exterior mutability
+    use std::cell::RefCell;
+    let x = RefCell::new(42);
+    let y = x.borrow_mut(); // interior mutability
+    // * Field-level mutability
+    struct Point {
+      x: f32, // can't be mut x: f32
+      y: f32,
+    }
+    let mut a = Point { x: 5., y: 6. };
+    a.x = 10.; // this is ok
+    use std::cell::Cell;
+    struct PointX {
+      x: f32,
+      y: Cell<f32>, // emulate field-level mutability
+    }
+    let point = PointX { x: 5., y: Cell::new(0.) };
+    point.y.set(7.);
+    println!("y: {:?}", point.y); // we changed its value within immutable struct
+  }
+  { // 4.12 structs
+    struct Point { x: i32, y: i32, }
+    let mut point = Point { x: 0, y: 0 };
+    println!("The origin is at ({}, {})", point.x, point.y);
+    struct PointRef<'a> { x: &'a mut i32, y: &'a mut i32 }
+    {
+      let r = PointRef { x: &mut point.x, y: &mut point.y };
+      *r.x = 5; *r.y = 6;
+    }
+    assert_eq!(5, point.x); assert_eq!(6, point.y);
+    // update syntax for structs
+    struct Point3d { x: i32, y: i32, z: i32, }
+    let mut point = Point3d { x: 0, y: 0, z: 0 };
+    point = Point3d { y: 1, .. point }; // update y to 1
+    // tuple structs
+    struct Color (i8, i8, i8);
+    let background = Color(255, 255, 255);
+    struct Inches(i32);
+    let length = Inches(10);
+    let Inches(integer_length) = length;
+    println!("length is {} inches", integer_length);
+    struct Electron; // actually a empty tuple ()
+    let x = Electron;
+  }
+  { // 4.13 Enums
     // FIXME
   }
 } // fn syntax()
