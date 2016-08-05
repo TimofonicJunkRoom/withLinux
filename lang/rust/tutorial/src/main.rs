@@ -32,14 +32,14 @@ fn guess_game () {
 }
 
 fn syntax () {
-  { // variable binding
+  { // 4.1 variable binding
     let x = 5; // general
     let (x, y) = (1, 2); // pattern
     let x: i32 = 5; // type annotation
     let mut x = 5; x = 10; // mutability
     { let y: i32 = 1; } // scope
   }
-  { // functions
+  { // 4.2 functions
     fn print_number (x: i32) {
       println! ("x = {}", x);
     }
@@ -59,7 +59,7 @@ fn syntax () {
     let f: fn(i32) -> i32 = plusone; // function pointer
     let y = f(5);
   }
-  { // Primitive types
+  { // 4.3 Primitive types
     let x = true;
     let y: bool = false;
     let x = 'x'; // char
@@ -91,5 +91,49 @@ fn syntax () {
     fn foo(x: i32) -> i32 { x }
     let x: fn(i32) -> i32 = foo; // function has type too
   }
-  println! ("TODO: {}", 4.4);
+  { // 4.4 comments
+    // this is line comment
+    // /// this is doc comment for the item following it, markdown is supported
+    // //! this is doc comment for the item enclosed, with markdown being supported
+    let stub = "stub";
+  }
+  { // 4.5 if
+    let x = 5;
+    if x == 5 {
+      println!("x is five");
+    } else if x == 6 {
+      println!("x is six");
+    } else {
+      println!("x is not five");
+    }
+    let y = if x == 5 { 10 } else { 15 };
+  }
+  { // 4.6 loop
+    loop { // infinite loop
+      println!("entered infinite loop");
+      break;
+    }
+    let mut x: i32 = 1;
+    let mut sum: i32 = 0;
+    while x <= 100 { // while
+      sum += x;
+      x +=1 ;
+    }
+    println!("1+2+...+100={}", sum);
+    let mut sum: i32 = 0;
+    for i in 0..101 { // 0..101 then be converted into an iterator
+      sum += i;
+    }
+    println!("1+2+...+100={}", sum);
+    let mut sum: i32 = 0;
+    for (i, j) in (1..11).enumerate() { // enumerate on range
+      sum += j;
+      println!("{}: 1+...+{}={}", i, j, sum);
+    }
+    let lines = "hello\nworld".lines();
+    for (linenumber, line) in lines.enumerate() { // enumerate on iterators
+      println!("{}: {}", linenumber, line);
+    }
+    // break and continue are available for rust
+  }
 }
