@@ -299,7 +299,72 @@ fn syntax () {
     }
   }
   { // 4.15 patterns
-    // FIXME
+    let x = 5;
+    match x {
+      1 | 2 => println!("one or two"), // multiple patterns
+      5 => println!("five"),
+      10 ... 20 => println!("ten through twenty"), // range
+      // 'a' ... 'z' => println!("matched a alphabet?"),
+      e @ 30 ... 40 => println!("we can bind the range element like this {}", e),
+      e @ 1 ... 5 | e @ 8 ... 10 => println!("got a range element {}", e),
+      _ => println!("unknown"), // compiler fails if this being missing.
+    }
+    // destructuring
+    struct Point { x: i32, y: i32, }
+    let origin = Point { x: 0, y: 0 };
+    match origin {
+      Point { x, y } => println!("({},{})", x, y),
+    }
+    match origin {
+      Point { x: x1, y: y1 } => println!("({},{})", x1, y1),
+    }
+    match origin {
+      Point { x, .. } => println!("x is {}", x),
+    }
+    match origin {
+      Point { y, .. } => println!("y is {}", y),
+    }
+    // let (x, _, z) = coordinate(); // _ is used to discard a part of struct here
+    let _ = String::from("  hello  ").trim(); // oh drop the return value immediately
+    enum OptTuple {
+      Value ( f32, f32, f32 ),
+      Missing,
+    }
+    let x : OptTuple = OptTuple::Value ( 0., 1., 2. );
+    match x {
+      OptTuple::Value(..) => println!("Got a tuple!"),
+      OptTuple::Missing => println!("No such luck."),
+    }
+    // ref and ref mut
+    let x = 5;
+    match x {
+      ref r => println!("Got a reference to {}", r),
+    }
+    let mut x = 5;
+    match x {
+      ref mut mr => println!("Got a mutable reference to {}", mr),
+    }
+    // complex structure matching
+    #[derive(Debug)]
+    struct Person {
+      name: Option<String>,
+    }
+    let name = "Steve".to_string();
+    let x: Option<Person> = Some(Person { name: Some(name) });
+    match x {
+      Some(Person { name: ref a @ Some(_), .. }) => println!("{:?}", a),
+      _ => {}
+    }
+    // match guards
+    let x = 4;
+    let y = false;
+    match x {
+      //ref r if * r < 0 => println!("got {} < 0", r),
+      4 | 5 if y => println!("yes"),
+      _ => println!("no"),
+    }
+  }
+  { // 4.16 method syntax
   }
   info!("syntax() done");
 } // fn syntax()
