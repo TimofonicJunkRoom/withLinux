@@ -1,4 +1,10 @@
 
+macro_rules! info {
+  ($msg:expr) => {{
+    println!("\x1b[32;1mI {}:{}] {}\x1b[m", file!(), line!(), $msg);
+  }};
+}
+
 fn main () {
   println! ("Reference: file:///home/schroot/sid/usr/share/doc/rust-doc/html/book/README.html");
 
@@ -234,6 +240,28 @@ fn syntax () {
     let x = Electron;
   }
   { // 4.13 Enums
-    // FIXME
+    enum Message {
+      Quit,
+      ChangeColor(i32, i32, i32),
+      Move { x: i32, y: i32 },
+      Write(String),
+    }
+    let x: Message = Message::Move { x: 3, y: 4 };
+    enum BoardGameTurn {
+      Move { squares: i32 },
+      Pass,
+    }
+    let y: BoardGameTurn = BoardGameTurn::Move { squares: 1 };
+    //fn process_color_change(msg: Message) {
+    //  let Message::ChangeColor(r, g, b) = msg; // compile-time error
+    //} // use `match` to break this limitation
+    let m = Message::Write("hello world".to_string()); // enum constructor
+    fn foo (x: String) -> Message { Message::Write(x) }
+    let x = foo("hello world".to_string()); // same as the above enum constructor
+    let v = vec!["hello".to_string(), "world".to_string()];
+    let v1: Vec<Message> = v.into_iter().map(Message::Write).collect();
   }
+  { // 4.14 match
+  }
+  info!("syntax() done");
 } // fn syntax()
