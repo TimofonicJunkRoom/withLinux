@@ -9,6 +9,7 @@ fn main () {
   println! ("Reference: file:///home/schroot/sid/usr/share/doc/rust-doc/html/book/README.html");
 
   //guess_game();
+  let _guess_game = guess_game; // _XXX avoids "unused_variable" warning
   //panic!(); // crash the program
   syntax();
 }
@@ -37,6 +38,11 @@ fn guess_game () {
   }
 }
 
+#[allow(unused_variables)]
+#[allow(unused_assignments)]
+#[allow(dead_code)]
+#[allow(unused_mut)]
+#[allow(non_shorthand_field_patterns)]
 fn syntax () {
   { // 4.1 variable binding
     let x = 5; // general
@@ -230,7 +236,7 @@ fn syntax () {
     let mut point = Point3d { x: 0, y: 0, z: 0 };
     point = Point3d { y: 1, .. point }; // update y to 1
     // tuple structs
-    struct Color (i8, i8, i8);
+    struct Color (u8, u8, u8);
     let background = Color(255, 255, 255);
     struct Inches(i32);
     let length = Inches(10);
@@ -262,6 +268,38 @@ fn syntax () {
     let v1: Vec<Message> = v.into_iter().map(Message::Write).collect();
   }
   { // 4.14 match
+    let x = 5;
+    match x {
+      1 => println!("one"),
+      5 => println!("five"),
+      _ => println!("unknown"), // compiler fails if this being missing.
+    }
+    let y = match x {
+      1 => "one",
+      5 => "five",
+      _ => "unknown",
+    };
+    // matching enums
+    enum Message {
+      Quit,
+      ChangeColor(i32, i32, i32),
+      Move { x: i32, y: i32 },
+      Write(String),
+    }
+    fn quit() { /* ... */ }
+    fn change_color(r: i32, g: i32, b: i32) { /* ... */ }
+    fn move_cursor(x: i32, y: i32) { /* ... */ }
+    fn process_message(msg: Message) {
+      match msg {
+        Message::Quit => quit(),
+        Message::ChangeColor(r, g, b) => change_color(r, g, b),
+        Message::Move { x: x, y: y } => move_cursor(x, y),
+        Message::Write(s) => println!("{}", s),
+      };
+    }
+  }
+  { // 4.15 patterns
+    // FIXME
   }
   info!("syntax() done");
 } // fn syntax()
