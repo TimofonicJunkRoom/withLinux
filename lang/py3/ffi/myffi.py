@@ -8,7 +8,7 @@ libc = ctypes.CDLL("libc.so.6")
 print(libc.getpid())
 
 kernel = ctypes.CDLL("./kernel.so")
-print(kernel.kernel()) # output of the kernel function is discard
+print(kernel.kernel("hello")) # BUG: only h is printed
 
 import cffi
 ffi = cffi.FFI()
@@ -16,5 +16,5 @@ ffi.cdef("""
     int printf(const char *, ...);
 """)
 libc = ffi.dlopen(None)   # standard library
-libc.printf("hello, %s!\n", ffi.new("char[]", ["world".encode()] ))
+libc.printf("hello, %s!\n", ffi.new("char[]", ["world".encode()] )) #FIXME
 
