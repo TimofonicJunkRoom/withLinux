@@ -468,3 +468,19 @@ fn effective_rust () {
   }
   info!("effective_rust() done");
 } // fn effective_rust()
+
+/* test stuff */
+#[test]
+fn it_works() {
+  assert_eq!(1, 1);
+}
+#[test]
+#[should_panic]
+fn it_doesnt_work() {
+  assert!(false);
+}
+#[test]
+#[should_panic(expected = "assertion failed")]
+fn it_doesnt_work_2() {
+    assert_eq!("Hello", "world");
+}
