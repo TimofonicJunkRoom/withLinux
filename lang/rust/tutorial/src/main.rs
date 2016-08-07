@@ -1,9 +1,6 @@
 
-macro_rules! info {
-  ($msg:expr) => {{
-    println!("\x1b[32;1mI {}:{}] {}\x1b[m", file!(), line!(), $msg);
-  }};
-}
+#[macro_use]
+mod lumin_log;
 
 fn main () {
   println! ("Reference: file:///home/schroot/sid/usr/share/doc/rust-doc/html/book/README.html");
@@ -184,12 +181,65 @@ fn syntax () {
     println!("");
   }
   { // 4.8 ownership | * Key feature of Rust
-    // FIXME
+    debug!("syntax: ownership");
+    // Rust ensures that there is exactly one binding to any given resource
+    let v: Vec<i32> = vec![1, 2, 3];
+    let v2 = v;
+    println!("{:?}", v2);
+    //println!("{:?}", v); // failure: use of moved value: `v`
+    fn take (v: Vec<i32>) {
+      println!("{:?}", v);
+    }
+    take(v2); // v2 moved here
+    // take(v2); // failure: use of moved value
+    let x1 = 1;
+    let x2 = x1; // trait Copy: full copy, so x1 is still available
+    println!("x1 {} x2 {}", x1, x2); 
+    fn double (x: i32) -> i32 { x * 2 }
+    println!("{} * 2 = {}", x1, double(x1));
+    // if we use types that do not implement the Copy trait, the compiler just
+    // ends up with an error saying that we tried to use a moved value.
   }
   { // 4.9 borrowing | * Key feature of Rust
-    // FIXME
+    debug!("syntax: borrowing");
+    let v1: Vec<i32> = vec![0];
+    let v2: Vec<i32> = vec![0];
+    fn foo (a: &Vec<i32>, b: &Vec<i32>) -> i32 { 42 }
+    let ans: i32 = foo(&v1, &v2);
+    let ans2: i32 = foo(&v1, &v2); // note, v1 and v2 are still usable.
+    fn i32asum (v: &Vec<i32>) -> i32 {
+      return v.iter().fold(0, |a, &b| if b>0 { a+b } else { a-b });
+    }
+    let v3 = vec![1, -1, 1, -1];
+    let y = i32asum(&v3);
+    println!("{}", y);
+    let v = vec![ 0 ];
+    // v.push(5); // failure: not mut
+    let mut x = 5;
+    {
+      let y = &mut x; // &mut borrow starts here
+      *y += 1;
+    } // &mut borrow starts here, OK
+    assert_eq!(x, 6); // borrow here
+    // * one or more references (&T) to a resource,
+    // * exactly one mutable reference (&mut T).
+    println!("but what's the advancement of borrowing? preventing data races");
+    let mut v = vec![1, 2, 3, 4];
+    for i in &v {
+      println!("{}", i);
+      //v.push(34); // not mut &, this prevents changing while iterating
+    }
+    // it also prevents use after free, e.g.
+    //  let y: &i32;
+    //  let x = 5;
+    //  y = &x; this won't compile
+    let x = 5;
+    let y: &i32;
+    y = &x; // it compiles, because y is freed before x. if x is freed before
+            // y, then what y points to is unknown.
   }
   { // 4.10 lifetimes | * Key features of Rust
+    debug!("syntax: lifetime");
     // FIXME
   }
   { // 4.11 mutability
