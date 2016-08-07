@@ -8,7 +8,7 @@ libc = ctypes.CDLL("libc.so.6")
 print(libc.getpid())
 
 kernel = ctypes.CDLL("./kernel.so")
-print(kernel.kernel("hello")) # BUG: only h is printed
+print(kernel.kernel(ctypes.c_char_p("hello python3 ffi to C library".encode())))
 
 import cffi
 ffi = cffi.FFI()
