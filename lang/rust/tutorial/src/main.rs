@@ -12,6 +12,7 @@ fn main () {
   let _guess_game = guess_game; // _XXX avoids "unused_variable" warning
   //panic!(); // crash the program
   syntax();
+  effective_rust();
 }
 
 fn guess_game () {
@@ -431,5 +432,39 @@ fn syntax () {
   { // 4.17 strings
     // FIXME
   }
+  {
+    // FIXME
+  }
+  { // 4.36 unsafe
+    unsafe fn dangerous_function () {} // unsafe function
+    unsafe { } // unsafe block
+    unsafe trait Scary { } // unsafe trait
+    unsafe impl Scary for i32 { } // unsafe impl
+    // if rust program segfaults, the cause is related to somthing marked "unsafe".
+    // Unsafe makes you able to
+    // * access or update a static mut
+    // * dereference a raw pointer
+    // * call unsafe functions
+  }
   info!("syntax() done");
 } // fn syntax()
+
+extern crate libc;
+use libc::pid_t;
+
+#[link(name = "c")] // you can omit this
+extern {
+  /* pid_t getpid(void); */
+  fn getpid() -> pid_t;
+}
+
+fn effective_rust () {
+  { // 5.9 FFI
+    unsafe {
+      let pid = getpid();
+      println!("my pid is {}", pid);
+    }
+    // TODO
+  }
+  info!("effective_rust() done");
+} // fn effective_rust()
