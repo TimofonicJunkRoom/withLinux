@@ -30,3 +30,17 @@ try:
   print(kernel._ZN6kernel6kernel17h48d014a057321023E(ctypes.c_char_p(u"hello")))
 except:
   print("_ZN6kernel6kernel17h48d014a057321023E not working")
+
+'''
+https://github.com/rust-lang/rust/issues/35459
+
+$ nm libkernel.so | ack kernel
+0000000000384108 d _ZN6kernel6kernel15__STATIC_FMTSTR17h42857d76e83fb6f3E
+00000000000b4090 T kernel
+000000000038f3d0 D rust_metadata_kernel_f0c475c1165a0b09
+'''
+try:
+  print(kernel.kernel)
+  print(kernel.kernel("hello".encode()))
+except:
+  print("kernel.kernel is not working")
