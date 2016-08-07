@@ -351,6 +351,7 @@ Programming, including Tool Languages
   1. [Perl introduction](./lang/perl/intro.pl)  
 1. Rust  
   1. [Learn RUST by example](http://rustbyexample.com/)  
+  1. [My GLOG-like logging util in Rust](./lang/rust/logging/)  
 1. [Julia]  
   1. [start.jl](./lang/jl/start.jl)  
 1. [C#/Mono]  
