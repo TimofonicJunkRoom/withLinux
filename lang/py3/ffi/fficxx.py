@@ -5,7 +5,6 @@ import ctypes
 
 kernel = ctypes.CDLL("./cxxkernel.so")
 
-#print(kernel._Z6kernelPc)
-#print(kernel._Z6kernelPc("hello"))
+print(kernel._Z6kernelPc(ctypes.c_char_p("hello python3 ffi to cxx lib".encode())))
 
-print(kernel._Z6kernelNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE("hello"))
+#print(kernel._Z6kernelNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE(ctypes.c_char_p("hello".encode())))
