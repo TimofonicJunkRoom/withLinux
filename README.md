@@ -338,6 +338,7 @@ Programming, including Tool Languages
   1. [lua embedding (el) ](http://www.ibm.com/developerworks/cn/linux/l-lua.html)  
   1. [2D Game engine -- love2d]
   1. [Programming in Lua (el)](https://www.lua.org/pil/contents.html)  
+  1. [GC in lua](./lang/lua/gc.lua)  
 1. Light weigt languages
   1. [Sed/Ed]  
   1. [AWK](./lang/awk/)  
