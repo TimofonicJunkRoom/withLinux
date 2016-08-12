@@ -7,5 +7,9 @@ python:
 rust:
 	python3 ffirust.py
 cxx:
+	python3 fficxx.py
+luajit:
+	LD_LIBRARY_PATH=. luajit ffiluajit.lua
+	-LD_LIBRARY_PATH=. th ffiluajit.lua
 clean:
 	$(RM) kernel.so libkernel.so cxxkernel.so
