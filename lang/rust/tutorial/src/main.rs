@@ -240,6 +240,17 @@ fn syntax () {
   }
   { // 4.10 lifetimes | * Key features of Rust
     debug!("syntax: lifetime");
+    fn foo (x: &i32) { } // implicit lifetime declaration
+    fn bar<'a> (x: &'a i32) { } // explicit lifetime declaration
+    // here < > is used to declare lifetime
+    struct Foo<'a> {
+      x: &'a i32,
+    }
+    fn foobar () {
+      let y = &5;
+      let f = Foo {x: y};
+      println!("{}", f.x);
+    }
     // FIXME
   }
   { // 4.11 mutability
@@ -480,6 +491,16 @@ fn syntax () {
     println!("y: {}", c.y);
   }
   { // 4.17 strings
+    debug!("strings");
+    // Rust has two main types of strings, &str and String
+    // &str is called string slices, fixed size, immutable
+    // String is heap-allocated, growable
+    // Strings are commonly created by converting from a string slice using the to_string method.
+    let greeting = "Hi there."; // &'static str, string literal
+    let mut s = "Hello".to_string(); // mut s: String
+    println!("{}", s);
+    s.push_str(", world.");
+    println!("{}", s);
     // FIXME
   }
   {
