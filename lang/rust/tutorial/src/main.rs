@@ -530,7 +530,78 @@ extern {
 }
 
 fn effective_rust () {
+  { // 5.6 Concurrency
+    debug!("Concurrency");
+    // send and sync
+    use std::thread;
+    fn foobar1 () {
+      thread::spawn(|| { println!("Hello from a thread!"); } );
+    }
+    foobar1();
+    fn foobar2 () {
+      let handle = thread::spawn(|| {
+        "Hello from a thread!"
+      });
+      println!("{}", handle.join().unwrap());
+    }
+    foobar2();
+    fn foobar3 () {
+      let x = 1;
+      //thread::spawn(|| { println!("x is {}", x); }); // error
+      thread::spawn(move || { println!("foobar3: x is {}", x); });
+    }
+    foobar3();
+    // Safe shared mutable state
+    use std::time::Duration;
+    //fn foobar4 () {
+    //  let mut data = vec![1, 2, 3];
+    //  for i in 0..3 {
+    //    thread::spawn(move || {
+    //      data[0] += i;
+    //    });
+    //  }
+    //  thread::sleep(Duration::from_millis(50));
+    //}
+    //foobar4(); // data race, won't compile
+    use std::rc::Rc;
+    //fn foobar5 () {
+    //  let mut data = Rc::new(vec![1, 2, 3]);
+    //  for i in 0..3 {
+    //    let data_ref = data.clone(); // new owned reference
+    //    thread::spawn(move || {
+    //      data_ref[0] += 1;
+    //    });
+    //  }
+    //  thread::sleep(Duration::from_millis(50));
+    //}
+    //foobar5(); // still not compile
+    //fn foobar6 () {
+    //  let mut data = Arc::new(vec![1, 2, 3]);
+    //  for i in 0..3 {
+    //    let data = data.clone();
+    //    thread::spawn(move || {
+    //      data[0] += i;
+    //    });
+    //  }
+    //  thread::sleep(Duration::from_millis(50));
+    //} // foobar6 is still not working
+    use std::sync::{Arc, Mutex};
+    fn foobar7 () {
+      let data = Arc::new(Mutex::new(vec![1, 2, 3]));
+      for i in 0..3 {
+        let data = data.clone();
+        thread::spawn(move || {
+          let mut data =data.lock().unwrap();
+          data[0] += 1;
+        });
+      }
+      thread::sleep(Duration::from_millis(50));
+    }
+    foobar7();
+    // TODO
+  }
   { // 5.9 FFI
+    debug!("FFI");
     unsafe {
       let pid = getpid();
       println!("my pid is {}", pid);
