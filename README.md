@@ -225,6 +225,7 @@ Kali / Security / Penetration
   1. [(el) Arch: dm-crypt](https://wiki.archlinux.org/index.php/Dm-crypt/System_configuration)  
   1. [(el) Debian: encrypt setup](http://madduck.net/docs/cryptdisk/)  
 1. http://wooyun.org/
+1. macchanger
 
 [Debian GNU/Linux Specific](https://www.debian.org/)  
 ---
