@@ -244,8 +244,11 @@ Kali / Security / Penetration
   1. [library packaging guide](https://www.netfort.gr.jp/~dancer/column/libpkg-guide/libpkg-guide.html)  
   1. [Debian Python Policy (el)](https://www.debian.org/doc/packaging-manuals/python-policy/)  
   1. [(el) Upstream Guide](https://wiki.debian.org/UpstreamGuide)  
+  1. [Hardening (wiki)](https://wiki.debian.org/Hardening)  
+  1. [How to get backtrace (wiki)](https://wiki.debian.org/HowToGetABacktrace)  
 1. [Computer language benchmark Game (el)](http://benchmarksgame.alioth.debian.org/)[ its conclusion](http://benchmarksgame.alioth.debian.org/dont-jump-to-conclusions.html)    
 1. [GPG: Keysigning](./debian/gpg.md)  
+1. [GNU license list](https://www.gnu.org/licenses/license-list.html)  
 
 [Looking For Help](http://google.com)  
 ---
