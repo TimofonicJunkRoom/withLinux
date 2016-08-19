@@ -9,6 +9,8 @@ from subprocess import Popen, PIPE
 from sys import stdout
 from time import sleep
 
+from spinloader import LoadSpinner, BarSpinner
+
 class Spinner(object):
   def __init__(self):
     self.pool   = '-\\|/'
@@ -56,14 +58,16 @@ def gentargets6(port):
   return targets
 
 if __name__ == '__main__':
-  spinner = Spinner()
-  #targets = gentargets(10022)
-  targets = gentargets6(22)
-  print('There are {} targets to scan.'.format(len(targets)))
-  stdout.write('Scanning ...  ')
-  with Manager() as manager, Pool(12) as tp:
-    #tpres = tp.map_async(scan, manager.list(targets))
-    tpres = tp.map_async(scan6, manager.list(targets))
-    while not tpres.ready():
-      print('\b'+spinner(), end='')
-      sleep(0.1)
+  with LoadSpinner('Scanning ... ', speed=LoadSpinner.FAST,
+                    new_line=False, spinner=BarSpinner()) as ls:
+    spinner = Spinner()
+    #targets = gentargets(10022)
+    targets = gentargets6(22)
+    print('There are {} targets to scan.'.format(len(targets)))
+    #stdout.write('Scanning ...  ')
+    with Manager() as manager, Pool(12) as tp:
+      #tpres = tp.map_async(scan, manager.list(targets))
+      tpres = tp.map_async(scan6, manager.list(targets))
+      while not tpres.ready():
+        #print('\b'+spinner(), end='')
+        sleep(0.1)
