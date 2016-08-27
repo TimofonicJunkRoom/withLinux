@@ -28,9 +28,10 @@ void
 Usage ()
 {
   printf("Usage:\n\
- mount.ecryptfs <SRC> <DST> <STUB> -- Mount SRC to DST by Shortcut\n\
- mount.ecryptfs <SRC> <DST>        -- Mount SRC to DST\n\
- mount.ecryptfs <DST>              -- Umount DST\n");
+ mount.ecryptfs <SRC> <DST> <STUB> <STUB> -- Mount SRC to DST, Enhanced\n\
+ mount.ecryptfs <SRC> <DST> <STUB>        -- Mount SRC to DST by Shortcut\n\
+ mount.ecryptfs <SRC> <DST>               -- Mount SRC to DST\n\
+ mount.ecryptfs <DST>                     -- Umount DST\n");
   return;
 }
 
@@ -53,6 +54,17 @@ main (int argc, char ** argv, char ** envp)
     printf ("mount -t ecryptfs -o *** %s %s\n", argv[1], argv[2]);
     setuid(geteuid());
     char * shortcut_opt="-o key=passphrase:,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=n,no_sig_cache";
+    char * mount_ecryptfs_argv[] = {
+        "mount", "-t", "ecryptfs", argv[1], argv[2], "-o", shortcut_opt, NULL
+    };
+    execve ("/bin/mount", mount_ecryptfs_argv, envp);
+  } else if (argc == 5) { // Enhanced shortcut mount
+    printf ("mount -t ecryptfs -o *** %s %s\n", argv[1], argv[2]);
+    setuid(geteuid());
+    char * shortcut_opt = ""
+"key=passphrase,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,"
+"ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,no_sig_cache,"
+"ecryptfs_fnek_sig=d395309aaad4de06"; // f("test") = d395309aaad4de06
     char * mount_ecryptfs_argv[] = {
         "mount", "-t", "ecryptfs", argv[1], argv[2], "-o", shortcut_opt, NULL
     };
