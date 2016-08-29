@@ -2,6 +2,7 @@
 
 import pycurl
 import sys
+from multiprocessing.dummy import Pool
 
 class Msg(object):
   def __init__(self):
@@ -13,7 +14,7 @@ def scan_curl(target):
   msg = Msg()
   curl = pycurl.Curl()
   curl.setopt(pycurl.URL, bytes(target.encode()))
-  curl.setopt(pycurl.TIMEOUT_MS, 50)
+  curl.setopt(pycurl.TIMEOUT_MS, 70)
   curl.setopt(pycurl.WRITEFUNCTION, msg.callback)
   try:
     curl.perform()
@@ -28,7 +29,7 @@ def scan_curl(target):
       print(target, eid, message)
       return 0
   if len(msg.content) > 0:
-    print('Caught reply: {} : {}'.format(target, curl.getinfo(pycurl.HTTP_CODE)))
+    print('{} : {}'.format(target, curl.getinfo(pycurl.HTTP_CODE)))
     print(msg.content.decode())
   sys.stdout.flush()
   sys.stderr.flush()
@@ -38,6 +39,9 @@ if __name__ == '__main__':
   targets = []
   for i in range(1, 256):
     for j in range(1, 256):
-      targets.append('10.170.{}.{}:10022'.format(i,j))
+      targets.append('10.170.{}.{}:22'.format(i,j))
   print("Scanning {} hosts ...".format(len(targets)))
-  list(map(scan_curl, targets))
+  #list(map(scan_curl, targets)) # slow
+  with Pool(32) as p:
+    list(p.map(scan_curl, targets))
+  print('Scan finished.')
