@@ -183,4 +183,4 @@ sub square {
     return $result;
 }
 
-$sq = square(8);
+my $sq = square(8);
