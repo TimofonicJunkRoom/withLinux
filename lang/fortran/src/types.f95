@@ -20,6 +20,10 @@ program types
   complex :: c, cx
 
   real, parameter :: pi = 3.141592653
+  complex, parameter :: imag = (0, 1) ! sqrt(-1)
+  complex :: ca, cb
+
+  character (len=40):: reply
 
   print *, huge(i8), huge(i16), huge(i32), huge(i64), huge(i128)
   print *, huge(idefault)
@@ -49,4 +53,28 @@ program types
 
   print *, pi ** p
 
+  ca = (7, 8)
+  cb = (5, -7)
+  write (*,*) imag*ca*cb
+
+  print *, kind(ca)
+  print *, kind(y), kind(n)
+
+  reply = 'this is reply'
+  print *, reply
+  print *, username//reply ! string concatenation
+  print *, trim(username)//' '//reply
+
 end program types
+
+! len(string)
+! index(string,sustring)
+! achar(int)
+! iachar(c)
+! trim(string)
+! scan(string, chars)
+! verify(string, chars)
+! adjustl(string)
+! adjustr(string)
+! len_trim(string)
+! repeat(string,ncopy)
