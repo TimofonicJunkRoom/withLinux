@@ -167,6 +167,7 @@ System Management / Server
 1. [Augment existing ext4 filesystem](./admin/ext4-extend-partition.md)  
 1. [LVM simple note](./admin/lvm.md)  
 1. [systemd note](./admin/systemd.md)  
+1. [ZFS note](./admin/zfs.md)  
 
 Linux Kernel Hacks / Operating System / Embedding  
 ---
