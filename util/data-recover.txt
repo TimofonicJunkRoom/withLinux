@@ -10,4 +10,6 @@ some undelete tools under linux:
 	testdisk & photorec
 		cgsecurity.org
 
+gddrescue
+
 Usage see their doc
