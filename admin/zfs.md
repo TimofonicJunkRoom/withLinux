@@ -53,6 +53,25 @@ luminz  7.25G   270K  7.25G         -     0%     0%  1.00x  ONLINE  -
 
 Note, the safe way to use USB+ZFS is `zpool import/export`.
 
+## ZFS experiments
+
+> https://wiki.archlinux.org/index.php/Installing_Arch_Linux_on_ZFS  
+> https://wiki.archlinux.org/index.php/ZFS/Virtual_disks  
+> https://wiki.archlinux.org/index.php/ZFS  
+
+```
+# zpool create -f zroot /dev/disk/by-id/id-to-partition-partx
+# findmnt
+```
+
+create virtual device images
+```
+dd if=/dev/zero of=vda.img bs=1M count=128
+dd if=/dev/zero of=vdb.img bs=1M count=128
+dd if=/dev/zero of=vdc.img bs=1M count=128
+```
+
+
 ## reference
 
 `man zfs`, `man zpool`
