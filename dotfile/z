@@ -9,7 +9,7 @@ Usage () {
 }
 
 mkhr () {
-  for i in $(seq 0 80); do
+  for i in $(seq 0 78); do
     printf '-'
   done
   echo ''
@@ -27,11 +27,13 @@ ls)
 la)
   mkhr; sudo zpool list -v; mkhr; sudo zfs list -tall; mkhr; exit ;;
 st)
-  sudo zpool status ;;
+  sudo zpool status -v;;
 find)
   findmnt -t zfs ;;
 all)
   $0 find; $0 la ;;
+-v)
+  sudo zpool upgrade -v ;;
 *)
   Usage; exit ;;
 esac
