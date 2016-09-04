@@ -1,0 +1,37 @@
+#!/bin/sh
+set -e +x
+# requires package
+#   zfsutils-linux
+
+# My ZPOOL and ZFS Wrapper
+Usage () {
+  echo "$0 <shortcut>"
+}
+
+mkhr () {
+  for i in $(seq 0 80); do
+    printf '-'
+  done
+  echo ''
+}
+
+if test -z "$1"; then
+  Usage; exit
+fi
+
+case "$1" in
+-h)
+  Usage; exit ;;
+ls)
+  mkhr; sudo zpool list; mkhr; sudo zfs list; mkhr; exit ;;
+la)
+  mkhr; sudo zpool list -v; mkhr; sudo zfs list -tall; mkhr; exit ;;
+st)
+  sudo zpool status ;;
+find)
+  findmnt -t zfs ;;
+all)
+  $0 find; $0 la ;;
+*)
+  Usage; exit ;;
+esac
