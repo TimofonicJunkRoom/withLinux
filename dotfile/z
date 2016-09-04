@@ -2,13 +2,27 @@
 set -e +x
 # requires package
 #   zfsutils-linux
+#   zfsnap
 
 # My ZPOOL and ZFS Wrapper
 Usage () {
-  echo "$0 <shortcut>"
+  cat << EOF
+$0 <shortcut> [pool]
+Shortcut:
+  -h            show help message
+  ls            list zpool and zfs
+  la            list all zpool and zfs
+  st            show zpool status
+  check <pool>  scrub a pool
+  snap  <pool>  rotate snapshots for a pool
+  find          show zfs currently in use
+  all           show mounted zfs, list all zpool and zfs
+  -v            show zfs version
+EOF
 }
 
 mkhr () {
+  sudo true
   for i in $(seq 0 78); do
     printf '-'
   done
@@ -28,6 +42,10 @@ la)
   mkhr; sudo zpool list -v; mkhr; sudo zfs list -tall; mkhr; exit ;;
 st)
   sudo zpool status -v;;
+check)
+  sudo zpool scrub $2 ;;
+snap)
+  sudo zfSnap -a 3d -r $2; sudo zfSnap -d ;;
 find)
   findmnt -t zfs ;;
 all)
