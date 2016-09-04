@@ -41,3 +41,7 @@ is specified the output will be in ASCII format instead of binary format.
 13. change configuration of the default key `gpg --default-key`, and use `gpg -u KEYID` to override this config.
 
 14. Encryption recipient `gpg -r name`, or `gpg -R name` (in this case the recipient will be hidden)
+
+NOTE
+
+use `gpg -v`, the verbose flag to debug should gpg fail.
