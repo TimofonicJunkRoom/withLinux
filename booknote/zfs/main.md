@@ -38,4 +38,16 @@ remount as read-only
 # zfs mount -o remount,ro tank/home
 ```
 
-TODO, page 188
+# Working with ZFS snapshots and clones
+
+# Using ACLs and attributes to protect ZFS files
+
+# ZFS delegated administration
+
+# ZFS Advanced topics
+
+# ZFS troubleshooting and recovery
+
+..
+
+Marked as done, 4 sept 2016
