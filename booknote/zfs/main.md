@@ -28,3 +28,14 @@ Note, ZFS root pool must be created with an SMI (VTOC) label instead of an EFI l
 
 # Managing zfs file systems
 
+inheriting ZFS properties.
+```
+# zfs inherit -r compression tank/home
+```
+
+remount as read-only
+```
+# zfs mount -o remount,ro tank/home
+```
+
+TODO, page 188
