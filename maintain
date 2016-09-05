@@ -108,7 +108,7 @@ main () {
   # invoke sub scripts
   case $1 in
     scan   ) scan_missing ;;
-    stat   ) stat_lines | tail ;;
+    stat   ) stat_lines | tail ; python3 statistics.py ;;
     make   ) compile_all ;;
     clean  ) clean ;;
     purge  ) purge ;;
