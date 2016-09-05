@@ -22,3 +22,5 @@ winetricks dotnet40
 5. [wine] install terraria with GOG installer, install XNA as prompted.  
 
 6. wine Terraria.exe  
+
+Note, more detail about [Wine Mono](https://wiki.winehq.org/Mono).  
