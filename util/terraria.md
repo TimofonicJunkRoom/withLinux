@@ -24,3 +24,7 @@ winetricks dotnet40
 6. wine Terraria.exe  
 
 Note, more detail about [Wine Mono](https://wiki.winehq.org/Mono).  
+
+https://wiki.winehq.org/FAQ
+
+https://wiki.winehq.org/Wine_User's_Guide
