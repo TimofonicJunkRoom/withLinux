@@ -1,0 +1,11 @@
+Enter KP
+Maximize
+ obj: 7 y1 + 16 y2 + 19 y3 + 15 y4
+St
+ c1: 3 y1 + 6 y2 + 7 y3 + 5 y4 <= 9
+Binaries
+ y1 y2 y3 y4
+End
+
+mipopt
+disp sol va *
