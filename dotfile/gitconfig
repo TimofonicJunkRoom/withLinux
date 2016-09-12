@@ -8,6 +8,7 @@
 	co = checkout
 	br = branch
 	st = status
+	stu = status -uno
 	l  = log --stat --show-signature --graph --date=iso
 	hist = log --oneline --graph --show-signature
 [url "git+ssh://git.debian.org/git/"]
