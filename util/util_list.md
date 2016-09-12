@@ -28,6 +28,8 @@ XTerm*foreground: green
 ```
 > note, download ubuntu font here `ubuntu/pool/main/u/ubuntu-font-family-sources/`  
 
+> note, check `/etc/X11/app-defaults/XTerm`
+
 System Monitoring
 ---
 1. `conky`  
