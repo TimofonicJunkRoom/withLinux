@@ -107,6 +107,30 @@ https://wiki.archlinux.org/index.php/Install_from_existing_Linux
   + pacman -Syy
   + pacstrap /mnt busybox base base-devel grub vim parted
 
+##############################################################
+## Install Arch root on ZFS
+##############################################################
+https://wiki.archlinux.org/index.php/Installing_Arch_Linux_on_ZFS  
+https://wiki.archlinux.org/index.php/ZFS  
+
+* boot with arch live cd
+* configure mirrorlist
+* enable AUR
+```
+pacman.conf
+
+[archlinuxfr]
+Server = http://repo.archliux.fr/x86_64
+SigLevel = Never
+
+[archzfs]
+Server = http://archzfs.com/$repo/x86_64
+SigLevel = Never
+```
+* install yaourt `pacman -S yaourt`
+* FIXME: archlinux broken?
+
+
 ==========
 References
 ==========
