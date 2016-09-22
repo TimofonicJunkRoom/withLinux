@@ -87,6 +87,7 @@ Graphical Interface Stuff (Xorg)
   1. [change the height of top bar ... modify](./x/topbar.md)  
   2. [against BUG: alacarte empties gnome menu ... wheezy](./x/alacarte.txt)  
   3. X11 default display manager ... /etc/X11/default-display-manager  
+  1. [gnome scaling factor](./x/gnome-scale.md)  
 2. LXDE  
   1. [set shortcut keys under LXDE](./x/lxde-shortcut)  
 3. Desktop Managers, X11 login program  
