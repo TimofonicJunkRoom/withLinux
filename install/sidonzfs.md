@@ -56,6 +56,20 @@ parted>
 $ sudo partprobe
 ```
 
+Method2:
+```
+$ dd if=/dev/zero of=debian.img bs=1M count=3000
+$ sudo parted debian.img
+parted>
+  ...
+$ sudo losetup -P -f debian.img
+$ lsblk
+  loop0       7:0    0     3G  1 loop 
+  ├─loop0p1 259:0    0     2M  1 loop 
+  ├─loop0p2 259:1    0   240M  1 loop 
+  └─loop0p3 259:2    0   2.7G  1 loop 
+```
+
 #### Make Filesystem
 
 ```
@@ -66,6 +80,19 @@ $ sudo zfs create -o mountpoint=/      rpool/ROOT/debian
 $ sudo zfs create -o mountpoint=/home  rpool/home
 $ sudo zpool set bootfs=rpool/ROOT/debian rpool
 $ sudo zpool export rpool
+```
+
+Method2:
+```
+mkfs.ext4 /dev/loop0p2
+cryptsetup benchmark
+cryptsetup luksFormat /dev/loop0p3
+cryptsetup luksOpen /dev/loop0p3 luks
+zpool create -o altroot=/mnt -m none rpool /dev/mapper/luks
+zfs create -o mountpoint=none rpool/ROOT
+zfs create -o mountpoint=/ rpool/ROOT/debian
+zpool set bootfs=rpool/ROOT/debian rpool
+zpool export rpool
 ```
 
 Note, `ashift=9` for 512 byte sector size while `ashift=12` for 4k sector size.
@@ -79,6 +106,18 @@ $ sudo zpool set cachefile=/mnt/etc/zfs/zpool.cache rpool
 $ sudo mkdir -p /mnt/boot
 $ sudo mount -t ext4 /dev/sdc2 /mnt/boot
 $ sudo eatmydata -- debootstrap sid /mnt/ http://ftp.xdlinux.info/debian
+```
+
+Method2:
+```
+zpool import -o altroot=/mnt rpool
+mkdir
+zpool set cachefile=/mnt/etc/zfs/zpool.cache rpool
+mkdir
+mount -t ext4 /dev/loop0p2 /mnt/boot
+bootstrap
+
+OH MY GOODNESS, why is ZFS over LUKS so slow on my side?
 ```
 
 #### Base system configuration
