@@ -34,6 +34,7 @@ Installing Linux
 1. [(/boot + LUKS (LVM (/ + /home))) Linux installation](./install/lvm-over-luks.md)  
 1. [Alpine linux note](./install/alpine.md)  
 1. [OpenBSD note](./install/openbsd.md)  
+1. [Debian Sid root on ZFS](./install/sidonzfs.md)  
 
 Utilities / Miscellaneous  
 ---
