@@ -118,6 +118,8 @@ mount -t ext4 /dev/loop0p2 /mnt/boot
 bootstrap
 
 OH MY GOODNESS, why is ZFS over LUKS so slow on my side?
+https://mthode.org/posts/2013/Sep/gentoo-hardened-zfs-rootfs-with-dm-cryptluks-062/
+https://help.ubuntu.com/community/encryptedZfs
 ```
 
 #### Base system configuration
