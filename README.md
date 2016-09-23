@@ -400,6 +400,7 @@ In alphabet order.
 4. [APUE (placeholder) ]
 1. [Big Talk Design Pattern (-)](./booknote/btdp/main.md)  
 1. [Beauty of math](./booknote/beautyofmath/main.md)  
+1. [Beautiful Architecture (-)](./booknote/BeautifulArchitecture/main.md)  
 3. [BOP (-) ](./booknote/bop/main.md)  
 4. [Byte of Python (placeholder) ]
 3. [Building High Availability Linux Servers](./booknote/BuildHighAvailabilityLinuxServers/)  

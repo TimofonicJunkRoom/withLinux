@@ -1,0 +1,4 @@
+Beautiful Architecture
+===
+
+Stub
