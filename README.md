@@ -97,6 +97,8 @@ Graphical Interface Stuff (Xorg)
   4. [jwm], [cwm], [twm], [i3-wm]  
 5. Graphical Virtual terminals  
   1. [gnome-terminal], [guake], [uxterm], [lilyterm]  
+1. Special task under graphical environment  
+  1. [Input greek letters](./x/greek.md)  
 
 Internet Specific  
 ---
