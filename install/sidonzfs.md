@@ -1,6 +1,11 @@
 Debian Sid root on ZFS
 ===
 
+```
+Copyright (C) 2016 Zhou Mo <cdluminate@gmail.com>  
+MIT License
+```
+
 > https://github.com/zfsonlinux/zfs/wiki/HOWTO%20install%20Debian%20GNU%20Linux%20to%20a%20Native%20ZFS%20Root%20Filesystem  
 > https://wiki.archlinux.org/index.php/ZFS  
 > https://wiki.archlinux.org/index.php/Installing_Arch_Linux_on_ZFS  
