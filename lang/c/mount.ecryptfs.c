@@ -81,7 +81,7 @@ wrap_shortcut_enhanced (char * srcdst, char ** envp)
   setuid(geteuid());
   char * shortcut_opt = ""
 "key=passphrase,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,"
-"cryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,no_sig_cache";
+"ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,no_sig_cache";
   char * mount_ecryptfs_argv[] = {
       "mount", "-t", "ecryptfs", srcdst, srcdst, "-o", shortcut_opt, NULL
   };
