@@ -2,9 +2,9 @@ Beautiful Architecture Notes
 ===
 > Oreilly
 
-# On Architecture
+# Part I: On Architecture
 
-## What Is Architecture
+## Chapter 1: What Is Architecture
 > john klein, david weiss  
 
 Central to beauty is conceptual integrity -- that is, a set of abstractions
@@ -49,3 +49,64 @@ practice.
 
 Architecture is a part of the design of the system; it highlights some details
 by abstracting away from others. Architecture is thus a subset of design.
+
+The first concern of a software architect is not the functionality of the
+system, but the quality concerns that needed to be satisfied.
+
+Architecture decisions will have an impact on what kinds of changes can be
+done easily and quickly and what changes will take time and be hard to do.
+
+In the extreme case, there is no decomposition, and the system is developed as
+a monolithic block of software.
+
+Choosing one of the technologies is and architecture decision that will have
+significant impact on your ability to meet cartain quality requirements.
+
+We hope you understand by now that architecture decisions are important if your
+system is going to meet its quality requirements, and what you want to pay
+attention to the architecture and make these decisions intentionaly rather than
+just "letting the architecture emerge".
+
+The mind of a single user must comprehend a computer architecture. If a planned
+architecture cannot be designed by a single mind, it cannot be comprehended by
+one.
+
+Fred Brooks said that conceptual integrity is the most important attribute of
+an architecture.
+
+* Functionality  
+* Changeability  
+* Performance  
+* Capacity  
+* Ecosystem  
+* Modularity  
+* Buildability  
+* Producibility  
+* Security  
+
+Key structural decisions divide the product into components and define the
+relationships among those components.
+
+#### Summary of structures
+
+* Information hiding structure: "is part of", "is contained in": changeability,
+modularity, buildability  
+* Uses structure: "uses": producibility, ecosystem  
+* Process structure: "gives work to", "gets resources from", "shares resource
+with", "contained in": performance, changeability, capacity  
+* Data access structure: "has access to": security, ecosystem  
+
+Searching the web for "software architecture review checklist" returns dozens
+of chechlists.
+
+Albert Einstein might say that beautiful architecture are as simple as possible,
+but no simpler.
+
+Our last example is the Unix system, which exhibits conceptual integrity, is
+widely used, and has had great influence. The pipe and filters design is a
+lovely abstraction that permits rapid construction of new applications.
+
+> "Chapter1" was marked as read in Sept 2016.  
+
+## Chapter 2: A Table of two systems: a modern-day software fable
+TODO
