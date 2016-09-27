@@ -1,7 +1,7 @@
 ZFS
 ===
 
-installing ZFS with `apt install zfs`
+installing ZFS with `apt install zfsutils-linux`
 
 ## create and use ZFS on usb stick
 
