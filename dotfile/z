@@ -11,6 +11,7 @@ $0 <shortcut> [pool]
 Shortcut:
   -h            show help message
   ls            list zpool and zfs
+  lss           list all snapshots
   la            list all zpool and zfs
   st            show zpool status
   check <pool>  scrub a pool
@@ -39,6 +40,8 @@ case "$1" in
   Usage; exit ;;
 ls)
   mkhr; sudo zpool list; mkhr; sudo zfs list; mkhr; exit ;;
+lss)
+  sudo zfs list -tsnap; exit ;;
 la)
   mkhr; sudo zpool list -v; mkhr; sudo zfs list -tall; mkhr; exit ;;
 st)
