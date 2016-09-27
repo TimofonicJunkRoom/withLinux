@@ -222,4 +222,36 @@ the architecture.
 
 Form ever follows function.
 
+Fortunately, there was none of the interpersonal rivalry apparent in the
+metropolis project, or any vying for positions of power in the team. The
+members didn't know each other well beforehead and didn't know how well
+we'd work together, but we were all enthused about the project and relished
+the challenge.
+
+The development process employed was extream programming (XP), which many
+believe eschews design: code from the hip, and don't think too far ahead.
+XP does not discourage design; it discourages work that isn't necessary (this
+is the YAGNI, or You Aren't Going To Need It, principle). However, where
+upfront design is required, XP requires you to do that. It also encourages
+rapid prototypes (known as spikes) to flesh out and prove the validity of
+designs. Both of these were very useful and contributed greatly to the final
+software design.
+
+... just some blobs on a diagram, a basic system design that could grow easily
+as pieces of functionality were added. Although basic, this initial architecture
+proved a solid basis for growth.
+
+The existence of an architectural plan sometimes made the developers work harder.
+The payoff for this extra effort was a much easier life later on, when maintaining
+or extending the system -- there was very little cruft to trip over.
+
+An architecture helps you to locate functionality: to add it, to modify it,
+or to fix it. It provides a template for you to slot work into and a map to
+navigate the system.
+
+A clear architecture design leads to a consistent system. All decisions should
+be made in the context of the architectural design.
+
+Clear architecture helps reduce duplication of functionality.
+
 To be continued. sept 2016.
