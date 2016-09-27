@@ -11,6 +11,7 @@ then check your disk status with
 ```
 $ smartctl -HcA /dev/sda
 $ smartctl -a /dev/sda
+$ smartctl -x /dev/sda
 ```
 
 perform disk self-test
