@@ -75,3 +75,5 @@ dd if=/dev/zero of=vdc.img bs=1M count=128
 ## reference
 
 `man zfs`, `man zpool`
+
+http://www.funtoo.org/ZFS_Fun  
