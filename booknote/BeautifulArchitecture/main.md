@@ -254,4 +254,43 @@ be made in the context of the architectural design.
 
 Clear architecture helps reduce duplication of functionality.
 
-To be continued. sept 2016.
+Software architecture is not set in stone. Change it if you need to.
+To be changeable, the architecture must remain simple. Resist changes
+that compromise simplicity.
+
+One of the XP principles that relly enhanced the quality of the design town
+architecture was YAGNI. It encouraged us to design only the important stuff
+early on, and to defer all remaining decisions untill later, when we had a
+clearer picture of the actual requirements and how best to fit them into the
+system. This is an immemsely powerful design approach, and quite liberating.
+
+Defer design decisions until you have to make them. Don't make architecture
+decisions when you don't know the requirements yet. Don't guess.
+
+Architectural quality must be maintained. This can happen only when the
+developers are given and take responsibility for it.
+
+Some areas of the design town internal structure recieved quite radical
+rework, and the unit tests gave us confidence that the rest of the system
+had not been broken.
+
+Having a good set of automated tests for your system allows you to make
+fundamental architectureal chagnes with minimal risk. It gives you space
+in which to work.
+
+The unit tests practically enforced good structure, it forced careful
+thought about each unit's interface, and ensured that the unit's APT
+was meaningful and internally consistent.
+
+Unit testing your code leads to better software designs, so design for testability.
+
+Good projest planning leads to superior designs. Allot sufficient time to create
+an architectural masterpiece -- they don't appear instantly.
+
+A team's organization has an inevitable affect on the code it produces.
+
+Never lose a holy curiosity. -- Albert Einstein
+
+> Chapter 2 was marked as read in Sept 2016.  
+
+## Chapter3 TODO
