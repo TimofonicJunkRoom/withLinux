@@ -255,6 +255,7 @@ Kali / Security / Penetration
 1. [Computer language benchmark Game (el)](http://benchmarksgame.alioth.debian.org/)[ its conclusion](http://benchmarksgame.alioth.debian.org/dont-jump-to-conclusions.html)    
 1. [GPG: Keysigning](./debian/gpg.md)  
 1. [GNU license list](https://www.gnu.org/licenses/license-list.html)  
+1. [Debian CD/DVD hint](./debian/debiancd.md)  
 
 [Looking For Help](http://google.com)  
 ---
