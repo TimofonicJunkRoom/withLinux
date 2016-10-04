@@ -11,7 +11,15 @@ Gitlab notes
 Note, with respect to gitlab-ce with version higher than `8.7.0`,
 when the first time you visit the index page you are asked to
 enter new password for `root` account directly, and there is
-no need to memorize the `5iveL!fe` password.
+no need to memorize the `5iveL!fe` password.  
+
+# Gitlab Backup
+
+First make sure that your gitlab service is running. Then
+```
+$ sudo gitlab-rake gitlab:backup:create
+$ sudo ls /var/opt/gitlab/backups/
+```
 
 ### Troubleshot
 
