@@ -130,6 +130,12 @@ SigLevel = Never
 * install yaourt `pacman -S yaourt`
 * FIXME: archlinux broken?
 
+###############################################################
+## ArchLinux with UEFI
+###############################################################
+
+TODO
+
 
 ==========
 References

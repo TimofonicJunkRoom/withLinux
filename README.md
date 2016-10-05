@@ -24,7 +24,7 @@ Installing Linux
 5. [Some packages related to EFI/UEFI](./install/efi.txt)  
 6. [My old installation log for a HP server](./install/hpserver)  
 7. [Bootstrap minimal/stage3 Debian system](./install/bootstrap)    
-8. [Simple ArchLinux install note](./install/arch)  
+8. [Simple ArchLinux install note](./install/arch.md)  
 9. [mdadm note for creating software md5](./install/mdadm.md)  
 10. [Trying Gentoo is worthwhile (-) ](./install/gentoo)  
 1. [Gentoo: Sakaki's EFI Install Guide (el) ](https://wiki.gentoo.org/wiki/Sakaki%27s_EFI_Install_Guide)  
