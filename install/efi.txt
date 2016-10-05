@@ -21,6 +21,10 @@ efibootmgr
 
 TODO
 
+# Virtualbox EFI
+
+write a script `startup.nsh` to avoid manual boot.
+
 # see also
 
 [archlinux with UEFI](./arch.md)  
