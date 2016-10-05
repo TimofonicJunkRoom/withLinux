@@ -21,7 +21,7 @@ Installing Linux
 3. [Turning off graphic card](./install/turn-off-gpu.txt)  
 4. [Tips about Solid State Drive (SSD)](./install/ssd.md)  
   1. [Gentoo wiki/SSD (el) ](https://wiki.gentoo.org/wiki/SSD)  
-5. [Some packages related to EFI/UEFI](./install/efi.txt)  
+5. [Some packages related to EFI/UEFI](./install/efi.md)  
 6. [My old installation log for a HP server](./install/hpserver)  
 7. [Bootstrap minimal/stage3 Debian system](./install/bootstrap)    
 8. [Simple ArchLinux install note](./install/arch.md)  
