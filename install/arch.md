@@ -1,8 +1,6 @@
 # ArchLinux quick note : installing
 
-##########################################################
 ## install with CD
-##########################################################
 
 * download CD
   https://www.archlinux.org/download/
@@ -88,10 +86,8 @@
   http://i3wm.org/docs/refcard.html
   http://i3wm.org/docs/userguide.html
 
-################################################################
-## Install with an existing Linux system
-##############################################################
-https://wiki.archlinux.org/index.php/Install_from_existing_Linux
+## Install with an existing Linux system  
+> https://wiki.archlinux.org/index.php/Install_from_existing_Linux  
 
 * download bootstrap tarball
 * extract to /tmp
@@ -107,11 +103,10 @@ https://wiki.archlinux.org/index.php/Install_from_existing_Linux
   + pacman -Syy
   + pacstrap /mnt busybox base base-devel grub vim parted
 
-##############################################################
 ## Install Arch root on ZFS
-##############################################################
-https://wiki.archlinux.org/index.php/Installing_Arch_Linux_on_ZFS  
-https://wiki.archlinux.org/index.php/ZFS  
+
+> https://wiki.archlinux.org/index.php/Installing_Arch_Linux_on_ZFS  
+> https://wiki.archlinux.org/index.php/ZFS  
 
 * boot with arch live cd
 * configure mirrorlist
@@ -130,14 +125,27 @@ SigLevel = Never
 * install yaourt `pacman -S yaourt`
 * FIXME: archlinux broken?
 
-###############################################################
 ## ArchLinux with UEFI
-###############################################################
 
-TODO
+parted and filesystem
+```
+parted>
+  mktable gpt
+  mkpart 2mb 512mb name=UEFI type=fat32
+  mkpart 512mb-100% name=ROOT type=ext4
+  toggle 1 esp
+$ partprobe
+$ mkfs.ext4 /dev/sda2
+$ mkfs.vfat -F32 /dev/sda1
+$ mount /dev/sda2 /mnt
+$ mount /dev/sda1 /mnt/boot
+$ pacstrap /mnt base
+...
+$ grub-install --efi-directory=/boot/efi --boot-directory=/boot /dev/sda
+# /boot/efi/EFI/arch/grubx64.efi
+$ efibootmgr
+```
 
-
-==========
 References
 ==========
 
