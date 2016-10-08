@@ -18,6 +18,7 @@ Shortcut:
   snap  <pool>  rotate snapshots for a pool
   find          show zfs currently in use
   hist  <pool>  dump history of a pool
+  io            iostat with interval 1
   all           show mounted zfs, list all zpool and zfs
   -v            show zfs version
 EOF
@@ -54,6 +55,8 @@ find)
   findmnt -t zfs ;;
 hist)
   sudo zpool history $2 ;;
+io)
+  sudo zpool iostat 1 ;;
 all)
   $0 find; $0 la ;;
 -v)
