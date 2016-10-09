@@ -17,9 +17,47 @@ no need to memorize the `5iveL!fe` password.
 
 First make sure that your gitlab service is running. Then
 ```
+$ sudo gitlab-ctl start
+[ make sure gitlab is running ]
 $ sudo gitlab-rake gitlab:backup:create
 $ sudo ls /var/opt/gitlab/backups/
 ```
+
+# Gitlab Restore
+
+> localhost/help/raketasks/backup_restore.md  
+
+Fist copy backup archive to backup directory
+```
+sudo cp 1393513186_gitlab_backup.tar /var/opt/gitlab/backups/
+sudo chown git:git that_archive.tar
+```
+
+Stop database clients
+```
+sudo gitlab-ctl stop unicorn
+sudo gitlab-ctl stop sidekiq
+# Verify
+sudo gitlab-ctl status
+```
+
+Overwrite the whole gitlab database
+```
+sudo gitlab-rake gitlab:backup:restore BACKUP=1393513186
+```
+
+Check and fix problems
+```
+sudo gitlab-ctl reconfigure # different from official document
+sudo gitlab-ctl start
+sudo gitlab-rake gitlab:check SANITIZE=true
+```
+
+Note, check log for debugging. `/var/log/gitlab/gitlab-rails/production.log`  
+
+Note, for gitlab version `8.9.6` there is a bug where a restored gitlab
+instance returns 500 (`OpenSSL::Cipher::CipherError`) when you are accessing any old data.
+See https://www.unixhot.com/article/53 and https://gitlab.com/gitlab-org/gitlab-ce/issues/19073#note_12712670  
 
 ### Troubleshot
 
