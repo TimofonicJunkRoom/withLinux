@@ -174,7 +174,7 @@ System Management / Server
 1. [ZFS note](./admin/zfs.md)  
 1. [Some RAID0 Restoring Experiment](./admin/raid0rescue.md)  
 
-Linux Kernel Hacks / Operating System / Embedding  
+Linux Kernel Hacks / Operating System / Embedding / Hardware
 ---
 4. [linux frozen ... handle with SysRq](./kernel/sysrq.txt)  
 1. [Compile linux kernel... ](./kernel/compile.txt)  
@@ -185,7 +185,9 @@ Linux Kernel Hacks / Operating System / Embedding
 3. [backlight](./kernel/backlight.txt)  
 1. [my OK6410 installation log](kernel/ok6410/main.pdf)  
 1. [OpenPOWER fundation](http://openpowerfoundation.org/)  
-1. cpuid -- dump cpu info
+1. cpuid -- dump cpu info  
+1. hwinfo, lshw  to gather detailed system hardware information.  
+1. i2c-tools (modprobe eeprom; decode-dimms) to obtain CAS latency.  
 
 Virtualization  
 ---
