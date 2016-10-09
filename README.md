@@ -173,6 +173,7 @@ System Management / Server
 1. [systemd note](./admin/systemd.md)  
 1. [ZFS note](./admin/zfs.md)  
 1. [Some RAID0 Restoring Experiment](./admin/raid0rescue.md)  
+1. sshfs -- mount remote host to local directory
 
 Linux Kernel Hacks / Operating System / Embedding / Hardware
 ---
