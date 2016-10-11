@@ -4,6 +4,8 @@ SQL Note
 > sqlite.org  
 > http://www.w3school.com.cn/sql/index.asp  
 
+# SQL basics
+
 Note, SQL is case insensitive!  
 
 A sql command is like
@@ -34,6 +36,8 @@ DDL is like
 ```
 select <colomn_name> from <table_name>
 select * from <table_name>
+
+SELECT Firstname, lastname FROM persons
 ```
 
 ### SELECT DISTINCT
@@ -79,10 +83,46 @@ insert into <table_name> (column1, column2, ...) values (<value1, value2, ...>)
 update <table_name> set <column_name> = <new_value> where <column_name> = <value>
 ```
 
-## DELETE
+### DELETE
 ```
 delete from <table_name> where <column_name> = value
 delete * from <table_name>
+```
+
+# SQL advanced
+
+### TOP
+```
+select top <number [percent]> <column_name> from <table_name>
+```
+
+### LIKE
+```
+select <column_name> from <table_name> where <column_name> like <pattern>
+select <column_name> from <table_name> where <column_name> not like <pattern>
+
+e.g.
+select * from persons where city like 'N%' --> N% matches e.g. 'New York',
+  where % is the wildcard. Key word 'not' makes matching samples filtered.
+```
+
+### SQL wildcard
+```
+%                   any char any length
+_                   one any char
+[charlist]          any one of them
+[!charlist]         except any of them
+```
+
+### IN
+```
+select <column_name> from <table_name> where <column_name> in (value1, value2, value3, ...)
+```
+
+### BETWEEN
+```
+select <column_name> from <table_name> where <column_name> between value1 and value2
+select <column_name> from <table_name> where <column_name> not between value1 and value2
 ```
 
 TODO
