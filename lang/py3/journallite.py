@@ -1,9 +1,19 @@
 #!/usr/bin/python3
 import os
 import sys
+import subprocess
 
 if len(sys.argv)!=2:
   raise Exception('missing operand')
+
+# round 0: get recall
+print('I: round0: get recall')
+proc = subprocess.Popen(['grep', '-i', '-A3', 'recall', '{}'.format(sys.argv[1].strip())],
+                        stdout=subprocess.PIPE)
+out, err = proc.communicate()
+with open('{}.recall'.format(sys.argv[1].strip()), 'w+') as f:
+  f.write(str(out.decode()))
+print('I: wrote recall')
 
 # round 1: get bottom line number
 print('I: get bottom line number')
