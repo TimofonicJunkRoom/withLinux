@@ -235,7 +235,7 @@ Kali / Security / Penetration
   1. [(el) Debian: encrypt setup](http://madduck.net/docs/cryptdisk/)  
 1. http://wooyun.org/
 1. macchanger
-1. steghide  
+1. steghide -- steghide (1)  
 1. openssl encryption -- openssl (1), enc (1)  
 
 [Debian GNU/Linux Specific](https://www.debian.org/)  
