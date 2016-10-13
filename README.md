@@ -236,6 +236,7 @@ Kali / Security / Penetration
 1. http://wooyun.org/
 1. macchanger
 1. steghide  
+1. openssl encryption -- openssl (1), enc (1)  
 
 [Debian GNU/Linux Specific](https://www.debian.org/)  
 ---
