@@ -142,4 +142,80 @@ select <column_name> from <table1> UNION select <column_name> from <table2>
 select <column_name> from <table1> UNION ALL select <column_name> from <table2>
 ```
 
+### SELECT INFO
+used for copying.
+todo
+
+### CREATE DATABASE
+```
+create database <database_name>
+```
+
+### CREATE TABLE
+```
+create table <table_name> (
+  <column_name1> <type1>,
+  <column_name2> <type2>,
+  <column_name3> <type3>,
+  ...
+)
+```
+types:
+```
+int(.), smallint(.), tinyint(.), integer(MAX_PLACES)
+decimal(size, d), numeric(size, d)
+char(size)
+varchar(size)
+date(yyyymmdd)
+```
+
+### CONSTRAINTS
+
+#### NOT NULL
+```
+create table persons (
+  guid int NOT NULL,
+  ...
+)
+```
+
+#### UNIQUE
+```
+guid int NOT NULL,
+...
+UNIQUE (guid),
+```
+
+#### PRIMARY KEY
+```
+guid int NOT NULL,
+...
+PRIMARY KEY (guid),
+```
+
+#### FOREIGN KEY
+todo
+
+#### CHECK
+```
+guid int NOT NULL,
+CHECK (guid > 0)
+```
+
+#### DEFAULT
+```
+city varchar(255) DEFAULT 'sandnes'
+
+ALTER TABLE Persons
+ALTER city DROP DEFAULT
+```
+
+#### CREATE INDEX
+for faster lookup speed.
+```
+create [unique] index <index_name> ON <table_name> (<column_name> [DESC])
+```
+
+###
+
 TODO
