@@ -210,12 +210,74 @@ ALTER TABLE Persons
 ALTER city DROP DEFAULT
 ```
 
-#### CREATE INDEX
+### CREATE INDEX
 for faster lookup speed.
 ```
 create [unique] index <index_name> ON <table_name> (<column_name> [DESC])
 ```
 
-###
+### DROP and TRUNCATE
+```
+DROP INDEX <index_name> ON <table_name>
 
-TODO
+DROP TABLE <table_name>
+
+DROP DATABASE <database_name>
+
+TRUNCATE TABLE <table_name>
+```
+
+### ALTER
+```
+alter table <table_name> <ADD|DROP|ALTER> <column_name> <datatype|column <column_name>>
+```
+
+### AUTO INCREMENT
+```
+guid int NOT NULL AUTO_INCREMENT,
+PRIMARY KEY (guid)
+```
+
+### VIEW
+todo
+
+### DATE functions
+todo, dependent on database implementation
+
+### IS [NOT] NULL
+```
+select name from persons where name IS NOT NULL
+```
+
+### SQL datatype
+todo, dependant to database implementation, e.g. sqlite3 `sqlite3-doc`.
+
+## SQL Functions
+```
+SELECT function(<column_name>) FROM <table_name>
+```
+lookup concrete implementation documentation for functions in detail.
+```
+select avg(column_name) from table_name -> average, null is excluded.
+select count(column_name) from table_name
+select count(*) fron table_name
+select count(distinct column_name) from table_name
+select first(column_name) from table_name
+select last(column_name) from table_name
+select max(column_name) from table_name
+select min(column_name) from table_name
+select sum(column_name) from table_name
+       ucase(
+       lcase(
+       mid(                                 --> string slicing
+       len(                                 --> string length
+select round(column_name, decimals) from table_name
+select column_name, now() from table_name
+select format(column_name, format) from table_name
+
+-- group by  and  having
+select column_name, SUM(column_name) from table_name group by column_name
+```
+
+# SQL quick reference
+> http://www.w3school.com.cn/sql/sql_quickref.asp  
