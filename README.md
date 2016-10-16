@@ -99,7 +99,7 @@ Graphical Interface Stuff (Xorg)
   1. [gnome-terminal], [guake], [uxterm], [lilyterm]  
 1. Special task under graphical environment  
   1. [Input greek letters](./x/greek.md)  
-1. package: numix-gtk-theme numix-icon-theme  
+1. package: numix-gtk-theme numix-icon-theme arc-theme  
 
 Internet Specific  
 ---
