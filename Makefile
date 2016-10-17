@@ -6,16 +6,16 @@ SourcesGZ := $(target_sources)
 
 .PHONY: jessie jessie-backports
 jessie:
-	debmirror --config-file jessie.conf ./jessie/
+	debmirror --config-file ./jessie.conf ./jessie/
 jessie-backports:
-	debmirror --config-file jessie-backports.conf ./jessie-backports/
+	debmirror --config-file ./jessie-backports.conf ./jessie-backports/
 .PHONY: sid exp
 sid:
 	@echo "USE debmirror/sid, dak change (Mar.2016) breaks debmirror/jessie."
-	debmirror --config-file sid.conf ./sid/
+	debmirror --config-file ./sid.conf ./sid/
 exp:
 	@echo "USE debmirror/sid, dak change (Mar.2016) breaks debmirror/jessie."
-	debmirror --config-file experimental.conf ./experimental/
+	debmirror --config-file ./experimental.conf ./experimental/
 
 default:
 	./sync.sh
