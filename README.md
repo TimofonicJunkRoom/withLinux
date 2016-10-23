@@ -412,6 +412,7 @@ In alphabet order.
 3. [BOP (-) ](./booknote/bop/main.md)  
 4. [Byte of Python (placeholder) ]
 3. [Building High Availability Linux Servers](./booknote/BuildHighAvailabilityLinuxServers/)  
+1. [Busybox Code](./booknote/busybox/main.md)  
 1. [C Primer Plus](./booknote/cprimerplus/cprimerplus.md)  
 4. [Computer Organization and Design (placeholder) ]
 2. [C++ Primer Plus (-)](./booknote/cppprimerplus/cppprimerplus.md)  
