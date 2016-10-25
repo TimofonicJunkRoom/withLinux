@@ -194,9 +194,7 @@ Linux Kernel Hacks / Operating System / Embedding / Hardware
 Virtualization  
 ---
 1. Docker.io, the linux container  
-  1. [install docker.io on debian](./virt/docker.install.txt)  
-  2. [sample run](./virt/dockerizing.txt)  
-  3. [make a docker image via bootstrap](./virt/docker.make.image.txt)  
+  1. [note](./virt/docker.md)  
 4. X86 dosbox emulator, (dosbox)  
 1. QEMU/KVM  
   1. [QEMU/KVM -- nographic mode](./virt/qemu-nographic.md)  

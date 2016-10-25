@@ -1,7 +1,0 @@
-Docker.io is supported by 
-	debian 8 jessie amd64
-
-install it via apt .
-
-so I passed this :-)
-see http://docker.io
