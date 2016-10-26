@@ -32,3 +32,48 @@ awk '/pattern1/{print $0}; /pattern2/{print $0}' data.txt
 
 hint, convert TABs into spaces with tool `expand`.
 
+## running awk and gawk
+pass
+
+functionality to include awk files is available in awk.
+
+## regular expressions
+```
+exp ~ /pattern/  # match expression with pattern
+exp !~ /pattern/ # not match
+
+$1 ~ /patter/    # field 1 match
+```
+
+regular expression operations
+```
+\      escape
+^      string begining
+$      string ending
+.      match a single character
+[...]  matches any one character provided within brackets
+|      alternation
+(...)  grouping regular expressions, e.g. (apple|banana)
+*      repeat preceding character or not, greedy.
++      repeat preceding character at least once
+?      repeat once or not.
+{n}
+{n,}
+{n,m}  interval expression
+```
+see also: POSIX character classes
+
+case sensitivity
+```
+tolower($1) ~ /regexp/
+```
+
+## reading input files
+```
+FILENAME
+RS = "u" # record separator
+NF       # number of fields
+NR       # number of records read so far
+```
+
+page 83
