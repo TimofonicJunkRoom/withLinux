@@ -358,6 +358,7 @@ Programming, including Tool Languages
 1. Light weigt languages
   1. [Sed/Ed]  
   1. [AWK](./lang/awk/)  
+    1. [GAWK Manual](http://www.gnu.org/software/gawk/manual)  
   1. [GNU BC/DC]     
 1. [Doxygen ... Automatic document generation for C++ code](./lang/doxygen/)  
 1. [Java]
@@ -428,6 +429,7 @@ In alphabet order.
 2. [Gray Hat Hacking](./booknote/GrayHatHacking/)  
 2. [Game Theory non-technical](./booknote/GameTheory_non-technical/)  
 4. [Game Theory (in progress) ]
+1. [Gawk Manual Note (-)](./booknote/Gawk/main.md)  
 1. [Hacker Debugging Uncovered](./booknote/HackerDebuggingUncovered/)  
 3. [High Performance Linux Server Programming](./booknote/HighPerfLinuxServerProg/)  
 3. [Intel Micro Processor (x) ](./booknote/IntelMicroProc/)  
