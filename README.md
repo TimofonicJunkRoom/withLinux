@@ -153,7 +153,7 @@ System Management / Server
   1. [some open source fonts](./admin/font_list.txt)  
 17. [systemd ... some reference link](./admin/systemd_link.txt)  
 20. [sshd security ... sshguard](./admin/sshguard.txt)  
-21. [sshd SFTP chroot ... ](./admin/ssh.txt)  
+21. [sshd SFTP chroot ... ](./admin/ssh.md)  
 22. [Ext2/Ext3/Ext4 on Windows](http://blog.csdn.net/hansel/article/details/7557033)  
   1. [ext2Fsd](http://www.ext2fsd.com/)  
   2. [Ext2Read](http://sourceforge.net/projects/ext2read/)  
