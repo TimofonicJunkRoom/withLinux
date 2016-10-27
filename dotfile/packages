@@ -6,6 +6,11 @@ set -e
 packages="
   command-not-found
   unar
+  hdf5-tools
+  fish
+  ipython3
+  julia
+  octave
 "
 
 # start scanning
