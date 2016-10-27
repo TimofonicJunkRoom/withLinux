@@ -56,3 +56,16 @@ docker rm 1234567 # remove container
 docker images -a # list images
 docker rmi 1234567 # remove image
 ```
+
+# Deploy archlinux containers and expose ssh port to the wild
+```
+docker run -t -i archlinux:20161001 /bin/bash
+(docker)# passwd
+(docker)# pacman -S openssh
+(docker)# /usr/bin/sshd -D # make sure it works
+docker commit 01234567 archlinux:ssh
+
+docker run -d -p 22:22 archlinux:ssh /usr/bin/sshd -D
+OR
+docker run -d -P archlinux:ssh /usr/bin/sshd -D # choose random port mapping
+```
