@@ -60,7 +60,7 @@ docker rmi 1234567 # remove image
 # Deploy archlinux containers and expose ssh port to the wild
 ```
 docker run -t -i archlinux:20161001 /bin/bash
-(docker)# passwd
+(docker)# echo 'root:toor' | chpasswd
 (docker)# pacman -S openssh
 (docker)# /usr/bin/sshd -D # make sure it works
 docker commit 01234567 archlinux:ssh
