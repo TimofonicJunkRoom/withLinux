@@ -68,12 +68,59 @@ case sensitivity
 tolower($1) ~ /regexp/
 ```
 
-## reading input files
+## chap4: reading input files
 ```
 FILENAME
 RS = "u" # record separator
 NF       # number of fields
-NR       # number of records read so far
+NR       # number of records read so far, starts from 1
+FS       # field separator
+BEGIN { FIELDWIDTHS = "9 6 10 6 7 7 35" }
 ```
 
-page 83
+`getline` function ...
+
+## chap5: printing output
+```
+print item1, item2, ...
+print "this is a string\n"
+print $1 $2   # <-- this is an common error, which yields no space between items
+print $1, $2  # correct.
+
+msg = "do not panic!"
+printf "%s\n", msg
+```
+
+`OFS` is output field separator.
+
+output redirectoring # seems important to me.
+```
+$ awk ’{ print $2 > "phone-list"
+>        print $3 >> "append"
+>        print $4 | "sort -r > c4.sorted"
+>        print $1 > "name-list" }’ mail-list
+```
+
+## chap6: expressions
+
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+FIXME
+
+## chap9: functions
