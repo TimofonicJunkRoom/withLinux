@@ -5,6 +5,9 @@
 https://segmentfault.com/a/1190000004448907
 https://segmentfault.com/a/1190000004455101
 
+https://wiki.archlinux.org/index.php/Kernel_modules
+http://tldp.org/LDP/lkmpg/2.6/html/index.html
+
  */
 /*
    all the functions you can use here are listed at
