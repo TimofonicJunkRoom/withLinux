@@ -124,3 +124,62 @@ FIXME
 FIXME
 
 ## chap9: functions
+
+#### mathematical functions
+```
+atan2(y, x) # y/x in radians, and `pi = atan2(0,-1)`
+cos(x) exp(x) int(x) log(x)
+rand() # [0, 1)
+sin(x) sqrt(x) srand([x])
+```
+
+#### string functions
+```
+asort(...   # array sort
+asorti(...
+gensub(regexp, replacement, how[, target]) # able to specify components
+gsub(regexp, replacement [, target])
+index(in, find)
+length([string])
+match(string, regexp, [array])
+patsplit(string, array [, fieldpat [, seps ] ]) # devide string into pieces
+split(string, array [, fieldsep [, seps ] ]) # Divide string into pieces separated by fieldsep and store the pieces in array
+sprintf(format, expression1, ...)
+strtonum(str)
+sub(regexp, replacement [, target])
+substr(string, start [, length ])
+tolower(string)
+toupper(string)
+```
+
+```
+$ gawk ’
+> BEGIN {
+> a = "abc def"
+> b = gensub(/(.+) (.+)/, "\\2 \\1", "g", a)
+> print b
+> }’
+a def abc
+```
+
+#### input/output functions
+```
+close(filename[, how])
+fflush([filename])
+system(command)
+```
+
+#### time functions
+```
+mktime(datespec)
+strftime([format [, timestamp [, utc-flag] ] ])
+systime()
+```
+
+#### bit-wise
+FIXME
+
+#### TODO
+
+#### user functions
+TODO
