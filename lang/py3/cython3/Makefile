@@ -1,4 +1,4 @@
-FLAGS=-I/usr/include/python3.4m -lpython3.4m
+FLAGS=-I/usr/include/python3.5m -lpython3.5m
 main:
 
 	cython3 fib_cy3.pyx #> generates fib_cy3.c
