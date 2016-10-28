@@ -1,5 +1,15 @@
 
 /* the simplest kernel module */
+/*
+
+https://segmentfault.com/a/1190000004448907
+https://segmentfault.com/a/1190000004455101
+
+ */
+/*
+   all the functions you can use here are listed at
+     $ cat /proc/kallsyms
+ */
 
 #include <linux/kernel.h>
 #include <linux/module.h>
