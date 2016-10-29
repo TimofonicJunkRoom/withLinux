@@ -206,7 +206,11 @@ NR             number of records read so far
 ```
 
 ## chap8: arrays in awk
-FIXME
+in awk, generally array index starts from 0. however actually awk array
+is similar to lua table.
+```
+array[index-expression] = value
+```
 
 ## chap9: functions
 
@@ -275,9 +279,11 @@ function name([parameter-list])
 ```
 
 ## practical awk programs
-FIXME
+TODO
 
 # appendix D: basic programming concepts
 ```
 |input|-->--|program|-->--|output|
 ```
+
+marked as basically done. 2016 Oct 29
