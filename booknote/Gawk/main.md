@@ -102,25 +102,110 @@ $ awk ’{ print $2 > "phone-list"
 ```
 
 ## chap6: expressions
+operators
+```
+arithmatic:
+ x^y, x**y   exponentiation
+ -x
+ +x
+ x*y
+ x/y
+ x%y
+ x+y
+ x-y
 
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
-FIXME
+assignment:
+ z = 1
+ += -= *= /= %= ^= (**=)
+
+increment and decrement:
+  ++ --
+
+true and false:
+  1 0
+
+comparison:
+  < <= > >= == != ~ !~
+  <subscript> in <array>
+
+boolean:
+  && || !
+
+conditional:
+  selector ? if-true-exp : if-false-exp
+```
+
+Note, Do not put any space between the function name and the open-
+ing parenthesis!
+
+## chap7: pattern, action, variable
+
+#### pattern elements
+```
+/regexp/
+experssion
+BEGIN
+END
+```
+
+e.g.
+```awk
+/foo|bar|baz/ { buzzwords++ }
+END           { print buzzwords, "buzzwords seen" }
+```
+
+control flow
+```
+if (expr) {
+  then-body
+} else {
+  else-body
+}
+
+while (condition) {
+  body
+}
+
+do {
+  body
+} while (condition)
+
+for (initialization; condition; increment) {
+  body
+}
+
+switch (expression) {
+case value or regular expression:
+  case-body
+default:
+  default-body
+}
+
+break
+
+continue
+
+next
+
+nextfile
+
+exit [code]
+```
+
+pre-defined variables
+```
+FS             field separator
+IGNORECASE
+OFS            output field separator
+ORS            output record separator
+RS             input record separator
+
+FILENAME
+NF             number of fields
+NR             number of records read so far
+```
+
+## chap8: arrays in awk
 FIXME
 
 ## chap9: functions
@@ -177,9 +262,22 @@ systime()
 ```
 
 #### bit-wise
-FIXME
-
-#### TODO
+pass
 
 #### user functions
-TODO
+```
+function name([parameter-list])
+{
+    body-of-function
+    [return]
+}
+
+```
+
+## practical awk programs
+FIXME
+
+# appendix D: basic programming concepts
+```
+|input|-->--|program|-->--|output|
+```
