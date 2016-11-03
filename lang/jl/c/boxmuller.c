@@ -2,6 +2,7 @@
 /*
   @reference https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform#Implementation
   @reference http://www.zhihu.com/question/29971598#answer-17169006
+  @reference http://mathworld.wolfram.com/Box-MullerTransformation.html
  */
 
 #include <stdio.h>
@@ -17,6 +18,10 @@ double * boxmuller(double *, size_t);
 double *
 boxmuller (double * a, size_t n)
 {
+  /* Box-Muller Gassian distributed random number generator
+     $$ z_1 = \sqrt{-2 \ln x_1 } \cos( 2\pi x_2 ) $$
+     $$ z_2 = \sqrt{-2 \ln x_1 } \sin( 2\pi x_2 ) $$
+   */
   #define PI 3.1415926535897932384
   #define drand(void) (1.0-((double)rand()/(double)RAND_MAX)) // (0, 1]
 
