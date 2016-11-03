@@ -30,9 +30,9 @@ function setenv(name::AbstractString, value::AbstractString, overwrite::Int64) #
    val
 end
 
-println(getenv("SHELL"))
-println(setenv("LD_LIBRARY_PATH", "./", 1))
-println(getenv("LD_LIBRARY_PATH"))
+println(" => SHELL ", getenv("SHELL"))
+setenv("LD_LIBRARY_PATH", "./", 1)
+println(" => LD_LIBRARY_PATH ", getenv("LD_LIBRARY_PATH"))
 
 a = ccall( (:hello, "libkernel.so"), Int32, () )
 println(a)
@@ -44,3 +44,10 @@ a = ccall( (:dasum, "libkernel.so"), Float64, (Ptr{Cdouble}, Csize_t), b, length
 println(a)
 a = ccall( (:pdasum, "libkernel.so"), Float64, (Ptr{Cdouble}, Csize_t), b, length(b))
 
+b = zeros(1, 5)
+ccall( (:boxmuller, "libboxmuller.so"), Ptr{Float64}, (Ptr{Cdouble}, Csize_t), b, length(b))
+println(b)
+println(length(b))
+#for i = 1:length(b)
+#   println(b[i])
+#end
