@@ -216,6 +216,7 @@ Cluster / HighPerf
     1. [My HTCondor wrapper script](./cluster/condor)  
     1. [my HTCondor note](/cluster/condor.md)  
   4. Other: Torque, SGE (sub grid engine), Slurm  
+1. [Note on OpenMP and OpenBLAS](./cluster/omp_oblas.md)  
 
 Kali / Security / Penetration  
 ---
