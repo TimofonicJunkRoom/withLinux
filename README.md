@@ -80,6 +80,7 @@ Utilities / Miscellaneous
 1. zhcon -- Chinese character in tty
 1. [cpio note](./util/cpio.md)  
 1. fish/fishshell -- powerful shell (`apt install fish; chsh; fish_config`)  
+1. [Vim](./util/vim.md)  
 
 Graphical Interface Stuff (Xorg)  
 ---
