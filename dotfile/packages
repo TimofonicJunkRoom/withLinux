@@ -4,18 +4,78 @@ set -e
 
 # packages
 packages="
-  command-not-found
-  cryptsetup
-  ecryptfs-utils
-  fail2ban
-  fish
-  hdf5-tools
-  ipython3
-  julia
-  octave
-  python3-ipdb
-  taskwarrior
-  unar
+ack
+axel
+bbswitch-dkms
+build-essential
+busybox-static
+command-not-found
+cryptsetup
+debhelper
+debmake
+debmirror
+devscripts
+docker.io
+dstat
+eatmydata
+ecryptfs-utils
+fail2ban
+fcitx
+fcitx-googlepinyin
+ffmpeg
+fish
+gdb
+git
+git-buildpackage
+gitg
+gpm
+gsmartcontrol
+guake
+hdf5-tools
+htop
+i3
+ipython3
+julia
+less
+libblas-dev
+libgoogle-glog-dev
+libhdf5-dev
+libopenblas-dev
+lm-sensors
+lshw
+ltrace
+luajit
+mawk
+octave
+openconnect
+pppoeconf
+progress
+python3-ipdb
+qemu
+quilt
+rfkill
+rsync
+rustc
+sed
+smartmontools
+sqlite3
+sshfs
+strace
+subversion
+sudo
+taskwarrior
+texlive-full
+tpp
+ttf-ubuntu-font-family
+ubuntu-dev-tools
+unar
+vim
+virtualbox
+w3m
+wesnoth
+wine32-development
+zfsnap
+zfsutils-linux
 "
 
 # start scanning
