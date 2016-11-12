@@ -218,6 +218,7 @@ Cluster / HighPerf
     1. [my HTCondor note](/cluster/condor.md)  
   4. Other: Torque, SGE (sub grid engine), Slurm  
 1. [Note on OpenMP and OpenBLAS](./cluster/omp_oblas.md)  
+1. [BLAS](./cluster/blas.md)  
 
 Kali / Security / Penetration  
 ---
