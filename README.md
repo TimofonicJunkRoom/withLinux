@@ -191,6 +191,7 @@ Linux Kernel Hacks / Operating System / Embedding / Hardware
 1. cpuid -- dump cpu info  
 1. hwinfo, lshw  to gather detailed system hardware information.  
 1. i2c-tools (modprobe eeprom; decode-dimms) to obtain CAS latency.  
+1. [VM note](./kernel/vm.md)  
 
 Virtualization  
 ---
