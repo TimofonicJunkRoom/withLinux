@@ -220,6 +220,7 @@ Cluster / HighPerf
   4. Other: Torque, SGE (sub grid engine), Slurm  
 1. [Note on OpenMP and OpenBLAS](./cluster/omp_oblas.md)  
 1. [BLAS](./cluster/blas.md)  
+1. [LAPACK](./cluster/lapack.md)  
 
 Kali / Security / Penetration  
 ---
