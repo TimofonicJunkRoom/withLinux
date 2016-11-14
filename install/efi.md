@@ -19,6 +19,18 @@ efibootmgr
 
 # Debian Sid with EFI
 
+The Debian installer handles UEFI properly.
+```
+sda gpt
+sda1 512mb FAT32 esp,boot  /boot/efi       # mkfs.fat -F32 /dev/sda1
+sda2 512mb ext4  boot      /boot
+sda3 rest  ext4  root      /
+
+efibootmgr
+```
+
+# ArchLinux with EFI / bootctl
+
 TODO
 
 # Virtualbox EFI
