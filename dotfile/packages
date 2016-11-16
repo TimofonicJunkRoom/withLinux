@@ -23,6 +23,7 @@ fail2ban
 fcitx
 fcitx-googlepinyin
 ffmpeg
+filezilla
 fish
 gdb
 git
@@ -45,6 +46,7 @@ lm-sensors
 lshw
 ltrace
 luajit
+lyx
 mawk
 octave
 openconnect
