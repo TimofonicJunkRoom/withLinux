@@ -44,6 +44,7 @@ libhdf5-dev
 libopenblas-dev
 lm-sensors
 lshw
+lsof
 ltrace
 luajit
 lyx
