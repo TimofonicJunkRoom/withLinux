@@ -28,3 +28,10 @@ Note, more detail about [Wine Mono](https://wiki.winehq.org/Mono).
 https://wiki.winehq.org/FAQ
 
 https://wiki.winehq.org/Wine_User's_Guide
+
+Might and Magic Heroes VI on linux with WINE
+===
+
+1. install `direct9x` with winetricks.  
+2. download `mfc90.dll` and put it under `WINE/drive_c/windows/system32/`.  
+3. run.  
