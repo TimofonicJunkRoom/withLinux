@@ -71,6 +71,20 @@ dd if=/dev/zero of=vdb.img bs=1M count=128
 dd if=/dev/zero of=vdc.img bs=1M count=128
 ```
 
+## Expand
+
+```
+dd if=/dev/zero of=vda.img bs=1M count=128
+dd if=/dev/zero of=vdb.img bs=1M count=128
+dd if=/dev/zero of=vdc.img bs=1M count=128
+dd if=/dev/zero of=vdd.img bs=1M count=128
+
+sudo zpool create ztest mirror /tmp/vda.img /tmp/vdb.img
+sudo zpool list -v
+sudo zpool add ztest mirror /tmp/vdc.img /tmp/vdd.img
+sudo zpool list -v
+```
+See also Autoexpand.
 
 ## reference
 
