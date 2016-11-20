@@ -73,6 +73,22 @@ timer.set()
 result0 = [ math.sin(i) for i in range(number_tasks) ]
 timer.stop()
 
+print('I: two functions')
+def myfun1(array):
+  return [ math.sin(element) for element in array ]
+def myfun2(array):
+  sin = math.sin
+  return [ math.sin(element) for element in array ]
+def myfun3(array):
+  return list(map(math.sin, array))
+def myfun4(array):
+  sin = math.sin
+  return list(map(sin, array))
+timer.set(); myfun1(task); timer.stop()
+timer.set(); myfun2(task); timer.stop()
+timer.set(); myfun3(task); timer.stop()
+timer.set(); myfun4(task); timer.stop()
+
 print('I: this technique is awesome!')
 '''
 def convert_image(imagepath):
