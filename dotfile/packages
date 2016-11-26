@@ -63,6 +63,7 @@ rsync
 rustc
 sed
 smartmontools
+spyder3
 sqlite3
 sshfs
 strace
