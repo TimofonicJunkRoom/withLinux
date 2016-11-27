@@ -10,6 +10,7 @@ bbswitch-dkms
 bpython3
 build-essential
 busybox-static
+codespell
 command-not-found
 cryptsetup
 debhelper
