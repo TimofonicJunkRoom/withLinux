@@ -22,3 +22,11 @@ NFS, Network FileSystem
 		/usr/sbin/showmount
 
 # autofs
+
+---
+
+# Nov. 27 2016
+
+## Setting up NFS on Debian
+
+* install `nfs-kernel-server` package.  
