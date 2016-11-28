@@ -1,0 +1,33 @@
+
+[debomatic-ppc64el]
+fqdn           = debomatic-ppc64el.debian.net
+incoming       = /srv/debomatic-ppc64el
+login          = debomatic
+method         = scp
+allow_unsigned_uploads  = 0
+allow_dcut     = 1
+scp_compress   = 1
+
+[debomatic-amd64]
+fqdn           = debomatic-amd64.debian.net
+incoming       = /srv/debomatic-amd64
+login          = debomatic
+method         = scp
+allow_unsigned_uploads  = 0
+allow_dcut     = 1
+scp_compress   = 1
+
+[debomatic-i386]
+fqdn           = debomatic-i386.debian.net
+incoming       = /srv/debomatic-i386
+login          = debomatic
+method         = scp
+allow_unsigned_uploads  = 0
+allow_dcut     = 1
+scp_compress   = 1
+
+[alioth]
+fqdn            = git.debian.org
+login           = cdluminate-guest
+method          = scp
+incoming        = /srv/home/users/cdluminate-guest/upload/

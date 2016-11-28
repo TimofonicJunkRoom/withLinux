@@ -29,6 +29,7 @@ cat > $tempfile <<EOF
  bashrc.lumin $home/.bashrc.lumin
  bashrc.system $home/.bashrc.system
  devscripts $home/.devscripts
+ dput.cf $home/.dput.cf
  gbp.conf $home/.gbp.conf
  xsession $home/.xsession
  xinitrc $home/.xinitrc
