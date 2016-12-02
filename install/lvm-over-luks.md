@@ -188,4 +188,6 @@ Method 2: change cryptsetup code
  1001     log_err(ctx, _("No key available with this passphrase.\n"));                
  1002     return -EPERM;
 
+@ http://unix.stackexchange.com/questions/107739/how-to-trigger-a-system-self-destruct-with-a-certain-password-is-entered
+@ https://github.com/offensive-security/cryptsetup-nuke-keys
 ```
