@@ -18,6 +18,11 @@
     var keyword = document.getElementById("keyword1").value;
     return template.replace("XXXXXX", keyword);
   }
+  function getBTS() {
+    var template = "https://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=XXXXXX"
+    var keyword = document.getElementById("keyword0").value;
+    return template.replace("XXXXXX", keyword)
+  }
  </script>
  
  <head>
@@ -39,6 +44,7 @@
    <br>
    <input type="button" value="Tracker" onclick="javascript:window.open(getTracker())">
    <input type="button" value="Buildd" onclick="javascript:window.open(getBuildd())">
+   <input type="button" value="BTS" onclick="javascript:window.open(getBTS())">
    <br>
  
   </div>
