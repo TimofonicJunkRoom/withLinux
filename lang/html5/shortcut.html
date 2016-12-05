@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+ <meta charset="UTF-8">
+
+ <script language='javascript'>
+  function getTracker() {
+    var template = "https://tracker.debian.org/pkg/XXXXXX";
+    var keyword = document.getElementById("keyword0").value;
+    return template.replace("XXXXXX", keyword);
+  }
+  function getBuildd() {
+    var template = "https://buildd.debian.org/status/package.php?p=XXXXXX";
+    var keyword = document.getElementById("keyword0").value;
+    return template.replace("XXXXXX", keyword);
+  }
+  function getDDPO() {
+    var template = "https://qa.debian.org/developer.php?email=XXXXXX";
+    var keyword = document.getElementById("keyword1").value;
+    return template.replace("XXXXXX", keyword);
+  }
+ </script>
+ 
+ <head>
+  <title>Shortcut to several Debian services</title>
+ </head>
+
+ <body>
+  <div>
+ 
+   <h2>Directly access</h2>
+   <input type="button" value="www.d.o" onclick="javascript:window.location.href='https://www.debian.org'">
+   <input type="button" value="sources.d.n" onclick="javascript:window.location.href='https://sources.debian.net'">
+ 
+  </div>
+  <div>
+ 
+   <h2>Package status lookup</h2>
+   Source package name: <input type="text" name="k" value="" id="keyword0">
+   <br>
+   <input type="button" value="Tracker" onclick="javascript:window.open(getTracker())">
+   <input type="button" value="Buildd" onclick="javascript:window.open(getBuildd())">
+   <br>
+ 
+  </div>
+  <div>
+ 
+   <h2>DDPO lookup</h2>
+   Maintainer email: <input type="text" name="e" value="" id="keyword1">
+   <input type="button" value="DDPO" onclick="javascript:window.open(getDDPO())">
+ 
+  </div>
+ </body>
+
+</html>
