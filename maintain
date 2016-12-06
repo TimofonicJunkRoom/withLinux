@@ -23,6 +23,7 @@ echo
 printf "Project withlinux has %s%d%s files currently.\n" "[34;1m" $files "[;0m"
 printf "Project withlinux has %s%d%s lines currently.\n" "[33;1m" $lines "[;0m"
 printf "Project withlinux occupies %s%s%s of disk space.\n" "[36;1m" $sizes "[;0m"
+printf "Project withlinux running on %s%s%s .\n" "[31;1m" $kernelname "[;0m"
 }
 
 scan_missing () {
@@ -93,6 +94,7 @@ lines=$(stat_lines | tail -n1 | awk '{print $1}' | sed -e 's/\n//g')
 files=$(find . -path ./.git -prune -o -name '*.pdf' -prune -o -type f -print | nl | tail -n1 | awk '{print $1}' | sed -e 's/\n//g')
 sizes=$(du -sh . | awk '{print $1}' | sed -e 's/\n//g')
 commits=$(git log --oneline | nl | tail -n1 | cut -f1)
+kernelname=$(uname -s | awk '/kFreeBSD/{print "kFreeBSD"}; /Linux/{print "Linux"};')
 
 main () {
   # detect arg
