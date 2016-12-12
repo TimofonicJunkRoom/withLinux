@@ -260,4 +260,17 @@ e.g. Xapian
 
 # chapter9: the web, untangled
 
-pp. 217
+web clients  
+* test with telnet  
+* python's standard web libraries: http, urllib  
+* beyond the standard library: requests  
+
+web servers  
+* `python3 -m http.server`  
+* WCGI  
+* frameworks (e.g. `bottle`, `flask`)  
+* (non-python) apache, nginx  
+
+# chapter10: systems
+
+pp. 241
