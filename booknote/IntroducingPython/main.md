@@ -122,4 +122,41 @@ b = A()
 A.kids() # 2
 ```
 
-page 135
+special methods
+```
+comparison
+__eq__(self, other) self == other
+__ne__
+__lt__
+__gt__
+__le__
+__ge__
+
+math
+__add__(self, other) self + other
+__sub__
+__mul__
+__floordiv__ //
+__truediv__ /
+__mod__ %
+__pow__ **
+
+miscellaneous
+__str__(self) str(self)
+__repr__(self) repr(self)
+__len__(self) len(self)
+```
+
+named tuples
+```
+from collections import namedtuple
+Duck = namedtuple('Duck', 'bill tail')
+duck = Duck('wide orange', 'long')
+duck # Duck(bill='wide orange', tail='long')
+duck.bill
+duck.tail
+```
+
+# chapter7: mangle data like a pro
+
+pp. 145
