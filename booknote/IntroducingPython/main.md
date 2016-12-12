@@ -355,4 +355,12 @@ Plots, graphs, visualization
 
 # appendix B: py at work
 
-pp. 353
+pp. 353, pass
+
+# appendix C: py Sci
+
+pandas for messy data.
+
+---
+
+Marked as done. Dec 12 2016. Nice book.
