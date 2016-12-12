@@ -273,4 +273,17 @@ web servers
 
 # chapter10: systems
 
-pp. 241
+```
+import os   # system
+import glob # list matching files
+```
+
+programs and processes
+```
+import subprocess
+import multiprocessing
+```
+
+# chapter11: concurrency and networks
+
+pp. 261
