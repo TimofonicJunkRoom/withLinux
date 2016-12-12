@@ -159,4 +159,21 @@ duck.tail
 
 # chapter7: mangle data like a pro
 
-pp. 145
+formating
+```
+print('{0:#^80s}'.format(' this is a comment line '))
+```
+
+regular expressions.
+
+pack and unpack
+```
+import struct
+struct.pack('>L', 154) # > for little-endian, L for 4-byte long int
+
+width, height = struct.unpack('>LL', data[16:24])
+```
+
+# chapter8: data has to go somewhere
+
+pp. 173
