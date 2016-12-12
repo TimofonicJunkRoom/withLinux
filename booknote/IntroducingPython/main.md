@@ -286,4 +286,55 @@ import multiprocessing
 
 # chapter11: concurrency and networks
 
-pp. 261
+ZeroMQ is like a Lego set.
+
+# chapter12: be a pythonista
+
+pip, ipython
+
+name and document
+
+`if __name__=='__main__':`
+
+test your code with `pylint, pyflakes, and pep8`.
+
+test with unittest.
+
+test with doctest.
+
+test with nose. (simpler than unittest)
+
+debug with pdb.
+
+logging error messages.
+
+optimize your code  
+1. measure timing `from time import time`.  
+2. algorithms and data structures.  
+3. cython, numpy, and c extensions.  
+4. pypy.  
+
+```
+from timeit import timeit
+
+def make_list_1():
+  result = []
+  for value in range(1000):
+    result.append()
+  return result
+
+def make_list_2():
+  result = [ value for value in range(1000) ]
+  return result
+
+print('make_list_1 takes', timeit(make_list_1, number=1000), 'seconds')
+print('make_list_2 takes', timeit(make_list_2, number=1000), 'seconds')
+```
+
+source control, git
+
+clone this book: `git clone https://github.com/madscheme/introducing-python`.
+
+# appendix A, python art
+
+pp. 339
