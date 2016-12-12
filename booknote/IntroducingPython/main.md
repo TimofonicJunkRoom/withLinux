@@ -176,4 +176,88 @@ width, height = struct.unpack('>LL', data[16:24])
 
 # chapter8: data has to go somewhere
 
-pp. 173
+### text/binary file input/output.
+
+```
+with open('file', 'w+') as f:
+  f.write(msg)
+```
+
+### structured text files
+
+```
+import csv
+v = [ [ 'a', 'b' ], [ 'c', 'd' ] ]
+with open('junk', 'wt') as fout:
+  csvout = csv.writer(fout)
+  csvout.writerows(v)
+
+import csv
+with open('junk', 'rt') as fin:
+  cin = csv.reader(fin)
+  v = [ row for row in cin ]
+```
+
+xml. html.
+
+json.
+```
+import json
+json.dumps()
+json.loads()
+```
+
+YAML.
+```
+import yaml
+```
+
+configuration files
+```
+import configparser
+```
+
+serializing binary blobs with pickle
+```
+import pickle
+import datetime
+now1 = datetime.datetime.utcnow()
+pickled = pickle.dumps(now1)
+now2 = pickle.loads(pickled)
+now1
+now2
+```
+
+### structured binary files
+
+spreadsheets
+
+HDF5
+
+### relational databases
+
+SQL, DB-API, SQLite, and so on.
+
+### NoSQL data stores
+
+dbm family, quick example
+```
+import dbm
+db = dbm.open('definitions', 'c') # 'r' read, 'w' write, 'c' both
+
+db['key'] = value # use it like a dictionary
+len(db) # db size 1
+db['key'] # lookup
+
+db.close()
+```
+
+memcached, Redis (data structure server).
+
+### full-text databases
+
+e.g. Xapian
+
+# chapter9: the web, untangled
+
+pp. 217
