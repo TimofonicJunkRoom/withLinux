@@ -337,4 +337,22 @@ clone this book: `git clone https://github.com/madscheme/introducing-python`.
 
 # appendix A, python art
 
-pp. 339
+2-D graphics  
+* imghdr (detects file type)  
+* colorsys (converts color, e.g. RGB, YIQ, HSV, HLS)  
+* PIL and Pillow  
+* imagemagick  
+* graphical user interface (GUI), e.g. tkinter  
+
+3-D graphics and animation  
+* panda3d  
+* blender  
+* maya  
+
+Plots, graphs, visualization  
+* matplotlib  
+* ...  
+
+# appendix B: py at work
+
+pp. 353
