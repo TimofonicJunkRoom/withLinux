@@ -32,6 +32,35 @@ and more
 
 Using runsnakerun to Visualize cProfile output.
 
-pp. 36.
+Using line_profiler for line-by-line measurements.
+
+Using memory_profiler to diagnose memory usage.
+
+Inspecting objects on the heap with heapy.
+
+Using dowser for live graphing of instantiated variables.
+
+Using the dis module.
+```python
+import dis
+
+def fn_expressive(n = 1000):
+  total = 0
+  for i in range(n):
+    total += i
+  return total
+
+def fn_terse(n = 1000):
+  return sum(range(n))
+
+dis.dis(fn_expressive)
+dis.dis(fn_terse)
+```
+
+Unit testing during optimization to maintain correctness.
+
+# chapter3: lists and tuples
+
+pp. 61
 
 This seems to be a nice book.
