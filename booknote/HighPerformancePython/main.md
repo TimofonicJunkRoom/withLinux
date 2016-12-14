@@ -61,6 +61,54 @@ Unit testing during optimization to maintain correctness.
 
 # chapter3: lists and tuples
 
-pp. 61
+lists are dynamic arrays while tuples are static arrays.
 
-This seems to be a nice book.
+list lookup runs in O(1), while list.index() runs in O(n) by performing linear search.
+
+# chapter4: dictionaries and sets
+
+pass
+
+# chapter5: iterators and genetators
+
+pass
+
+# chapter6: matrix and vector computation
+
+TODO
+
+# chapter7: Compiling to C
+
+* Cython -- (most commonly used) mixture of C and python  
+* Shed -- Python2C converter  
+* Numba -- LLVM-based  
+* PyPy -- JIT  
+
+* FFI  
+
+TODO
+
+# chapter8: Concurrency
+
+async
+
+# chapter9: The multiprocessing Module
+
+TODO
+
+# chapter10: Cluster and Job Queues
+
+TODO
+
+# chapter11: Using Less RAM
+
+TODO
+
+Tips:  
+1. Use numpy if you are working with numeric data.  
+
+# chapter12: Lessons from the Field
+
+TODO
+
+Nice book.
