@@ -81,6 +81,7 @@ Utilities / Miscellaneous
 1. [cpio note](./util/cpio.md)  
 1. fish/fishshell -- powerful shell (`apt install fish; chsh; fish_config`)  
 1. [Vim](./util/vim.md)  
+1. [Linux-Perf](./util/perf.md)  
 
 Graphical Interface Stuff (Xorg)  
 ---
