@@ -51,23 +51,13 @@ function normalize(mat)
    return (mat - minimum(mat)) / (maximum(mat) - minimum(mat))
 end
 
-# prepare
-@printf("Preparing Matrices\n")
-Z = complex(zeros(samples, samples))
+# calculate
 output = zeros(samples, samples)
+@printf("Calculating Julia Set\n")
 for (i,x) in enumerate(linspace(xmin, xmax, samples))
    for (j,y) in enumerate(linspace(ymin, ymax, samples))
       # FIXME: why should I rotate the resulting image like this?
-      Z[j,i] = x + y * im
-   end
-end
-
-# calculate
-@printf("Calculating Julia Set\n")
-for i = 1:samples
-   #@printf(" -> iteration %d\n", i)
-   for j = 1:samples
-      output[i,j] = getCount(Z[i,j], C)
+      output[j,i] = getCount(x + y * im, C)
    end
 end
 
