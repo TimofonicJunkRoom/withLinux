@@ -1,11 +1,15 @@
 # Calculate Julia Set with Julia.
 #
-# https://en.wikipedia.org/wiki/Julia_set
-# http://mathworld.wolfram.com/JuliaSet.html
+# https://en.wikipedia.org/wiki/Julia_set      for "julia set"
+# http://mathworld.wolfram.com/JuliaSet.html   for "julia set"
+# https://en.wikipedia.org/wiki/Netpbm_format  for "ppm picture format"
 #
 # The resulting image will be saved in PPM format to file result.ppm
 # This ppm file can be viewed directly, or you can convert it into
-# another format like this: $ ffmpeg -i result.ppm -vcodec png output.png
+# another format like this:
+#  $ ffmpeg -i result.ppm -vcodec png output.png
+# This command provides performance information.
+#  $ sudo /usr/bin/time perf stat julia main.jl
 # 
 # Copyright © Zhou Mo <cdluminate AT gmail.com>
 # MIT License
@@ -18,6 +22,12 @@ xmax = 1.8
 ymin = -1.8
 ymax = 1.8
 samples = 2000
+@printf("%s", "Dump configuration
+ -> C       = $(C)
+ -> xrange  = [ $(xmin), $(xmax) ]
+ -> yrange  = [ $(ymin), $(ymax) ]
+ -> samples = $(samples)
+")
 
 # helper functions
 function getPPMHeader(width, height)
@@ -54,7 +64,6 @@ end
 
 # calculate
 @printf("Calculating Julia Set\n")
-# FIXME: why doesn't @parallel for i = 1:samples work ?
 for i = 1:samples
    #@printf(" -> iteration %d\n", i)
    for j = 1:samples
