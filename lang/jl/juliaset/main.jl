@@ -1,5 +1,8 @@
 # Calculate Julia Set with Julia.
 #
+# https://en.wikipedia.org/wiki/Julia_set
+# http://mathworld.wolfram.com/JuliaSet.html
+#
 # The resulting image will be saved in PPM format to file result.ppm
 # This ppm file can be viewed directly, or you can convert it into
 # another format like this: $ ffmpeg -i result.ppm -vcodec png output.png
@@ -9,6 +12,7 @@
 
 # configure
 C = -0.62772 -0.42193im
+#C = 0.285 + 0im
 xmin = -1.8
 xmax = 1.8
 ymin = -1.8
