@@ -34,9 +34,7 @@ samples = 2000
 # helper functions
 function getPPMHeader(width, height, magic="P2")
    # Magic "P2" for gray PPM picture
-   return "$(magic)
-   $(width) $(height)
-   255
+   return "$(magic) $(width) $(height) 255
    "
 end
 
@@ -80,6 +78,7 @@ end
 output = zeros(samples, samples)
 @printf("Calculating Julia Set\n")
 for (i,x) in enumerate(linspace(xmin, xmax, samples))
+   @printf(" -> progress: %.2f\n", i/samples)
    for (j,y) in enumerate(linspace(ymin, ymax, samples))
       # FIXME: why should I rotate the resulting image like this?
       output[j,i] = getCount(x + y * im, C)
