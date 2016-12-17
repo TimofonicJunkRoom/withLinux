@@ -11,6 +11,8 @@ const samples = 2000
  -> yrange  = [ $(ymin), $(ymax) ]
  -> samples = $(samples)\n")
 
+# This is LJR's modified version of Julia Set Generator
+
 function gen_im!(file::AbstractString, xmin::Real, xmax::Real, ymin::Real, ymax::Real, samples::Int, C::Complex)
     y = ((ymin-ymax)/samples)
     x = ((xmax-xmin)/samples)
