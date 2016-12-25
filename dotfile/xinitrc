@@ -1,5 +1,6 @@
 # lumin's xinitrc
-# referece: arch wiki
+# referece: https://wiki.archlinux.org/index.php/I3
+xautolock -time 1 -locker "i3lock" &
 xset r rate 190 60
 xset -b
 exec i3
