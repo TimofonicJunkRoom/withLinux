@@ -9,7 +9,10 @@ mount --bind /proc proc
 mount --bind /sys sys
 mount --bind /dev dev
 
-echo " -> please run /opt/gitlab/embedded/bin/runsvdir-start in background"
+echo " -> Run /opt/gitlab/embedded/bin/runsvdir-start in background."
+echo " -> Start gitlab with «gitlab-ctl start»."
+echo " ->  Work with Gitlab."
+echo " -> Stop gitlab with «gitlab-ctl stop»."
 
 chroot . /bin/bash
 
