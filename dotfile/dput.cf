@@ -22,6 +22,33 @@ fqdn           = debomatic-i386.debian.net
 incoming       = /srv/debomatic-i386
 login          = debomatic
 method         = scp
+allow_unsigned_uploads = 0
+allow_dcut     = 1
+scp_compress   = 1
+
+[debomatic-arm64]
+fqdn           = debomatic-arm64.debian.net
+incoming       = /srv/debomatic-arm64
+login          = debomatic
+method         = scp
+allow_unsigned_uploads  = 0
+allow_dcut     = 1
+scp_compress   = 1
+
+[debomatic-armel]
+fqdn           = debomatic-armel.debian.net
+incoming       = /srv/debomatic-armel
+login          = debomatic
+method         = scp
+allow_unsigned_uploads  = 0
+allow_dcut     = 1
+scp_compress   = 1
+
+[debomatic-armhf]
+fqdn           = debomatic-armhf.debian.net
+incoming       = /srv/debomatic-armhf
+login          = debomatic
+method         = scp
 allow_unsigned_uploads  = 0
 allow_dcut     = 1
 scp_compress   = 1
