@@ -133,6 +133,7 @@ Internet Specific
   1. [list of DNS record types ... useful with dig(1)](http://en.wikipedia.org/wiki/List_of_DNS_record_types)  
   2. [comparison of DNS server software](http://http://en.wikipedia.org/wiki/Comparison_of_DNS_server_software)  
 1. [Restrict connections with Iptables](./internet/iptables-restrict-connections.md)  
+1. [access intranet with ddns](./internet/intranet-ddns.md)  
 
 System Management / Server  
 ---
