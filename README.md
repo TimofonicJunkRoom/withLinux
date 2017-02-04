@@ -96,12 +96,13 @@ Graphical Interface Stuff (Xorg)
   1. [gdm3] and [kdm], too heavy  
   2. [sddm] for plasma5  
   3. [lightdm] and [slim] are light and small  
-  4. [jwm], [cwm], [twm], [i3-wm]  
+  4. [jwm], [cwm], [twm], [i3-wm], [dwm]  
 5. Graphical Virtual terminals  
-  1. [gnome-terminal], [guake], [uxterm], [lilyterm]  
+  1. [gnome-terminal], [guake], [uxterm], [lilyterm], [sakura], [st]  
 1. Special task under graphical environment  
   1. [Input greek letters](./x/greek.md)  
 1. package: numix-gtk-theme numix-icon-theme arc-theme  
+2. [Xorg+dwm notes](./x/xorgdwm.md)  
 
 Internet Specific  
 ---
