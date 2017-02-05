@@ -18,10 +18,12 @@ debhelper
 debmake
 debmirror
 devscripts
+dmenu
 dnsmasq
 dnsutils
 docker.io
 dstat
+dwm
 eatmydata
 ecryptfs-utils
 fail2ban
@@ -66,12 +68,14 @@ quilt
 rfkill
 rsync
 rustc
+sakura
 sed
 smartmontools
 spyder3
 sqlite3
 sshfs
 strace
+stterm
 subversion
 sudo
 taskwarrior
