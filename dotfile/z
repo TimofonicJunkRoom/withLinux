@@ -25,11 +25,18 @@ EOF
 }
 
 mkhr () {
+  local char
+  if test -z "$1"; then
+    char='='
+  else
+    char=$1
+  fi
   sudo true
+  /bin/echo -en "\x1b[1;33m"
   for i in $(seq 0 78); do
-    printf '-'
+    printf "$char"
   done
-  echo ''
+  /bin/echo -e "\x1b[m"
 }
 
 if test -z "$1"; then
@@ -40,7 +47,7 @@ case "$1" in
 -h)
   Usage; exit ;;
 ls)
-  mkhr; sudo zpool list; mkhr; sudo zfs list; mkhr; exit ;;
+  mkhr; sudo zpool list; mkhr -; sudo zfs list; mkhr; exit ;;
 lss)
   sudo zfs list -tsnap; exit ;;
 la)
