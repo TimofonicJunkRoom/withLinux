@@ -57,8 +57,6 @@ Utilities / Miscellaneous
 19. Wine  
   1. [(el) Arch: wine](https://wiki.archlinux.org/index.php/Wine)  
   1. [Terraria with Wine32, on Linux](./util/terraria.md)  
-  1. [(el) Deepin's wined cajviewer](http://packages.linuxdeepin.com/deepin/pool/main/d/deepinwine-cajviewer/)  
-  1. [(el) Deepin: wine QQ](http://wiki.deepin.org/index.php?title=QQ)  
 20. [Git ... content tracker](http://www.git-scm.com/)  
   1. [set up git ... github help](https://help.github.com/articles/set-up-git)  
   2. [a git tutor ... git immersion](http://gitimmersion.com/)  
