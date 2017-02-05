@@ -50,6 +50,8 @@ st)
 check)
   sudo zpool scrub $2 ;;
 snap)
+  sudo zfSnap -a 32d -r $2 ;;
+autosnap)
   sudo zfSnap -a 32d -r $2; sudo zfSnap -d ;;
 find)
   findmnt -t zfs ;;
