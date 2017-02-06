@@ -6,3 +6,10 @@ wheezy:
 apt-get update
 apt-get install wine:i386
 
+How to force winetricks use a 32-bit wineprefix?
+---
+
+```
+rm -rf ~/.wine
+WINEARCH=win32 winetricks --gui
+```
