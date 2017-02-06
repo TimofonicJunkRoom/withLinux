@@ -150,7 +150,7 @@ System Management / Server
 11. [SMART, hard disk smart attributes](./admin/smart.md)  
 12. [Steam ... install steam on amd64](./admin/steam.txt)  
 13. [Sudo ...](./admin/sudo.txt)  
-14. [Wine ... on amd64](./admin/wine.txt)  
+14. [Wine ... on amd64](./admin/wine.md)  
 16. [font ... install font](./admin/font.txt)  
   1. [some open source fonts](./admin/font_list.txt)  
 17. [systemd ... some reference link](./admin/systemd_link.txt)  
