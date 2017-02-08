@@ -17,3 +17,7 @@ sudo ufw show raw
 ```
 
 See ufw(8) for detail.
+
+```
+systemctl enable ufw
+```
