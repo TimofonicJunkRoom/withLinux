@@ -71,7 +71,9 @@ rsync
 rustc
 sakura
 sed
+shorewall
 smartmontools
+snort
 spyder3
 sqlite3
 sshfs
