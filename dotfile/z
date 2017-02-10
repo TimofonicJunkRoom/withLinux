@@ -51,7 +51,7 @@ ls)
 lss)
   sudo zfs list -tsnap; exit ;;
 la)
-  mkhr; sudo zpool list -v; mkhr; sudo zfs list -tall; mkhr; exit ;;
+  mkhr; sudo zpool list -v; mkhr -; sudo zfs list -tall; mkhr; exit ;;
 st)
   sudo zpool status -v;;
 check)
