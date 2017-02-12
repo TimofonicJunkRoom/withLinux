@@ -111,6 +111,7 @@ chapter 2 +placeholder
 #### decrease-and-conquer method  
 
 1. [insert sorting](./code/insert_sort.cc)  
+1. [topological sorting](./code/topo_sort_source_removal.cc)  
 
 #### ...
 
