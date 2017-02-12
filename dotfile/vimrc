@@ -67,3 +67,6 @@ set ruler
 
 " colorscheme slate
 colorscheme ron
+
+" pathogen
+execute pathogen#infect()

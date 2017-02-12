@@ -91,6 +91,7 @@ ufw
 unar
 vainfo
 vim
+vim-pathogen
 virtualbox
 w3m
 wesnoth
