@@ -61,6 +61,7 @@ lyx
 mawk
 octave
 openconnect
+pep8
 pppoeconf
 progress
 python3-ipdb
@@ -88,6 +89,7 @@ ttf-ubuntu-font-family
 ubuntu-dev-tools
 ufw
 unar
+vainfo
 vim
 virtualbox
 w3m
