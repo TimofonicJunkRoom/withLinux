@@ -48,6 +48,7 @@ set hidden		" Hide buffers when they are abandoned
 set number		" Line number
 "set backup
 "set cursorline
+"set list       " show invisible characters
 
 "set expandtab
 set ts=4
