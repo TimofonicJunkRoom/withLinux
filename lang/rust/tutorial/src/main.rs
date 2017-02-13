@@ -65,9 +65,14 @@ fn syntax () {
     println! ("{}", plusone(1));
     fn diverges() -> ! { // diverging function
       panic!("This function never returns!");
+      // use RUST_BACKTRACE=1 to see backtrace
     }
     let f: fn(i32) -> i32 = plusone; // function pointer
     let y = f(5);
+    fn earlyReturn(x: i32) -> i32 {
+      return x; // using return before the last line is fine
+      x+1
+    }
   }
   { // 4.3 Primitive types
     let x = true;
@@ -103,8 +108,8 @@ fn syntax () {
   }
   { // 4.4 comments
     // this is line comment
-    // /// this is doc comment for the item following it, markdown is supported
-    // //! this is doc comment for the item enclosed, with markdown being supported
+    // /// this is doc comment for the item following it, supports markdown
+    // //! this is doc comment for the item enclosed, and markdown is supported
     let stub = "stub";
   }
   { // 4.5 if
