@@ -67,14 +67,14 @@ set fileformats=unix,dos,mac
 set ruler
 
 " colorscheme slate
-" colorscheme ron
+ colorscheme ron
 
 " pathogen
 execute pathogen#infect()
 
 " vim-colors-solarized
 let g:solarized_termcolors=256
-colorscheme solarized
+"colorscheme solarized
 
 " http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
 " Automatic Parenthesis and Brackets completion
@@ -84,12 +84,12 @@ inoremap { {<ESC>o    <ESC>o}<ESC>ka
 inoremap } <c-r>=ClosePair('}')<CR>
 inoremap [ []<ESC>i
 inoremap ] <c-r>=ClosePair(']')<CR>
-inoremap < <><ESC>i
-inoremap > <c-r>=ClosePair('>')<CR>
+"inoremap < <><ESC>i
+"inoremap > <c-r>=ClosePair('>')<CR>
 "inoremap " ""<ESC>i
-inoremap " <c-r>=QuoteDelim('"')<CR>
+"inoremap " <c-r>=QuoteDelim('"')<CR>
 "inoremap ' ''<ESC>i
-inoremap ' <c-r>=QuoteDelim("'")<CR>
+"inoremap ' <c-r>=QuoteDelim("'")<CR>
 function ClosePair(char)
 	if getline('.')[col('.') - 1] == a:char
 		return "\<Right>"
