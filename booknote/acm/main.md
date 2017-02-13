@@ -112,6 +112,7 @@ chapter 2 +placeholder
 
 1. [insert sorting](./code/insert_sort.cc)  
 1. [topological sorting](./code/topo_sort_source_removal.cc)  
+1. [permutation_johnson](./code/permutation_jonson.cc)  
 
 #### ...
 
