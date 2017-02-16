@@ -80,7 +80,7 @@ let g:solarized_termcolors=256
 " Automatic Parenthesis and Brackets completion
 inoremap ( ()<ESC>i
 inoremap ) <c-r>=ClosePair(')')<CR>
-inoremap { {<ESC>o    <ESC>o}<ESC>ka
+inoremap { {}<ESC>i
 inoremap } <c-r>=ClosePair('}')<CR>
 inoremap [ []<ESC>i
 inoremap ] <c-r>=ClosePair(']')<CR>
