@@ -47,6 +47,7 @@ htop
 i3
 ipython3
 julia
+jupyter-notebook
 less
 libblas-dev
 libgoogle-glog-dev
