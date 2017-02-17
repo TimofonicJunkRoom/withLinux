@@ -62,6 +62,7 @@ lyx
 mawk
 octave
 openconnect
+pandoc
 parallel
 pep8
 pppoeconf
