@@ -70,6 +70,32 @@ def generate_ints(N): # returns an iterator function
         yield i # a function containing "yield" is a generator function
 # more examples at testsuite: Lib/test/test_generators.py
 
+''' built-in functions '''
+list(map(str.upper, ['sentence', 'fragment']))
+[s.upper() for s in ['sentence', 'fragment']]
+list(filter(lambda x: ((x%2)==0), range(10)))
+for i, line in enumerate(open(__file__, 'r')): print(i, line.strip())
+# sorted() any() all() zip()
+
+''' itertools '''
+import itertools
+# itertools.count(n) returns an infinite stream of integers
+# itertools.cycle(content) returns an iterator that repeats the elements infinitely.
+# itertools.repeat(content, n) repeats content for n times, or endlessly if n was omitted.
+# ...
+# itertools.combinations(iterable, r) gives all possible r-tuple of the elements in iterable
+# itertools.permutations(iterable, r)
+# itertools.groupby(iterable, key_func=None) collects all the consecutive elements from the underlying itertable that have the same key value
+
+''' functools '''
+import functools
+# functools.partial(function, arg1, arg2, ...)
+# functools.reduce(function, iterable, [initial_value]) # where the function takes two values
+
+''' lambda expression '''
+# https://docs.python.org/3.5/howto/functional.html#small-functions-and-the-lambda-expression
+
+''' (extra) functional style algorithm '''
 def fpsum(vec):
     if len(vec)==1:
         return vec[0]
