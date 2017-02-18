@@ -115,3 +115,38 @@ catch e
 end
 
 # -- functions --
+function add(x, y)
+	println("adding $x and $y")
+	x+y
+end
+add(5, 6)
+f_add(x, y) = x+y # compact assignment of functions
+f_foo(x, y) = x+y, x-y # returns a tuple
+
+function va_args(args...)
+	return args
+end
+va_args(1, 2, 3)
+
+add([5,6]...) # equiv to add(5,6), the ... is called a splat.
+
+function f_positional(a, b, x=5, y=6) # positional arguments
+	return "$a $b and $x $y"
+end
+function f_keyword(; k1=4, name2="hello") # keyword argument
+	return Dict("k1"=> k1, "name2"=> name2)
+end
+
+function create_adder(x) # Julia has first class functions
+	adder = function (y)
+		return x+y
+	end
+	return adder
+end
+
+println( (x -> x>2)(3) ) # true; this is stabby lambda syntax
+
+map(+, [1,2,3,4]) # built-in higher order functions
+filter(x -> x>5, [3,4,5,6,7])
+
+println([(x -> x+1)(i) for i in [1, 2, 3]]) # list comprehensions
