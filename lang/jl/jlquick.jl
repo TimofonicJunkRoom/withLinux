@@ -150,3 +150,44 @@ map(+, [1,2,3,4]) # built-in higher order functions
 filter(x -> x>5, [3,4,5,6,7])
 
 println([(x -> x+1)(i) for i in [1, 2, 3]]) # list comprehensions
+
+# -- types --
+typeof(5) # Int64
+type MyType
+	real::Float64
+	imag::Float64
+	tag::AbstractString
+	stub # same as stub::Any
+end
+aaa = MyType(0.1, 0.2, "test", 0)
+bbb = typeof(aaa)(0, 0, "bbb", 0)
+
+abstract Cat # just a name and node in the type hierarchy
+println(subtypes(AbstractString))
+println(super(Int64))
+
+type Lion <: Cat # <: is the subtype operator
+	name_color
+	roar::AbstractString
+end
+Lion(roar::AbstractString) = Lion("gree", roar) # overloading constructor
+type Panther <: Cat
+	eye_color
+	Panther() = new(green) # will only have this constructor
+end
+
+# -- multiple dispatch --
+function meow(animal::Lion)
+	animal.roar
+end
+function meow(animal::Panther)
+	"grrr"
+end
+issubtype(Lion, Cat)
+
+# -- under the hood
+sqare_area(l) = l*l
+code_native(sqare_area, (Int32,))
+code_native(sqare_area, (Float64,))
+
+# -- quick guide done
