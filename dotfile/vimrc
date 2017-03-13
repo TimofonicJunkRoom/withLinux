@@ -49,6 +49,7 @@ set number		" Line number
 "set backup
 "set cursorline
 "set list       " show invisible characters
+"set spell          " Enable spell check
 
 "set expandtab
 set ts=4
