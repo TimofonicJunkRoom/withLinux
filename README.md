@@ -5,12 +5,12 @@ Some solutions to the Euler project
 
 Euler totient function looks like
 ```math
-\Phi(n) = n \prod_{p|n} ( 1 - \frac{1}{p} )
+\varphi(n) = n \prod_{p|n} ( 1 - \frac{1}{p} )
 ```
 
 To find the solution n* which maximizes our object function
 ```math
-\text{max} \frac{n}{\Phi(n)} = \frac{1}{ \prod\limits_{p|n} (1-\frac{1}{p}) }, n \leq 1000000
+\text{max} \frac{n}{\varphi(n)} = \frac{1}{ \prod\limits_{p|n} (1-\frac{1}{p}) }, n \leq 1000000
 ```
 
 is equivalent to
