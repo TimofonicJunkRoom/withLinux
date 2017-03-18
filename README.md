@@ -32,30 +32,30 @@ the infinite production.
 Code (Julia)
 ```julia
 for i in 1:20
-	println(i,'\t', prod(primes(i)), '\t', prod(primes(i))<1_000_000)
+    @printf "%d\t%8d\t%s\n" i prod(primes(i)) "$(prod(primes(i))<1_000_000)"
 end
 ```
 
 Output
 ```
-1	1	true
-2	2	true
-3	6	true
-4	6	true
-5	30	true
-6	30	true
-7	210	true
-8	210	true
-9	210	true
-10	210	true
-11	2310	true
-12	2310	true
-13	30030	true
-14	30030	true
-15	30030	true
-16	30030	true
-17	510510	true
-18	510510	true    *
-19	9699690	false
-20	9699690	false
+1	       1	true
+2	       2	true
+3	       6	true
+4	       6	true
+5	      30	true
+6	      30	true
+7	     210	true
+8	     210	true
+9	     210	true
+10	     210	true
+11	    2310	true
+12	    2310	true
+13	   30030	true
+14	   30030	true
+15	   30030	true
+16	   30030	true
+17	  510510	true
+18	  510510	true    *
+19	 9699690	false
+20	 9699690	false
 ```
