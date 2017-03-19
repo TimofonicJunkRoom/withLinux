@@ -2,6 +2,6 @@
 fortune-zh
 
 function jl
-	julia $argv
+	/home/lumin/Downloads/julia-6445c82d00/bin/julia $argv
 end
 
