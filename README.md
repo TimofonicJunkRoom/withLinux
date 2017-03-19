@@ -1,4 +1,4 @@
-## With Linux - Brief Hacks
+## With Linux - Quite Messy Personal Hacking Notes  
 > KISS: Keep It Simple, Stupid  
 > Life, Love, Linux  
 
