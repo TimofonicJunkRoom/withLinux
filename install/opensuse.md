@@ -11,6 +11,12 @@ https://software.opensuse.org
 
 packman
 
+# upgrade from leap 42.2 to tumbleweed
+
+1. edit zypper source, add tumbleweed source
+
+2. `zypper refresh` and `zypper dup`
+
 # tips
 
 package management frontend `zypper`.
