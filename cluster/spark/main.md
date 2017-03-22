@@ -10,6 +10,9 @@ Language: Scala, Python, R, Java
 download the prebuilt binary blob tarball and extract to a proper directory,
 e.g. `spark-2.1.0-bin-hadoop2.7.tgz`
 
+This stuff could be downloaded from a mirror site, e.g.
+https://mirrors.tuna.tsinghua.edu.cn/apache/spark/
+
 # [quick-start](http://spark.apache.org/docs/latest/quick-start.html)
 
 spark shell `./bin/spark-shell`
