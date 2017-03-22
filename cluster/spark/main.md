@@ -129,8 +129,30 @@ Lauch slaves
 
 This works on a single machine.
 
-TODO
+TODO: deploy on private cluster.
 
 # [Spark Programming](http://spark.apache.org/docs/latest/programming-guide.html)
 
-TODO
+## Python Spark
+
+```shell
+$ ./bin/pyspark --master local[4]
+$ ./bin/pyspark --master local[4] --py-files code.py
+$ PYSPARK_DRIVER_PYTHON=ipython ./bin/pyspark
+$ PYSPARK_DRIVER_PYTHON=jupyter ./bin/pyspark
+$ PYSPARK_PYTHON=python3.4 bin/pyspark
+$ PYSPARK_PYTHON=/opt/pypy-2.5/bin/pypy bin/spark-submit examples/src/main/python/pi.py
+```
+
+```python
+from pyspark import SparkContext, SparkConf
+
+conf = SparkConf().setAppName(appName).setMaster(master)
+   # master could be "local" here
+sc = SparkContext(conf=conf)
+
+# Resilient Distributed Dataset
+...
+```
+
+See the official guide.
