@@ -108,7 +108,26 @@ Run more examples
 ./bin/spark-submit examples/src/main/python/pi.py
 ```
 
-# [cluster installation](http://spark.apache.org/docs/latest/cluster-overview.html)
+# [Cluster installation](http://spark.apache.org/docs/latest/cluster-overview.html)
+
+Client should be able to connect the master via ssh without password?
+```
+ssh-keygen
+cp xxx.pub ~/.ssh/authorized_keys
+chmod 0600 ~/.ssh/authorized_keys
+```
+
+Launch master
+```
+./sbin/start-master.sh
+```
+
+Lauch slaves
+```
+./sbin/start-slaves.sh spark://MASTER_IP:7077
+```
+
+This works on a single machine.
 
 TODO
 
