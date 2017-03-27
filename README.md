@@ -196,6 +196,7 @@ Linux Kernel Hacks / Operating System / Embedding / Hardware
 1. i2c-tools (modprobe eeprom; decode-dimms) to obtain CAS latency.  
 1. [VM note](./kernel/vm.md)  
 1. [Emulating systems with QEMU](./kernel/qemu-emulate.md)  
+1. [SATA Hard disk hotplugging](./kernel/hotplug.md)  
 
 Virtualization  
 ---
