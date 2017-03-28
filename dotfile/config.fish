@@ -6,3 +6,4 @@ function jl
 end
 
 set -g theme_powerline_fonts no
+set -g theme_display_user yes
