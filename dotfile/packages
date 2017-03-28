@@ -48,6 +48,7 @@ i3
 ipython3
 julia
 jupyter-notebook
+latexila
 less
 libblas-dev
 libgoogle-glog-dev
