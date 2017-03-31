@@ -69,6 +69,7 @@ pep8
 pppoeconf
 progress
 python3-ipdb
+python3-pip
 qemu
 quilt
 rfkill
