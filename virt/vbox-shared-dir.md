@@ -5,6 +5,8 @@ VBox shared directory
 
 > file: /usr/share/doc/virtualbox/UserManual.pdf   
 
+> https://wiki.archlinux.org/index.php/VirtualBox#Enable_shared_folders
+
 > package: virtualbox
 
 ### install guest addition
