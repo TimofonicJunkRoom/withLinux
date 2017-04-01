@@ -1,15 +1,14 @@
 ## With Linux - Quite Messy Personal Hacking Notes  
+
 > KISS: Keep It Simple, Stupid  
-> Life, Love, Linux  
 
 Linux tricks, hints, hacks and many others based on my personal experience with
 [Debian GNU/Linux](https://www.debian.org). This project is a personal knowledge
 base, and some of the hints and hacks there are just recored by keywords.  
 
-One way to use this project is to clone it to your machine,
-and lookup keywords within it with the perl utility `ack`.  
+Lookup keywords within it with the perl utility `ack`.  
   
-Items marked with `(-)` are still in progress.  
+Items marked with `(-)` are still works in progress.  
 Items marked with `(el)` means external link.  
   
 Installing Linux  
@@ -80,6 +79,7 @@ Utilities / Miscellaneous
 1. fish/fishshell -- powerful shell (`apt install fish; chsh; fish_config`)  
 1. [Vim](./util/vim.md)  
 1. [Linux-Perf](./util/perf.md)  
+1. [Terminology -- fancy terminal emulator](./util/terminology.md)  
 
 Graphical Interface Stuff (Xorg)  
 ---
