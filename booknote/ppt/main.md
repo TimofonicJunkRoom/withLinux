@@ -39,6 +39,13 @@ PPT炼成记
 
 注意段落的对齐和行距。
 
+You can embed your opentype or truetype font into your PPT file
+via settings -> save -> embed font .
+
+Paragraphs could be converted into "SmartArt", which is able to
+transform your structured paragraph into logical diagram.
+Select a paragraph, right click it and select "convert to SmartArt".
+
 # ch3 用好图片
 
 配图：解释说明，情景再现，气氛营造
@@ -65,7 +72,9 @@ kuler.adobe.com / color.adobe.com
 
 # ch8 版式
 
-。。。
+Make good use of the golden ratio 0.618 .
+
+Typeset should be balanced.
 
 # ch9 模板
 
@@ -78,3 +87,9 @@ kuler.adobe.com / color.adobe.com
 20170402
 
 P.S useless without practice.
+
+# resources
+
+www.51ppt.com.cn
+
+office.microsoft.com/en-us/templates
