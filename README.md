@@ -272,6 +272,7 @@ Kali / Security / Penetration
 1. [wikipedia: comparison of licenses](https://en.wikipedia.org/wiki/Comparison_of_free_and_open-source_software_licenses)  
 1. [Debian CD/DVD hint](./debian/debiancd.md)  
 1. [ftpmaster-removal](https://wiki.debian.org/ftpmaster_Removals)  
+1. [Package Transition](https://wiki.debian.org/PackageTransition)  
 
 [Looking For Help](http://google.com)  
 ---
