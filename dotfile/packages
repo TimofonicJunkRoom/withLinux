@@ -7,6 +7,7 @@ packages="
 ack
 axel
 bbswitch-dkms
+bmon
 bpython3
 blender
 build-essential
@@ -80,6 +81,7 @@ sakura
 sed
 shorewall
 smartmontools
+snapper
 snort
 spyder3
 sqlite3
