@@ -38,6 +38,7 @@ gdb
 git
 git-buildpackage
 gitg
+gogs
 gpm
 gsmartcontrol
 guake
