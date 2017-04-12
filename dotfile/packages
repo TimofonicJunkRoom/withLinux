@@ -73,6 +73,7 @@ progress
 python3-ipdb
 python3-pip
 qemu
+qtqr
 quilt
 rfkill
 rsync
