@@ -11,7 +11,7 @@ Btrfs
 
 OpenSUSE use Btrfs as its default file system at least on OpenSUSE Leap 42.
 
-## ...
+## btrfs
 
 Create filesystem on a single device `mkfs.btrfs -L mylabel /dev/sdb1`
 
@@ -35,4 +35,19 @@ Create snapshot `btrfs subv snap /mnt /mnt/.btrfs/snap1`
 
 Send snapshot `btrfs send /root_backup | btrfs receive /backup`
 
+## snapper
+
+> https://wiki.archlinux.org/index.php/Snapper  
+
+`sudo apt install snapper`
+
+Create snapper config `snapper -c bt create-config /mnt`
+
+List snapper snapshots `snapper -c bt list`
+
+Create snapshot `snapper -c bt create -d "before cleanup"`
+
+Compare snapshots `snapper -c bt status 1..2`
+
+Show file differences between snapshots `snapper -c bt diff 1..2`
 
