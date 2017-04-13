@@ -1,7 +1,7 @@
 /* bsdbar.h
 
    part of Bytefreq
-   cdluminate@163.com
+   cdluminate@gmail.com
 */
 #ifndef BSDBAR_H
 #define BSDBAR_H

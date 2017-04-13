@@ -1,4 +1,4 @@
-/* init.c - cdluminate@163.com */
+/* init.c - cdluminate@gmail.com */
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>

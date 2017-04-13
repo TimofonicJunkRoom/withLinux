@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # translate argv with youdao
-# 2015 <cdluminate@163.com>
+# 2015 <cdluminate@gmail.com>
 
 import sys
 import requests
