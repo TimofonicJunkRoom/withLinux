@@ -167,3 +167,10 @@ sqrt(x^2)
 ```
 
 `partfrac()` is for partial fraction expansion.
+
+```
+(%i17) partfrac( (x+1)/x, x);
+                                     1
+(%o17)                               - + 1
+                                     x
+```
