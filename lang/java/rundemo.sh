@@ -13,4 +13,8 @@ echo
 echo "run the compiled program with java"
 java Main
 
+echo "making jar package"
+jar cvfm hello.jar MANIFEST.MF -C . .
+java -jar hello.jar
+
 # reference: http://docs.oracle.com/javase/tutorial/getStarted/cupojava/unix.html
