@@ -121,7 +121,7 @@ Internet Specific
 14. HTTP status code reference  
   1. RFC2616  
   2. [list of http status codes ... wikipedia](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)  
-15. Sharing files through network  
+15. Sharing files over network  
   1. [nc](./util/netcat.txt)  
   2. scp, ssh, rsync.  
   3. samba server.  
@@ -222,7 +222,7 @@ Cluster / HighPerf
   3. HTCondor (most convenient one in case to manage a single machine)   
     1. [My HTCondor wrapper script](./cluster/condor)  
     1. [my HTCondor note](/cluster/condor.md)  
-  4. Other: Torque, SGE (sub grid engine), Slurm  
+  4. Other job control systems: Torque, SGE (sub grid engine), Slurm  
 1. [Note on OpenMP and OpenBLAS](./cluster/omp_oblas.md)  
 1. [BLAS](./cluster/blas.md)  
 1. [LAPACK](./cluster/lapack.md)  
@@ -242,10 +242,9 @@ Kali / Security / Penetration
   1. [(el) Gentoo: dm-crypt LUKS](https://wiki.gentoo.org/wiki/DM-Crypt_LUKS)  
   1. [(el) Arch: dm-crypt](https://wiki.archlinux.org/index.php/Dm-crypt/System_configuration)  
   1. [(el) Debian: encrypt setup](http://madduck.net/docs/cryptdisk/)  
-1. http://wooyun.org/
-1. macchanger
-1. steghide -- steghide (1)  
-1. openssl encryption -- openssl (1), enc (1)  
+1. macchanger -- changes you mac address  
+1. steghide -- steghide (1) -- forensics/steganography tool  
+1. encryption with openssl -- see openssl (1), enc (1)  
 
 [Debian GNU/Linux Specific](https://www.debian.org/)  
 ---
@@ -288,13 +287,11 @@ wiki, doc, tutorial, and some interesting sites.
 5. [stackoverflow](http://stackoverflow.com)  
 7. [IBM Developer works](https://www.ibm.com/developerworks/cn/linux/)  
 10. [FreeBSD doc ... sometimes helps](https://www.freebsd.org/docs.html)  
-11. [OpenBSD docs]
 12. [vbird.org ... detailed, complete linux guide](http://linux.vbird.org)  
 13. [from windows to Linux, beginner ... IBM developer works](http://www.ibm.com/developerworks/cn/linux/l-roadmap/index.html)  
 14. Search Engines  
   1. google  
   2. shodan  
-  3. [Baidu Yun Search](http://www.zhihu.com/question/24263185#answer-7880704)  
 1. [Awesome List](https://github.com/sindresorhus/awesome)  
 1. [Matrix67 blog](http://www.matrix67.com/blog/)  
 1. [TUNA Wiki](https://wiki.tuna.tsinghua.edu.cn/Homepage)  
@@ -411,23 +408,24 @@ Programming, including Tool Languages
     1. [In BASH Shell](./lang/lumin_log.sh)  
     1. [In Python3](./lang/py3/lumin_log_demo.py)  
 
-Artificial Intelegence / Mathematics  
+Tiny Bits about Artificial Intelegence  
 ---
-1. Mathematics  
+1. Random Mathematical Bits  
   1. [Wikipedia: Embedding (el) ](https://en.wikipedia.org/wiki/Embedding)  
+1. Wolfram  
+  1. [Introduction to Wolfram language (el)](http://www.wolfram.com/language/elementary-introduction/)  
+  1. [Wolfram Alpha (el)](http://www.wolframalpha.com/)  
+  1. [Wolfram Mathworld (el)](http://mathworld.wolfram.com/)  
 1. Machine Learning  
   1. [stanford:Ng's opencourse (el) ](http://openclassroom.stanford.edu/MainFolder/CoursePage.php?course=MachineLearning)  
-1. Deep Learning Frameworks  
+1. Some Deep Learning Frameworks  
   1. [caffe (cxx, python, matlab)](https://github.com/BVLC/caffe)  
-  1. [torch7 (lua)](https://github.com/torch/distro)  
-    1. [torch cheatsheet](https://github.com/torch/torch7/wiki/Cheatsheet)  
-  1. [theano (python)](http://deeplearning.net/software/theano/)  
-    1. [my theano note](ai/theano/main.md)  
-    1. [theano trouble, no recursion is supported](./ai/theano/fac.py)  
+  1. [torch7 (lua)](https://github.com/torch/distro) [-- torch cheatsheet --](https://github.com/torch/torch7/wiki/Cheatsheet)  
+  1. [theano (python)](http://deeplearning.net/software/theano/) [-- my theano note --](ai/theano/main.md)  
+    1. [theano issue, no recursion is supported](./ai/theano/fac.py)  
   1. [tensorflow (python)](https://github.com/tensorflow/tensorflow)  
   1. [mxnet (cxx, julia)](https://github.com/dmlc/mxnet)  
-  1. [leaf (rust)](https://github.com/autumnai/leaf)  
-    1. [Deep learning frameworks benchmark by leaf](http://autumnai.com/deep-learning-benchmarks)  
+  1. [leaf (rust)](https://github.com/autumnai/leaf) [-- Deep learning frameworks benchmark by leaf --](http://autumnai.com/deep-learning-benchmarks)  
   1. [Chainer, Define-by-Run instead of Define-and-Run (python)](https://github.com/pfnet/chainer)  
 1. Deep learning
   1. http://deeplearning.stanford.edu/  
@@ -437,22 +435,15 @@ Artificial Intelegence / Mathematics
 1. Datasets  
   1. [MS COCO](https://github.com/CDLuminate/cocofetch)  
   1. [Imagenet](http://image-net.org/index)  
-1. Wolfram  
-  1. [Introduction to Wolfram language (el)](http://www.wolfram.com/language/elementary-introduction/)  
-  1. [Wolfram Alpha (el)](http://www.wolframalpha.com/)  
-  1. [Wolfram Mathworld (el)](http://mathworld.wolfram.com/)  
 1. [WikiCFP](http://www.wikicfp.com/cfp/)  
-1. In Matlab  
-  1. [simple nn example : xor](./ai/nn-matlab/nn_xor.m)  
-  1. [not working, nn\_iris]
   
 ## LICENSE
 ```
 MIT LICENSE.
-COPYRIGHT (C) 2014,2015,2016 Lumin
+COPYRIGHT (C) 2014,2015,2016,2017 Lumin
 ```  
 ---
 Started on 2014/06/28 by Lumin Zhou  
   
-Seek for UNIX, look into UNIX, follow the UNIX, play with UNIX, work with UNIX, learn from UNIX,
-but neither becoming an UNIX, nor marrying UNIX. -- lumin  
+Seek for UNIX, look into UNIX, follow the beats of UNIX, play with UNIX,
+work with UNIX, learn from UNIX, but neither become an UNIX, nor marry UNIX.
