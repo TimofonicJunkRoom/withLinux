@@ -143,7 +143,6 @@ System Management / Server
 3. [Config runlevels (sysvinit) ...](./admin/runlevel.txt)  
 4. [Font in tty ...](./admin/tty-font.txt)  
 5. [Networkmanager ... can't change network settings?](./admin/networkmanager.txt)  
-6. [bashrc ...](./admin/bashrc.txt)  
 7. [Google earth ... install on amd64](./admin/gearth.txt)  
 8. [grub ... boot with kali iso image](./admin/grub_kali_iso.txt)  
 9. [time ... hardware time](./admin/hardwaretime.txt)  
