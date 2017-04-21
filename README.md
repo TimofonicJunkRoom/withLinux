@@ -162,7 +162,7 @@ System Management / Server
   3. [Ext2IFS](http://www.fs-driver.org/)  
   4. [DiskInternals Linux Reader for Windows](http://www.diskinternals.com/linux-reader)  
 1. [vsftpd ... a simple setup](./admin/BriefVsftpd.tex)  
-2. [dnsmasq ... local cache name server](./admin/dnsmasq.txt)  
+2. [dnsmasq ... local cache name server](./admin/dnsmasq.md)  
 3. [apache2 (2.2.22) ... simple setup](./admin/apache2.md)  
 4. [bind9 (debian)... DNS (cache) - config file](./admin/named.conf.options)  
 5. [hostapd ... dev work](http://www.ibm.com/developerworks/cn/linux/l-wifiencrypthostapd/index.html)  
