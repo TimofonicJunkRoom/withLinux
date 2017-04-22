@@ -5,6 +5,7 @@ set -e
 # packages
 packages="
 ack
+apt-xapian-index
 axel
 bbswitch-dkms
 bmon
