@@ -16,7 +16,6 @@ namespace lumin {
 void
 insertion_sort (std::vector<int> & v)
 {
-	using namespace std;
 	for (unsigned int i = 1; i < v.size(); i++) { // handle this number
 		// select insert location
 		unsigned int j = 0;
@@ -25,6 +24,25 @@ insertion_sort (std::vector<int> & v)
 		int tmp = v.at(i);
 		v.erase(v.begin()+i);
 		v.insert(v.begin()+j, tmp);
+	}
+	return;
+}
+
+// in-place insertion sort
+// reference: Intro to Algo, pp. 18
+void
+insertion_sort_v2 (std::vector<int> & v)
+{
+	if (v.size() < 2) return;
+	for (unsigned int i = 2; i < v.size(); i++) {
+		int pivot = v.at(i);
+		// do insertion
+		unsigned int j = i - 1;
+		while ((j>0) && v.at(j) > pivot) {
+			v.at(j+1) = v.at(j);
+			j--;
+		}
+		v.at(j+1) = pivot;
 	}
 	return;
 }
