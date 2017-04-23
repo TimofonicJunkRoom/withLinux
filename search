@@ -44,7 +44,7 @@ try:
 
     for m in matches:
         m_data = m.document.get_data().decode('utf-8')
-        m_data_head = '\n'.join([s.strip() for s in m_data.split('\n') if query_string.lower() in s.lower()])
+        m_data_pick = '\n'.join([s.strip() for s in m_data.split('\n') if (True in [token in s.lower() for token in query_string.lower().split()]) ])
         with open('__xdb__/path.list', 'r') as f:
             paths = f.readlines()
             m_path = paths[m.docid-1]
@@ -52,7 +52,7 @@ try:
         #mkhr()
         mkbanner("%i: %i%% docid=%i" % (m.rank + 1, m.percent, m.docid))
         mkbanner("%s" % m_path.strip(), ' ')
-        print(m_data_head)
+        print(m_data_pick)
         #print("%i: %i%% docid=%i [%s]" % (m.rank + 1, m.percent, m.docid, m_data_head))
     mkhr()
 
