@@ -18,6 +18,8 @@ actions:
   log     show one-line log
   help    print this help message
   deploy  call the dotfile deploy script
+  xdb     refresh xapian database
+  search  search content with xapian database
 EOF
 echo
 printf "Project withlinux has %s%d%s files currently.\n" "[34;1m" $files "[;0m"
@@ -67,6 +69,7 @@ clean () {
   find . -name 'tq.err' -exec rm {} +
   find . -name 'tq.out' -exec rm {} +
   find . -type d -name '__pycache__' -exec rm -rf {} +
+  rm -rf __xdb__
 }
 
 purge () {
@@ -119,7 +122,9 @@ main () {
     log    ) git log --oneline --graph --show-signature; printf "Commits Count %d\n" $commits;;
     help   ) Usage ;;
     deploy ) cd dotfile; shift; ./deploy $@;;
-       *   ) echo "E: invalid action" ;;
+    xdb    ) ./cxdb.py ;;
+    #search ) ./search $@ ;;
+    *      ) echo "E: invalid action" ;;
   esac
 }
 main $@

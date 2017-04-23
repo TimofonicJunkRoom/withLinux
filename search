@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+#
+# reference xapian python example
+
+import sys
+import xapian
+
+if len(sys.argv) < 2:
+    print("Usage: %s QUERY" % sys.argv[0], file=sys.stderr)
+    sys.exit(1)
+
+def mkhr(pat='-'):
+    buf = pat*78
+    buf = '\x1b[33;1m' + buf + '\x1b[;0m'
+    print(buf)
+
+def mkbanner(msg='', pat='-'):
+    msg = '[ ' + msg + ' ]'
+    while len(msg) < 78:
+        msg = pat + msg + pat
+    msg = '\x1b[33;1m' + msg + '\x1b[;0m'
+    print(msg)
+
+try:
+    database = xapian.Database("__xdb__")
+    enquire = xapian.Enquire(database)
+    query_string = str.join(' ', sys.argv[1:])
+
+    qp = xapian.QueryParser()
+    stemmer = xapian.Stem("english")
+    qp.set_stemmer(stemmer)
+    qp.set_database(database)
+    qp.set_stemming_strategy(xapian.QueryParser.STEM_SOME)
+    query = qp.parse_query(query_string)
+    print("Parsed query is: %s" % str(query))
+
+    # Find the top 10 results for the query.
+    enquire.set_query(query)
+    matches = enquire.get_mset(0, 10)
+
+    # Display the results.
+    print("%i results found." % matches.get_matches_estimated())
+    print("Results 1-%i:" % matches.size())
+
+    for m in matches:
+        mkhr()
+        mkbanner("%i: %i%% docid=%i" % (m.rank + 1, m.percent, m.docid))
+        m_data = m.document.get_data().decode('utf-8')
+        m_data_head = '\n'.join([s.strip() for s in m_data.split('\n') if query_string.lower() in s.lower()])
+        print(m_data_head)
+        #print("%i: %i%% docid=%i [%s]" % (m.rank + 1, m.percent, m.docid, m_data_head))
+    mkhr()
+
+except Exception as e:
+    print("Exception: %s" % str(e), file=sys.stderr)
+    sys.exit(1)

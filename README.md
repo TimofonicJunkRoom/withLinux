@@ -6,7 +6,8 @@ Linux tricks, hints, hacks and many others based on my personal experience with
 [Debian GNU/Linux](https://www.debian.org). This project is a personal knowledge
 base, and some of the hints and hacks there are just recored by keywords.  
 
-Lookup keywords within it with the perl utility `ack`.  
+Lookup keywords within it with the perl utility `ack`. Or use the script
+`search` to search for some tips as long as created an xapian database.
   
 Items marked with `(-)` are still works in progress.  
 Items marked with `(el)` means external link.  
