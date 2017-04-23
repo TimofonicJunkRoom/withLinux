@@ -23,6 +23,7 @@ try:
 
     # scan the project
     counter_indexed = 0
+    pathlist_indexed = []
     for dirpath, _, filenames in os.walk("."):
         if ".git" in dirpath or "__xdb__" in dirpath:
             continue
@@ -48,10 +49,15 @@ try:
                 indexer.index_text(cursor_content)
 
                 xdb.add_document(doc)
+
                 counter_indexed = counter_indexed + 1
+                pathlist_indexed.append(cursor)
             except:
                 print("W: skip problematic file {}".format(cursor))
                 pass
+    with open('__xdb__/path.list', 'w+') as f:
+        f.write('\n'.join(pathlist_indexed))
+    print("I: path list saved.")
 
 except Exception as e:
     print("Exception: {}".format(e))

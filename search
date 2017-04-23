@@ -43,10 +43,15 @@ try:
     print("Results 1-%i:" % matches.size())
 
     for m in matches:
-        mkhr()
-        mkbanner("%i: %i%% docid=%i" % (m.rank + 1, m.percent, m.docid))
         m_data = m.document.get_data().decode('utf-8')
         m_data_head = '\n'.join([s.strip() for s in m_data.split('\n') if query_string.lower() in s.lower()])
+        with open('__xdb__/path.list', 'r') as f:
+            paths = f.readlines()
+            m_path = paths[m.docid-1]
+
+        #mkhr()
+        mkbanner("%i: %i%% docid=%i" % (m.rank + 1, m.percent, m.docid))
+        mkbanner("%s" % m_path.strip(), ' ')
         print(m_data_head)
         #print("%i: %i%% docid=%i [%s]" % (m.rank + 1, m.percent, m.docid, m_data_head))
     mkhr()
