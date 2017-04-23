@@ -50,8 +50,7 @@ try:
             m_path = paths[m.docid-1]
 
         #mkhr()
-        mkbanner("%i: %i%% docid=%i" % (m.rank + 1, m.percent, m.docid))
-        mkbanner("%s" % m_path.strip(), ' ')
+        mkbanner("%i: %i%% (id=%i) %s" % (m.rank + 1, m.percent, m.docid, m_path.strip()))
         print(m_data_pick)
         #print("%i: %i%% docid=%i [%s]" % (m.rank + 1, m.percent, m.docid, m_data_head))
     mkhr()
