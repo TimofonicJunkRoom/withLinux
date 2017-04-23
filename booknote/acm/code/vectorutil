@@ -2,8 +2,14 @@
  * @file vectorutil
  * @brief some utilities used to manipulate with vectors
  */
+
+#if ! defined(VECTORUTIL_HPP_)
+#define VECTORUTIL_HPP_
+
 #include <iostream>
 #include <vector>
+
+namespace vu {
 
 template <typename DType>
 void
@@ -41,3 +47,5 @@ vector_dot (std::vector<DType> x, std::vector<DType> y)
 	}
 	return ret;
 }
+} // namespace vu
+#endif

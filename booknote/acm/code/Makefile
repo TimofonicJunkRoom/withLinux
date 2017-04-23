@@ -12,3 +12,5 @@ compile_all_parallel:
 	# Done
 clean:
 	-$(RM) *.elf
+%.elf:
+	$(CXX) -g -Wall -std=c++11 $(patsubst %.elf,%.cc,$@) -o $@
