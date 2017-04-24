@@ -39,6 +39,7 @@ gdb
 git
 git-buildpackage
 gitg
+gnome-builder
 gogs
 gpm
 gsmartcontrol
