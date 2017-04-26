@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+#
+# NAME
+#   stig - Generate copies from Simple Templates Instantly
+#
+# EXAMPLE
+#   (1) template is a file
+#       a. shell script `stig_test.sh.in`:
+#         #!/bin/sh
+#         set -e
+#         for I in $(seq 1 ##STIG##); do echo hello, $(whoami)!; done
+#       b. use stig like this:
+#         stig stig_test.sh seqmax [1,2,4]
+#       c. then list directory:
+#         ./stig_test.sh.in
+#         ./stig_test.sh_seqmax_1/stig_test.sh
+#         ./stig_test.sh_seqmax_2/stig_test.sh
+#         ./stig_test.sh_seqmax_4/stig_test.sh
+#       d. remove generated directories:
+#         rm -rf ./stig_test.sh_*
+#   (2) template is a directory
+#       a. template directory is named as yyy.in, template files too
+#       b. stig stig_dir_test.in somestub [8,16,32]
+#       c. list directory:
+#         ./stig_dir_test.in/...
+#         ./stig_dir_test_somestub_8/...
+#           all files with ".in" suffix will be treated as a template
+#
+# AUTHOR
+#   Lumin <cdluminate@gmail.com>
+# MIT LICENSE
+
+import os
+import sys
+import json
+import stat
+from subprocess import call
+
+def Usage():
+    print("Usage: stig <template> <name> <list>\n\
+stig version: 1")
+
+def autogen(template, stigtype, stigname, stubstr, replacements):
+    if template[-3:] != '.in': raise Exception("invalid template")
+    template_strip = template[:-3]
+    basedir = os.path.dirname(template)
+
+    if stigtype == "plain":
+        with open(template, 'r') as f:
+            template_lines = f.readlines()
+        for i in replacements:
+            dirname = template_strip + '_' + stigname + '_' + str(i)
+            tempdir = os.path.join(basedir, dirname)
+            os.mkdir(tempdir)
+            new_lines = [line.replace(stubstr, str(i)) for line in template_lines]
+            with open(os.path.join(tempdir, template_strip), 'w') as f:
+                f.writelines(new_lines)
+            print("I: generated file {}".format(os.path.join(tempdir, template_strip)))
+    elif stigtype == "dir":
+        for i in replacements:
+            dirname = template_strip + '_' + stigname + '_' + str(i)
+            tempdir = os.path.join(basedir, dirname)
+            # copy the contents to new directory
+            call(['cp', '-a', template, tempdir])
+            # walk into the directory and do template
+            for root, dirs, files in os.walk(tempdir):
+                filepaths = [os.path.join(root, fname) for fname in files]
+                for filepath in filepaths:
+                    # is it a template file?
+                    if not '.in' in filepath:
+                        continue
+                    if not '.in' == filepath[-3:]:
+                        continue
+                    # strip the .in suffix
+                    filepath_strip = filepath[:-3]
+                    # do content replacement
+                    with open(filepath, 'r') as f:
+                        lines_in = f.readlines()
+                    new_lines = [line.replace(stubstr, str(i)) for line in lines_in]
+                    with open(filepath_strip, 'w') as f:
+                        f.writelines(new_lines)
+                    print("I: generated file {}".format(filepath_strip))
+    else:
+        raise Exception("invalid stigtype")
+    return
+
+if __name__=='__main__':
+    # validate arg list
+    if len(sys.argv) != 4:
+        Usage()
+        raise Exception("invalid argument list")
+    templatepath = sys.argv[1]  # must be something like "xxx.in"
+    stigname = sys.argv[2]
+    stiglist = json.loads(sys.argv[3])
+    if len(os.path.basename(templatepath)) < 3:
+        raise Exception("invalid basename of <template>")
+    if '.in' != os.path.basename(templatepath)[-3:]:
+        raise Exception("invalid template name")
+    if not os.access(templatepath, os.R_OK):
+        raise Exception("invalid <template>: not readable")
+    if not isinstance(stiglist, list):
+        raise Exception("invalid <list> argument")
+    if len(stiglist) < 1:
+        raise Exception("invalid <list>: no replacement candidate found")
+
+    # check template type
+    template_mode = os.stat(templatepath).st_mode
+    if stat.S_ISDIR(template_mode):
+        stigtype = "dir"
+    else:
+        stigtype = "plain"
+
+    # invoke generation function
+    autogen(templatepath, stigtype, stigname, '##STIG##', stiglist)
+
+    # report
+    print(' -> template {}/{}'.format(templatepath, stigtype))
+    print(' -> generated {} new directories as you wish'.format(len(stiglist)))
