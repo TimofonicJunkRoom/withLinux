@@ -6,10 +6,10 @@ func main() {
 		sum += i
 	}
 
-	sum2 := 1
-	for ; sum2 < 1000; {
-		sum2 += sum2
-	}
+	//sum2 := 1
+	//for ; sum2 < 1000; {
+	//	sum2 += sum2
+	//}
 
 	sum3 := 1
 	for sum3 < 1000 { // while

@@ -2,12 +2,13 @@ package main
 
 import "fmt"
 
-const Pi = 3.14
-
 func main() {
-	var i int
+	i, j := 42, 2701
+	p := &i
+	fmt.Println(*p)
 	fmt.Println(i)
 
-	var j int = 1
+	p = &j
+	*p = *p / 37
 	fmt.Println(j)
 }
