@@ -36,9 +36,11 @@ import json
 import stat
 from subprocess import call
 
+import shlex
+
 def Usage():
-    print("Usage: stig <template> <name> <list>\n\
-stig version: 1")
+    print("Usage: stig <template> <name> <list> [-- command]\n\
+stig version: 2")
 
 def autogen(template, stigtype, stigname, stubstr, replacements):
     if template[-3:] != '.in': raise Exception("invalid template")
@@ -84,11 +86,32 @@ def autogen(template, stigtype, stigname, stubstr, replacements):
         raise Exception("invalid stigtype")
     return
 
+def runparts(template, stigtype, stigname, stubstr, replacements, stigcmd):
+    if template[-3:] != '.in': raise Exception("invalid template")
+    template_strip = template[:-3]
+    basedir = os.path.dirname(template)
+    root = os.getcwd()
+    for i in replacements:
+        dirname = template_strip + '_' + stigname + '_' + str(i)
+        tempdir = os.path.join(basedir, dirname)
+        os.chdir(tempdir)
+        print('I: calling', stigcmd, 'in', tempdir, '.. start')
+        call(stigcmd)
+        print('I: calling', stigcmd, 'in', tempdir, '.. end')
+        os.chdir(root)
+    return
+       
+
 if __name__=='__main__':
+    print(sys.argv)
     # validate arg list
     if len(sys.argv) != 4:
-        Usage()
-        raise Exception("invalid argument list")
+        # len 4 : autogen
+        if len(sys.argv) >= 6 and sys.argv[4]=='--':
+            pass # len 6 : autogen + execute
+        else:
+            Usage()
+            raise Exception("invalid argument list")
     templatepath = sys.argv[1]  # must be something like "xxx.in"
     stigname = sys.argv[2]
     stiglist = json.loads(sys.argv[3])
@@ -102,6 +125,8 @@ if __name__=='__main__':
         raise Exception("invalid <list> argument")
     if len(stiglist) < 1:
         raise Exception("invalid <list>: no replacement candidate found")
+    if len(sys.argv) >= 6 and sys.argv[4] == '--':
+        stigcmd = shlex.split(' '.join(sys.argv[5:]))
 
     # check template type
     template_mode = os.stat(templatepath).st_mode
@@ -113,6 +138,12 @@ if __name__=='__main__':
     # invoke generation function
     autogen(templatepath, stigtype, stigname, '##STIG##', stiglist)
 
+    # run the command in each generated directory if a cmd is specified
+    if len(sys.argv) >= 6 and sys.argv[4] == '--':
+        runparts(templatepath, stigtype, stigname, '##STIG##', stiglist, stigcmd)
+
     # report
-    print(' -> template {}/{}'.format(templatepath, stigtype))
-    print(' -> generated {} new directories as you wish'.format(len(stiglist)))
+    print(' => template {}/{}'.format(stigtype, templatepath))
+    print(' => generated {} new directories.'.format(len(stiglist)))
+    if len(sys.argv) >= 6 and sys.argv[4] == '--':
+        print(' => your command line is:', stigcmd)
