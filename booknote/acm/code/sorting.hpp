@@ -4,6 +4,11 @@
  * Output : a permutation of original vector
  */
 
+/* SORTING
+ *  * insertion sort
+ *  * merge sort
+ */
+
 #if ! defined(SORTING_HPP_)
 #define SORTING_HPP_
 
@@ -46,6 +51,8 @@ insertion_sort_v2 (std::vector<int> & v)
 	}
 	return;
 }
+
+// void merge_sort (std::vector<int> &v);
 
 } // namespace lumin
 #endif // defined SORTING_HPP
