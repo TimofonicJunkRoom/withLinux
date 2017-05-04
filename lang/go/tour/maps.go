@@ -24,7 +24,7 @@ func main() {
 	fmt.Println(m["Bell Labs"])
 	fmt.Println(m)
 
-	m["Answer"] = Vertex{1,2}
+	m["Answer"] = Vertex{1, 2}
 	delete(m, "Answer")
 	v, ok := m["Answer"]
 	fmt.Println(v, ok)
