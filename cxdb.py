@@ -10,6 +10,17 @@ import traceback
 
 import xapian # apt install python3-xapian
 
+class Spinner(object):
+    def __init__(self):
+        self._counter = 0
+        self._spinner = list('-\|/')
+    def spin(self):
+        cursor = self._spinner[self._counter % len(self._spinner)]
+        self._counter += 1
+        print('\b'+cursor, end='')
+        sys.stdout.flush()
+spinner = Spinner()
+
 # http://stackoverflow.com/questions/898669/how-can-i-detect-if-a-file-is-binary-non-text-in-python
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
@@ -36,7 +47,8 @@ try:
                 if is_binary_string(cursor_content):
                     print("D: skip non-plain file {}".format(cursor))
                     continue
-            print("I: {:04d} : processing {}".format(counter_indexed, cursor))
+            #print("I: {:04d} : processing {}".format(counter_indexed, cursor))
+            spinner.spin()
 
             try:
                 doc = xapian.Document()
