@@ -6,4 +6,6 @@ Introduction to Algorithms, 3rd Edition
 
 `Divide -> Conquer -> Combine`
 
-* the maximum subarray problem
+* The maximum subarray problem
+
+* Strassen's algorithm for matrix multiplication
