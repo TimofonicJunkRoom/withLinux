@@ -17,7 +17,7 @@ class Spinner(object):
     def spin(self):
         cursor = self._spinner[self._counter % len(self._spinner)]
         self._counter += 1
-        print('\b'+cursor, end='')
+        print('\b\b\b'+'['+cursor+']', end='')
         sys.stdout.flush()
 spinner = Spinner()
 
