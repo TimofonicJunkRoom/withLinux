@@ -1,6 +1,6 @@
 #!/usr/bin/python3.4
 # translate argv with bing
-# 2015 <cdluminate@163.com>
+# 2015 Lumin Zhou
 
 import sys
 import requests
