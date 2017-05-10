@@ -19,6 +19,9 @@ class Spinner(object):
         self._counter += 1
         print('\b\b\b'+'['+cursor+']', end='')
         sys.stdout.flush()
+    def clear(self):
+        print('\b\b\b', end='')
+        sys.stdout.flush()
 spinner = Spinner()
 
 # http://stackoverflow.com/questions/898669/how-can-i-detect-if-a-file-is-binary-non-text-in-python
@@ -45,6 +48,7 @@ try:
             with open(cursor, 'rb') as cursor_file:
                 cursor_content = cursor_file.read()
                 if is_binary_string(cursor_content):
+                    spinner.clear()
                     print("D: skip non-plain file {}".format(cursor))
                     continue
             #print("I: {:04d} : processing {}".format(counter_indexed, cursor))
@@ -65,13 +69,16 @@ try:
                 counter_indexed = counter_indexed + 1
                 pathlist_indexed.append(cursor)
             except:
+                spinner.clear()
                 print("W: skip problematic file {}".format(cursor))
                 pass
     with open('__xdb__/path.list', 'w+') as f:
         f.write('\n'.join(pathlist_indexed))
+    spinner.clear()
     print("I: path list saved.")
 
 except Exception as e:
+    spinner.clear()
     print("Exception: {}".format(e))
     traceback.print_exc()
     sys.exit(1)
