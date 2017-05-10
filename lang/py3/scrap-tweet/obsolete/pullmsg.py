@@ -1,7 +1,5 @@
 #!/usr/bin/python3.4
 
-# cdluminate@163.com
-
 # simply pull messages from twitter
 # using https://twitter.com/serach?q=
 

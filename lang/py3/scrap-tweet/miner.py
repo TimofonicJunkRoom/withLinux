@@ -1,7 +1,5 @@
 #!/usr/bin/python3.4
 
-# cdluminate@163.com
-
 #proxies1 = {
 #	"http": "http://127.0.0.1:8087",
 #	"https": "https://127.0.0.1:8087"
