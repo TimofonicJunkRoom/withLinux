@@ -69,7 +69,6 @@ Usage (char *progname)
 "    -h        Show this help information.\n"
 "Environment:\n"
 "    CDA       Set temp dir to use.  (current: %s)\n"
-"    CDASH     Set shell to use.     (current: %s)\n"
 "", progname,
 	(NULL==getenv("CDA"))?("/tmp"):getenv("CDA"),
 	(NULL==getenv("CDASH"))?("/bin/bash"):getenv("CDASH"));
@@ -95,7 +94,7 @@ main (int argc, char **argv, char **env)
 	int flags; /* flag for libarchive */
 
 	char * prefix = PREFIX; /* tmp dir path prefix */
-	char * shell = SHELL; /* default shell */
+	char * shell = cda_getshell(); /* default shell */
 	char * archfname; /* archive file name */
 	char   template[] = TEMPLATE; /* used by mkdtemp */
 	char * temp_dir; /* store the temp dir name */

@@ -44,6 +44,15 @@ License: GPL-3.0+
 
 #define PREFIX        ("/tmp/")
 #define TEMPLATE      ("cda.XXXXXX")
-#define SHELL         ("/bin/bash")
+
+char *
+cda_getshell(void)
+{
+	char * shell = getenv("SHELL");
+	if (NULL == shell) {
+		shell = "/bin/bash";
+	}
+	return shell;
+}
 
 #endif /* CDA_H_ */
