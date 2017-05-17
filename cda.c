@@ -33,7 +33,7 @@ License: GPL-3.0+
 #include <archive_entry.h>
 
 #include "cda.h"
-#include "cda_log.h"
+#include "lumin_log.h"
 #include "cda_wrapper.h"
 
 static int debug = 1; /* debug level, 1 for normal, 2 for detail */
@@ -49,6 +49,7 @@ Usage (char *progname)
 	fprintf (stderr, "------------------------------------------------------------------------\n");
 	fprintf (stderr, "  CDA %s -- built on %s %s \n", CDA_VERSION,
 			__DATE__, __TIME__);
+	fprintf (stderr, "   :: %s\n", archive_version_string());
 	fprintf (stderr, "------------------------------------------------------------------------\n");
 	fprintf (stderr, ""
 "Synopsis:\n"
@@ -69,12 +70,9 @@ Usage (char *progname)
 "Environment:\n"
 "    CDA       Set temp dir to use.  (current: %s)\n"
 "    CDASH     Set shell to use.     (current: %s)\n"
-"Lib Version:\n"
-"    %s\n"
 "", progname,
 	(NULL==getenv("CDA"))?("/tmp"):getenv("CDA"),
-	(NULL==getenv("CDASH"))?("/bin/bash"):getenv("CDASH"),
-	archive_version_string());
+	(NULL==getenv("CDASH"))?("/bin/bash"):getenv("CDASH"));
 	return;
 }
 
@@ -115,7 +113,7 @@ main (int argc, char **argv, char **env)
 	{ /* check and parse argument */
 		/* check argc */
 		if (2 > argc) {
-			LOG_WARN ("Missing arguments.\n");
+			LOG_WARN ("Missing arguments.");
 			Usage (argv[0]);
 			exit (EXIT_FAILURE);
 		}

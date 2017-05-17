@@ -1,4 +1,9 @@
-/* cdalog.h  ---  cd into Archive, logging facility header
+/* This file is originally written for my utility "cda" as a logging module,
+ * but now I import it into my rainbowlog repo with some minor changes,
+ * but no any change on licence.
+ * For cda: https://github.com/cdluminate/cda
+ *
+ * cdalog.h  ---  cd into Archive, logging facility header
  * Copyright (C) 2015 Lumin <cdluminate@gmail.com>
  * License: GPL-3.0+
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +23,12 @@
  * Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
  */
 
-#ifndef LIBCDALOG_H_
-#define LIBCDALOG_H_
+/*
+   Usage:
+ */
+
+#ifndef LUMIN_LOG_H_
+#define LUMIN_LOG_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,8 +38,8 @@
 #include <sys/types.h>
 #include <execinfo.h>
 
-struct timeb timeb_s;
-char _cda_logbuf[4096];
+static struct timeb timeb_s;
+static char _cda_logbuf[4096];
 
 #define CDA_COLOR_RED       ((const char *)"\x1B[31m")
 #define CDA_COLOR_RED_B     ((const char *)"\x1B[31;1m")
@@ -48,13 +57,14 @@ char _cda_logbuf[4096];
 #define CDA_COLOR_WHILE_B   ((const char *)"\x1B[37;1m")
 #define CDA_COLOR_RESET     ((const char *)"\x1B[m")
 
-void _CDA_BACKTRACE (void);
-void _CDA_LOG_CORE (char level, struct timeb * timebp, pid_t pid,
+static void _CDA_BACKTRACE (void);
+static void _CDA_LOG_CORE (char level, struct timeb * timebp, pid_t pid,
                __typeof__(__FILE__) file,
                __typeof__(__LINE__) line,
 		       __typeof__(__FUNCTION__) func,
                char * msgstring);
 
+/* interfaces */
 #define LOG_DEBUG(_cda_msg) do { \
 	_CDA_LOG_CORE ('D', &timeb_s, getpid(), __FILE__, __LINE__, __FUNCTION__, ((_cda_msg))); \
 } while (0)
@@ -92,4 +102,45 @@ void _CDA_LOG_CORE (char level, struct timeb * timebp, pid_t pid,
 	LOG_ERROR (_cda_logbuf); \
 } while (0)
 
-#endif /* LIBCDALOG_H_ */
+
+/* backend function */
+void
+_CDA_LOG_CORE (char level,
+               struct timeb * timebp,
+               pid_t pid,
+               __typeof__(__FILE__) file,
+               __typeof__(__LINE__) line,
+		       __typeof__(__FUNCTION__) func,
+               char * msgstring) 
+{
+	ftime (timebp);
+	struct tm * ptm = gmtime (&timebp->time);
+	fprintf (stderr, (level=='I')?CDA_COLOR_GREEN_B
+			:(level=='W')?CDA_COLOR_YELLOW_B
+			:(level=='E')?CDA_COLOR_RED_B
+			:(level=='D')?CDA_COLOR_CYAN_B
+			:CDA_COLOR_RESET);
+	fprintf (stderr, "%1c%02d%02d %02d:%02d:%02d.%03d %05d %s:%d] @%s() %s\n", level,
+		   	ptm->tm_mon, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec,
+		   	timebp->millitm, pid, file, line, func, msgstring);
+	fprintf (stderr, CDA_COLOR_RESET);
+	return;
+}
+
+/* see backtrace(3) */
+#define CDA_BT_SIZE 16
+void
+_CDA_BACKTRACE (void)
+{
+	int nptrs;
+	void * bt_buffer[CDA_BT_SIZE];
+
+	nptrs = backtrace (bt_buffer, CDA_BT_SIZE);
+	LOG_DEBUGF ("backtrace depth %d", nptrs);
+
+	backtrace_symbols_fd (bt_buffer, nptrs, STDERR_FILENO);
+	return;
+}
+#undef CDA_BT_SIZE
+
+#endif /* LUMIN_LOG_H_ */

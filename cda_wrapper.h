@@ -22,7 +22,7 @@ License: GPL-3.0+
 #define CDA_WRAPPER_H_
 
 #include "cda.h"
-#include "cda_log.h"
+#include "lumin_log.h"
 
 /*
  * Wrapper functions 

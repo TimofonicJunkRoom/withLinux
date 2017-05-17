@@ -36,7 +36,7 @@ License: GPL-3.0+
 #include <archive.h>
 #include <archive_entry.h>
 
-#define CDA_VERSION   ("1.6.2 (02 Mar. 2016)")
+#define CDA_VERSION   ("1.7 (17 May. 2017)")
 
 #define CDA_LIST         (0x0001)
 #define CDA_EXTRACT      (0x0010)
@@ -45,21 +45,5 @@ License: GPL-3.0+
 #define PREFIX        ("/tmp/")
 #define TEMPLATE      ("cda.XXXXXX")
 #define SHELL         ("/bin/bash")
-
-#define CDA_COLOR_RED       ((const char *)"\x1B[31m")
-#define CDA_COLOR_RED_B     ((const char *)"\x1B[31;1m")
-#define CDA_COLOR_GREEN     ((const char *)"\x1B[32m")
-#define CDA_COLOR_GREEN_B   ((const char *)"\x1B[32;1m")
-#define CDA_COLOR_YELLOW    ((const char *)"\x1B[33m")
-#define CDA_COLOR_YELLOW_B  ((const char *)"\x1B[33;1m")
-#define CDA_COLOR_BLUE      ((const char *)"\x1B[34m")
-#define CDA_COLOR_BLUE_B    ((const char *)"\x1B[34;1m")
-#define CDA_COLOR_PURPLE    ((const char *)"\x1B[35m")
-#define CDA_COLOR_PURPLE_B  ((const char *)"\x1B[35;1m")
-#define CDA_COLOR_CYAN      ((const char *)"\x1B[36m")
-#define CDA_COLOR_CYAN_B    ((const char *)"\x1B[36;1m")
-#define CDA_COLOR_WHITE     ((const char *)"\x1B[37m")
-#define CDA_COLOR_WHILE_B   ((const char *)"\x1B[37;1m")
-#define CDA_COLOR_RESET   ((const char *)"\x1B[m")
 
 #endif /* CDA_H_ */
