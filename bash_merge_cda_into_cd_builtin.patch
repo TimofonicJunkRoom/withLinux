@@ -16,7 +16,7 @@ index f66e68c..31a20d1 100644
 +        char * envp[] = { NULL };
 +        stat (nolinks ? newdir : tdir, &stat_buf);
 +        if ((stat_buf.st_mode & S_IFMT) == S_IFREG) {
-+          printf ("LUMIN: integrated \'cda\' into \'cd\', execve cda...\n");
++          printf ("NOTE: execve \'cda\' from \'cd\' ...\n");
 +          execve ("/usr/bin/cda", argv, envp);
 +        }
 +      }
