@@ -34,7 +34,6 @@ License: GPL-3.0+
 
 #include "cda.h"
 #include "lumin_log.h"
-#include "cda_wrapper.h"
 
 static int debug = 1; /* debug level, 1 for normal, 2 for detail */
 static int silent= 0; /* 1 for silent, i.e. no progress bar */
@@ -143,12 +142,12 @@ main (int argc, char **argv, char **env)
 				silent = 1;
 				break;
 			default:
-				LOG_ERROR ("option not defined.\n");
+				LOG_ERROR ("option not defined.");
 				exit (EXIT_FAILURE);
 			}
 		}
 		if (optind >= argc) {
-			LOG_ERROR ("no archive specified.\n");
+			LOG_ERROR ("no archive specified.");
 			exit (EXIT_FAILURE);
 		} else {
 			archfname = argv[optind];
@@ -160,7 +159,7 @@ main (int argc, char **argv, char **env)
 		Stat (archfname, stat_buf);
 		/* check whether target archive is a plain file */
 		if (!( stat_buf->st_mode & S_IFREG )) {
-			LOG_ERROR ("only plain files could be processed.\n");
+			LOG_ERROR ("only plain files could be processed.");
 			exit (EXIT_FAILURE);
 		}
 		archfilesize = stat_buf -> st_size;
@@ -168,7 +167,7 @@ main (int argc, char **argv, char **env)
 	}
 	{ /* Access -- check mode of target */
 		Access (archfname, R_OK);
-		if (1<debug) LOG_DEBUGF ("access(\"%s\", R_OK) success.\n", archfname);
+		if (1<debug) LOG_DEBUGF ("access(\"%s\", R_OK) success.", archfname);
 	}
 	{ /* init libarchive settings, and open archive file*/
 		archfd = Open (archfname, O_RDONLY);
@@ -185,14 +184,14 @@ main (int argc, char **argv, char **env)
 		/* open archive */
 		//if (ARCHIVE_OK != archive_read_open_filename (arch, archfname, 10240)) {
 		if (ARCHIVE_OK != archive_read_open_fd (arch, archfd, 10240)) {
-			LOG_ERRORF ("%s\n", archive_error_string(arch));
+			LOG_ERRORF ("%s", archive_error_string(arch));
 			exit (EXIT_FAILURE);
 		}
 	}
 	{ /* create temporary directory */
 		Chdir (prefix);
 		temp_dir = Mkdtemp (template);
-		if (1<debug) LOG_DEBUGF ("create temporary directory [%s/%s]\n", prefix, temp_dir);
+		if (1<debug) LOG_DEBUGF ("create temporary directory [%s/%s]", prefix, temp_dir);
 		Chdir (temp_dir);
 		Getcwd (destdir, 4095);
 	}
@@ -205,7 +204,7 @@ main (int argc, char **argv, char **env)
 		sigaction (SIGINT, &cda_signal_act, &cda_signal_old_act);
 	}
 	{ /* do the CDA matter with the forked child */
-		LOG_INFOF ("Extracting Archive into [%s]...\n", destdir);
+		LOG_INFOF ("Extracting Archive into [%s]...", destdir);
 		if (cda_action & (CDA_EXTRACT|CDA_LIST)) {
 			/* extract archive into temp_dir */
 			pid_t pid = Fork ();
@@ -216,17 +215,17 @@ main (int argc, char **argv, char **env)
 				int status = 0;
 				Waitpid (-1, &status, 0); // wait for any child
 				if (0 != status) {
-					LOG_ERRORF ("libarchive operations exited with error (%d).\n", status);
+					LOG_ERRORF ("libarchive operations exited with error (%d).", status);
 					exit (EXIT_FAILURE);
 				}
-				if (1>debug) LOG_DEBUGF ("libarchive operations are successful. (%d).\n", status);
+				if (1>debug) LOG_DEBUGF ("libarchive operations are successful. (%d).", status);
 			}
 		}
 	}
 	{ /* fork and execve() a shell in the cda environment */
 		if (cda_action & CDA_SHELL) {
-			if (1<debug) LOG_DEBUGF ("fork and execve a shell for you, under [%s]\n", destdir);
-			LOG_WARNF ("-*- \x1b[4mExit this shell when operations complete\x1b[24m -*-\n");
+			if (1<debug) LOG_DEBUGF ("fork and execve a shell for you, under [%s]", destdir);
+			LOG_WARNF ("-*- \x1b[4mExit this shell when operations complete\x1b[24m -*-");
 			int tmp;
 			pid_t pid = Fork ();
 			if (0 == pid) { /* child execve a shell */
@@ -240,9 +239,9 @@ main (int argc, char **argv, char **env)
 	}
 	{ /* remove the temporary stuff */
 		if (cda_action == CDA_EXTRACT) { /* extract only, i.e. keep */
-			LOG_INFOF ("keeping temp directory [%s]\n", destdir);
+			LOG_INFOF ("keeping temp directory [%s]", destdir);
 		} else {
-			if (1<debug) LOG_DEBUGF ("removing the temporary directory [%s]\n", destdir);
+			if (1<debug) LOG_DEBUGF ("removing the temporary directory [%s]", destdir);
 			remove_tmpdir (destdir, 1);
 		}
 	}
@@ -300,7 +299,7 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 		if (ARCHIVE_EOF == r)
 			break;
 		if (ARCHIVE_OK > r)
-			LOG_ERRORF ("%s\n", archive_error_string (arch));
+			LOG_ERRORF ("%s", archive_error_string (arch));
 		if (ARCHIVE_WARN > r)
 			exit (EXIT_FAILURE);
 
@@ -329,18 +328,18 @@ cda_archive_handler (struct archive * arch, int flags, const int cda_action)
 
 			r = archive_write_header (ext, entry);
 			if (ARCHIVE_OK > r)
-				LOG_WARNF ("%s\n", archive_error_string (ext));
+				LOG_WARNF ("%s", archive_error_string (ext));
 			else if (0 < archive_entry_size(entry)) {
 				r = copy_data (arch, ext);
 				if (ARCHIVE_OK > r)
-					LOG_ERRORF ("%s\n", archive_error_string(ext));
+					LOG_ERRORF ("%s", archive_error_string(ext));
 				if (ARCHIVE_WARN > r)
 					exit (EXIT_FAILURE);
 			}
 
 			r = archive_write_finish_entry (ext);
 			if (ARCHIVE_OK > r)
-				LOG_WARNF ("%s\n", archive_error_string(ext));
+				LOG_WARNF ("%s", archive_error_string(ext));
 			if (ARCHIVE_WARN > r)
 				exit (EXIT_FAILURE);
 		}
@@ -409,17 +408,17 @@ remove_tmpdir (char * destdir, int force)
 		char * rmenv[]  = { NULL };
 		char * rmargv[] = { "rm", (0==force)?("-ri"):("-rf"), destdir, NULL };
 		{ /* dump the RM command line */
-			if (1<debug) LOG_WARNF (" execve(): %s %s %s \n", rmargv[0], rmargv[1], rmargv[2]);
+			if (1<debug) LOG_WARNF (" execve(): %s %s %s", rmargv[0], rmargv[1], rmargv[2]);
 		}
 		execve ("/bin/rm", rmargv, rmenv);
-		LOG_ERRORF ("%s\n", strerror(errno));/* execve only returns on error */
+		LOG_ERRORF ("%s", strerror(errno));/* execve only returns on error */
 		exit (EXIT_FAILURE);
 	} else {  /* fork : parent */
 		Waitpid (-1, &_tmp, 0);
 		if (0 == _tmp) {
-			LOG_INFOF ("Removal of [%s] (%d) : Success.\n", destdir, _tmp);
+			LOG_INFOF ("Removal of [%s] (%d) : Success.", destdir, _tmp);
 		} else {
-			LOG_ERRORF ("Removal of [%s] (%d) : Failed.\n", destdir, _tmp);
+			LOG_ERRORF ("Removal of [%s] (%d) : Failed.", destdir, _tmp);
 			exit (EXIT_FAILURE);
 		}
 	}
@@ -429,14 +428,14 @@ remove_tmpdir (char * destdir, int force)
 /* int on_exit(void (*function)(int , void *), void *arg); */
 static void cda_hook_exit (int status, void * arg)
 {
-	if (1<debug) LOG_DEBUGF ("hook status %d\n", status);
+	if (1<debug) LOG_DEBUGF ("hook status %d", status);
 	/* on exit, we need to remove the temporary directory if it still exists. */
 	if (status != EXIT_SUCCESS) {
-		if (1<debug) LOG_DEBUGF ("detecting residual temporary directory ...\n");
+		if (1<debug) LOG_DEBUGF ("detecting residual temporary directory ...");
 		struct stat stat_buf_;
 		stat ((char *) arg, &stat_buf_); /* note: don't use wrapper here ! */
 		if ((stat_buf_.st_mode & S_IFMT) == S_IFDIR) {
-			if (1<debug) LOG_DEBUGF ("remove tmpdir %s via on_exit hook\n", (char *)arg);
+			if (1<debug) LOG_DEBUGF ("remove tmpdir %s via on_exit hook", (char *)arg);
 			remove_tmpdir ((char *)arg, 1);
 		}
 	} else {
@@ -451,7 +450,7 @@ cda_signal_handler (int signal)
 	switch (signal) {
 	case SIGINT:
 		/* we need to delete temporary directory on interruption */
-		LOG_DEBUG ("Ctrl^C Triggered SIGINT handler\n");
+		LOG_DEBUG ("Ctrl^C Triggered SIGINT handler");
 		exit (EXIT_FAILURE);
 		break;
 	default:

@@ -1,6 +1,6 @@
-CFLAGS  := -g -O2 -Wall -rdynamic -Wpedantic -std=gnu11 \
+CFLAGS  := -g -O2 -Wall -rdynamic -std=gnu11 \
   -pie -fPIC -fstack-protector-strong -Wformat -Werror=format-security \
-  -Wdate-time -D_FORTIFY_SOURCE=2
+  -Wno-date-time -Wno-format-extra-args -D_FORTIFY_SOURCE=2
 INSTALL := install
 DESTDIR :=
 BIN     := /usr/bin/
