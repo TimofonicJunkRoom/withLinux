@@ -1,4 +1,4 @@
-## With Linux - Quite Messy Personal Hacking Notes  
+## With Linux - Quite Messy Collection of Personal Notes
 
 > KISS: Keep It Simple, Stupid  
 
