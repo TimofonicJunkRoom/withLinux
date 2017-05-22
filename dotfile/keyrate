@@ -1,0 +1,3 @@
+#!/bin/sh
+set -e
+xset r rate 170 96
