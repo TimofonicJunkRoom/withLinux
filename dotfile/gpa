@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+git push
+git push --all
+git push --tags
