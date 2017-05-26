@@ -6,94 +6,116 @@
 import json
 import sys
 
-# configure
-s_indent_block = '    '
-b_show_example = False
+class lsJson(object):
 
-# helper functions
-def _c(s, color):
-    esc = '\x1b['
-    restore = esc + ';m'
-    if color=='red':
-        c = esc+'31;1m' # red for list
-    elif color=='green':
-        c = esc+'32;1m' # green for int
-    elif color=='yellow':
-        c = esc+'33;1m' # yellow for dict
-    elif color=='blue':
-        c = esc+'34;1m' # blue for unknown
-    elif color=='cyan':
-        c = esc+'36;1m' # cyan for dict key
-    elif color=='white':
-        c = esc+'37;1m' # white for string
-    elif color=='violet':
-        c = esc+'35;1m' # for example and special use
-    else:
-        c = ''
-    return c+s+restore
+    def __init__(self, arg_indent_block='    '):
+        # configure
+        self.s_indent_block = arg_indent_block
 
-def _type(obj):
-    if isinstance(obj, list):
-        return 'list'
-    elif isinstance(obj, dict):
-        return 'dict'
-    elif isinstance(obj, int):
-        return 'int'
-    elif isinstance(obj, str):
-        return 'str'
-    else:
-        return str(type(obj))
+    def __call__(self, jobj, cdepth=0, show_example=False):
+        self.lsjson(jobj, cdepth, show_example)
 
-def lsjson(jobj, cdepth=0, show_example=False):
-    '''
-    Walk the json object (dict, list) recursively
-    When the jobj is a list, we assume the inner structure
-    of its elements is the same.
-    '''
-    #print(s_indent_block*cdepth, type(jobj), cdepth)
-    if isinstance(jobj, list):
-        if len(jobj)!=0: # non-empty list
-            sample = jobj[0]
-            print(_c(s_indent_block*cdepth + '['+ str(_type(jobj)), 'red'))
-            lsjson(sample, cdepth=cdepth+1, show_example=show_example)
-            print(_c(s_indent_block*cdepth + '... ]', 'red'))
+    def _c(self, s, color):
+        ''' <helper>
+        colorize the given string by wrapping it with ANSI color sequence
+        in: s: given string
+               color: string indicating the color
+        out: str: colorized version of string s
+        '''
+        esc = '\x1b['
+        restore = esc + ';m'
+        if color=='red':
+            c = esc+'31;1m' # red for list
+        elif color=='green':
+            c = esc+'32;1m' # green for int
+        elif color=='yellow':
+            c = esc+'33;1m' # yellow for dict
+        elif color=='blue':
+            c = esc+'34;1m' # blue for unknown
+        elif color=='cyan':
+            c = esc+'36;1m' # cyan for dict key
+        elif color=='white':
+            c = esc+'37;1m' # white for string
+        elif color=='violet':
+            c = esc+'35;1m' # for example and special use
         else:
-            print(_c(s_indent_block*cdepth + '[]', 'red'))
-    elif isinstance(jobj, dict):
-        if len(jobj.keys())!=0: # non-empty dict
-            print(_c(s_indent_block*cdepth + '{'+ str(_type(jobj)), 'yellow'))
-            for key in jobj.keys():
-                '''
-                if the sample is int or str, don't break line
-                '''
-                sample = jobj[key]
-                if isinstance(sample, int) or isinstance(sample, str):
-                    endline = ''
-                else:
-                    endline = '\n'
-                print(_c(s_indent_block*(cdepth+1) + ':{:20s}'.format(key), 'cyan'), end=endline)
-                lsjson(sample, cdepth=cdepth+2, show_example=show_example)
-            print(_c(s_indent_block*cdepth + '}', 'yellow'))
+            c = ''
+        return c+s+restore
+
+    def _type(self, obj):
+        ''' <helper>
+        alternative to built-in function type()
+        in: obj
+        out: string indicating the type of the given object
+        '''
+        if isinstance(obj, list):
+            return 'list'
+        elif isinstance(obj, dict):
+            return 'dict'
+        elif isinstance(obj, int):
+            return 'int'
+        elif isinstance(obj, str):
+            return 'str'
+        elif isinstance(obj, float):
+            return 'float'
         else:
-            print(_c(s_indent_block*cdepth + '{}', 'yellow'))
-    elif isinstance(jobj, int):
-        print(_c(s_indent_block*(9-cdepth)+str(_type(jobj)), 'green'))
-        if show_example:
-            print(_c(s_indent_block*(cdepth-1) + '-> '+str(repr(jobj)), 'violet'))
-    elif isinstance(jobj, str):
-        print(_c(s_indent_block*(9-cdepth)+str(_type(jobj)), 'white'))
-        if show_example:
-            print(_c(s_indent_block*(cdepth-1) + '-> '+str(repr(jobj)), 'violet'))
-    else:
-        print(_c(s_indent_block*cdepth+ str(_type(jobj)), 'unknown'))
+            return str(type(obj))
 
-# argument check
-if not sys.argv[1]:
-    raise Exception('where is input json file?')
-if len(sys.argv)==3 and sys.argv[2]=='-e': # show example
-    b_show_example = True
+    def lsjson(self, jobj, cdepth=0, show_example=False):
+        ''' <main interface>
+        Walk the json object (dict, list) recursively
+        When the jobj is a list, we assume the inner structure
+        of its elements is the same.
+        '''
+        #print(self.s_indent_block*cdepth, type(jobj), cdepth)
+        if isinstance(jobj, list):
+            if len(jobj)!=0: # non-empty list
+                sample = jobj[0]
+                print(self._c(self.s_indent_block*cdepth + '['+ str(self._type(jobj)), 'red'))
+                lsjson(sample, cdepth=cdepth+1, show_example=show_example)
+                print(self._c(self.s_indent_block*cdepth + '... ]', 'red'))
+            else:
+                print(self._c(self.s_indent_block*cdepth + '[]', 'red'))
+        elif isinstance(jobj, dict):
+            if len(jobj.keys())!=0: # non-empty dict
+                print(self._c(self.s_indent_block*cdepth + '{'+ str(self._type(jobj)), 'yellow'))
+                for key in jobj.keys():
+                    '''
+                    if the sample is int or str, don't break line
+                    '''
+                    sample = jobj[key]
+                    if isinstance(sample, int) or isinstance(sample, str):
+                        endline = ''
+                    else:
+                        endline = '\n'
+                    print(self._c(self.s_indent_block*(cdepth+1) + ':{:20s}'.format(key), 'cyan'), end=endline)
+                    lsjson(sample, cdepth=cdepth+2, show_example=show_example)
+                print(self._c(self.s_indent_block*cdepth + '}', 'yellow'))
+            else:
+                print(self._c(self.s_indent_block*cdepth + '{}', 'yellow'))
+        elif isinstance(jobj, int) or isinstance(jobj, float):
+            print(self._c(self.s_indent_block*(9-cdepth)+str(self._type(jobj)), 'green'))
+            if show_example:
+                print(self._c(self.s_indent_block*(cdepth-1) + '-> '+str(repr(jobj)), 'violet'))
+        elif isinstance(jobj, str):
+            print(self._c(self.s_indent_block*(9-cdepth)+str(self._type(jobj)), 'white'))
+            if show_example:
+                print(self._c(self.s_indent_block*(cdepth-1) + '-> '+str(repr(jobj)), 'violet'))
+        else:
+            print(self._c(self.s_indent_block*cdepth+ str(self._type(jobj)), 'unknown'))
 
-# main
-print(_c('=> lsjson '+sys.argv[1], 'violet'))
-j_content = json.loads(open(sys.argv[1], 'r').read())
-lsjson(j_content, show_example=b_show_example)
+if __name__=='__main__':
+    # configure
+    b_show_example=False
+
+    # argument check
+    if not sys.argv[1]:
+        raise Exception('where is input json file?')
+    if len(sys.argv)==3 and sys.argv[2]=='-e': # show example
+        b_show_example = True
+
+    # main
+    lsjson = lsJson()
+    print(lsjson._c('=> lsjson '+sys.argv[1], 'violet'))
+    j_content = json.loads(open(sys.argv[1], 'r').read())
+    lsjson(j_content, show_example=b_show_example)
