@@ -9,11 +9,16 @@ import sys
 class lsJson(object):
 
     def __init__(self, arg_indent_block='    '):
-        # configure
+        '''
+        configure
+        '''
         self.s_indent_block = arg_indent_block
-        self.__version__ = '1'
+        self.__version__ = '2'
 
     def __call__(self, jobj, cdepth=0, show_example=False):
+        '''
+        wrapper call to self.lsjson
+        '''
         self.lsjson(jobj, cdepth, show_example)
 
     def _c(self, s, color):
@@ -67,13 +72,23 @@ class lsJson(object):
         Walk the json object (dict, list) recursively
         When the jobj is a list, we assume the inner structure
         of its elements is the same.
+        in: jobj: any possible object found in json
+            cdepth: current recursion depth, int
+            show_example:
+                -> True: show one example
+                -> False: only dump structure
+                -> 999: dump structure and all content
         '''
         #print(self.s_indent_block*cdepth, type(jobj), cdepth)
         if isinstance(jobj, list):
             if len(jobj)!=0: # non-empty list
-                sample = jobj[0]
+                if show_example==999:
+                    samples = jobj # dump all content
+                else:
+                    samples = [jobj[0]] # selectively dump the first
                 print(self._c(self.s_indent_block*cdepth + '['+ str(self._type(jobj)), 'red'))
-                lsjson(sample, cdepth=cdepth+1, show_example=show_example)
+                for sample in samples:
+                    lsjson(sample, cdepth=cdepth+1, show_example=show_example)
                 print(self._c(self.s_indent_block*cdepth + '... ]', 'red'))
             else:
                 print(self._c(self.s_indent_block*cdepth + '[]', 'red'))
@@ -110,13 +125,27 @@ if __name__=='__main__':
     b_show_example=False
     lsjson = lsJson()
 
+    # helper
+    def Usage():
+        msg='''lsJson: pretty printer for json files
+usage:
+    lsjson <bla.json> [-e|-a]
+flags:
+    -e  show one example for each part of the structure
+    -a  dump the structure and all the content
+        '''
+        print(msg)
+
     # argument check
     if len(sys.argv)==1:
         #raise Exception('where is input json file?')
         print(lsjson._c('where is input json file?', 'red'))
+        Usage()
         exit(1)
     if len(sys.argv)==3 and sys.argv[2]=='-e': # show example
         b_show_example = True
+    if len(sys.argv)==3 and sys.argv[2]=='-a': # dump all
+        b_show_example = 999
 
     # main
     print(lsjson._c('=> lsjson '+sys.argv[1], 'violet'))
