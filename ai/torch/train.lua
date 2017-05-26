@@ -33,15 +33,21 @@ log.debug('upgrade function')
 function gradUpdate(mlp, x, y, crit, lr)
 	local netout = mlp:forward(x)
 	local err = crit:forward(netout, y)
-	local gradcrit = crit:backward(netout)
+	local gradcrit = crit:backward(netout, y)
 	mlp:zeroGradParameters()
 	mlp:backward(x, gradcrit)
 	mlp:updateParameters(lr)
+	return err
 end
 
 log.debug('train')
-trainer:train(dataset) --> this line is troublesome
---for i = 1, dataset:size() do
---	log.info('iteration ' .. i)
---	gradUpdate(mlp, dataset[i][1], dataset[i][2], crit, 0.01) --> why doesn't it work?
---end
+
+-- high level training
+trainer:train(dataset)
+
+-- low level training
+for i = 1, dataset:size() do
+	--log.info('iteration ' .. i)
+	local d_err = gradUpdate(mlp, dataset[i][1], dataset[i][2], crit, 0.01)
+	print(d_err)
+end
