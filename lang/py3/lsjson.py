@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Show the structure of a given json file.
-# Copyright © Lumin <cdluminate@gmail.com>
+# Copyright © 2017 Lumin <cdluminate@gmail.com>
 # MIT License
 
 import json
@@ -11,6 +11,7 @@ class lsJson(object):
     def __init__(self, arg_indent_block='    '):
         # configure
         self.s_indent_block = arg_indent_block
+        self.__version__ = '1'
 
     def __call__(self, jobj, cdepth=0, show_example=False):
         self.lsjson(jobj, cdepth, show_example)
@@ -107,15 +108,17 @@ class lsJson(object):
 if __name__=='__main__':
     # configure
     b_show_example=False
+    lsjson = lsJson()
 
     # argument check
-    if not sys.argv[1]:
-        raise Exception('where is input json file?')
+    if len(sys.argv)==1:
+        #raise Exception('where is input json file?')
+        print(lsjson._c('where is input json file?', 'violet'))
+        exit(1)
     if len(sys.argv)==3 and sys.argv[2]=='-e': # show example
         b_show_example = True
 
     # main
-    lsjson = lsJson()
     print(lsjson._c('=> lsjson '+sys.argv[1], 'violet'))
     j_content = json.loads(open(sys.argv[1], 'r').read())
     lsjson(j_content, show_example=b_show_example)
