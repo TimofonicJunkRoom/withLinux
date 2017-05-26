@@ -113,12 +113,19 @@ if __name__=='__main__':
     # argument check
     if len(sys.argv)==1:
         #raise Exception('where is input json file?')
-        print(lsjson._c('where is input json file?', 'violet'))
+        print(lsjson._c('where is input json file?', 'red'))
         exit(1)
     if len(sys.argv)==3 and sys.argv[2]=='-e': # show example
         b_show_example = True
 
     # main
     print(lsjson._c('=> lsjson '+sys.argv[1], 'violet'))
-    j_content = json.loads(open(sys.argv[1], 'r').read())
-    lsjson(j_content, show_example=b_show_example)
+    try:
+        j_content = json.loads(open(sys.argv[1], 'r').read())
+        lsjson(j_content, show_example=b_show_example)
+    except json.decoder.JSONDecodeError as e:
+        print(lsjson._c('=> invalid or malformed file', 'red'))
+        exit(2)
+    except FileNotFoundError as e:
+        print(lsjson._c('=> file not found', 'red'))
+        exit(4) 
