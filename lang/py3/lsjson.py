@@ -133,6 +133,8 @@ usage:
 flags:
     -e  show one example for each part of the structure
     -a  dump the structure and all the content
+see also:
+    json_pp in perl package
         '''
         print(msg)
 
