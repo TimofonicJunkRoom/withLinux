@@ -51,6 +51,9 @@ manual_connect_without_NetworkManager () {
 	sudo iw dev wlp3s0 connect xxx [key yyy] # use iw, with or without password
 	#5. dhcp
 	sudo dhclient wlp3s0 || sudo dhcpcd wlp3s0
+	#6. check status
+	sudo iw dev wlp3s0 link
+	sudo iwconfig wlp3s0
 }
 
 # main
