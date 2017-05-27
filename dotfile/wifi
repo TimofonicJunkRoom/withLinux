@@ -21,7 +21,9 @@ general_status () {
 }
 wifi_connect () {
 	# $1: wifi ID
-	sudo nmcli -a connection up $@
+	sudo nmcli -a connection up $@ || sudo nmcli -a dev wifi con $@
+	# first try to find a matching connection in profile.
+	# then try to connect the wifi specified by given information.
 }
 create_hotspot () {
 	sudo nmcli dev wifi hotspot ssid "StarBound" password fishx
