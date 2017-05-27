@@ -31,7 +31,9 @@ general_status () {
 }
 wifi_connect () {
 	# $1: wifi ID
-	sudo nmcli -a connection up $@ || sudo nmcli -a dev wifi con $@
+	sudo nmcli -a connection up $@ 2>/dev/null || \
+		echo =\> No matching connection. Connecting ...; \
+		sudo nmcli -a dev wifi con $@
 	# first try to find a matching connection in profile.
 	# then try to connect the wifi specified by given information.
 }
