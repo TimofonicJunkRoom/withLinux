@@ -1,6 +1,11 @@
 #!/bin/sh
-# wifi helper with nmcli or manual
-# reference: nmcli-examples
+# my simple wifi helper
+# reference: nmcli-examples wicd-cli iw iwconfig ip wpa_supplicant
+# three ways to connect to a wifi
+# 1. nmcli : network manager, requires systemd
+# 2. wicd  : no systemd dependency
+# 3. iw/iwconfig : low level, no WPA support
+# 4. wpa_supplicant : annoying
 set -e
 
 # helper function
