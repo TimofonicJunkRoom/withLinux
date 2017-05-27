@@ -6,6 +6,11 @@
 # 2. wicd  : no systemd dependency
 # 3. iw/iwconfig : low level, no WPA support
 # 4. wpa_supplicant : annoying
+# reference:
+#  https://wiki.archlinux.org/index.php/Network_configuration
+#  https://wiki.archlinux.org/index.php/Wireless_network_configuration#Manual_setup
+#  https://wiki.archlinux.org/index.php/NetworkManager
+#  https://wiki.archlinux.org/index.php/Wicd
 set -e
 
 # helper function
@@ -75,5 +80,6 @@ case $1 in
 	x   ) create_hotspot;;
 	on  ) wifi_on;;
 	off ) wifi_off;;
+	tui ) nmtui;; # Network Manager Text User Interface
 	*   ) nmcli $@;;
 esac
