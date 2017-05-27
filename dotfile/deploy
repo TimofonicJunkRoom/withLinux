@@ -44,6 +44,11 @@ cat > $tempfile <<EOF
  ../cluster/condor $home/bin/con # my HTCondor wrapper
  ../lang/py3/ydtrans/t.py $home/bin/t # my youdao translation script
  z $home/bin/z # my zfs tools wrapper
+ gpa $home/bin/gpa # git push ALLLLLLLLLLLLLLLLLLLL
+ keyrate $home/bin/keyrate # dirty workaround to key board rate problem
+ wifi $home/bin/wifi # wifi helper
+ ../lang/py3/stig $home/bin/stig
+ ../lang/py3/lsjson.py $home/bin/lsjson # pretty json printer
 EOF
 sources=( $(cat $tempfile | awk '{print $1}') )
 targets=( $(cat $tempfile | awk '{print $2}') )
