@@ -1,0 +1,53 @@
+#!/bin/sh
+# wifi helper with nmcli
+# reference: nmcli-examples
+set -e
+
+# helper function
+scan () {
+	# $1: device, e.g. wlp3s0
+	sudo iw dev $1 scan
+}
+wifilist () {
+	nmcli dev wifi list
+}
+wifilist_detail () {
+	nmcli -f in-use,device,active,ssid,bssid,mode,chan,rate,signal,bars,security dev wifi
+}
+general_status () {
+	nmcli dev
+	echo .
+	nmcli general status
+}
+wifi_connect () {
+	# $1: wifi ID
+	sudo nmcli -a connection up $@
+}
+create_hotspot () {
+	sudo nmcli dev wifi hotspot ssid "StarBound" password fishx
+}
+wifi_rescan () {
+	sudo nmcli dev wifi rescan
+}
+wifi_off () {
+	sudo nmcli radio wifi off
+}
+wifi_on () {
+	sudo nmcli radio wifi on
+}
+
+
+# main
+case $1 in
+	ls  ) wifilist;;
+	list) wifilist_detail;;
+	scan) scan $2;;
+	rescan) wifi_rescan;;
+	# con) # list connections
+	st  ) general_status;;
+	+   ) shift; wifi_connect $@;;
+	x   ) create_hotspot;;
+	on  ) wifi_on;;
+	off ) wifi_off;;
+	*   ) nmcli $@;;
+esac
