@@ -46,6 +46,8 @@ manual_connect_without_NetworkManager () {
 	#3. scan
 	sudo iwlist wlp3s0 scan
 	#4. connect
+	# NOTE, these methods only works with none-security network or WEP network.
+	# Use wpa_supplicant to connect WPA and WPA2 networks.
 	sudo iwconfig wlp3s0 essid xxx # without password
 	sudo iwconfig wlp3s0 essid xxx key yyy # with password
 	sudo iw dev wlp3s0 connect xxx [key yyy] # use iw, with or without password
