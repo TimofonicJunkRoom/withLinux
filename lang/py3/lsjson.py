@@ -13,7 +13,7 @@ class lsJson(object):
         configure
         '''
         self.s_indent_block = arg_indent_block
-        self.__version__ = '2'
+        self.__version__ = '3'
 
     def __call__(self, jobj, cdepth=0, show_example=False):
         '''
@@ -89,7 +89,10 @@ class lsJson(object):
                 print(self._c(self.s_indent_block*cdepth + '['+ str(self._type(jobj)), 'red'))
                 for sample in samples:
                     lsjson(sample, cdepth=cdepth+1, show_example=show_example)
-                print(self._c(self.s_indent_block*cdepth + '... ]', 'red'))
+                if show_example==999:
+                    print(self._c(self.s_indent_block*cdepth + ']', 'red'))
+                else:
+                    print(self._c(self.s_indent_block*cdepth + '... ]', 'red'))
             else:
                 print(self._c(self.s_indent_block*cdepth + '[]', 'red'))
         elif isinstance(jobj, dict):
@@ -104,7 +107,7 @@ class lsJson(object):
                         endline = ''
                     else:
                         endline = '\n'
-                    print(self._c(self.s_indent_block*(cdepth+1) + ':{:20s}'.format(key), 'cyan'), end=endline)
+                    print(self._c(self.s_indent_block*(cdepth+1) + ':{:32s}'.format(key), 'cyan'), end=endline)
                     lsjson(sample, cdepth=cdepth+2, show_example=show_example)
                 print(self._c(self.s_indent_block*cdepth + '}', 'yellow'))
             else:
@@ -134,7 +137,7 @@ flags:
     -e  show one example for each part of the structure
     -a  dump the structure and all the content
 see also:
-    json_pp in perl package
+    json_pp in perl package, but lsjson is much prettier.
         '''
         print(msg)
 
