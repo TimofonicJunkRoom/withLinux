@@ -1,5 +1,5 @@
 #!/bin/sh
-# wifi helper with nmcli
+# wifi helper with nmcli or manual
 # reference: nmcli-examples
 set -e
 
@@ -38,6 +38,20 @@ wifi_on () {
 	sudo nmcli radio wifi on
 }
 
+manual_connect_without_NetworkManager () {
+	#1. check rfkill
+	sudo rfkill list
+	#2. bring up device
+	sudo ip link set dev wlp3s0 up
+	#3. scan
+	sudo iwlist wlp3s0 scan
+	#4. connect
+	sudo iwconfig wlp3s0 essid xxx # without password
+	sudo iwconfig wlp3s0 essid xxx key yyy # with password
+	sudo iw dev wlp3s0 connect xxx [key yyy] # use iw, with or without password
+	#5. dhcp
+	sudo dhclient wlp3s0 || sudo dhcpcd wlp3s0
+}
 
 # main
 case $1 in
