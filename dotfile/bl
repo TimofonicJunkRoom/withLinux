@@ -3,7 +3,7 @@
 # Copyright © 2017 Lumin
 set -e #-x
 
-# preparation
+# configure
 debug=1
 BLDIR=/sys/class/backlight/intel_backlight
 BL_MAX=$(cat $BLDIR/max_brightness)
@@ -12,8 +12,7 @@ BL_CUR=$(cat $BLDIR/brightness)
 BL_INC=$(( $BL_CUR + 5 * $BL_MAX/100 ))
 BL_DEC=$(( $BL_CUR - 5 * $BL_MAX/100 ))
 if test $debug -ge 0; then
-	echo BL_MAX=$BL_MAX BL_CUR=$BL_CUR
-	echo BL_INC=$BL_INC BL_DEC=$BL_DEC
+	echo BL_MAX=$BL_MAX BL_CUR=$BL_CUR BL_INC=$BL_INC BL_DEC=$BL_DEC
 fi
 
 # main
@@ -21,13 +20,16 @@ case $1 in
 	'') # empty input
 		;;
 	+)
+		printf 'Backlight brightness has been set to '
 		echo $BL_INC | sudo tee $BLDIR/brightness
 		;;
 	-)
+		printf 'Backlight brightness has been set to '
 		echo $BL_DEC | sudo tee $BLDIR/brightness
 		;;
 	*)
 		BL_SPEC=$(( $1 * $BL_MAX / 100 ))
+		printf 'Backlight brightness has been set to '
 		echo $BL_SPEC | sudo tee $BLDIR/brightness
 		;;
 esac
