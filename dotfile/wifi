@@ -37,6 +37,9 @@ wifi_connect () {
 	# first try to find a matching connection in profile.
 	# then try to connect the wifi specified by given information.
 }
+wifi_disconnect () {
+	sudo nmcli device wifi disconnect
+}
 create_hotspot () {
 	sudo nmcli dev wifi hotspot ssid "StarBound" password fishx
 }
@@ -79,6 +82,7 @@ case $1 in
 	# con) # list connections
 	st  ) general_status;;
 	+   ) shift; wifi_connect $@;;
+	-   ) wifi_disconnect;;
 	x   ) create_hotspot;;
 	on  ) wifi_on;;
 	off ) wifi_off;;
