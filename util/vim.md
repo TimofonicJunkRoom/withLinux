@@ -9,3 +9,12 @@ Ctrl^p    automatic completion
 
 ggvG=     indent code automatically
 ```
+
+# encrypt file
+
+```
+vim -x encrypted.txt
+:help 'cm'
+:setlocal cm=blowfish2
+:wq
+```
