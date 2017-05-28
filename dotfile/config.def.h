@@ -1,4 +1,25 @@
 /* See LICENSE file for copyright and license details. */
+/* Lumin's dwm config header
+ *
+ * Reference:
+ *
+ * http://dwm.suckless.org
+ * https://wiki.archlinux.org/index.php/Dwm
+ *
+ * .xinitrc:
+ * ```
+ * # Statusbar loop
+ * while true; do
+ *   xsetroot -name "$( date +"%F %R" )"
+ *   sleep 30
+ * done &
+ *
+ * # autostart part
+ * # pacmanfm &
+ *
+ * exec dw
+ * ```
+ */
 
 /* appearance */
 static const char *fonts[] = {
