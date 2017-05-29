@@ -3,11 +3,14 @@
  * MIT License
  */
 
+/* Linux-only */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
 #include <stdarg.h>
+#include <unistd.h>
 
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
@@ -24,6 +27,7 @@ static char * module_sysinfo(void);
 static char * module_uname(void);
 static char * module_split(void);
 static char * module_space(void);
+static char * module_cpu(void);
 
 /* <config> dwmstatus :: content */
 #define M(name) module_##name
@@ -93,6 +97,32 @@ module_uname (void) {
 	return pc_uname;
 }
 
+/* <helper,linux-only> get cpu usage via /proc */
+static char*
+module_cpu (void) {
+	//FILE* pf_procstat = fopen("/proc/stat", "r");
+	FILE* pf_procstat = NULL;
+	unsigned long cpus[4] = {0,0,0,0}; // user,nice,sys,idle
+	unsigned long cpue[4] = {0,0,0,0};
+	static char pc_cpu[MAXSTR];
+#define getProcStatCPU(pf, buf) do {\
+	pf = fopen("/proc/stat", "r"); \
+	fseek(pf, 0, SEEK_SET); \
+	fscanf(pf, "cpu %ld %ld %ld %ld", \
+			buf+0, buf+1, buf+2, buf+3); \
+	fclose(pf); \
+} while(0)
+	#define CPUOccupy_(x) ((cpu##x[0] + cpu##x[1] + cpu##x[2]))
+	#define CPUTotal_(x) ((cpu##x[0] + cpu##x[1] + cpu##x[2] + cpu##x[3]))
+	getProcStatCPU(pf_procstat, cpus);
+	usleep(250000);
+	getProcStatCPU(pf_procstat, cpue);
+	double cpuusage = (double)(CPUOccupy_(e) - CPUOccupy_(s)) * 100. /
+		(double)(CPUTotal_(e) - CPUTotal_(s));
+	snprintf(pc_cpu, sizeof(pc_cpu), "cpu %.1f%%", cpuusage);
+	return pc_cpu;
+}
+
 /* <helper> split line */
 static char *
 module_split (void) {
@@ -131,6 +161,7 @@ main (int argc, char **argv, char **envp)
 	MODTEST(sysinfo);
 	MODTEST(split);
 	MODTEST(space);
+	MODTEST(cpu);
 #else // TEST
 	char pc_overview[MAXSTR];
 	module_collect(pc_overview, status_modules,
