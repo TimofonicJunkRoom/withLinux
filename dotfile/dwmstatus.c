@@ -3,7 +3,11 @@
  * MIT License
  */
 
-/* Linux-only */
+/* XXX: Linux-only Software
+ * Refernce:
+ *   1. http://dwm.suckless.org/dwmstatus/
+ * 
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +15,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <unistd.h>
+#include <assert.h>
 
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
@@ -29,14 +34,34 @@ static char * module_split(void);
 static char * module_space(void);
 static char * module_cpu(void);
 
+
 /* <config> dwmstatus :: content */
 #define M(name) module_##name
 static char * (*status_modules[])(void) = {
 	// a set of "static const char *" functions that controls content
 	M(uname),
+	M(split),
 	M(sysinfo),
-	M(date)
+	M(split),
+	M(date),
 };
+
+/* <helper> modules that returns simple string */
+#define MODULE_STR(name, str) module_##name(void) { \
+	return (char*)((str)); \
+}
+static char * MODULE_STR(space, " ");
+static char * MODULE_STR(split, " | ");
+
+/* <helper> get bar */
+static const char *
+getBar(int percent)
+{
+	static const char *s[] = {
+		"_", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█", "█"};
+	assert(percent <= 100);
+	return s[(int)((percent-1)/10)];
+}
 
 /* <helper> module output collector */
 void
@@ -119,20 +144,10 @@ module_cpu (void) {
 	getProcStatCPU(pf_procstat, cpue);
 	double cpuusage = (double)(CPUOccupy_(e) - CPUOccupy_(s)) * 100. /
 		(double)(CPUTotal_(e) - CPUTotal_(s));
-	snprintf(pc_cpu, sizeof(pc_cpu), "cpu %.1f%%", cpuusage);
+	//snprintf(pc_cpu, sizeof(pc_cpu), "CPU %.1f%%", cpuusage); // numerical
+	snprintf(pc_cpu, sizeof(pc_cpu), "CPU %.0f%% %s",
+			cpuusage, getBar((int)cpuusage)); // num+bar
 	return pc_cpu;
-}
-
-/* <helper> split line */
-static char *
-module_split (void) {
-	return (char*)" | ";
-}
-
-/* <helper> space */
-static char *
-module_space (void) {
-	return (char*)" ";
 }
 
 /* <helper> xsetroot -name xxx */
