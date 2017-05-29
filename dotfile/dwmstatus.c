@@ -177,7 +177,7 @@ static char *
 module_date (void) {
 	static char pc_date[MAXSTR];
 	time_t now = time(0);
-	strftime(pc_date, MAXSTR, "%Y-%m-%d %H:%M", localtime(&now));
+	strftime(pc_date, MAXSTR, "%Y-%m-%d %H:%M:%S", localtime(&now));
 	//strftime(date, MAXSTR, "%Y-%m-%d %H:%M", gmtime(&now)); // UTC
 	return pc_date;
 }
