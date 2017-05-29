@@ -192,7 +192,7 @@ module_sysinfo (void) {
 	struct sysinfo s;
 	sysinfo(&s);
 	snprintf(pc_sysinfo, sizeof(pc_sysinfo),
-		"☕ %.1fH ♻ %.0f%% %s",
+		"☕ %.1fh ♻ %.0f%% %s",
 		((float)s.uptime/3600.),
 		100.*(float)(s.totalram-s.freeram)/(float)s.totalram,
 		getBar((int)(100.*(float)(s.totalram-s.freeram)/(float)s.totalram)));
