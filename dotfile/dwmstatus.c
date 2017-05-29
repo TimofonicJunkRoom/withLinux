@@ -25,6 +25,8 @@
 #define MAXSTR  512
 #define VERSION "0.1"
 //#define TEST // gcc -DTEST to compile test binary
+#define SYSBAT0 "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0" // find /sys | ack BAT0
+#define SYSHWMON0 "/sys/devices/virtual/hwmon/hwmon0"
 
 /* helper moudle primitives */
 static char * module_date(void);
@@ -33,7 +35,9 @@ static char * module_uname(void);
 static char * module_split(void);
 static char * module_space(void);
 static char * module_cpu(void);
-
+static char * module_battery(void);
+static char * module_temperature(void);
+static char * module_netupdown(void);
 
 /* <config> dwmstatus :: content */
 #define M(name) module_##name
@@ -46,10 +50,16 @@ static char * (*status_modules[])(void) = {
 	M(date),
 };
 
-/* <helper> modules that returns simple string */
 #define MODULE_STR(name, str) module_##name(void) { \
 	return (char*)((str)); \
 }
+#define readstuff(path, pattern, dest) do { \
+	FILE* pf = fopen(path, "r"); \
+	fseek(pf, 0, SEEK_SET); \
+	fscanf(pf, pattern, dest); \
+} while(0)
+
+/* <helper> modules that returns simple string */
 static char * MODULE_STR(space, " ");
 static char * MODULE_STR(split, " | ");
 
@@ -82,6 +92,83 @@ module_collect (char * overview,
 	return;
 }
 
+/* <helper,linux-only> total network up/down */
+static char *
+module_netupdown (void)
+{
+#define CMDNET "mawk '" \
+	"BEGIN{inbyte=0;outbyte=0};" \
+	"NR>2 && $1!~/lo:/ {inbyte+=$2; outbyte+=$10};" \
+	"END{print inbyte, outbyte};' /proc/net/dev"
+#define getNetUpDown(pf, buf) do { \
+	pf = popen(CMDNET, "r"); \
+	fscanf(pf, "%lu %lu", buf+0, buf+1); \
+	pclose(pf); \
+	} while(0)
+#define netG (1024*1024*1024)
+#define netM (1024*1024)
+#define netK (1024)
+#define netCompat(count, buf, bufsz) ( \
+		(count > netG) ? (snprintf(buf, bufsz, "%.1fGB/s", count/(double)netG)) \
+		: (count > netM) ? (snprintf(buf, bufsz, "%.1fMB/s", count/(double)netM)) \
+		: (count > netK) ? (snprintf(buf, bufsz, "%.1fKB/s", count/(double)netK)) \
+		: (snprintf(buf, bufsz, "%.0fB/s", count)) )
+
+	FILE* pf_netupdown = NULL;
+	unsigned long nets[2] = {0,0}; // start up/down
+	unsigned long nete[2] = {0,0}; // end up/down
+	char pc_down[MAXSTR];
+	char pc_up[MAXSTR];
+	static char pc_net[MAXSTR];
+	getNetUpDown(pf_netupdown, nets);
+	usleep(1000000);
+	getNetUpDown(pf_netupdown, nete);
+	unsigned long down = nete[0] - nets[0];
+	unsigned long up = nete[1] - nets[1];
+	//printf("%lu %lu\n", down, up);
+	netCompat((double)down, pc_down, sizeof(pc_down));
+	netCompat((double)up,   pc_up,   sizeof(pc_up));
+	snprintf(pc_net, sizeof(pc_net), "↑ %s ↓ %s", pc_up, pc_down);
+	return pc_net;
+}
+
+/* <helper,linux-only> read temperature */
+static char *
+module_temperature (void)
+{
+	static char pc_temp0[MAXSTR];
+	double temp0;
+	readstuff(SYSHWMON0"/temp1_input", "%lf", &temp0);
+	snprintf(pc_temp0, sizeof(pc_temp0), "T %.0f°C", temp0/1000);
+	return pc_temp0;
+}
+
+/* <helper> battery */
+static char *
+module_battery (void)
+{
+#define STREQ(s1,s2) (0==strcmp(s1,s2))
+	static char pc_batstatus[MAXSTR];
+	static char pc_batcapacity[MAXSTR];
+	static char pc_bat[MAXSTR];
+	readstuff(SYSBAT0"/status", "%s", pc_batstatus);
+	readstuff(SYSBAT0"/capacity", "%s", pc_batcapacity);
+	if STREQ("Charging", pc_batstatus) {
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s %s",
+			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[A/C]");
+	} else if STREQ("Discharging", pc_batstatus) {
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s",
+			pc_batcapacity, getBar(atoi(pc_batcapacity)));
+	} else if STREQ("Unknown", pc_batstatus) {
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s %s",
+			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[?]");
+	} else {
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s [%s]",
+			pc_batcapacity, getBar(atoi(pc_batcapacity)), pc_batstatus);
+	}
+	return pc_bat;
+}
+
 /* <helper> date */
 static char *
 module_date (void) {
@@ -98,14 +185,17 @@ module_sysinfo (void) {
 	static char pc_sysinfo[MAXSTR];
 	struct sysinfo s;
 	sysinfo(&s);
-	// uptime(H) free(M)/all(M) sw(M)
 	snprintf(pc_sysinfo, sizeof(pc_sysinfo),
-		"UP %.1fH, RAM %dM/%dM, SW %dM",
+		"UP %.1fH, RAM %.0f%% %s",
 		((float)s.uptime/3600.),
-		(int)((s.totalram-s.freeram)/1048576),
-		(int)(s.totalram/1048576),
-		(int)((s.totalswap-s.freeswap)/1048576)
-		);
+		100.*(float)(s.totalram-s.freeram)/(float)s.totalram,
+		getBar((int)(100.*(float)(s.totalram-s.freeram)/(float)s.totalram)));
+	//	"UP %.1fH, RAM %dM/%dM, SW %dM",
+	//	((float)s.uptime/3600.),
+	//	(int)((s.totalram-s.freeram)/1048576),
+	//	(int)(s.totalram/1048576),
+	//	(int)((s.totalswap-s.freeswap)/1048576)
+	//	);
 	return pc_sysinfo;
 }
 
@@ -177,6 +267,9 @@ main (int argc, char **argv, char **envp)
 	MODTEST(split);
 	MODTEST(space);
 	MODTEST(cpu);
+	MODTEST(battery);
+	MODTEST(temperature);
+	MODTEST(netupdown);
 #else // TEST
 	char pc_overview[MAXSTR];
 	module_collect(pc_overview, status_modules,
