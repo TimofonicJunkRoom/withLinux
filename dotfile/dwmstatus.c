@@ -1,12 +1,15 @@
 /* Copyright (C) 2016 Lumin <cdluminate@gmail.com>
+ *
+ * XXX: Linux-only Software
  * compile: gcc -Wall -o dwmstatus dwmstatus.c -O2 -lX11
+ * install: $HOME/bin
+ * xinitrc: while true; do $HOME/bin/dwmstatus; done &
+ * customize: modify `static char * (*status_modules[])(void) = ...`
+ *
  * MIT License
- */
-
-/* XXX: Linux-only Software
+ *
  * Refernce:
  *   1. http://dwm.suckless.org/dwmstatus/
- * 
  */
 
 #include <stdio.h>
@@ -23,10 +26,10 @@
 #include <X11/Xlib.h>
 
 #define MAXSTR  512
-#define VERSION "1"
+#define VERSION "2"
 //#define TEST // gcc -DTEST to compile test binary
 #define SYSBAT0 "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0" // find /sys | ack BAT0
-#define SYSHWMON0 "/sys/devices/virtual/hwmon/hwmon0"
+#define SYSHWMON0 "/sys/devices/virtual/hwmon/hwmon0" // find /sys | ack hwmon
 
 /* helper moudle primitives */
 static char * module_date(void);
