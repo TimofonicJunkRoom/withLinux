@@ -23,7 +23,7 @@
 #include <X11/Xlib.h>
 
 #define MAXSTR  512
-#define VERSION "0.1"
+#define VERSION "1"
 //#define TEST // gcc -DTEST to compile test binary
 #define SYSBAT0 "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0" // find /sys | ack BAT0
 #define SYSHWMON0 "/sys/devices/virtual/hwmon/hwmon0"
@@ -32,22 +32,25 @@
 static char * module_date(void);
 static char * module_sysinfo(void);
 static char * module_uname(void);
-static char * module_split(void);
-static char * module_space(void);
 static char * module_cpu(void);
 static char * module_battery(void);
 static char * module_temperature(void);
 static char * module_netupdown(void);
+//
+static char * module_split(void);
+static char * module_space(void);
 
 /* <config> dwmstatus :: content */
 #define M(name) module_##name
 static char * (*status_modules[])(void) = {
 	// a set of "static const char *" functions that controls content
-	M(uname),
-	M(split),
-	M(sysinfo),
-	M(split),
-	M(date),
+	M(uname), M(space),
+	M(netupdown), M(space),
+	M(cpu), M(space),
+	M(temperature), M(space),
+	M(sysinfo), M(space),
+	M(battery), M(space),
+	M(date)
 };
 
 #define MODULE_STR(name, str) module_##name(void) { \
@@ -274,7 +277,7 @@ main (int argc, char **argv, char **envp)
 	char pc_overview[MAXSTR];
 	module_collect(pc_overview, status_modules,
 		sizeof(status_modules)/sizeof(status_modules[0]) );
-	fprintf(stderr, "%s\n", pc_overview);
+	//fprintf(stderr, "%s\n", pc_overview);
 	XSetRoot(pc_overview);
 #endif // TEST
 	return 0;
