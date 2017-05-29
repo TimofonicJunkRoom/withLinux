@@ -66,8 +66,8 @@ static char * (*status_modules[])(void) = {
 } while(0)
 
 /* <helper> modules that returns simple string */
-static char * MODULE_STR(space, " ");
-static char * MODULE_STR(split, " | ");
+static char * MODULE_STR(space, " ")
+static char * MODULE_STR(split, " | ")
 
 /* <helper> get bar */
 static const char *
@@ -145,7 +145,7 @@ module_temperature (void)
 	static char pc_temp0[MAXSTR];
 	double temp0;
 	readstuff(SYSHWMON0"/temp1_input", "%lf", &temp0);
-	snprintf(pc_temp0, sizeof(pc_temp0), "T %.0f°C", temp0/1000);
+	snprintf(pc_temp0, sizeof(pc_temp0), "❄ %.0f°C", temp0/1000);
 	return pc_temp0;
 }
 
@@ -161,13 +161,13 @@ module_battery (void)
 	readstuff(SYSBAT0"/capacity", "%s", pc_batcapacity);
 	if STREQ("Charging", pc_batstatus) {
 		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s %s",
-			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[A/C]");
+			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[+]");
 	} else if STREQ("Discharging", pc_batstatus) {
-		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s",
-			pc_batcapacity, getBar(atoi(pc_batcapacity)));
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s %s",
+			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[-]");
 	} else if STREQ("Unknown", pc_batstatus) {
 		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s %s",
-			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[?]");
+			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[A/C]");
 	} else {
 		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s [%s]",
 			pc_batcapacity, getBar(atoi(pc_batcapacity)), pc_batstatus);
@@ -180,7 +180,7 @@ static char *
 module_date (void) {
 	static char pc_date[MAXSTR];
 	time_t now = time(0);
-	strftime(pc_date, MAXSTR, "%Y-%m-%d %H:%M:%S", localtime(&now));
+	strftime(pc_date, MAXSTR, "⛅ %Y-%m-%d %H:%M:%S", localtime(&now));
 	//strftime(date, MAXSTR, "%Y-%m-%d %H:%M", gmtime(&now)); // UTC
 	return pc_date;
 }
@@ -192,7 +192,7 @@ module_sysinfo (void) {
 	struct sysinfo s;
 	sysinfo(&s);
 	snprintf(pc_sysinfo, sizeof(pc_sysinfo),
-		"UP %.1fH, RAM %.0f%% %s",
+		"☕ %.1fH ♻ %.0f%% %s",
 		((float)s.uptime/3600.),
 		100.*(float)(s.totalram-s.freeram)/(float)s.totalram,
 		getBar((int)(100.*(float)(s.totalram-s.freeram)/(float)s.totalram)));
@@ -214,7 +214,7 @@ module_uname (void) {
 		perror("uname failed");
 		exit(EXIT_FAILURE);
 	}
-	snprintf(pc_uname,sizeof(pc_uname),"%s %s",u.sysname,u.nodename);
+	snprintf(pc_uname, sizeof(pc_uname), "⚛ %s", u.nodename);
 	return pc_uname;
 }
 
@@ -241,7 +241,7 @@ module_cpu (void) {
 	double cpuusage = (double)(CPUOccupy_(e) - CPUOccupy_(s)) * 100. /
 		(double)(CPUTotal_(e) - CPUTotal_(s));
 	//snprintf(pc_cpu, sizeof(pc_cpu), "CPU %.1f%%", cpuusage); // numerical
-	snprintf(pc_cpu, sizeof(pc_cpu), "CPU %.0f%% %s",
+	snprintf(pc_cpu, sizeof(pc_cpu), "♥ %.0f%% %s",
 			cpuusage, getBar((int)cpuusage)); // num+bar
 	return pc_cpu;
 }

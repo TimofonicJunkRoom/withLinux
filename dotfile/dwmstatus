@@ -1,0 +1,3 @@
+#!/bin/sh
+set -e
+gcc dwmstatus.c -lX11 -O2 -o ~/bin/dwmstatus -pedantic
