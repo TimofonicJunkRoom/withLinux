@@ -37,6 +37,9 @@
 	#error  "Please define your SYSBAT0 and SYSHWMON0!"
 #endif
 
+/* set this to 1 to noop *sleep() calls */
+static int if_nosleep = 0; // int flag _ no sleep
+
 /* helper moudle primitives */
 static char * module_date(void);
 static char * module_sysinfo(void);
@@ -81,6 +84,8 @@ static char * MODULE_STR(split, " | ")
 static const char *
 getBar(int percent)
 {
+	if (percent < 0 || percent > 100)
+		return "|?|";
 	static const char *s[] = {
 		"_", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█", "█"};
 	assert(percent <= 100);
@@ -173,7 +178,7 @@ module_netupdown (void)
 	char pc_up[MAXSTR];
 	static char pc_net[MAXSTR];
 	getNetUpDown(pf_netupdown, nets);
-	usleep(1000000);
+	usleep(if_nosleep ? 100 : 1000000);
 	getNetUpDown(pf_netupdown, nete);
 	unsigned long down = nete[0] - nets[0];
 	unsigned long up = nete[1] - nets[1];
@@ -282,7 +287,7 @@ module_cpu (void) {
 	#define CPUOccupy_(x) ((cpu##x[0] + cpu##x[1] + cpu##x[2]))
 	#define CPUTotal_(x) ((cpu##x[0] + cpu##x[1] + cpu##x[2] + cpu##x[3]))
 	getProcStatCPU(pf_procstat, cpus);
-	usleep(250000);
+	usleep(if_nosleep ? 100 : 250000);
 	getProcStatCPU(pf_procstat, cpue);
 	double cpuusage = (double)(CPUOccupy_(e) - CPUOccupy_(s)) * 100. /
 		(double)(CPUTotal_(e) - CPUTotal_(s));
@@ -324,6 +329,9 @@ main (int argc, char **argv, char **envp)
 	MODTEST(netupdown);
 	MODTEST(audiovolume);
 #else // TEST
+	if (argc > 1) {
+		if_nosleep = 1; // toggle fast status scan
+	}
 	char pc_overview[MAXSTR];
 	module_collect(pc_overview, status_modules,
 		sizeof(status_modules)/sizeof(status_modules[0]) );
