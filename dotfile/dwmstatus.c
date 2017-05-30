@@ -33,8 +33,10 @@
 #if defined(__T430s__)
 	#define SYSBAT0 "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0" // find /sys | ack BAT0
 	#define SYSHWMON0 "/sys/devices/virtual/hwmon/hwmon0" // find /sys | ack hwmon
+	#define SYSBRIGHT "/sys/class/backlight/intel_backlight/brightness"
+	#define SYSBRIGHTMAX "/sys/class/backlight/intel_backlight/max_brightness"
 #else
-	#error  "Please define your SYSBAT0 and SYSHWMON0!"
+	#error  "Please define your SYSBAT0, SYSHWMON0, SYSBRIGHT!"
 #endif
 
 /* set this to 1 to noop *sleep() calls */
@@ -49,6 +51,7 @@ static char * module_battery(void);
 static char * module_temperature(void);
 static char * module_netupdown(void);
 static char * module_audiovolume(void);
+static char * module_monbrightness(void);
 //
 static char * module_split(void);
 static char * module_space(void);
@@ -64,6 +67,7 @@ static char * (*status_modules[])(void) = {
 	M(sysinfo), M(space),
 	M(battery), M(space),
 	M(audiovolume), M(space),
+	M(monbrightness), M(space),
 	M(date)
 };
 
@@ -111,6 +115,19 @@ module_collect (char * overview,
 	return;
 }
 
+/* <helper> monitor brightness */
+static char *
+module_monbrightness (void)
+{
+	long br_cur = 0;
+	long br_max = 0;
+	static char pc_br[MAXSTR];
+	{ readstuff(SYSBRIGHT, "%ld", &br_cur); }
+	{ readstuff(SYSBRIGHTMAX, "%ld", &br_max); }
+	snprintf(pc_br, sizeof(pc_br), "⛭%s", getBar((int)br_cur*100/br_max));
+	return pc_br;
+}
+
 /* <helper,linux-only ALSA> get audio volume (master gain) */
 static char *
 module_audiovolume (void)
@@ -137,14 +154,10 @@ module_audiovolume (void)
 	int master_gain = 0;
 	getMasterGain(pf_avolume, &master_gain);
 	getMuteState(pf_avmute, &mutestate);
-	//snprintf(pc_av, sizeof(pc_av),
-	//		(mutestate ? "♫%s%s": "♫%d%s"),
-	//		(mutestate ? "[M]": master_gain),
-	//		getBar(master_gain)); // compiler will warn
 	if (mutestate) {
-		snprintf(pc_av, sizeof(pc_av), "♫%s%s", "[M]", getBar(master_gain));
+snprintf(pc_av, sizeof(pc_av), "♫%s%s", "[M]", getBar(master_gain));
 	} else {
-		snprintf(pc_av, sizeof(pc_av), "♫%d%s", master_gain, getBar(master_gain));
+snprintf(pc_av, sizeof(pc_av), "♫%d%s", master_gain, getBar(master_gain));
 	}
 	return pc_av;
 }
@@ -328,6 +341,7 @@ main (int argc, char **argv, char **envp)
 	MODTEST(temperature);
 	MODTEST(netupdown);
 	MODTEST(audiovolume);
+	MODTEST(monbrightness);
 #else // TEST
 	if (argc > 1) {
 		if_nosleep = 1; // toggle fast status scan
