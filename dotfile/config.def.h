@@ -23,9 +23,9 @@
 
 /* appearance */
 static const char *fonts[] = {
-	"monospace:size=11"
+	"Noto Mono:size=11"
 };
-static const char dmenufont[]       = "monospace:size=11";
+static const char dmenufont[]       = "Noto Mono:size=11";
 static const char normbordercolor[] = "#444444";
 static const char normbgcolor[]     = "#222222";
 static const char normfgcolor[]     = "#bbbbbb";
@@ -63,6 +63,16 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
+/* reference: https://stackoverflow.com/questions/34582279/linux-c-keymapping-keycodes */
+/* dump console key mapping: sudo dumpkeys -l
+ * dump X server key mapping for X applications: xmodmap -pm -pk
+ */
+#define XF86AudioMicMute       0x1008ffb2
+#define XF86AudioMute          0x1008ff12
+#define XF86AudioLowerVolume   0x1008ff11
+#define XF86AudioRaiseVolume   0x1008ff13
+#define XF86KbdBrightnessDown  0x1008ff06
+#define XF86KbdBrightnessUp    0x1008ff05
 #define MODKEY Mod1Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -78,9 +88,15 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "sakura", NULL };
 static const char *lockcmd[]  = { "slock", NULL };
+static const char *cmdalv[]   = { "amixer", "-q", "sset", "Master", "5%-", NULL };
+static const char *cmdarv[]   = { "amixer", "-q", "sset", "Master", "5%+", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
+	{ 0, XF86AudioLowerVolume, spawn, {.v = cmdalv }},
+	{ 0, XF86AudioRaiseVolume, spawn, {.v = cmdarv }},
+    /* defaults */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
@@ -113,7 +129,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
