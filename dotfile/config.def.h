@@ -90,12 +90,14 @@ static const char *termcmd[]  = { "sakura", NULL };
 static const char *lockcmd[]  = { "slock", NULL };
 static const char *cmdalv[]   = { "amixer", "-q", "sset", "Master", "5%-", NULL };
 static const char *cmdarv[]   = { "amixer", "-q", "sset", "Master", "5%+", NULL };
+static const char cmdmute[]   = "amixer sget Master | grep '\\[off\\]' >/dev/null && amixer -q sset Master unmute || amixer -q sset Master mute";
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
 	{ 0, XF86AudioLowerVolume, spawn, {.v = cmdalv }},
 	{ 0, XF86AudioRaiseVolume, spawn, {.v = cmdarv }},
+	{ 0, XF86AudioMute,        spawn, SHCMD(cmdmute) },
     /* defaults */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
