@@ -30,7 +30,7 @@
 //#define TEST // gcc -DTEST to compile test binary
 
 /* oops this looks dirty but we need it */
-#if defined(__T430s__)
+#if defined(__T430s__) || defined(__T420s__)
 	#define SYSBAT0 "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0" // find /sys | ack BAT0
 	#define SYSHWMON0 "/sys/devices/virtual/hwmon/hwmon0" // find /sys | ack hwmon
 	#define SYSBRIGHT "/sys/class/backlight/intel_backlight/brightness"
