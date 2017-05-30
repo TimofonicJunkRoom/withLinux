@@ -80,6 +80,7 @@ Utilities / Miscellaneous
 1. [Vim](./util/vim.md)  
 1. [Linux-Perf](./util/perf.md)  
 1. [Terminology -- fancy terminal emulator](./util/terminology.md)  
+1. [`fold -s txt` -- automatically wrap lines in your file]  
 
 Graphical Interface Stuff (Xorg)  
 ---
