@@ -112,10 +112,28 @@ spawnxpoststatusupdate(const Arg *arg)
 	// post status update
 	system("dwmstatus nosleep"); // <stdlib.h>
 }
+/* <enhancement> suspend screen when it's locked */
+static void
+spawnxpostdpms(const Arg *arg)
+{
+	if (arg->v == dmenucmd)
+		dmenumon[0] = '0' + selmon->num;
+	if (fork() == 0) {
+		if (dpy)
+			close(ConnectionNumber(dpy));
+		setsid();
+		execvp(((char **)arg->v)[0], (char **)arg->v);
+		fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);
+		perror(" failed");
+		exit(EXIT_SUCCESS);
+	}
+	// post status update
+	system("sleep 3; xset dpms force suspend"); // <stdlib.h>
+}
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
+	{ MODKEY|ShiftMask, XK_l,  spawnxpostdpms,         {.v = lockcmd } },
 	{ 0, XF86AudioLowerVolume, spawnxpoststatusupdate, {.v = cmdalv }},
 	{ 0, XF86AudioRaiseVolume, spawnxpoststatusupdate, {.v = cmdarv }},
 	{ 0, XF86AudioMute,        spawnxpoststatusupdate, SHCMD(cmdmute) },
