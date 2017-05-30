@@ -25,6 +25,7 @@ dnsmasq
 dnsutils
 docker.io
 dstat
+dunst
 dwm
 eatmydata
 ecryptfs-utils

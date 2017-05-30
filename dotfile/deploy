@@ -49,6 +49,7 @@ cat > $tempfile <<EOF
  wifi $home/bin/wifi # wifi helper
  ../lang/py3/stig $home/bin/stig
  ../lang/py3/lsjson.py $home/bin/lsjson # pretty json printer
+ ./dunstrc $home/.config/dunst/dunstrc
 EOF
 sources=( $(cat $tempfile | awk '{print $1}') )
 targets=( $(cat $tempfile | awk '{print $2}') )
