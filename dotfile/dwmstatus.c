@@ -113,17 +113,34 @@ module_audiovolume (void)
 	/* FIXME:BUG: wrong number when the master gain goes to 100% */
 	#define CMDGAIN "amixer get Master |" \
 	" gawk \"BEGIN{gain=0};NF==6&&/Front (Left|Right)/{gain+=substr(\\$5,2,2)};END{print gain/2}\""
+	#define CMDMUTESTATE "amixer sget Master | grep '\\[off\\]' >/dev/null && echo 1 || echo 0"
 	#define getMasterGain(pf, buf) do { \
 		pf = popen(CMDGAIN, "r"); \
 		fscanf(pf, "%d", buf+0); \
 		pclose(pf); \
 	} while(0)
+	#define getMuteState(pf, buf) do { \
+		pf = popen(CMDMUTESTATE, "r"); \
+		fscanf(pf, "%d", buf+0); \
+		pclose(pf); \
+	} while(0)
 
 	FILE* pf_avolume = NULL;
+	FILE* pf_avmute = NULL;
 	static char pc_av[MAXSTR];
+	int mutestate = 0;
 	int master_gain = 0;
 	getMasterGain(pf_avolume, &master_gain);
-	snprintf(pc_av, sizeof(pc_av), "♫%d%s", master_gain, getBar(master_gain));
+	getMuteState(pf_avmute, &mutestate);
+	//snprintf(pc_av, sizeof(pc_av),
+	//		(mutestate ? "♫%s%s": "♫%d%s"),
+	//		(mutestate ? "[M]": master_gain),
+	//		getBar(master_gain)); // compiler will warn
+	if (mutestate) {
+		snprintf(pc_av, sizeof(pc_av), "♫%s%s", "[M]", getBar(master_gain));
+	} else {
+		snprintf(pc_av, sizeof(pc_av), "♫%d%s", master_gain, getBar(master_gain));
+	}
 	return pc_av;
 }
 

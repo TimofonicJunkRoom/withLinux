@@ -1,10 +1,12 @@
 #!/bin/sh
 set -e
 
+BOX=__T430s__
+
 if test -z "$1"; then
-	gcc dwmstatus.c -lX11 -O2 -o ~/bin/dwmstatus -pedantic -D__T430s__
+	gcc dwmstatus.c -lX11 -O2 -o ~/bin/dwmstatus -pedantic -D$BOX
 else
-	gcc dwmstatus.c -lX11 -O2 -o ./dwmstatus.test -pedantic -DTEST
+	gcc dwmstatus.c -lX11 -O2 -o ./dwmstatus.test -pedantic -D$BOX -DTEST
 	./dwmstatus.test
 	rm ./dwmstatus.test || true
 fi
