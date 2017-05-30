@@ -1,3 +1,10 @@
 #!/bin/sh
 set -e
-gcc dwmstatus.c -lX11 -O2 -o ~/bin/dwmstatus -pedantic
+
+if test -z "$1"; then
+	gcc dwmstatus.c -lX11 -O2 -o ~/bin/dwmstatus -pedantic -D__T430s__
+else
+	gcc dwmstatus.c -lX11 -O2 -o ./dwmstatus.test -pedantic -DTEST
+	./dwmstatus.test
+	rm ./dwmstatus.test || true
+fi

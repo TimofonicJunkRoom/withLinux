@@ -26,10 +26,16 @@
 #include <X11/Xlib.h>
 
 #define MAXSTR  512
-#define VERSION "2"
+#define VERSION "3"
 //#define TEST // gcc -DTEST to compile test binary
-#define SYSBAT0 "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0" // find /sys | ack BAT0
-#define SYSHWMON0 "/sys/devices/virtual/hwmon/hwmon0" // find /sys | ack hwmon
+
+/* oops this looks dirty but we need it */
+#if defined(__T430s__)
+	#define SYSBAT0 "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0" // find /sys | ack BAT0
+	#define SYSHWMON0 "/sys/devices/virtual/hwmon/hwmon0" // find /sys | ack hwmon
+#else
+	#error  "Please define your SYSBAT0 and SYSHWMON0!"
+#endif
 
 /* helper moudle primitives */
 static char * module_date(void);
@@ -39,6 +45,7 @@ static char * module_cpu(void);
 static char * module_battery(void);
 static char * module_temperature(void);
 static char * module_netupdown(void);
+static char * module_audiovolume(void);
 //
 static char * module_split(void);
 static char * module_space(void);
@@ -53,6 +60,7 @@ static char * (*status_modules[])(void) = {
 	M(temperature), M(space),
 	M(sysinfo), M(space),
 	M(battery), M(space),
+	M(audiovolume), M(space),
 	M(date)
 };
 
@@ -98,6 +106,27 @@ module_collect (char * overview,
 	return;
 }
 
+/* <helper,linux-only ALSA> get audio volume (master gain) */
+static char *
+module_audiovolume (void)
+{
+	/* FIXME:BUG: wrong number when the master gain goes to 100% */
+	#define CMDGAIN "amixer get Master |" \
+	" gawk \"BEGIN{gain=0};NF==6&&/Front (Left|Right)/{gain+=substr(\\$5,2,2)};END{print gain/2}\""
+	#define getMasterGain(pf, buf) do { \
+		pf = popen(CMDGAIN, "r"); \
+		fscanf(pf, "%d", buf+0); \
+		pclose(pf); \
+	} while(0)
+
+	FILE* pf_avolume = NULL;
+	static char pc_av[MAXSTR];
+	int master_gain = 0;
+	getMasterGain(pf_avolume, &master_gain);
+	snprintf(pc_av, sizeof(pc_av), "♫%d%s", master_gain, getBar(master_gain));
+	return pc_av;
+}
+
 /* <helper,linux-only> total network up/down */
 static char *
 module_netupdown (void)
@@ -134,7 +163,7 @@ module_netupdown (void)
 	//printf("%lu %lu\n", down, up);
 	netCompat((double)down, pc_down, sizeof(pc_down));
 	netCompat((double)up,   pc_up,   sizeof(pc_up));
-	snprintf(pc_net, sizeof(pc_net), "↑ %s ↓ %s", pc_up, pc_down);
+	snprintf(pc_net, sizeof(pc_net), "↑%s ↓%s", pc_up, pc_down);
 	return pc_net;
 }
 
@@ -145,7 +174,7 @@ module_temperature (void)
 	static char pc_temp0[MAXSTR];
 	double temp0;
 	readstuff(SYSHWMON0"/temp1_input", "%lf", &temp0);
-	snprintf(pc_temp0, sizeof(pc_temp0), "❄ %.0f°C", temp0/1000);
+	snprintf(pc_temp0, sizeof(pc_temp0), "❄%.0f°C", temp0/1000);
 	return pc_temp0;
 }
 
@@ -160,16 +189,16 @@ module_battery (void)
 	readstuff(SYSBAT0"/status", "%s", pc_batstatus);
 	readstuff(SYSBAT0"/capacity", "%s", pc_batcapacity);
 	if STREQ("Charging", pc_batstatus) {
-		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s %s",
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%%%s%s",
 			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[+]");
 	} else if STREQ("Discharging", pc_batstatus) {
-		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s %s",
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%%%s%s",
 			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[-]");
 	} else if STREQ("Unknown", pc_batstatus) {
-		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s %s",
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%%%s%s",
 			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[A/C]");
 	} else {
-		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%% %s [%s]",
+		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%%%s[%s]",
 			pc_batcapacity, getBar(atoi(pc_batcapacity)), pc_batstatus);
 	}
 	return pc_bat;
@@ -192,7 +221,7 @@ module_sysinfo (void) {
 	struct sysinfo s;
 	sysinfo(&s);
 	snprintf(pc_sysinfo, sizeof(pc_sysinfo),
-		"☕ %.1fh ♻ %.0f%% %s",
+		"☕%.1fh ♻%.0f%%%s",
 		((float)s.uptime/3600.),
 		100.*(float)(s.totalram-s.freeram)/(float)s.totalram,
 		getBar((int)(100.*(float)(s.totalram-s.freeram)/(float)s.totalram)));
@@ -214,7 +243,7 @@ module_uname (void) {
 		perror("uname failed");
 		exit(EXIT_FAILURE);
 	}
-	snprintf(pc_uname, sizeof(pc_uname), "⚛ %s", u.nodename);
+	snprintf(pc_uname, sizeof(pc_uname), "⚛%s", u.nodename);
 	return pc_uname;
 }
 
@@ -241,7 +270,7 @@ module_cpu (void) {
 	double cpuusage = (double)(CPUOccupy_(e) - CPUOccupy_(s)) * 100. /
 		(double)(CPUTotal_(e) - CPUTotal_(s));
 	//snprintf(pc_cpu, sizeof(pc_cpu), "CPU %.1f%%", cpuusage); // numerical
-	snprintf(pc_cpu, sizeof(pc_cpu), "♥ %.0f%% %s",
+	snprintf(pc_cpu, sizeof(pc_cpu), "♥%.0f%%%s",
 			cpuusage, getBar((int)cpuusage)); // num+bar
 	return pc_cpu;
 }
@@ -276,6 +305,7 @@ main (int argc, char **argv, char **envp)
 	MODTEST(battery);
 	MODTEST(temperature);
 	MODTEST(netupdown);
+	MODTEST(audiovolume);
 #else // TEST
 	char pc_overview[MAXSTR];
 	module_collect(pc_overview, status_modules,
