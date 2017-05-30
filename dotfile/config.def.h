@@ -75,8 +75,8 @@ static const Layout layouts[] = {
 #define XF86AudioMute          0x1008ff12
 #define XF86AudioLowerVolume   0x1008ff11
 #define XF86AudioRaiseVolume   0x1008ff13
-#define XF86KbdBrightnessDown  0x1008ff06
-#define XF86KbdBrightnessUp    0x1008ff05
+#define XF86MonBrightnessDown  0x1008ff03
+#define XF86MonBrightnessUp    0x1008ff02
 #define MODKEY Mod1Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -96,6 +96,8 @@ static const char *termcmd[]  = { "sakura", NULL };
 static const char *lockcmd[]  = { "slock", NULL };
 static const char *cmdalv[]   = { "amixer", "-q", "sset", "Master", "5%-", NULL };
 static const char *cmdarv[]   = { "amixer", "-q", "sset", "Master", "5%+", NULL };
+static const char *cmdbrd[]   = { "b", "-", NULL }; // dotfile/b.c
+static const char *cmdbru[]   = { "b", "+", NULL }; // dotfile/b.c
 static const char cmdmute[]   = "amixer sget Master | grep '\\[off\\]' >/dev/null && amixer -q sset Master unmute || amixer -q sset Master mute";
 
 /* <enhancement> modified "spawn" function with a post hook */
@@ -141,6 +143,8 @@ static Key keys[] = {
 	{ 0, XF86AudioLowerVolume, spawnxpoststatusupdate, {.v = cmdalv }},
 	{ 0, XF86AudioRaiseVolume, spawnxpoststatusupdate, {.v = cmdarv }},
 	{ 0, XF86AudioMute,        spawnxpoststatusupdate, SHCMD(cmdmute) },
+	{ 0, XF86MonBrightnessUp,  spawn,                  {.v = cmdbru }},
+	{ 0, XF86MonBrightnessDown,spawn,                  {.v = cmdbrd }},
     /* defaults */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
