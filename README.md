@@ -198,6 +198,7 @@ Linux Kernel Hacks / Operating System / Embedding / Hardware
 1. [VM note](./kernel/vm.md)  
 1. [Emulating systems with QEMU](./kernel/qemu-emulate.md)  
 1. [SATA Hard disk hotplugging](./kernel/hotplug.md)  
+1. [syscall list -- man syscalls]
 
 Virtualization  
 ---
