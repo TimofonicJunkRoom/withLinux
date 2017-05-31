@@ -69,7 +69,7 @@
 "sakura"
   b:2 + Release
 
-"clipmenu"
+"clipmenu.my"
   Alt + y
 
 "chromium"
