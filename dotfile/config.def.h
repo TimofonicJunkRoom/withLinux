@@ -133,7 +133,8 @@ spawnxpostdpms(const Arg *arg)
 		perror(" failed");
 		exit(EXIT_SUCCESS);
 	}
-	// post status update
+	// poweroff display via DPMS after locking.
+	// https://wiki.archlinux.org/index.php/Display_Power_Management_Signaling
 	system("sleep 3; xset dpms force suspend"); // <stdlib.h>
 }
 
