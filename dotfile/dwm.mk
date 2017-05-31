@@ -2,7 +2,7 @@ dwm:
 	keyrate || xset r rate 170 96 # dwm keyrate
 	feh --bg-scale $(BGIMG) || xsetroot -solid black # dwm background
 	while true; do dwmstatus; done & # dwm status bar
-	dunst & # dwm notification
-	xbindkeys  # dwm shortcuts
-	clipmenud & # dwm clipboard
+	killall dunst; dunst & # dwm notification
+	killall xbindkeys; xbindkeys  # dwm shortcuts
+	killall clipmenud; clipmenud & # dwm clipboard
 	ps aux | grep '.*sh.*while true'
