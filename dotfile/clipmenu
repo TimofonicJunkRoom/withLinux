@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+exec clipmenu.upstream -i -b -p "ClipMenu>" -sf "#00ffff" -fn "Ubuntu Mono:size=13" \
+	-nb "#222222" $@
