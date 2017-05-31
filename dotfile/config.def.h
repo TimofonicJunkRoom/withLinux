@@ -61,11 +61,46 @@ static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] 
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 
+/* http://dwm.suckless.org/patches/dwm-horizgrid-6.1.diff */
+static void
+horizgrid(Monitor *m) {
+	Client *c;
+	unsigned int n, i;
+	int w = 0;
+	int ntop, nbottom = 0;
+
+	/* Count windows */
+	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+
+	if(n == 0)
+		return;
+	else if(n == 1) { /* Just fill the whole screen */
+		c = nexttiled(m->clients);
+		resize(c, m->wx, m->wy, m->ww - (2*c->bw), m->wh - (2*c->bw), False);
+	} else if(n == 2) { /* Split vertically */
+		w = m->ww / 2;
+		c = nexttiled(m->clients);
+		resize(c, m->wx, m->wy, w - (2*c->bw), m->wh - (2*c->bw), False);
+		c = nexttiled(c->next);
+		resize(c, m->wx + w, m->wy, w - (2*c->bw), m->wh - (2*c->bw), False);
+	} else {
+		ntop = n / 2;
+		nbottom = n - ntop;
+		for(i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+			if(i < ntop)
+				resize(c, m->wx + i * m->ww / ntop, m->wy, m->ww / ntop - (2*c->bw), m->wh / 2 - (2*c->bw), False);
+			else
+				resize(c, m->wx + (i - ntop) * m->ww / nbottom, m->wy + m->wh / 2, m->ww / nbottom - (2*c->bw), m->wh / 2 - (2*c->bw), False);
+		}
+	}
+}
+
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
+	{ "###",      horizgrid },
 };
 
 /* key definitions */
@@ -142,12 +177,13 @@ spawnxpostdpms(const Arg *arg)
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY|ShiftMask, XK_l,  spawnxpostdpms,         {.v = lockcmd } },
-	{ 0, XF86AudioLowerVolume, spawnxpoststatusupdate, {.v = cmdalv }},
-	{ 0, XF86AudioRaiseVolume, spawnxpoststatusupdate, {.v = cmdarv }},
-	{ 0, XF86AudioMute,        spawnxpoststatusupdate, SHCMD(cmdmute) },
-	{ 0, XF86MonBrightnessUp,  spawn,                  {.v = cmdbru }},
-	{ 0, XF86MonBrightnessDown,spawn,                  {.v = cmdbrd }},
+	{ MODKEY|ShiftMask,             XK_l,      spawnxpostdpms, {.v = lockcmd } },
+	{ 0, XF86AudioLowerVolume,      spawnxpoststatusupdate,    {.v = cmdalv }},
+	{ 0, XF86AudioRaiseVolume,      spawnxpoststatusupdate,    {.v = cmdarv }},
+	{ 0, XF86AudioMute,             spawnxpoststatusupdate,    SHCMD(cmdmute) },
+	{ 0, XF86MonBrightnessUp,                  spawn,          {.v = cmdbru }},
+	{ 0, XF86MonBrightnessDown,                spawn,          {.v = cmdbrd }},
+	{ MODKEY,                       XK_g,      setlayout,      {.v = &layouts[3]}},
     /* defaults */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
