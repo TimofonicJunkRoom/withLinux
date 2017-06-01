@@ -81,6 +81,7 @@ Utilities / Miscellaneous
 1. [Linux-Perf](./util/perf.md)  
 1. [Terminology -- fancy terminal emulator](./util/terminology.md)  
 1. [`fold -s txt` -- automatically wrap lines in your file]  
+1. [kill all processes of user X `pkill -u X`]  
 
 Graphical Interface Stuff (Xorg)  
 ---
