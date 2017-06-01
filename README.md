@@ -81,6 +81,7 @@ Utilities / Miscellaneous
 1. [Linux-Perf](./util/perf.md)  
 1. [Terminology -- fancy terminal emulator](./util/terminology.md)  
 1. [`fold -s txt` -- automatically wrap lines in your file]  
+1. [kill all processes of user X `pkill -u X`]  
 
 Graphical Interface Stuff (Xorg)  
 ---
@@ -198,6 +199,7 @@ Linux Kernel Hacks / Operating System / Embedding / Hardware
 1. [VM note](./kernel/vm.md)  
 1. [Emulating systems with QEMU](./kernel/qemu-emulate.md)  
 1. [SATA Hard disk hotplugging](./kernel/hotplug.md)  
+1. [syscall list -- man syscalls]
 
 Virtualization  
 ---

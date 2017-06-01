@@ -91,7 +91,6 @@ shorewall
 smartmontools
 snapper
 snort
-spacemacs
 spyder3
 sqlite3
 sshfs
@@ -118,6 +117,7 @@ w3m
 wesnoth
 wine32-development
 wxmaxima
+xbindkeys
 zfsnap
 zfsutils-linux
 "
