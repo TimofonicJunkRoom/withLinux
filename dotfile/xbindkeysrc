@@ -66,8 +66,8 @@
 #  Control + b:2 + Release
 #
 
-"sakura"
-  b:2 + Release
+#"sakura"
+#  b:2 + Release
 
 "clipmenu.my"
   Alt + y
