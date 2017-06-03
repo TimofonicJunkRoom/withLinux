@@ -1,0 +1,552 @@
+Sentence #1 (12 tokens):
+a big red telephone booth that a man is standing in.
+[Text=a CharacterOffsetBegin=0 CharacterOffsetEnd=1 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=big CharacterOffsetBegin=2 CharacterOffsetEnd=5 PartOfSpeech=JJ Lemma=big NamedEntityTag=O]
+[Text=red CharacterOffsetBegin=6 CharacterOffsetEnd=9 PartOfSpeech=JJ Lemma=red NamedEntityTag=O]
+[Text=telephone CharacterOffsetBegin=10 CharacterOffsetEnd=19 PartOfSpeech=NN Lemma=telephone NamedEntityTag=O]
+[Text=booth CharacterOffsetBegin=20 CharacterOffsetEnd=25 PartOfSpeech=NN Lemma=booth NamedEntityTag=O]
+[Text=that CharacterOffsetBegin=26 CharacterOffsetEnd=30 PartOfSpeech=IN Lemma=that NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=31 CharacterOffsetEnd=32 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=man CharacterOffsetBegin=33 CharacterOffsetEnd=36 PartOfSpeech=NN Lemma=man NamedEntityTag=O]
+[Text=is CharacterOffsetBegin=37 CharacterOffsetEnd=39 PartOfSpeech=VBZ Lemma=be NamedEntityTag=O]
+[Text=standing CharacterOffsetBegin=40 CharacterOffsetEnd=48 PartOfSpeech=VBG Lemma=stand NamedEntityTag=O]
+[Text=in CharacterOffsetBegin=49 CharacterOffsetEnd=51 PartOfSpeech=IN Lemma=in NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=51 CharacterOffsetEnd=52 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP
+      (NP (DT a) (JJ big) (JJ red) (NN telephone) (NN booth))
+      (PP (IN that)
+        (NP (DT a) (NN man))))
+    (VP (VBZ is)
+      (VP (VBG standing)
+        (PP (IN in))))
+    (. .)))
+
+root(ROOT-0, standing-10)
+det(booth-5, a-1)
+amod(booth-5, big-2)
+amod(booth-5, red-3)
+compound(booth-5, telephone-4)
+nsubj(standing-10, booth-5)
+case(man-8, that-6)
+det(man-8, a-7)
+nmod:that(booth-5, man-8)
+aux(standing-10, is-9)
+nmod(standing-10, in-11)
+punct(standing-10, .-12)
+
+Sentence #2 (9 tokens):
+a person standing inside of a phone booth.
+[Text=a CharacterOffsetBegin=54 CharacterOffsetEnd=55 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=person CharacterOffsetBegin=56 CharacterOffsetEnd=62 PartOfSpeech=NN Lemma=person NamedEntityTag=O]
+[Text=standing CharacterOffsetBegin=63 CharacterOffsetEnd=71 PartOfSpeech=NN Lemma=standing NamedEntityTag=O]
+[Text=inside CharacterOffsetBegin=72 CharacterOffsetEnd=78 PartOfSpeech=IN Lemma=inside NamedEntityTag=O]
+[Text=of CharacterOffsetBegin=79 CharacterOffsetEnd=81 PartOfSpeech=IN Lemma=of NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=82 CharacterOffsetEnd=83 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=phone CharacterOffsetBegin=84 CharacterOffsetEnd=89 PartOfSpeech=NN Lemma=phone NamedEntityTag=O]
+[Text=booth CharacterOffsetBegin=90 CharacterOffsetEnd=95 PartOfSpeech=NN Lemma=booth NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=95 CharacterOffsetEnd=96 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (NP
+    (NP (DT a) (NN person) (NN standing))
+    (PP (IN inside))
+    (PP (IN of)
+      (NP (DT a) (NN phone) (NN booth)))
+    (. .)))
+
+root(ROOT-0, standing-3)
+det(standing-3, a-1)
+compound(standing-3, person-2)
+acl(standing-3, inside-4)
+case(booth-8, of-5)
+det(booth-8, a-6)
+compound(booth-8, phone-7)
+nmod:of(standing-3, booth-8)
+punct(standing-3, .-9)
+
+Sentence #3 (12 tokens):
+this is an image of a man in a phone booth.
+[Text=this CharacterOffsetBegin=98 CharacterOffsetEnd=102 PartOfSpeech=DT Lemma=this NamedEntityTag=O]
+[Text=is CharacterOffsetBegin=103 CharacterOffsetEnd=105 PartOfSpeech=VBZ Lemma=be NamedEntityTag=O]
+[Text=an CharacterOffsetBegin=106 CharacterOffsetEnd=108 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=image CharacterOffsetBegin=109 CharacterOffsetEnd=114 PartOfSpeech=NN Lemma=image NamedEntityTag=O]
+[Text=of CharacterOffsetBegin=115 CharacterOffsetEnd=117 PartOfSpeech=IN Lemma=of NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=118 CharacterOffsetEnd=119 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=man CharacterOffsetBegin=120 CharacterOffsetEnd=123 PartOfSpeech=NN Lemma=man NamedEntityTag=O]
+[Text=in CharacterOffsetBegin=124 CharacterOffsetEnd=126 PartOfSpeech=IN Lemma=in NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=127 CharacterOffsetEnd=128 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=phone CharacterOffsetBegin=129 CharacterOffsetEnd=134 PartOfSpeech=NN Lemma=phone NamedEntityTag=O]
+[Text=booth CharacterOffsetBegin=135 CharacterOffsetEnd=140 PartOfSpeech=NN Lemma=booth NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=140 CharacterOffsetEnd=141 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP (DT this))
+    (VP (VBZ is)
+      (NP
+        (NP (DT an) (NN image))
+        (PP (IN of)
+          (NP
+            (NP (DT a) (NN man))
+            (PP (IN in)
+              (NP (DT a) (NN phone) (NN booth)))))))
+    (. .)))
+
+root(ROOT-0, image-4)
+nsubj(image-4, this-1)
+cop(image-4, is-2)
+det(image-4, an-3)
+case(man-7, of-5)
+det(man-7, a-6)
+nmod:of(image-4, man-7)
+case(booth-11, in-8)
+det(booth-11, a-9)
+compound(booth-11, phone-10)
+nmod:in(man-7, booth-11)
+punct(image-4, .-12)
+
+Sentence #4 (10 tokens):
+A man is standing in a red phone booth.
+[Text=A CharacterOffsetBegin=143 CharacterOffsetEnd=144 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=man CharacterOffsetBegin=145 CharacterOffsetEnd=148 PartOfSpeech=NN Lemma=man NamedEntityTag=O]
+[Text=is CharacterOffsetBegin=149 CharacterOffsetEnd=151 PartOfSpeech=VBZ Lemma=be NamedEntityTag=O]
+[Text=standing CharacterOffsetBegin=152 CharacterOffsetEnd=160 PartOfSpeech=VBG Lemma=stand NamedEntityTag=O]
+[Text=in CharacterOffsetBegin=161 CharacterOffsetEnd=163 PartOfSpeech=IN Lemma=in NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=164 CharacterOffsetEnd=165 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=red CharacterOffsetBegin=166 CharacterOffsetEnd=169 PartOfSpeech=JJ Lemma=red NamedEntityTag=O]
+[Text=phone CharacterOffsetBegin=170 CharacterOffsetEnd=175 PartOfSpeech=NN Lemma=phone NamedEntityTag=O]
+[Text=booth CharacterOffsetBegin=176 CharacterOffsetEnd=181 PartOfSpeech=NN Lemma=booth NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=181 CharacterOffsetEnd=182 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP (DT A) (NN man))
+    (VP (VBZ is)
+      (VP (VBG standing)
+        (PP (IN in)
+          (NP (DT a) (JJ red) (NN phone) (NN booth)))))
+    (. .)))
+
+root(ROOT-0, standing-4)
+det(man-2, A-1)
+nsubj(standing-4, man-2)
+aux(standing-4, is-3)
+case(booth-9, in-5)
+det(booth-9, a-6)
+amod(booth-9, red-7)
+compound(booth-9, phone-8)
+nmod:in(standing-4, booth-9)
+punct(standing-4, .-10)
+
+Sentence #5 (10 tokens):
+A man using a phone in a phone booth.
+[Text=A CharacterOffsetBegin=184 CharacterOffsetEnd=185 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=man CharacterOffsetBegin=186 CharacterOffsetEnd=189 PartOfSpeech=NN Lemma=man NamedEntityTag=O]
+[Text=using CharacterOffsetBegin=190 CharacterOffsetEnd=195 PartOfSpeech=VBG Lemma=use NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=196 CharacterOffsetEnd=197 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=phone CharacterOffsetBegin=198 CharacterOffsetEnd=203 PartOfSpeech=NN Lemma=phone NamedEntityTag=O]
+[Text=in CharacterOffsetBegin=204 CharacterOffsetEnd=206 PartOfSpeech=IN Lemma=in NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=207 CharacterOffsetEnd=208 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=phone CharacterOffsetBegin=209 CharacterOffsetEnd=214 PartOfSpeech=NN Lemma=phone NamedEntityTag=O]
+[Text=booth CharacterOffsetBegin=215 CharacterOffsetEnd=220 PartOfSpeech=NN Lemma=booth NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=220 CharacterOffsetEnd=221 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (NP
+    (NP (DT A) (NN man))
+    (VP (VBG using)
+      (NP
+        (NP (DT a) (NN phone))
+        (PP (IN in)
+          (NP (DT a) (NN phone) (NN booth)))))
+    (. .)))
+
+root(ROOT-0, man-2)
+det(man-2, A-1)
+acl(man-2, using-3)
+det(phone-5, a-4)
+dobj(using-3, phone-5)
+case(booth-9, in-6)
+det(booth-9, a-7)
+compound(booth-9, phone-8)
+nmod:in(phone-5, booth-9)
+punct(man-2, .-10)
+
+Sentence #6 (11 tokens):
+A man preparing desserts in a kitchen covered in frosting.
+[Text=A CharacterOffsetBegin=223 CharacterOffsetEnd=224 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=man CharacterOffsetBegin=225 CharacterOffsetEnd=228 PartOfSpeech=NN Lemma=man NamedEntityTag=O]
+[Text=preparing CharacterOffsetBegin=229 CharacterOffsetEnd=238 PartOfSpeech=VBG Lemma=prepare NamedEntityTag=O]
+[Text=desserts CharacterOffsetBegin=239 CharacterOffsetEnd=247 PartOfSpeech=NNS Lemma=dessert NamedEntityTag=O]
+[Text=in CharacterOffsetBegin=248 CharacterOffsetEnd=250 PartOfSpeech=IN Lemma=in NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=251 CharacterOffsetEnd=252 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=kitchen CharacterOffsetBegin=253 CharacterOffsetEnd=260 PartOfSpeech=NN Lemma=kitchen NamedEntityTag=O]
+[Text=covered CharacterOffsetBegin=261 CharacterOffsetEnd=268 PartOfSpeech=VBN Lemma=cover NamedEntityTag=O]
+[Text=in CharacterOffsetBegin=269 CharacterOffsetEnd=271 PartOfSpeech=IN Lemma=in NamedEntityTag=O]
+[Text=frosting CharacterOffsetBegin=272 CharacterOffsetEnd=280 PartOfSpeech=NN Lemma=frosting NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=280 CharacterOffsetEnd=281 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP
+      (NP (DT A) (NN man))
+      (VP (VBG preparing)
+        (NP
+          (NP (NNS desserts))
+          (PP (IN in)
+            (NP (DT a) (NN kitchen))))))
+    (VP (VBN covered)
+      (PP (IN in)
+        (NP (NN frosting))))
+    (. .)))
+
+root(ROOT-0, covered-8)
+det(man-2, A-1)
+nsubj(covered-8, man-2)
+acl(man-2, preparing-3)
+dobj(preparing-3, desserts-4)
+case(kitchen-7, in-5)
+det(kitchen-7, a-6)
+nmod:in(desserts-4, kitchen-7)
+case(frosting-10, in-9)
+nmod:in(covered-8, frosting-10)
+punct(covered-8, .-11)
+
+Sentence #7 (10 tokens):
+A chef is preparing and decorating many small pastries.
+[Text=A CharacterOffsetBegin=283 CharacterOffsetEnd=284 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=chef CharacterOffsetBegin=285 CharacterOffsetEnd=289 PartOfSpeech=NN Lemma=chef NamedEntityTag=O]
+[Text=is CharacterOffsetBegin=290 CharacterOffsetEnd=292 PartOfSpeech=VBZ Lemma=be NamedEntityTag=O]
+[Text=preparing CharacterOffsetBegin=293 CharacterOffsetEnd=302 PartOfSpeech=VBG Lemma=prepare NamedEntityTag=O]
+[Text=and CharacterOffsetBegin=303 CharacterOffsetEnd=306 PartOfSpeech=CC Lemma=and NamedEntityTag=O]
+[Text=decorating CharacterOffsetBegin=307 CharacterOffsetEnd=317 PartOfSpeech=VBG Lemma=decorate NamedEntityTag=O]
+[Text=many CharacterOffsetBegin=318 CharacterOffsetEnd=322 PartOfSpeech=JJ Lemma=many NamedEntityTag=O]
+[Text=small CharacterOffsetBegin=323 CharacterOffsetEnd=328 PartOfSpeech=JJ Lemma=small NamedEntityTag=O]
+[Text=pastries CharacterOffsetBegin=329 CharacterOffsetEnd=337 PartOfSpeech=NNS Lemma=pastry NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=337 CharacterOffsetEnd=338 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP (DT A) (NN chef))
+    (VP (VBZ is)
+      (VP (VBG preparing)
+        (CC and)
+        (VBG decorating)
+        (NP (JJ many) (JJ small) (NNS pastries))))
+    (. .)))
+
+root(ROOT-0, preparing-4)
+det(chef-2, A-1)
+nsubj(preparing-4, chef-2)
+aux(preparing-4, is-3)
+cc(preparing-4, and-5)
+conj:and(preparing-4, decorating-6)
+amod(pastries-9, many-7)
+amod(pastries-9, small-8)
+dobj(preparing-4, pastries-9)
+punct(preparing-4, .-10)
+
+Sentence #8 (9 tokens):
+A baker prepares various types of baked goods.
+[Text=A CharacterOffsetBegin=340 CharacterOffsetEnd=341 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=baker CharacterOffsetBegin=342 CharacterOffsetEnd=347 PartOfSpeech=NN Lemma=baker NamedEntityTag=O]
+[Text=prepares CharacterOffsetBegin=348 CharacterOffsetEnd=356 PartOfSpeech=VBZ Lemma=prepare NamedEntityTag=O]
+[Text=various CharacterOffsetBegin=357 CharacterOffsetEnd=364 PartOfSpeech=JJ Lemma=various NamedEntityTag=O]
+[Text=types CharacterOffsetBegin=365 CharacterOffsetEnd=370 PartOfSpeech=NNS Lemma=type NamedEntityTag=O]
+[Text=of CharacterOffsetBegin=371 CharacterOffsetEnd=373 PartOfSpeech=IN Lemma=of NamedEntityTag=O]
+[Text=baked CharacterOffsetBegin=374 CharacterOffsetEnd=379 PartOfSpeech=JJ Lemma=baked NamedEntityTag=O]
+[Text=goods CharacterOffsetBegin=380 CharacterOffsetEnd=385 PartOfSpeech=NNS Lemma=goods NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=385 CharacterOffsetEnd=386 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP (DT A) (NN baker))
+    (VP (VBZ prepares)
+      (NP
+        (NP (JJ various) (NNS types))
+        (PP (IN of)
+          (NP (JJ baked) (NNS goods)))))
+    (. .)))
+
+root(ROOT-0, prepares-3)
+det(baker-2, A-1)
+nsubj(prepares-3, baker-2)
+amod(types-5, various-4)
+dobj(prepares-3, types-5)
+case(goods-8, of-6)
+amod(goods-8, baked-7)
+nmod:of(types-5, goods-8)
+punct(prepares-3, .-9)
+
+Sentence #9 (13 tokens):
+a close up of a person grabbing a pastry in a container.
+[Text=a CharacterOffsetBegin=388 CharacterOffsetEnd=389 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=close CharacterOffsetBegin=390 CharacterOffsetEnd=395 PartOfSpeech=NN Lemma=close NamedEntityTag=O]
+[Text=up CharacterOffsetBegin=396 CharacterOffsetEnd=398 PartOfSpeech=IN Lemma=up NamedEntityTag=O]
+[Text=of CharacterOffsetBegin=399 CharacterOffsetEnd=401 PartOfSpeech=IN Lemma=of NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=402 CharacterOffsetEnd=403 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=person CharacterOffsetBegin=404 CharacterOffsetEnd=410 PartOfSpeech=NN Lemma=person NamedEntityTag=O]
+[Text=grabbing CharacterOffsetBegin=411 CharacterOffsetEnd=419 PartOfSpeech=VBG Lemma=grab NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=420 CharacterOffsetEnd=421 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=pastry CharacterOffsetBegin=422 CharacterOffsetEnd=428 PartOfSpeech=NN Lemma=pastry NamedEntityTag=O]
+[Text=in CharacterOffsetBegin=429 CharacterOffsetEnd=431 PartOfSpeech=IN Lemma=in NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=432 CharacterOffsetEnd=433 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=container CharacterOffsetBegin=434 CharacterOffsetEnd=443 PartOfSpeech=NN Lemma=container NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=443 CharacterOffsetEnd=444 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (NP
+    (NP (DT a) (NN close))
+    (VP
+      (ADVP (IN up)
+        (PP (IN of)
+          (NP (DT a) (NN person))))
+      (VBG grabbing)
+      (NP
+        (NP (DT a) (NN pastry))
+        (PP (IN in)
+          (NP (DT a) (NN container)))))
+    (. .)))
+
+root(ROOT-0, close-2)
+det(close-2, a-1)
+advmod(grabbing-7, up-3)
+case(person-6, of-4)
+det(person-6, a-5)
+nmod:of(up-3, person-6)
+acl(close-2, grabbing-7)
+det(pastry-9, a-8)
+dobj(grabbing-7, pastry-9)
+case(container-12, in-10)
+det(container-12, a-11)
+nmod:in(pastry-9, container-12)
+punct(close-2, .-13)
+
+Sentence #10 (9 tokens):
+Close up of a hand touching various pastries.
+[Text=Close CharacterOffsetBegin=446 CharacterOffsetEnd=451 PartOfSpeech=VB Lemma=close NamedEntityTag=O]
+[Text=up CharacterOffsetBegin=452 CharacterOffsetEnd=454 PartOfSpeech=IN Lemma=up NamedEntityTag=O]
+[Text=of CharacterOffsetBegin=455 CharacterOffsetEnd=457 PartOfSpeech=IN Lemma=of NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=458 CharacterOffsetEnd=459 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=hand CharacterOffsetBegin=460 CharacterOffsetEnd=464 PartOfSpeech=NN Lemma=hand NamedEntityTag=O]
+[Text=touching CharacterOffsetBegin=465 CharacterOffsetEnd=473 PartOfSpeech=VBG Lemma=touch NamedEntityTag=O]
+[Text=various CharacterOffsetBegin=474 CharacterOffsetEnd=481 PartOfSpeech=JJ Lemma=various NamedEntityTag=O]
+[Text=pastries CharacterOffsetBegin=482 CharacterOffsetEnd=490 PartOfSpeech=NNS Lemma=pastry NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=490 CharacterOffsetEnd=491 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (VP (VB Close)
+      (ADVP (IN up))
+      (PP (IN of)
+        (NP
+          (NP (DT a) (NN hand))
+          (VP (VBG touching)
+            (NP (JJ various) (NNS pastries))))))
+    (. .)))
+
+root(ROOT-0, Close-1)
+advmod(Close-1, up-2)
+case(hand-5, of-3)
+det(hand-5, a-4)
+nmod:of(Close-1, hand-5)
+acl(hand-5, touching-6)
+amod(pastries-8, various-7)
+dobj(touching-6, pastries-8)
+punct(Close-1, .-9)
+
+Sentence #11 (9 tokens):
+A restaurant has modern wooden tables and chairs.
+[Text=A CharacterOffsetBegin=493 CharacterOffsetEnd=494 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=restaurant CharacterOffsetBegin=495 CharacterOffsetEnd=505 PartOfSpeech=NN Lemma=restaurant NamedEntityTag=O]
+[Text=has CharacterOffsetBegin=506 CharacterOffsetEnd=509 PartOfSpeech=VBZ Lemma=have NamedEntityTag=O]
+[Text=modern CharacterOffsetBegin=510 CharacterOffsetEnd=516 PartOfSpeech=JJ Lemma=modern NamedEntityTag=O]
+[Text=wooden CharacterOffsetBegin=517 CharacterOffsetEnd=523 PartOfSpeech=JJ Lemma=wooden NamedEntityTag=O]
+[Text=tables CharacterOffsetBegin=524 CharacterOffsetEnd=530 PartOfSpeech=NNS Lemma=table NamedEntityTag=O]
+[Text=and CharacterOffsetBegin=531 CharacterOffsetEnd=534 PartOfSpeech=CC Lemma=and NamedEntityTag=O]
+[Text=chairs CharacterOffsetBegin=535 CharacterOffsetEnd=541 PartOfSpeech=NNS Lemma=chair NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=541 CharacterOffsetEnd=542 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP (DT A) (NN restaurant))
+    (VP (VBZ has)
+      (NP (JJ modern) (JJ wooden) (NNS tables)
+        (CC and)
+        (NNS chairs)))
+    (. .)))
+
+root(ROOT-0, has-3)
+det(restaurant-2, A-1)
+nsubj(has-3, restaurant-2)
+amod(tables-6, modern-4)
+amod(tables-6, wooden-5)
+dobj(has-3, tables-6)
+cc(tables-6, and-7)
+conj:and(tables-6, chairs-8)
+punct(has-3, .-9)
+
+Sentence #12 (10 tokens):
+A long restaurant table with rattan rounded back chairs.
+[Text=A CharacterOffsetBegin=544 CharacterOffsetEnd=545 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=long CharacterOffsetBegin=546 CharacterOffsetEnd=550 PartOfSpeech=JJ Lemma=long NamedEntityTag=O]
+[Text=restaurant CharacterOffsetBegin=551 CharacterOffsetEnd=561 PartOfSpeech=NN Lemma=restaurant NamedEntityTag=O]
+[Text=table CharacterOffsetBegin=562 CharacterOffsetEnd=567 PartOfSpeech=NN Lemma=table NamedEntityTag=O]
+[Text=with CharacterOffsetBegin=568 CharacterOffsetEnd=572 PartOfSpeech=IN Lemma=with NamedEntityTag=O]
+[Text=rattan CharacterOffsetBegin=573 CharacterOffsetEnd=579 PartOfSpeech=NN Lemma=rattan NamedEntityTag=O]
+[Text=rounded CharacterOffsetBegin=580 CharacterOffsetEnd=587 PartOfSpeech=VBD Lemma=round NamedEntityTag=O]
+[Text=back CharacterOffsetBegin=588 CharacterOffsetEnd=592 PartOfSpeech=RB Lemma=back NamedEntityTag=O]
+[Text=chairs CharacterOffsetBegin=593 CharacterOffsetEnd=599 PartOfSpeech=NNS Lemma=chair NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=599 CharacterOffsetEnd=600 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP
+      (NP (DT A) (JJ long) (NN restaurant) (NN table))
+      (PP (IN with)
+        (NP (NN rattan))))
+    (VP (VBD rounded)
+      (PRT (RB back))
+      (NP (NNS chairs)))
+    (. .)))
+
+root(ROOT-0, rounded-7)
+det(table-4, A-1)
+amod(table-4, long-2)
+compound(table-4, restaurant-3)
+nsubj(rounded-7, table-4)
+case(rattan-6, with-5)
+nmod:with(table-4, rattan-6)
+compound:prt(rounded-7, back-8)
+dobj(rounded-7, chairs-9)
+punct(rounded-7, .-10)
+
+Sentence #13 (15 tokens):
+a long table with a plant on top of it surrounded with wooden chairs.
+[Text=a CharacterOffsetBegin=602 CharacterOffsetEnd=603 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=long CharacterOffsetBegin=604 CharacterOffsetEnd=608 PartOfSpeech=JJ Lemma=long NamedEntityTag=O]
+[Text=table CharacterOffsetBegin=609 CharacterOffsetEnd=614 PartOfSpeech=NN Lemma=table NamedEntityTag=O]
+[Text=with CharacterOffsetBegin=615 CharacterOffsetEnd=619 PartOfSpeech=IN Lemma=with NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=620 CharacterOffsetEnd=621 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=plant CharacterOffsetBegin=622 CharacterOffsetEnd=627 PartOfSpeech=NN Lemma=plant NamedEntityTag=O]
+[Text=on CharacterOffsetBegin=628 CharacterOffsetEnd=630 PartOfSpeech=IN Lemma=on NamedEntityTag=O]
+[Text=top CharacterOffsetBegin=631 CharacterOffsetEnd=634 PartOfSpeech=NN Lemma=top NamedEntityTag=O]
+[Text=of CharacterOffsetBegin=635 CharacterOffsetEnd=637 PartOfSpeech=IN Lemma=of NamedEntityTag=O]
+[Text=it CharacterOffsetBegin=638 CharacterOffsetEnd=640 PartOfSpeech=PRP Lemma=it NamedEntityTag=O]
+[Text=surrounded CharacterOffsetBegin=641 CharacterOffsetEnd=651 PartOfSpeech=VBD Lemma=surround NamedEntityTag=O]
+[Text=with CharacterOffsetBegin=652 CharacterOffsetEnd=656 PartOfSpeech=IN Lemma=with NamedEntityTag=O]
+[Text=wooden CharacterOffsetBegin=657 CharacterOffsetEnd=663 PartOfSpeech=JJ Lemma=wooden NamedEntityTag=O]
+[Text=chairs CharacterOffsetBegin=664 CharacterOffsetEnd=670 PartOfSpeech=NNS Lemma=chair NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=670 CharacterOffsetEnd=671 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP
+      (NP (DT a) (JJ long) (NN table))
+      (PP (IN with)
+        (NP
+          (NP (DT a) (NN plant))
+          (PP (IN on)
+            (NP
+              (NP (NN top))
+              (PP (IN of)
+                (NP (PRP it))))))))
+    (VP (VBD surrounded)
+      (PP (IN with)
+        (NP (JJ wooden) (NNS chairs))))
+    (. .)))
+
+root(ROOT-0, surrounded-11)
+det(table-3, a-1)
+amod(table-3, long-2)
+nsubj(surrounded-11, table-3)
+case(plant-6, with-4)
+det(plant-6, a-5)
+nmod:with(table-3, plant-6)
+case(it-10, on-7)
+mwe(on-7, top-8)
+mwe(on-7, of-9)
+nmod:on_top_of(plant-6, it-10)
+case(chairs-14, with-12)
+amod(chairs-14, wooden-13)
+nmod:with(surrounded-11, chairs-14)
+punct(surrounded-11, .-15)
+
+Sentence #14 (13 tokens):
+A long table with a flower arrangement in the middle for meetings.
+[Text=A CharacterOffsetBegin=673 CharacterOffsetEnd=674 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=long CharacterOffsetBegin=675 CharacterOffsetEnd=679 PartOfSpeech=JJ Lemma=long NamedEntityTag=O]
+[Text=table CharacterOffsetBegin=680 CharacterOffsetEnd=685 PartOfSpeech=NN Lemma=table NamedEntityTag=O]
+[Text=with CharacterOffsetBegin=686 CharacterOffsetEnd=690 PartOfSpeech=IN Lemma=with NamedEntityTag=O]
+[Text=a CharacterOffsetBegin=691 CharacterOffsetEnd=692 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=flower CharacterOffsetBegin=693 CharacterOffsetEnd=699 PartOfSpeech=NN Lemma=flower NamedEntityTag=O]
+[Text=arrangement CharacterOffsetBegin=700 CharacterOffsetEnd=711 PartOfSpeech=NN Lemma=arrangement NamedEntityTag=O]
+[Text=in CharacterOffsetBegin=712 CharacterOffsetEnd=714 PartOfSpeech=IN Lemma=in NamedEntityTag=O]
+[Text=the CharacterOffsetBegin=715 CharacterOffsetEnd=718 PartOfSpeech=DT Lemma=the NamedEntityTag=O]
+[Text=middle CharacterOffsetBegin=719 CharacterOffsetEnd=725 PartOfSpeech=NN Lemma=middle NamedEntityTag=O]
+[Text=for CharacterOffsetBegin=726 CharacterOffsetEnd=729 PartOfSpeech=IN Lemma=for NamedEntityTag=O]
+[Text=meetings CharacterOffsetBegin=730 CharacterOffsetEnd=738 PartOfSpeech=NNS Lemma=meeting NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=738 CharacterOffsetEnd=739 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (NP
+    (NP (DT A) (JJ long) (NN table))
+    (PP (IN with)
+      (NP (DT a) (NN flower) (NN arrangement)))
+    (PP (IN in)
+      (NP
+        (NP (DT the) (NN middle))
+        (PP (IN for)
+          (NP (NNS meetings)))))
+    (. .)))
+
+root(ROOT-0, table-3)
+det(table-3, A-1)
+amod(table-3, long-2)
+case(arrangement-7, with-4)
+det(arrangement-7, a-5)
+compound(arrangement-7, flower-6)
+nmod:with(table-3, arrangement-7)
+case(middle-10, in-8)
+det(middle-10, the-9)
+nmod:in(table-3, middle-10)
+case(meetings-12, for-11)
+nmod:for(middle-10, meetings-12)
+punct(table-3, .-13)
+
+Sentence #15 (11 tokens):
+A table is adorned with wooden chairs with blue accents.
+[Text=A CharacterOffsetBegin=741 CharacterOffsetEnd=742 PartOfSpeech=DT Lemma=a NamedEntityTag=O]
+[Text=table CharacterOffsetBegin=743 CharacterOffsetEnd=748 PartOfSpeech=NN Lemma=table NamedEntityTag=O]
+[Text=is CharacterOffsetBegin=749 CharacterOffsetEnd=751 PartOfSpeech=VBZ Lemma=be NamedEntityTag=O]
+[Text=adorned CharacterOffsetBegin=752 CharacterOffsetEnd=759 PartOfSpeech=VBN Lemma=adorn NamedEntityTag=O]
+[Text=with CharacterOffsetBegin=760 CharacterOffsetEnd=764 PartOfSpeech=IN Lemma=with NamedEntityTag=O]
+[Text=wooden CharacterOffsetBegin=765 CharacterOffsetEnd=771 PartOfSpeech=JJ Lemma=wooden NamedEntityTag=O]
+[Text=chairs CharacterOffsetBegin=772 CharacterOffsetEnd=778 PartOfSpeech=NNS Lemma=chair NamedEntityTag=O]
+[Text=with CharacterOffsetBegin=779 CharacterOffsetEnd=783 PartOfSpeech=IN Lemma=with NamedEntityTag=O]
+[Text=blue CharacterOffsetBegin=784 CharacterOffsetEnd=788 PartOfSpeech=JJ Lemma=blue NamedEntityTag=O]
+[Text=accents CharacterOffsetBegin=789 CharacterOffsetEnd=796 PartOfSpeech=NNS Lemma=accent NamedEntityTag=O]
+[Text=. CharacterOffsetBegin=796 CharacterOffsetEnd=797 PartOfSpeech=. Lemma=. NamedEntityTag=O]
+(ROOT
+  (S
+    (NP (DT A) (NN table))
+    (VP (VBZ is)
+      (VP (VBN adorned)
+        (PP (IN with)
+          (NP (JJ wooden) (NNS chairs)))
+        (PP (IN with)
+          (NP (JJ blue) (NNS accents)))))
+    (. .)))
+
+root(ROOT-0, adorned-4)
+det(table-2, A-1)
+nsubjpass(adorned-4, table-2)
+auxpass(adorned-4, is-3)
+case(chairs-7, with-5)
+amod(chairs-7, wooden-6)
+nmod:with(adorned-4, chairs-7)
+case(accents-10, with-8)
+amod(accents-10, blue-9)
+nmod:with(adorned-4, accents-10)
+punct(adorned-4, .-11)
+
+Coreference set:
+	(4,2,[1,3]) -> (1,8,[7,9]), that is: "A man" -> "a man"
+Coreference set:
+	(3,11,[9,12]) -> (2,8,[6,9]), that is: "a phone booth" -> "a phone booth"
+	(5,9,[7,10]) -> (2,8,[6,9]), that is: "a phone booth" -> "a phone booth"
+Coreference set:
+	(3,1,[1,2]) -> (3,4,[3,12]), that is: "this" -> "an image of a man in a phone booth"
+Coreference set:
+	(13,10,[10,11]) -> (12,4,[1,7]), that is: "it" -> "A long restaurant table with rattan"
+Coreference set:
+	(15,7,[6,8]) -> (13,14,[13,15]), that is: "wooden chairs" -> "wooden chairs"
