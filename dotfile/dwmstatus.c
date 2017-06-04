@@ -176,12 +176,15 @@ module_netupdown (void)
 	pclose(pf); \
 	} while(0)
 #define netG (1024*1024*1024)
+#define threG (1024*1024*1000)
 #define netM (1024*1024)
+#define threM (1024*1000)
 #define netK (1024)
+#define threK (1000)
 #define netCompat(count, buf, bufsz) ( \
-		(count > netG) ? (snprintf(buf, bufsz, "%.1fGB/s", count/(double)netG)) \
-		: (count > netM) ? (snprintf(buf, bufsz, "%.1fMB/s", count/(double)netM)) \
-		: (count > netK) ? (snprintf(buf, bufsz, "%.1fKB/s", count/(double)netK)) \
+		(count >= threG) ? (snprintf(buf, bufsz, "%.1fGB/s", count/(double)netG)) \
+		: (count >= threM) ? (snprintf(buf, bufsz, "%.1fMB/s", count/(double)netM)) \
+		: (count >= threK) ? (snprintf(buf, bufsz, "%.1fKB/s", count/(double)netK)) \
 		: (snprintf(buf, bufsz, "%.0fB/s", count)) )
 
 	FILE* pf_netupdown = NULL;
