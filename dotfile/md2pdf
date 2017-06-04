@@ -1,3 +1,30 @@
 #!/bin/sh
+# my pandoc markdown -> pdf convertion helper
 set -e
-exec pandoc -V fontfamily=times -V geometry=margin=1in -o $1.pdf $1
+
+die () {
+	echo $1
+	exit 1
+}
+pre () {
+	printf "=> Processing ... "
+}
+post () {
+	printf "[Done]\n"
+}
+
+if test "$#" -eq 1; then
+	stat $1 >/dev/null || die 'stat failed'
+	pre
+	pandoc -V fontfamily=times -V geometry=margin=1in -o $1.pdf $1
+	post
+elif test "$#" -gt 1; then
+	filename=$1
+	stat $filename >/dev/null || die 'stat failed'
+	shift;
+	pre
+	pandoc -V fontfamily=times -V geometry=margin=1in -o $filename.pdf $filename $@
+	post
+elif test "$#" -lt 1; then
+	die 'no markdown file specified'
+fi
