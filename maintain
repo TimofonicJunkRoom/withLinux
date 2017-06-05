@@ -118,7 +118,7 @@ main () {
     clean  ) clean ;;
     purge  ) purge ;;
     undel  ) undelete ;;
-    repack ) git repack ;;
+    refresh) git gc; git repack ;;
     log    ) git log --oneline --graph --show-signature; printf "Commits Count %d\n" $commits;;
     help   ) Usage ;;
     deploy ) cd dotfile; shift; ./deploy $@;;
