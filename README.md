@@ -103,6 +103,7 @@ Graphical Interface Stuff (Xorg)
   1. [Input greek letters](./x/greek.md)  
 1. package: numix-gtk-theme numix-icon-theme arc-theme  
 2. [Xorg+dwm notes](./x/xorgdwm.md)  
+1. [Extend your screen via network](./x/extend-screen-with-vnc.md)  
 
 Internet Specific  
 ---
