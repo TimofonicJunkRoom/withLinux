@@ -57,6 +57,7 @@ julia
 jupyter-notebook
 latexila
 less
+lftp
 libblas-dev
 libgoogle-glog-dev
 libhdf5-dev
