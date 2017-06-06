@@ -23,6 +23,9 @@ export DEBFULLNAME="Zhou Mo"
 export DEB_BUILD_OPTIONS=parallel=4
 export BUILDER=pbuilder
 
+export QUILT_SERIES=debian/patches/series
+export QUILT_PATCHES=debian/patches
+
 # end debian packaging block
 
 export GIT_EDITOR=vim
