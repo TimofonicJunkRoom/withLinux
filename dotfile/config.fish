@@ -30,3 +30,7 @@ export QUILT_PATCHES=debian/patches
 
 export GIT_EDITOR=vim
 
+
+cowsay -f stegosaurus "苦海无边，回头是岸"
+# 不忘初心，方得始终 -- L.J.R.
+
