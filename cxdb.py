@@ -75,7 +75,7 @@ try:
                 pass
     with open('__xdb__/path.list', 'w+') as f:
         f.write('\n'.join(pathlist_indexed))
-    spinner.print("I: path list saved.")
+    spinner.print("I: path list saved => __xdb__/path.list")
 
 except Exception as e:
     spinner.print("Exception: {}".format(e))
