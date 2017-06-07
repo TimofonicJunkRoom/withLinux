@@ -6,6 +6,7 @@ set -e
 packages="
 ack
 apt-xapian-index
+arandr
 axel
 bbswitch-dkms
 bmon
@@ -119,6 +120,7 @@ wesnoth
 wine32-development
 wxmaxima
 xbindkeys
+xrandr
 zfsnap
 zfsutils-linux
 "
