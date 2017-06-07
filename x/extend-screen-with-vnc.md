@@ -47,3 +47,11 @@ vncviewer -fullscreen 192.168.1.1::5900
 ```
 xrandr --output DP-1 --off
 ```
+
+## Trouble and tips
+
+* `ctrc` failure: select another unused output and try again.
+
+* Press F8 to pop up a menu in vncclient
+
+* use `xrandr --output DVI-0 --primary` to move your pannel.
