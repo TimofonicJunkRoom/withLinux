@@ -185,37 +185,37 @@ System Management / Server
 
 Linux Kernel Hacks / Operating System / Embedding / Hardware
 ---
-4. [linux frozen ... handle with SysRq](./kernel/sysrq.txt)  
-1. [Compile linux kernel... ](./kernel/compile.txt)  
+4. [linux frozen ... handle with SysRq](./admin/sysrq.txt)  
+1. [Compile linux kernel... ](./admin/compile.txt)  
 2. [MIT Xv6 Original](https://pdos.csail.mit.edu/6.828/2011/xv6.html)  
 4. [Cook a minimum bootable linux / initramfs ](./minisys/main.pdf)  
-1. [hard disk link power manage ... sample hack](./kernel/hddpower.sh)  
-2. [cpu freqency tweak ... sample hack](./kernel/cpufreq.sh)  
-3. [backlight](./kernel/backlight.txt)  
-1. [my OK6410 installation log](kernel/ok6410/main.pdf)  
+1. [hard disk link power manage ... sample hack](./admin/hddpower.sh)  
+2. [cpu freqency tweak ... sample hack](./admin/cpufreq.sh)  
+3. [backlight](./admin/backlight.txt)  
+1. [my OK6410 installation log](admin/ok6410/main.pdf)  
 1. [OpenPOWER fundation](http://openpowerfoundation.org/)  
 1. cpuid -- dump cpu info  
 1. hwinfo, lshw  to gather detailed system hardware information.  
 1. i2c-tools (modprobe eeprom; decode-dimms) to obtain CAS latency.  
-1. [VM note](./kernel/vm.md)  
-1. [Emulating systems with QEMU](./kernel/qemu-emulate.md)  
-1. [SATA Hard disk hotplugging](./kernel/hotplug.md)  
+1. [VM note](./admin/vm.md)  
+1. [Emulating systems with QEMU](./admin/qemu-emulate.md)  
+1. [SATA Hard disk hotplugging](./admin/hotplug.md)  
 1. [syscall list -- man syscalls]
 
 Virtualization  
 ---
 1. Docker.io, the linux container  
-  1. [note](./virt/docker.md)  
+  1. [note](./admin/docker.md)  
 4. X86 dosbox emulator, (dosbox)  
 1. QEMU/KVM  
-  1. [QEMU/KVM -- nographic mode](./virt/qemu-nographic.md)  
+  1. [QEMU/KVM -- nographic mode](./admin/qemu-nographic.md)  
 1. Fake Virtualizations  
   1. traditional chroots  
   1. schroot: [Archwiki:schroot](https://wiki.archlinux.org/index.php/Install_bundled_32-bit_system_in_64-bit_system)[ Debianwiki:Schroot](https://wiki.debian.org/Schroot)    
-    1. [schroot note](./virt/schroot.md)  
+    1. [schroot note](./admin/schroot.md)  
 1. Virtualbox  
-  1. [Extremely slow network transmission speed within loop between host and guest](./virt/virt-slow-transmission.md)  
-  1. [Virtualbox Shared Directory](./virt/vbox-shared-dir.md)  
+  1. [Extremely slow network transmission speed within loop between host and guest](./admin/virt-slow-transmission.md)  
+  1. [Virtualbox Shared Directory](./admin/vbox-shared-dir.md)  
 
 Cluster / HighPerf  
 ---
