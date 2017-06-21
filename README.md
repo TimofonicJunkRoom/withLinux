@@ -233,14 +233,14 @@ Cluster / HighPerf
 
 Kali / Security / Penetration  
 ---
-1. [kali tools short list](./kali/tools.txt)  
-2. [nmap note](./kali/nmap.txt)  
-3. [nping note](./kali/nping.txt)  
+1. [kali tools short list](./util/kali-tools.txt)  
+2. [nmap note](./util/nmap.txt)  
+3. [nping note](./util/nping.txt)  
 4. [preventing buffer overflow](http://www.ibm.com/developerworks/cn/linux/l-sp/part4/index.html)  
-5. [External resources](./kali/resource.md) 
-6. [ARP spoof](kali/arpspoof.txt)  
-7. [AirCrack](kali/aircrack.txt)  
-8. [aircrack-ng](kali/aircrack-ng.txt)  
+5. [External resources](./util/resource.md) 
+6. [ARP spoof](util/arpspoof.txt)  
+7. [AirCrack](util/aircrack.txt)  
+8. [aircrack-ng](util/aircrack-ng.txt)  
 1. Disk Encryption  
   1. [(el) Gentoo: dm-crypt](https://wiki.gentoo.org/wiki/Dm-crypt)  
   1. [(el) Gentoo: dm-crypt LUKS](https://wiki.gentoo.org/wiki/DM-Crypt_LUKS)  

@@ -1,4 +1,0 @@
-Resources
-===
-
-http://wooyun.org/
