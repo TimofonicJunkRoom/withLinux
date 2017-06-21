@@ -14,27 +14,27 @@ Items marked with `(el)` means external link.
   
 Installing Linux  
 ---
-1. [Install linux into an USB drive](./install/install-linux-into-usb-stick.txt)  
-2. [Tips about Drivers and firmware](./install/dri)  
-  1. [Graphic card](./install/dri/graphic_card_driver.txt)  
-  2. [Wireless network card](./install/dri/wireless.txt)  
-3. [Turning off graphic card](./install/turn-off-gpu.txt)  
-4. [Tips about Solid State Drive (SSD)](./install/ssd.md)  
+1. [Install linux into an USB drive](./admin/install-linux-into-usb-stick.txt)  
+2. [Tips about Drivers and firmware](./admin/dri)  
+  1. [Graphic card](./admin/dri/graphic_card_driver.txt)  
+  2. [Wireless network card](./admin/dri/wireless.txt)  
+3. [Turning off graphic card](./admin/turn-off-gpu.txt)  
+4. [Tips about Solid State Drive (SSD)](./admin/ssd.md)  
   1. [Gentoo wiki/SSD (el) ](https://wiki.gentoo.org/wiki/SSD)  
-5. [Some packages related to EFI/UEFI](./install/efi.md)  
-6. [My old installation log for a HP server](./install/hpserver)  
-7. [Bootstrap minimal/stage3 Debian system](./install/bootstrap)    
-8. [Simple ArchLinux install note](./install/arch.md)  
-9. [mdadm note for creating software md5](./install/mdadm.md)  
-10. [Trying Gentoo is worthwhile (-) ](./install/gentoo.md)  
+5. [Some packages related to EFI/UEFI](./admin/efi.md)  
+6. [My old installation log for a HP server](./admin/hpserver)  
+7. [Bootstrap minimal/stage3 Debian system](./admin/bootstrap)    
+8. [Simple ArchLinux install note](./admin/arch.md)  
+9. [mdadm note for creating software md5](./admin/mdadm.md)  
+10. [Trying Gentoo is worthwhile (-) ](./admin/gentoo.md)  
 1. [Gentoo: Sakaki's EFI Install Guide (el) ](https://wiki.gentoo.org/wiki/Sakaki%27s_EFI_Install_Guide)  
 1. [Gentoo Prefix (el) ](https://wiki.gentoo.org/wiki/Project:Prefix)  
 1. [ArchLinux's application list (el) ](https://wiki.archlinux.org/index.php/List_of_applications)  
 1. [My dotfiles](./dotfile) and [its deploy script](./deploy)  
-1. [(/boot + LUKS (LVM (/ + /home))) Linux installation](./install/lvm-over-luks.md)  
-1. [Alpine linux note](./install/alpine.md)  
-1. [OpenBSD note](./install/openbsd.md)  
-1. [Debian Sid root on ZFS](./install/sidonzfs.md)  
+1. [(/boot + LUKS (LVM (/ + /home))) Linux installation](./admin/lvm-over-luks.md)  
+1. [Alpine linux note](./admin/alpine.md)  
+1. [OpenBSD note](./admin/openbsd.md)  
+1. [Debian Sid root on ZFS](./admin/sidonzfs.md)  
 
 Utilities / Miscellaneous  
 ---
@@ -219,17 +219,17 @@ Virtualization
 
 Cluster / HighPerf  
 ---
-1. [storm local setup ... apache inqubator, storm](./cluster/setup-local-storm.txt)  
-2. [PBS - Cluster Job Management](./cluster/pbs)  
-3. [parallel computing note](./cluster/parallel.intro.txt)  
+1. [storm local setup ... apache inqubator, storm](./parallel/setup-local-storm.txt)  
+2. [PBS - Cluster Job Management](./parallel/pbs)  
+3. [parallel computing note](./parallel/parallel.intro.txt)  
 4. [(el) Debian wiki: High Performance Computing](https://wiki.debian.org/HighPerformanceComputing)  
   3. HTCondor (most convenient one in case to manage a single machine)   
-    1. [My HTCondor wrapper script](./cluster/condor)  
-    1. [my HTCondor note](/cluster/condor.md)  
+    1. [My HTCondor wrapper script](./parallel/condor)  
+    1. [my HTCondor note](/parallel/condor.md)  
   4. Other job control systems: Torque, SGE (sub grid engine), Slurm  
-1. [Note on OpenMP and OpenBLAS](./cluster/omp_oblas.md)  
-1. [BLAS](./cluster/blas.md)  
-1. [LAPACK](./cluster/lapack.md)  
+1. [Note on OpenMP and OpenBLAS](./parallel/omp_oblas.md)  
+1. [BLAS](./parallel/blas.md)  
+1. [LAPACK](./parallel/lapack.md)  
 
 Kali / Security / Penetration  
 ---
