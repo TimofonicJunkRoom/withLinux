@@ -86,12 +86,12 @@ Utilities / Miscellaneous
 Graphical Interface Stuff (Xorg)  
 ---
 1. Gnome3 (gnome-shell)  
-  1. [change the height of top bar ... modify](./x/topbar.md)  
-  2. [against BUG: alacarte empties gnome menu ... wheezy](./x/alacarte.txt)  
+  1. [change the height of top bar ... modify](./util/topbar.md)  
+  2. [against BUG: alacarte empties gnome menu ... wheezy](./util/alacarte.txt)  
   3. X11 default display manager ... /etc/X11/default-display-manager  
-  1. [gnome scaling factor](./x/gnome-scale.md)  
+  1. [gnome scaling factor](./util/gnome-scale.md)  
 2. LXDE  
-  1. [set shortcut keys under LXDE](./x/lxde-shortcut)  
+  1. [set shortcut keys under LXDE](./util/lxde-shortcut)  
 3. Desktop Managers, X11 login program  
   1. [gdm3] and [kdm], too heavy  
   2. [sddm] for plasma5  
@@ -100,10 +100,10 @@ Graphical Interface Stuff (Xorg)
 5. Graphical Virtual terminals  
   1. [gnome-terminal], [guake], [uxterm], [lilyterm], [sakura], [st]  
 1. Special task under graphical environment  
-  1. [Input greek letters](./x/greek.md)  
+  1. [Input greek letters](./util/greek.md)  
 1. package: numix-gtk-theme numix-icon-theme arc-theme  
-2. [Xorg+dwm notes](./x/xorgdwm.md)  
-1. [Extend your screen via network](./x/extend-screen-with-vnc.md)  
+2. [Xorg+dwm notes](./util/xorgdwm.md)  
+1. [Extend your screen via network](./util/extend-screen-with-vnc.md)  
 
 Internet Specific  
 ---
