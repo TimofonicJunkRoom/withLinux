@@ -108,19 +108,19 @@ Graphical Interface Stuff (Xorg)
 Internet Specific  
 ---
 5. ifup and ifdown setting ... see interfaces(5)
-2. [vpn ... set up on debian](./internet/vpn.txt)  
-3. [ping ... no reply to icmp ping](./internet/ping.txt)  
-4. [port ... what is running on a port](./internet/port.txt)  
-6. [share the network with other machine ... one of cases](./internet/share-network-between-linux.txt)  
-7. [share-ipv4-with-ipv6-tunnel ...](./internet/share-ipv4-with-ipv6-tunnel.txt)  
-8. [openvpn ... simple utilization](./internet/openvpn.txt)  
-9. [802.1X auth ... ref link](./internet/802auth)  
+2. [vpn ... set up on debian](./admin/vpn.txt)  
+3. [ping ... no reply to icmp ping](./admin/ping.txt)  
+4. [port ... what is running on a port](./admin/port.txt)  
+6. [share the network with other machine ... one of cases](./admin/share-network-between-linux.txt)  
+7. [share-ipv4-with-ipv6-tunnel ...](./admin/share-ipv4-with-ipv6-tunnel.txt)  
+8. [openvpn ... simple utilization](./admin/openvpn.txt)  
+9. [802.1X auth ... ref link](./admin/802auth)  
 10. [iptables howto ... ubuntu help](https://help.ubuntu.com/community/IptablesHowTo)  
 1. IPv6
-  1. [miredo note ... IPv6 Net with Teredo](./internet/miredo.md)
-  1. [isatap ... IPv6 with ISATAP](./internet/isatap.txt)
+  1. [miredo note ... IPv6 Net with Teredo](./admin/miredo.md)
+  1. [isatap ... IPv6 with ISATAP](./admin/isatap.txt)
   1. [(el) microsoft: teredo](https://technet.microsoft.com/en-us/library/bb457042.aspx)  
-13. [script for listing available wifi SSIDs](./internet/wifilist)  
+13. [script for listing available wifi SSIDs](./admin/wifilist)  
 14. HTTP status code reference  
   1. RFC2616  
   2. [list of http status codes ... wikipedia](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)  
@@ -128,15 +128,15 @@ Internet Specific
   1. [nc](./util/netcat.txt)  
   2. scp, ssh, rsync.  
   3. samba server.  
-  4. http server, like apache2. OR [python](internet/python.txt)   
+  4. http server, like apache2. OR [python](admin/python.txt)   
   5. ftp server, like vsftpd.  
   6. NFS  
 16. Dynamic Name Service   
   1. [list of DNS record types ... useful with dig(1)](http://en.wikipedia.org/wiki/List_of_DNS_record_types)  
   2. [comparison of DNS server software](http://http://en.wikipedia.org/wiki/Comparison_of_DNS_server_software)  
-1. [Restrict connections with Iptables](./internet/iptables-restrict-connections.md)  
-1. [access intranet with ddns](./internet/intranet-ddns.md)  
-1. [UFW -- uncomplicated firewall](./internet/ufw.md)  
+1. [Restrict connections with Iptables](./admin/iptables-restrict-connections.md)  
+1. [access intranet with ddns](./admin/intranet-ddns.md)  
+1. [UFW -- uncomplicated firewall](./admin/ufw.md)  
 
 System Management / Server  
 ---
