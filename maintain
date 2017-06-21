@@ -113,7 +113,7 @@ main () {
   # invoke sub scripts
   case $1 in
     scan   ) scan_missing ;;
-    stat   ) stat_lines | tail ; python3 statistics.py ;;
+    stat   ) stat_lines | tail ; python3 maintain.d/statistics.py ;;
     make   ) compile_all ;;
     clean  ) clean ;;
     purge  ) purge ;;
@@ -122,7 +122,7 @@ main () {
     log    ) git log --oneline --graph --show-signature; printf "Commits Count %d\n" $commits;;
     help   ) Usage ;;
     deploy ) cd dotfile; shift; ./deploy $@;;
-    xdb    ) ./cxdb.py ;;
+    xdb    ) ./maintain.d/cxdb.py ;;
     #search ) ./search $@ ;;
     *      ) echo "E: invalid action" ;;
   esac
