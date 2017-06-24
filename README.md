@@ -440,6 +440,7 @@ Tiny Bits about Artificial Intelegence
   1. [MS COCO](https://github.com/CDLuminate/cocofetch)  
   1. [Imagenet](http://image-net.org/index)  
 1. [WikiCFP](http://www.wikicfp.com/cfp/)  
+1. http://sci-hub.io/  
   
 ## LICENSE
 ```
