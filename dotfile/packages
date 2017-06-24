@@ -42,6 +42,7 @@ gdb
 git
 git-buildpackage
 gitg
+glances
 gnome-builder
 gogs
 gpm
