@@ -1,6 +1,18 @@
 
 fortune-zh
 
+function aup
+   sudo apt update
+   sudo apt list --upgradable
+end
+
+function aug
+   sudo apt upgrade
+end
+function adug
+   sudo apt dist-upgrade
+end
+
 function jl
 	/home/lumin/Downloads/julia-6445c82d00/bin/julia $argv
 end
