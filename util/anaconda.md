@@ -1,6 +1,9 @@
 python package manager, anaconda
 ===
 
+Anaconda ships many packages by default but many of them may not be needed.
+One can install Miniconda (Lite version of Anaconda) and packages in need by himself.
+
 download https://mirrors.tuna.tsinghua.edu.cn/anaconda/
 
 doc https://docs.continuum.io/anaconda/
