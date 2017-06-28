@@ -22,8 +22,8 @@ test_images = test.iloc[:,:].div(255)
 print('-> test  set shape', test_images.shape)
 
 ### Setup Graph ###
-x = tf.placeholder(tf.float32, [None, 784])
-y = tf.placeholder(tf.float32, [None, 10])
+x = tf.placeholder(tf.float32, [None, 784], name='x')
+y = tf.placeholder(tf.float32, [None, 10], name='y')
 
 def weight_variable(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
@@ -60,7 +60,7 @@ b_fc1 = bias_variable([1024])
 h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
-keep_prob = tf.placeholder(tf.float32)
+keep_prob = tf.placeholder(tf.float32, name='keep_prob')
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
 W_fc2 = weight_variable([1024, 10])
@@ -90,7 +90,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 
-for i in range(20000):
+for i in range(200):
 # could not set cudnn tensor descriptor: CUDNN_STATUS_BAD_PARAM
 # batchsize 0 will cause the above zero, be careful when reading.
 # when your index for reading data is wrong, the batch could be 0.
@@ -121,7 +121,7 @@ print('Save file to path:', saver.save(sess, 'kaggle_MNIST_net.ckpt'))
 #     print('b:',sess.run(b))
 
 ### Test ###
-test_predictions = sess.run( tf.argmax(y_, 1), feed_dict={x: test_images})
+test_predictions = sess.run( tf.argmax(y_, 1), feed_dict={x: test_images, keep_prob: 1.0})
 print('-> made predictions', test_predictions.shape)
 df_predictions = pd.DataFrame(np.array([np.arange(1,28000+1), test_predictions]).T,
         columns=["ImageID", "Label"])
