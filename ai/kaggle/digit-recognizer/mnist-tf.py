@@ -41,14 +41,14 @@ for i in range(10000):
     batch_images = train_images.iloc[(i*50)%33600:((i+1)*50)%33600].values
     batch_labels = train_labels.iloc[(i*50)%33600:((i+1)*50)%33600].values
 
-    loss, _ = sess.run([cross_entropy, train_step],
+    loss, acc, _ = sess.run([cross_entropy, accuracy, train_step],
             feed_dict={x: batch_images, y: batch_labels})
     if i % 500 == 0:
-        print('-> step {:5d} | loss: {:5.2f} | accuracy: {:.05f}'.format(
-            i, loss, 
+        print('-> step {:5d} | loss: {:5.2f} | train acc: {:.03f} | test accuracy: {:.05f}'.format(
+            i, loss, acc,
             sess.run(accuracy, feed_dict={x:val_images, y:val_labels})))
 
-print('Save file to path:', saver.save(sess, 'kaggle_MNIST_net.ckpt'))
+print('Save file to path:', saver.save(sess, 'kaggle_mnist.tfs'))
 ### saver restore ### 
 # W = tf.Variable(tf.zeros([784, 10]), dtype=tf.float32, name='Weights')
 # b = tf.Variable(tf.zeros([1, 10]), dtype=tf.float32, name='biases')
