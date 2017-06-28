@@ -32,22 +32,30 @@ train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 correct_pred = tf.equal(tf.argmax(y_, 1), tf.argmax(y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
+tf.summary.scalar('cross_entropy', cross_entropy)
+tf.summary.scalar('accuracy', accuracy)
+
 ### Train and Val ###
 sess = tf.Session()
-sess.run(tf.global_variables_initializer())
+merged = tf.summary.merge_all()
+train_writer = tf.summary.FileWriter("/home/lumin/tblog/train", sess.graph)
+test_writer = tf.summary.FileWriter("/home/lumin/tblog/test")
 saver = tf.train.Saver()
+
+sess.run(tf.global_variables_initializer())
 
 for i in range(10000):
     # FIXME: the batch will be zero when i==671, since the index is 33550:0
     batch_images = train_images.iloc[(i*50)%33600:((i+1)*50)%33600].values
     batch_labels = train_labels.iloc[(i*50)%33600:((i+1)*50)%33600].values
 
-    loss, acc, _ = sess.run([cross_entropy, accuracy, train_step],
+    loss, acc, summary, _ = sess.run([cross_entropy, accuracy, merged, train_step],
             feed_dict={x: batch_images, y: batch_labels})
+    train_writer.add_summary(summary, i)
     if i % 500 == 0:
-        print('-> step {:5d} | loss: {:5.2f} | train acc: {:.03f} | test accuracy: {:.05f}'.format(
-            i, loss, acc,
-            sess.run(accuracy, feed_dict={x:val_images, y:val_labels})))
+        tacc, summary = sess.run([accuracy, merged], feed_dict={x:val_images, y:val_labels})
+        print('-> step {:5d} | loss: {:5.2f} | train acc: {:.03f} | test accuracy: {:.05f}'.format( i, loss, acc, tacc))
+        test_writer.add_summary(summary, i)
 
 print('Save file to path:', saver.save(sess, 'kaggle_mnist.tfs'))
 ### saver restore ### 
