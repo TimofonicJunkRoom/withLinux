@@ -91,12 +91,21 @@ sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 
 for i in range(20000):
-    batch_images = train_images.iloc[(i*50)%33600:((i+1)*50)%33600].values
-    batch_labels = train_labels.iloc[(i*50)%33600:((i+1)*50)%33600].values
+# could not set cudnn tensor descriptor: CUDNN_STATUS_BAD_PARAM
+# batchsize 0 will cause the above zero, be careful when reading.
+# when your index for reading data is wrong, the batch could be 0.
+    batch_images = train_images.iloc[
+        (i*50)%33600:
+        (i+1)%672==0 and 33600 or ((i+1)*50)%33600].values
+    batch_labels = train_labels.iloc[
+        (i*50)%33600:
+        (i+1)%672==0 and 33600 or ((i+1)*50)%33600].values
 
     loss, acc, _ = sess.run([cross_entropy, accuracy, train_step],
             feed_dict={x: batch_images, y: batch_labels, keep_prob: 0.5})
     if i % 20 == 0:
+        #print('-> data range {} - {}'.format( (i*50)%33600,
+        #    (i+1)%672==0 and 33600 or ((i+1)*50)%33600))
         print('-> step {:5d} | loss: {:5.2f} | train acc {:.03f} | test accuracy: {:.05f}'.format(
             i, loss, acc,
             sess.run(accuracy, feed_dict={x:val_images, y:val_labels, keep_prob: 1.0})))

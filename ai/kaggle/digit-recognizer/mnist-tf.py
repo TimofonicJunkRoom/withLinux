@@ -38,6 +38,7 @@ sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 
 for i in range(10000):
+    # FIXME: the batch will be zero when i==671, since the index is 33550:0
     batch_images = train_images.iloc[(i*50)%33600:((i+1)*50)%33600].values
     batch_labels = train_labels.iloc[(i*50)%33600:((i+1)*50)%33600].values
 
