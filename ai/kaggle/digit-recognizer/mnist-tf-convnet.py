@@ -90,7 +90,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 
-for i in range(200):
+for i in range(20000):
 # could not set cudnn tensor descriptor: CUDNN_STATUS_BAD_PARAM
 # batchsize 0 will cause the above zero, be careful when reading.
 # when your index for reading data is wrong, the batch could be 0.
