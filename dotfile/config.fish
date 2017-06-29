@@ -13,8 +13,9 @@ function adug
    sudo apt dist-upgrade
 end
 
+# Julia 0.6 Official Binary Tarball
 function jl
-	/home/lumin/Downloads/julia-6445c82d00/bin/julia $argv
+	/home/lumin/Downloads/julia-903644385b/bin/julia $argv
 end
 
 function ips
