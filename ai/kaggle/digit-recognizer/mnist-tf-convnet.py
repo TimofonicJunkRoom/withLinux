@@ -1,6 +1,8 @@
 # http://tensorfly.cn/tfdoc/tutorials/mnist_pros.html
 # http://oldblog.fuyangzhen.com/bootstrap/blog/001484103400778194a18ec4c8e4e599d4df98c338590f7000#
 
+profilename='default'
+
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -90,6 +92,12 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 
+tf.summary.scalar('cross_entropy', cross_entropy)
+tf.summary.scalar('accuracy', accuracy)
+tfsmmall = tf.summary.merge_all()
+train_writer = tf.summary.FileWriter("mnist-convnet/train-{}".format(profilename), sess.graph)
+test_writer  = tf.summary.FileWriter("mnist-convnet/test-{}".format(profilename))
+
 for i in range(20000):
 # could not set cudnn tensor descriptor: CUDNN_STATUS_BAD_PARAM
 # batchsize 0 will cause the above zero, be careful when reading.
@@ -101,14 +109,18 @@ for i in range(20000):
         (i*50)%33600:
         (i+1)%672==0 and 33600 or ((i+1)*50)%33600].values
 
-    loss, acc, _ = sess.run([cross_entropy, accuracy, train_step],
+    loss, acc, summary, _ = sess.run([cross_entropy, accuracy,
+            tfsmmall , train_step],
             feed_dict={x: batch_images, y: batch_labels, keep_prob: 0.5})
+    train_writer.add_summary(summary, i)
     if i % 20 == 0:
         #print('-> data range {} - {}'.format( (i*50)%33600,
         #    (i+1)%672==0 and 33600 or ((i+1)*50)%33600))
+        testacc, summary = sess.run([accuracy, tfsmmall ],
+            feed_dict={x:val_images, y:val_labels, keep_prob: 1.0})
+        test_writer.add_summary(summary, i)
         print('-> step {:5d} | loss: {:5.2f} | train acc {:.03f} | test accuracy: {:.05f}'.format(
-            i, loss, acc,
-            sess.run(accuracy, feed_dict={x:val_images, y:val_labels, keep_prob: 1.0})))
+            i, loss, acc, testacc))
 
 print('Save file to path:', saver.save(sess, 'kaggle_MNIST_net.ckpt'))
 ### saver restore ### 
