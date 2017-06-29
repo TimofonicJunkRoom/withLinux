@@ -1,17 +1,17 @@
+                                                                # - Variables -
+export GIT_EDITOR=vim
 
-fortune-zh
-
+                                                                  # - Helpers -
 function aup
    sudo apt update
    sudo apt list --upgradable
 end
 
-function aug
-   sudo apt upgrade
-end
-function adug
-   sudo apt dist-upgrade
-end
+alias julia="jl"
+alias ip="ip -c"
+
+abbr -a aug sudo apt upgrade
+abbr -a gpa "git push; git push --all; git push --tags"
 
 # Julia 0.6 Official Binary Tarball
 function jl
@@ -22,15 +22,7 @@ function ips
 	ip -s -c -h a
 end
 
-function gitpushall
-	git push; git push --all; git push --tags
-end
-
-set -g theme_powerline_fonts no
-set -g theme_display_user yes
-
-# start debian packaging block
-
+                                                         # - debian packaging - 
 function dquilt
 	quilt --quiltrc=$HOME/.quiltrc-dpkg $argv
 end
@@ -43,11 +35,7 @@ export BUILDER=pbuilder
 export QUILT_SERIES=debian/patches/series
 export QUILT_PATCHES=debian/patches
 
-# end debian packaging block
-
-export GIT_EDITOR=vim
-
-
-cowsay -f stegosaurus "苦海无边，回头是岸"
+                                                                # - Greetings -
+fortune-zh
+#cowsay -f stegosaurus "苦海无边，回头是岸"
 # 不忘初心，方得始终 -- L.J.R.
-
