@@ -39,3 +39,18 @@ export QUILT_PATCHES=debian/patches
 fortune-zh
 #cowsay -f stegosaurus "苦海无边，回头是岸"
 # 不忘初心，方得始终 -- L.J.R.
+
+# omf install grc
+# fix grc behaviour
+alias ls="ls --color"
+alias findmnt="grc findmnt"
+alias lsblk="grc lsblk"
+alias lsmod="grc lsmod"
+alias lspci="grc lspci"
+alias stat="grc stat"
+alias env="grc env"
+alias lsof="grc lsof"
+alias uptime="grc uptime"
+alias ss="grc ss"
+alias iptables="grc iptables"
+alias id="grc id"
