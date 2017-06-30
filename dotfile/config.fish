@@ -12,6 +12,7 @@ alias ip="ip -c"
 
 abbr -a aug sudo apt upgrade
 abbr -a gpa "git push; git push --all; git push --tags"
+abbr -a off systemctl poweroff
 
 # Julia 0.6 Official Binary Tarball
 function jl
@@ -21,6 +22,21 @@ end
 function ips
 	ip -s -c -h a
 end
+
+# omf install grc
+# fix grc behaviour
+alias ls="ls --color"
+alias findmnt="grc findmnt"
+alias lsblk="grc lsblk"
+alias lsmod="grc lsmod"
+alias lspci="grc lspci"
+alias stat="grc stat"
+alias env="grc env"
+alias lsof="grc lsof"
+alias uptime="grc uptime"
+alias ss="grc ss"
+alias iptables="grc iptables"
+alias id="grc id"
 
                                                          # - debian packaging - 
 function dquilt
@@ -40,18 +56,3 @@ fortune-zh
 #cowsay -f stegosaurus "苦海无边，回头是岸"
 # 不忘初心，方得始终 -- L.J.R.
 grc uptime
-
-# omf install grc
-# fix grc behaviour
-alias ls="ls --color"
-alias findmnt="grc findmnt"
-alias lsblk="grc lsblk"
-alias lsmod="grc lsmod"
-alias lspci="grc lspci"
-alias stat="grc stat"
-alias env="grc env"
-alias lsof="grc lsof"
-alias uptime="grc uptime"
-alias ss="grc ss"
-alias iptables="grc iptables"
-alias id="grc id"
