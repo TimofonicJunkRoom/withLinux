@@ -182,10 +182,10 @@ module_netupdown (void)
 #define netK (1024)
 #define threK (1000)
 #define netCompat(count, buf, bufsz) ( \
-		(count >= threG) ? (snprintf(buf, bufsz, "%.1fGB/s", count/(double)netG)) \
-		: (count >= threM) ? (snprintf(buf, bufsz, "%.1fMB/s", count/(double)netM)) \
-		: (count >= threK) ? (snprintf(buf, bufsz, "%.1fKB/s", count/(double)netK)) \
-		: (snprintf(buf, bufsz, "%.0fB/s", count)) )
+		(count >= threG) ? (snprintf(buf, bufsz, "%5.1fGB/s", count/(double)netG)) \
+		: (count >= threM) ? (snprintf(buf, bufsz, "%5.1fMB/s", count/(double)netM)) \
+		: (count >= threK) ? (snprintf(buf, bufsz, "%5.1fKB/s", count/(double)netK)) \
+		: (snprintf(buf, bufsz, "%6.0fB/s", count)) )
 
 	FILE* pf_netupdown = NULL;
 	unsigned long nets[2] = {0,0}; // start up/down
@@ -308,7 +308,7 @@ module_cpu (void) {
 	double cpuusage = (double)(CPUOccupy_(e) - CPUOccupy_(s)) * 100. /
 		(double)(CPUTotal_(e) - CPUTotal_(s));
 	//snprintf(pc_cpu, sizeof(pc_cpu), "CPU %.1f%%", cpuusage); // numerical
-	snprintf(pc_cpu, sizeof(pc_cpu), "♥%.0f%%%s",
+	snprintf(pc_cpu, sizeof(pc_cpu), "♥%2.0f%%%s",
 			cpuusage, getBar((int)cpuusage)); // num+bar
 	return pc_cpu;
 }
