@@ -20,9 +20,14 @@ filelist  = glob.glob('**/*', recursive=True)
 configure = open('genreadme.conf', 'r').readlines()
 configure = [ entry for entry in configure if len(re.findall('^#.*', entry))==0 ] # support comments in config file
 configure = [ entry for entry in configure if len(entry.strip())>0 ] # remove empty lines
-configure_sections  = [ entry.replace('%','').strip() for entry in configure if len(re.findall('^%.*', entry))!=0 ]
-configure_omit = [ line.strip() for line in configure if (len(line.strip().split('|'))==1 and len(re.findall('%',line))==0) ]
-configure_normal = [ line.strip() for line in configure if len(re.findall('|',line))>0 ]
+configure_sections, configure_omit, configure_normal = [], [], []
+for line in configure:
+    if len(re.findall('^%.*', line))!=0:
+        configure_sections.append(line.replace('%','').strip())
+    elif (len(line.strip().split('|'))==1 and len(re.findall('%',line))==0):
+        configure_omit.append(line.strip())
+    elif len(re.findall('|',line))>0:
+        configure_normal.append(line.strip())
 print('=> {} files found, {} configurations found'.format(len(filelist), len(configure)))
 
 # filter-out files specified by single-column entries in config
@@ -34,5 +39,16 @@ for pattern in configure_omit:
 # generate sections
 print(' -> {} configure_sections'.format(len(configure_sections)))
 jsections = {} # dict{tag: list[ comment/url pairs ]}
+for line in configure_normal:
+    pattern, tag_comment = line.split('|')
+    tag, comment = tag_comment.split(';')
+    pattern, tag, comment = pattern.strip(), tag.strip(), comment.strip()
+    print('   > ', pattern, '/', tag, '/', comment)
+    if tag not in jsections.keys():
+        jsections[tag] = []
+    jsections[tag].append([pattern, comment])
+
+# dump sections
+print(jsections)
 
 #pprint(filelist)
