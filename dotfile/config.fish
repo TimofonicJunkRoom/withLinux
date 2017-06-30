@@ -39,6 +39,7 @@ export QUILT_PATCHES=debian/patches
 fortune-zh
 #cowsay -f stegosaurus "苦海无边，回头是岸"
 # 不忘初心，方得始终 -- L.J.R.
+grc uptime
 
 # omf install grc
 # fix grc behaviour
