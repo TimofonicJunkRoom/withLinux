@@ -15,4 +15,8 @@ f['/u8'][:] = np.ones((1,50), dtype=np.int32)
 f['u8'][0,:4] = np.zeros((1,4), dtype=np.int32)
 print(f['/u8'])
 
+f['zhs'] = '你好' # simply works, implicitly using utf8
+f['zhs2'] = '你好'.encode('utf8')
+print( f['zhs2'][...].all().decode() )
+
 f.close()
