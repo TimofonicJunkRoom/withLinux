@@ -36,9 +36,11 @@ f.close()
 log.info('done')
 
 '''
-Inspect the resulting hdf5:
+Inspecting the resulting hdf5, and repack hdf5 into compressed format.
 
     h5ls -r junk.h5
     h5dump -g /strings junk.h5
     h5dump -d /strings/1 junk.h5
+    h5stat junk.h5
+    h5repack -i junk.hdf5 -o junk.repack.h5 -f GZIP=9 -v
 '''
