@@ -37,6 +37,7 @@ alias uptime="grc uptime"
 alias ss="grc ss"
 alias iptables="grc iptables"
 alias id="grc id"
+alias df="grc df -h"
 
                                                          # - debian packaging - 
 function dquilt
