@@ -15,6 +15,7 @@ abbr -a aug sudo apt upgrade
 abbr -a gpa "git push; git push --all; git push --tags"
 abbr -a off systemctl poweroff
 abbr -a rg ranger
+abbr -a ip3 ipython3
 
 # Julia 0.6 Official Binary Tarball
 function jl
