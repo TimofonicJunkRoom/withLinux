@@ -13,3 +13,11 @@ failed to set IOPL for I/O (Operation not permitted)
 
 See Debian bug `Bug#802327`. The solution is to install the
 `xserver-xorg-legacy` package.
+
+# Fixing misbehaving Java applications
+
+> https://wiki.archlinux.org/index.php/Dwm
+
+```
+export _JAVA_AWT_WM_NONREPARENTING=1
+```
