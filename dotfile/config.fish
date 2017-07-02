@@ -1,5 +1,6 @@
                                                                 # - Variables -
 export GIT_EDITOR=vim
+#export _JAVA_AWT_WM_NONREPARENTING=1
 
                                                                   # - Helpers -
 function aup
