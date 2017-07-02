@@ -44,3 +44,5 @@ main(void)
 	factor(factorial(53));
 	return 0;
 }
+
+// FIXME: overflow
