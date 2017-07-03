@@ -18,7 +18,9 @@ public:
 };
 */
 
-
+// [Array]
+// Given a list<int> which contains no repeated numbers, return indices of
+// the two numbers that they add up to the specified target.
 class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
