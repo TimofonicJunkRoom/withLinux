@@ -60,15 +60,15 @@ static char * module_space(void);
 #define M(name) module_##name
 static char * (*status_modules[])(void) = {
 	// a set of "static const char *" functions that controls content
-	M(uname), M(space),
+	//M(uname), M(space),
+	M(date), M(space),
 	M(netupdown), M(space),
 	M(cpu), M(space),
 	M(temperature), M(space),
 	M(sysinfo), M(space),
 	M(battery), M(space),
 	M(audiovolume), M(space),
-	M(monbrightness), M(space),
-	M(date)
+	M(monbrightness), 
 };
 
 #define MODULE_STR(name, str) module_##name(void) { \
@@ -212,7 +212,7 @@ module_temperature (void)
 	static char pc_temp0[MAXSTR];
 	double temp0;
 	readstuff(SYSHWMON0"/temp1_input", "%lf", &temp0);
-	snprintf(pc_temp0, sizeof(pc_temp0), "❄%.0f°C", temp0/1000);
+	snprintf(pc_temp0, sizeof(pc_temp0), "T %.0f°C", temp0/1000);
 	return pc_temp0;
 }
 
@@ -234,7 +234,7 @@ module_battery (void)
 			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[-]");
 	} else if STREQ("Unknown", pc_batstatus) {
 		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%%%s%s",
-			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[A/C]");
+			pc_batcapacity, getBar(atoi(pc_batcapacity)), "[=]");
 	} else {
 		snprintf(pc_bat, sizeof(pc_bat), "⚡%s%%%s[%s]",
 			pc_batcapacity, getBar(atoi(pc_batcapacity)), pc_batstatus);
@@ -247,7 +247,7 @@ static char *
 module_date (void) {
 	static char pc_date[MAXSTR];
 	time_t now = time(0);
-	strftime(pc_date, MAXSTR, "⛅ %Y-%m-%d %H:%M:%S", localtime(&now));
+	strftime(pc_date, MAXSTR, "%Y-%m-%d %H:%M:%S ❯❯❯", localtime(&now));
 	//strftime(date, MAXSTR, "%Y-%m-%d %H:%M", gmtime(&now)); // UTC
 	return pc_date;
 }
@@ -259,8 +259,7 @@ module_sysinfo (void) {
 	struct sysinfo s;
 	sysinfo(&s);
 	snprintf(pc_sysinfo, sizeof(pc_sysinfo),
-		"☕%.1fh ♻%.0f%%%s",
-		((float)s.uptime/3600.),
+		"RAM %.0f%%%s",
 		100.*(float)(s.totalram-s.freeram)/(float)s.totalram,
 		getBar((int)(100.*(float)(s.totalram-s.freeram)/(float)s.totalram)));
 	//	"UP %.1fH, RAM %dM/%dM, SW %dM",
@@ -308,7 +307,7 @@ module_cpu (void) {
 	double cpuusage = (double)(CPUOccupy_(e) - CPUOccupy_(s)) * 100. /
 		(double)(CPUTotal_(e) - CPUTotal_(s));
 	//snprintf(pc_cpu, sizeof(pc_cpu), "CPU %.1f%%", cpuusage); // numerical
-	snprintf(pc_cpu, sizeof(pc_cpu), "♥%2.0f%%%s",
+	snprintf(pc_cpu, sizeof(pc_cpu), "CPU %2.0f%%%s",
 			cpuusage, getBar((int)cpuusage)); // num+bar
 	return pc_cpu;
 }
