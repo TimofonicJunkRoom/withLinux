@@ -58,7 +58,17 @@ export QUILT_SERIES=debian/patches/series
 export QUILT_PATCHES=debian/patches
 
                                                                 # - Greetings -
-fortune-zh
-#cowsay -f stegosaurus "苦海无边，回头是岸"
-# 不忘初心，方得始终 -- L.J.R.
-grc uptime
+# Don't break Rsync, Scp or something alike. You can use this script to
+# test whether fish is writting something to terminal.
+# foo.fish:
+# | echo extra stuff
+# Then $ fish foo.fish
+#
+# https://github.com/fish-shell/fish-shell/issues/3473#issuecomment-254599357
+# https://superuser.com/questions/679498/specifying-an-alternate-shell-with-rsync
+if status --is-interactive
+   fortune-zh
+   #cowsay -f stegosaurus "苦海无边，回头是岸"
+   # 不忘初心，方得始终 -- L.J.R.
+   grc uptime
+end
