@@ -39,6 +39,7 @@ log.info('done')
 Inspecting the resulting hdf5, and repack hdf5 into compressed format.
 
     h5ls -r junk.h5
+    h5ls -rfv junk.h5
     h5dump -g /strings junk.h5
     h5dump -d /strings/1 junk.h5
     h5stat junk.h5

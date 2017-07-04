@@ -39,6 +39,9 @@ dataset2 = group.create_dataset('another_dataset', (50,), dtype='f')
 print (dataset2.name)
 dataset3 = f.create_dataset('group2/data2', (10,), dtype='d')
 print (dataset3.name)
+dataset4 = f.create_dataset('compressed', (1000,1000), dtype='d',
+        compression='gzip', compression_opts=1,
+        data=np.random.randn(1000,1000))
 
 log.info('retrieve data2')
 data2 = f['group2/data2']
