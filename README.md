@@ -358,6 +358,7 @@ Programming, including Tool Languages
   1. [PyGame](./lang/py3/pygame/)  
   1. [python3 ffi/ctypes](./lang/py3/ffi/)  
   1. [jupyter-notebook (el)](http://jupyter.readthedocs.io/en/latest/running.html)  
+  1. [CPython Time Complexity](https://wiki.python.org/moin/TimeComplexity)  
 1. [Octave/Matlab](./lang/oct)  
   1. [Simple FFT (recursive algorithm) in octave](./lang/oct/dsp/main.m)  
   1. [Notable differences between Octave and Matlab](./lang/oct/diff.md)  
