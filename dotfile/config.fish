@@ -43,6 +43,7 @@ alias ss="grc ss"
 alias iptables="grc iptables"
 alias id="grc id"
 alias df="grc df -h"
+alias mtr="mtr -t"
 
                                                          # - debian packaging - 
 function dquilt
