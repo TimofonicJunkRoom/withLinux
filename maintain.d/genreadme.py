@@ -36,6 +36,8 @@ print(' -> {} configure_omit'.format(len(configure_omit)))
 for pattern in configure_omit:
   print('    > {}\t[omit]'.format(pattern))
   filelist = [ entry for entry in filelist if len(re.findall(pattern.strip(), entry))==0 ]
+for patternplusxxx in configure_normal:
+  filelist = [ entry for entry in filelist if len(re.findall(patternplusxxx.split('|')[0].strip(), entry))==0 ]
 
 # generate sections
 print(' -> {} configure_sections'.format(len(configure_sections)))
