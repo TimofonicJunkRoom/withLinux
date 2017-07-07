@@ -64,6 +64,7 @@ for tag in configure_sections:
 print(''.join(md))
 
 if len(filelist) > 10:
+    pprint(filelist)
     print('-> {} files not configured.'.format(len(filelist)))
 else:
     pprint(filelist)
