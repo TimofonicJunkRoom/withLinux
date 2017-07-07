@@ -56,3 +56,5 @@ else if rotational = 1 then
 	it is not ssd, but a hard disk
 fi
 ```
+
+#  1. [Gentoo wiki/SSD (el) ](https://wiki.gentoo.org/wiki/SSD)  

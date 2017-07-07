@@ -4,6 +4,7 @@ import sys
 import os
 import glob
 import json
+import string
 from pprint import pprint
 
 '''
@@ -17,7 +18,7 @@ pattern | tag;comment  ...
 
 # glob files and read configuration
 filelist  = glob.glob('**/*', recursive=True)
-configure = open('genreadme.conf', 'r').readlines()
+configure = open('maintain.d/genreadme.conf', 'r').readlines()
 configure = [ entry for entry in configure if len(re.findall('^#.*', entry))==0 ] # support comments in config file
 configure = [ entry for entry in configure if len(entry.strip())>0 ] # remove empty lines
 configure_sections, configure_omit, configure_normal = [], [], []
@@ -46,9 +47,33 @@ for line in configure_normal:
     print('   > ', pattern, '/', tag, '/', comment)
     if tag not in jsections.keys():
         jsections[tag] = []
-    jsections[tag].append([pattern, comment])
+    jsections[tag].append([pattern, string.capwords(comment)])
+for k in jsections.keys():
+    jsections[k] = sorted(jsections[k], key=(lambda x:x[1]))
 
 # dump sections
 print(jsections)
+md = []
+for tag in configure_sections:
+    md.append("# {}\n".format(tag))
+    md.append("\n")
+    for pattern, comment in jsections[tag]:
+        md.append('* [{}]({})  \n'.format(comment, pattern))
+    md.append("\n")
 
-#pprint(filelist)
+print(''.join(md))
+
+if len(filelist) > 10:
+    print('-> {} files not configured.'.format(len(filelist)))
+else:
+    pprint(filelist)
+    print('-> {} files not configured.')
+
+# write file
+headlines = [ line for line in open('maintain.d/README.md.head').readlines() ]
+taillines = [ line for line in open('maintain.d/README.md.tail').readlines() ]
+with open('README.md', 'w+') as f:
+    f.writelines(headlines)
+    f.writelines(md)
+    f.writelines(taillines)
+

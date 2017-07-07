@@ -123,6 +123,7 @@ main () {
     help   ) Usage ;;
     deploy ) cd dotfile; shift; ./deploy $@;;
     xdb    ) ./maintain.d/cxdb.py ;;
+	md     ) ./maintain.d/genreadme.py ;;
     #search ) ./search $@ ;;
     *      ) echo "E: invalid action" ;;
   esac
