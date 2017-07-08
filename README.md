@@ -1,14 +1,15 @@
 ## With Linux - Quite Messy Collection of Personal Notes
 
-> KISS: Keep It Simple, Stupid  
+> KISS: Keep It Simple, Stupid
 
-Linux tricks, hints, hacks and many others based on my personal experience with
-[Debian GNU/Linux](https://www.debian.org). This project is a personal knowledge
-base, and some of the hints and hacks there are just recored by keywords.  
+This personal notes collection contains not only hints, tricks and
+hacks about Linux. However many files may be not useful to you.
 
-Lookup keywords within it with the perl utility `ack`. Or use the script
-`search` to search for some tips as long as created an xapian database.
+To search among these notes, lookup keywords within this repo with the
+perl utility `ack`. Or search some keywords with the script `search`
+as long as you have created an xapian database with `./maintain xdb`.
 
+The following listing is automatically generated.
 # Top
 
 * [Search Keyword In Xapian Databse](search)  
@@ -172,12 +173,11 @@ Lookup keywords within it with the perl utility `ack`. Or use the script
 * [Wikipedia](http://wikipedia.org)  
 
 ## LICENSE
+
 ```
-MIT LICENSE.
-COPYRIGHT (C) 2014,2015,2016,2017 Lumin
+The WithLinux Project is published under the MIT LICENSE.
+COPYRIGHT (C) 2014-2017 Lumin
+
+Created on 2014 June 28
+Have fun with UNIX, learn from UNIX, but never become UNIX.
 ```  
----
-Started on 2014/06/28 by Lumin Zhou  
-  
-Seek for UNIX, look into UNIX, follow the beats of UNIX, play with UNIX,
-work with UNIX, learn from UNIX, but neither become an UNIX, nor marry UNIX.
