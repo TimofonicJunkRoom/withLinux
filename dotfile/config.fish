@@ -18,6 +18,7 @@ abbr -a rg ranger
 abbr -a ip3 ipython3
 abbr -a sv sudo supervisorctl
 abbr -a bt bluetoothctl
+abbr -a nb jupyter notebook --no-browser
 
 # Julia 0.6 Official Binary Tarball
 function jl
