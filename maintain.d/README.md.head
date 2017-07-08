@@ -5,7 +5,7 @@
 This personal notes collection contains not only hints, tricks and
 hacks about Linux. However many files may be not useful to you.
 
-To search among these notes, lookup keywords within this repo with the
+To search among these notes, lookup keywords in this repo with the
 perl utility `ack`. Or search some keywords with the script `search`
 as long as you have created an xapian database with `./maintain xdb`.
 
