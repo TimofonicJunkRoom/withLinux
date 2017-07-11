@@ -22,6 +22,9 @@ environment=HOME="/home/lumin/",USER="lumin",PATH="/usr/bin:/bin:/usr/local/game
 In the above example, if you write `command=./gogs ...` or something else
 it would not work and end up with that error.
 
+Note, GOGS requires correctly configured environment.
+The separator used in path is colon ":" instead of ";".
+
 ## Subprocess
 
 Supervising `pppd call dsl-provider`. By default, pppd will fork and work
