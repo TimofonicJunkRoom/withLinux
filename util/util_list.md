@@ -43,11 +43,22 @@ XTerm*foreground: green
 
 > note, check `/etc/X11/app-defaults/XTerm`
 
+2. `gnome-terminal`
+
+3. guake
+
+4. lilyterm
+
+5. sakura
+
+6. st (suckless.org)
+
 System Monitoring
 ---
 1. `conky`  
 1. `dstat`  
 1. `htop`  
+1. kill all processes of user X `pkill -u X`
 
 Disk information
 ---
@@ -117,3 +128,6 @@ Proxy
 ---
 1. `export http_proxy=http://xx.xx.xx.xx:xxx`  
 
+Text Processing
+---
+1. `fold -s txt` automatically wrap lines in your file

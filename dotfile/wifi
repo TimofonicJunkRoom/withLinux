@@ -17,6 +17,7 @@ set -e
 scan () {
 	# $1: device, e.g. wlp3s0
 	sudo iw dev $1 scan
+	#/sbin/iwlist wlan0 scan | grep 'ESSID' | cut -d ':' -f 2 | sort | nl
 }
 wifilist () {
 	nmcli dev wifi list

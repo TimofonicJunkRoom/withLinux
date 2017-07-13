@@ -1,5 +1,4 @@
-alacarte empties gnome menu is a bug existed long ago.
-on debian wheezy, gnome 3.4
+on debian wheezy with gnome 3.4, alacarte empties gnome menu, which is a bug existing for a long time.
 
 `cd ~/.config/menus/`
 `rm -rf *`
