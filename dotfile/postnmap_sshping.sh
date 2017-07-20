@@ -1,6 +1,9 @@
 #!/bin/sh
 set +e
 
+# 1. nohup nmap -p22 -T5 10.170.0.0/16 &
+# 2. bash <THIS_SCRIPT> nohup.out
+
 if test -z "$1"; then
 	printf "NO NMAP LOG FOUND\n"
 fi
