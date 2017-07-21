@@ -56,6 +56,12 @@ set ts=4
 set shiftwidth=4
 set scrolloff=7
 set cc=80 " setting right margin to 80 characters, cc==colorcolumn
+set listchars=tab:>-,trail:⋅
+set list " show white spaces and tabs
+
+" Show trailing spaces
+highlight WhitespaceEOL ctermbg=red guibg=red
+match WhitespaceEOL /\s\+$/
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
