@@ -1,5 +1,11 @@
 #!/usr/bin/python3
 
+'''
+http://nbviewer.jupyter.org/github/BVLC/caffe/blob/master/examples/01-learning-lenet.ipynb
+http://nbviewer.jupyter.org/github/BVLC/caffe/blob/master/examples/brewing-logreg.ipynb
+https://github.com/BVLC/caffe/pull/3970
+'''
+
 import os
 
 import caffe
