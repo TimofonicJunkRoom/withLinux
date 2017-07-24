@@ -127,3 +127,14 @@ with open('mnist-th-convnet.pred.csv', 'w+') as f:
     for line in csvcontent:
         f.write(','.join(line)+'\n')
 print('-> done')
+
+'''
+further:
+
+    https://www.kaggle.com/c/digit-recognizer/discussion/4045
+
+    1. Synthesizing more training data using image processing libraries.
+       e.g. rotate left, rotate right, zoom, stretch horizontally and
+       vertivally, elastic deformations
+    2. reduce overfitting using concepts of early convergence and dropout.
+'''
