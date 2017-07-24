@@ -26,6 +26,7 @@ class Net(th.nn.Module):
         self.conv2 = th.nn.Conv2d(6, 16, 5)
         self.fc1 = th.nn.Linear(16*4*4, 120) # affine operation
         self.fc2 = th.nn.Linear(120, 84)
+        self.bn2 = th.nn.BatchNorm1d(84)
         self.fc3 = th.nn.Linear(84, 10)
     def forward(self, x):
         x = F.max_pool2d(F.relu(self.conv1(x)), (2,2))
@@ -33,6 +34,7 @@ class Net(th.nn.Module):
         x = x.view(-1, self.num_flat_features(x))
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
+        x = self.bn2(x)
         x = self.fc3(x)
         return x
     def num_flat_features(self, x):
@@ -54,10 +56,18 @@ def transform(images, labels):
     labels = Variable(th.from_numpy(labels.reshape(-1).astype(np.long)), requires_grad=False)
     return images, labels
 
-for i in range(1000+1):
+#for i in range(100+1):
+for i in range(1500+1):
     # read data
     images, labels = dataloader.getBatch('train', 64)
     images, labels = transform(images, labels)
+
+    # half the learning rate @ iter 500
+    if i==500 or i==1000:
+        print('-> half the learning rate')
+        for param_group in optimizer.param_groups:
+            param_group['lr'] *= 0.5
+            print(param_group['lr'])
 
     # train
     net.train()
@@ -93,5 +103,25 @@ for i in range(1000+1):
         print('|')
         print('-> TEST @ {} |'.format(i),
                 'Loss {:7.3f} |'.format(lossaccum),
-                'Accu {:.2f}|'.format(correct / total))
+                'Accu {:.5f}|'.format(correct / total))
 
+### Make prediction and export to csv
+print('-> making prediction')
+net.eval()
+dataloader.reset('test')
+csvcontent = [ ['ImageID', 'Label'] ]
+predictions = []
+for i in range(dataloader.itersInEpoch('test', 100)):
+    images, labels = dataloader.getBatch('test', 100)
+    images, labels = transform(images, labels)
+    out = net(images)
+    pred = out.data.max(1)[1]
+    predictions += [ pred[i][0] for i in range(len(pred)) ]
+    print('.', end=''); sys.stdout.flush()
+print(' -> prediction size ', len(predictions))
+for i,l in enumerate(predictions):
+    csvcontent += [ [str(i+1), str(l)] ]
+with open('mnist-th-convnet.pred.csv', 'w+') as f:
+    for line in csvcontent:
+        f.write(','.join(line)+'\n')
+print('-> done')
