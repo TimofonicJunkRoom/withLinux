@@ -1,0 +1,97 @@
+# http://pytorch.org/tutorials/
+# http://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html
+# https://github.com/pytorch/examples/blob/master/mnist/main.py
+
+import sys
+import os
+os.putenv('OPENBLAS_NUM_THREADS', '4')
+
+import torch as th
+import torch.nn.functional as F
+from torch.autograd import Variable
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+print('-> Using TH', th.__version__)
+th.set_default_tensor_type('torch.DoubleTensor')
+
+from dataloader import DataLoader
+dataloader = DataLoader()
+
+### Model ###
+class Net(th.nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = th.nn.Conv2d(1, 6, 5) # input channel, 6 out channel, 5x5 conv
+        self.conv2 = th.nn.Conv2d(6, 16, 5)
+        self.fc1 = th.nn.Linear(16*4*4, 120) # affine operation
+        self.fc2 = th.nn.Linear(120, 84)
+        self.fc3 = th.nn.Linear(84, 10)
+    def forward(self, x):
+        x = F.max_pool2d(F.relu(self.conv1(x)), (2,2))
+        x = F.max_pool2d(F.relu(self.conv2(x)), 2)
+        x = x.view(-1, self.num_flat_features(x))
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+    def num_flat_features(self, x):
+        size = x.size()[1:]
+        num_features = 1
+        for s in size:
+            num_features *= s
+        return num_features
+
+net = Net()
+print(net)
+crit = th.nn.CrossEntropyLoss()
+optimizer = th.optim.Adam(net.parameters(), lr=1e-2)
+
+### Train
+def transform(images, labels):
+    images = images.reshape(-1, 1, 28, 28) / 255.
+    images = Variable(th.from_numpy(images.astype(np.double)), requires_grad=False)
+    labels = Variable(th.from_numpy(labels.reshape(-1).astype(np.long)), requires_grad=False)
+    return images, labels
+
+for i in range(1000+1):
+    # read data
+    images, labels = dataloader.getBatch('train', 64)
+    images, labels = transform(images, labels)
+
+    # train
+    net.train()
+    out = net(images)
+    loss = crit(out, labels)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+    pred = out.data.max(1)[1]
+    correct = pred.eq(labels.data).cpu().sum()
+    print('-> Iter {:5d} |'.format(i), 'loss {:7.3f} |'.format(loss.data[0]),
+            'Bch Train Accu {:.2f}'.format(correct / out.size()[0]))
+
+    # val
+    if i%100==0:
+        print('-> TEST @ {} |'.format(i), end='')
+        net.eval()
+        correct = 0
+        total = 0
+        lossaccum = 0
+        dataloader.reset('val')
+        for j in range(dataloader.itersInEpoch('val', 100)):
+            images, labels = dataloader.getBatch('val', 100)
+            images, labels = transform(images, labels)
+            out = net(images)
+            loss = crit(out, labels)
+            pred = out.data.max(1)[1]
+            correct += pred.eq(labels.data).cpu().sum()
+            total += 100
+            lossaccum += loss.data[0]
+            print('.', end=''); sys.stdout.flush()
+        print('|')
+        print('-> TEST @ {} |'.format(i),
+                'Loss {:7.3f} |'.format(lossaccum),
+                'Accu {:.2f}|'.format(correct / total))
+
