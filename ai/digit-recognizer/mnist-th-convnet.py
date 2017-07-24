@@ -57,13 +57,13 @@ def transform(images, labels):
     return images, labels
 
 #for i in range(100+1):
-for i in range(1500+1):
+for i in range(2500+1):
     # read data
     images, labels = dataloader.getBatch('train', 64)
     images, labels = transform(images, labels)
 
     # half the learning rate @ iter 500
-    if i==500 or i==1000:
+    if i==500 or i==1000 or i==2000:
         print('-> half the learning rate')
         for param_group in optimizer.param_groups:
             param_group['lr'] *= 0.5

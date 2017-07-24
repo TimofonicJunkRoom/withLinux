@@ -17,7 +17,7 @@ class DataLoader(object):
         self.train_images, self.val_images, \
                 self.train_labels, self.val_labels = \
                 train_test_split(trainval_images, trainval_labels,
-                train_size=0.8, random_state=0)
+                train_size=0.9, random_state=0)
         print(' -> train im shape', self.train_images.shape)
         print(' -> train lb shape', self.train_labels.shape)
         print(' -> val   im shape', self.val_images.shape)
@@ -55,8 +55,16 @@ class DataLoader(object):
             batchids.append(self.cur[split])
             self.inc(split)
         #print(batchids)
-        batchim[:,:] = self.train_images.values[batchids, :]
-        batchlb[:,:] = self.train_labels.values[batchids, :]
+        if split=='train':
+            batchim[:,:] = self.train_images.values[batchids, :]
+            batchlb[:,:] = self.train_labels.values[batchids, :]
+        elif split=='val':
+            batchim[:,:] = self.val_images.values[batchids, :]
+            batchlb[:,:] = self.val_labels.values[batchids, :]
+        elif split=='test':
+            batchim[:,:] = self.test_images.values[batchids, :]
+        else:
+            raise Exception('Unexpected split')
         return batchim, batchlb
 
 if __name__=='__main__':
