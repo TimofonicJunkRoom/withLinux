@@ -27,6 +27,7 @@ class Net(th.nn.Module):
         self.fc1 = th.nn.Linear(16*4*4, 120) # affine operation
         self.fc2 = th.nn.Linear(120, 84)
         self.bn2 = th.nn.BatchNorm1d(84)
+        self.drop2 = th.nn.Dropout(p=0.2)
         self.fc3 = th.nn.Linear(84, 10)
     def forward(self, x):
         x = F.max_pool2d(F.relu(self.conv1(x)), (2,2))
@@ -35,6 +36,7 @@ class Net(th.nn.Module):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.bn2(x)
+        x = self.drop2(x)
         x = self.fc3(x)
         return x
     def num_flat_features(self, x):
