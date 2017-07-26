@@ -4,11 +4,14 @@
 
 import sys
 import os
-os.putenv('OPENBLAS_NUM_THREADS', '4')
-os.putenv('OMP_NUM_THREADS', '4')
-os.putenv('MKL_NUM_THREADS', '4')
+
+### Setting up *_NUM_THREADS env variable ###
 # https://discuss.pytorch.org/t/how-long-does-it-take-to-train-the-network-in-the-cifar-10-tutorial/1929/8
 # A large number of CPU cores may be a reason of slowdown. Use a small number of threads.
+X_THNUM = '4'
+os.putenv('OPENBLAS_NUM_THREADS', X_THNUM)
+os.putenv('OMP_NUM_THREADS', X_THNUM)
+os.putenv('MKL_NUM_THREADS', X_THNUM)
 
 import torch as th
 import torch.nn.functional as F
