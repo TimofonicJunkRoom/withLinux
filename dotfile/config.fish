@@ -16,6 +16,7 @@ abbr -a gpa "git push; git push --all; git push --tags"
 abbr -a off systemctl poweroff
 abbr -a rg ranger
 abbr -a ip3 ipython3
+abbr -a p3 ptipython3
 abbr -a sv sudo supervisorctl
 abbr -a bt bluetoothctl
 abbr -a nb jupyter notebook --no-browser
