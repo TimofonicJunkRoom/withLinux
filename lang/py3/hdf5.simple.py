@@ -44,4 +44,9 @@ Inspecting the resulting hdf5, and repack hdf5 into compressed format.
     h5dump -d /strings/1 junk.h5
     h5stat junk.h5
     h5repack -i junk.hdf5 -o junk.repack.h5 -f GZIP=9 -v
+
+Further reading:
+
+    http://cyrille.rossant.net/moving-away-hdf5/
+    http://cyrille.rossant.net/should-you-use-hdf5/
 '''
