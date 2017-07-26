@@ -81,3 +81,23 @@ for i in range(1000+1):
                 'Loss {:7.3f} |'.format(lossaccum),
                 'Accu {:.2f}|'.format(correct / total))
 
+### Make prediction and export to csv
+print('-> making prediction')
+net.eval()
+dataloader.reset('test')
+csvcontent = [ ['ImageID', 'Label'] ]
+predictions = []
+for i in range(dataloader.itersInEpoch('test', 100)):
+    images, labels = dataloader.getBatch('test', 100)
+    images, labels = transform(images, labels)
+    out = net(images)
+    pred = out.data.max(1)[1]
+    predictions += [ pred[i][0] for i in range(len(pred)) ]
+    print('.', end=''); sys.stdout.flush()
+print(' -> prediction size ', len(predictions))
+for i,l in enumerate(predictions):
+    csvcontent += [ [str(i+1), str(l)] ]
+with open('mnist-th-convnet.pred.csv', 'w+') as f:
+    for line in csvcontent:
+        f.write(','.join(line)+'\n')
+print('-> done')
