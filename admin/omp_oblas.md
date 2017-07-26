@@ -27,3 +27,7 @@ debuild
 
 To disable `DYNAMIC_ARCH` build, remove that flag. Enable dynamic
 cpu detection with `DYNAMIC_ARCH=1` make flag.
+
+# mkl
+
+http://diracprogram.org/doc/release-12/installation/mkl.html
