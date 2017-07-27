@@ -1,4 +1,5 @@
-#DEBUILD_DPKG_BUILDPACKAGE_OPTS="-i"
 DEBUILD_DPKG_BUILDPACKAGE_OPTS="-i -us -uc"
-DEBUILD_LINTIAN_OPTS="-EviI --pedantic --show-overrides"
+DEBUILD_LINTIAN_OPTS="-EI --pedantic --show-overrides --color always"
+#DEBUILD_LINTIAN_OPTS="-EviI --pedantic --show-overrides --color always"
 DEBSIGN_KEYID="5F686A8A"
+DEBUILD_PRESERVE_ENVVARS="DPKG_COLORS"

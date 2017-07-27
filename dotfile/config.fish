@@ -53,6 +53,7 @@ function dquilt
 	quilt --quiltrc=$HOME/.quiltrc-dpkg $argv
 end
 
+export DPKG_COLORS=always
 export DEBEMAIL="cdluminate@gmail.com"
 export DEBFULLNAME="Zhou Mo"
 export DEB_BUILD_OPTIONS=parallel=4
