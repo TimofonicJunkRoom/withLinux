@@ -74,6 +74,7 @@ lsof
 ltrace
 luajit
 lyx
+mame
 mawk
 mtr
 mupdf
@@ -82,6 +83,8 @@ openconnect
 pandoc
 parallel
 pep8
+pigz
+plank
 pppoeconf
 ppsspp
 progress
@@ -96,6 +99,7 @@ rfkill
 rsync
 rustc
 sakura
+scrot
 sed
 shorewall
 smartmontools
@@ -126,6 +130,7 @@ virtualbox
 w3m
 wdm
 wesnoth
+whois
 wine32-development
 wxmaxima
 xbindkeys
