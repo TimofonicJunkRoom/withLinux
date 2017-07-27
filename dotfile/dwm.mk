@@ -1,6 +1,6 @@
 dwm:
 	keyrate || xset r rate 170 96 # dwm keyrate
-	feh --bg-scale $(BGIMG) || xsetroot -solid gray # dwm background
+	feh --bg-scale $(BGIMG) --bg-fill || xsetroot -solid gray # dwm background
 
 	-pkill -f -u $$USER '.*/bin/sh.*-c.*while true.*dwmstatus.*done'
 	while true; do dwmstatus; done & # dwm status bar
