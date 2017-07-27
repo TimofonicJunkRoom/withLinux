@@ -16,8 +16,7 @@ os.putenv('OPENBLAS_NUM_THREADS', X_THNUM)
 os.putenv('OMP_NUM_THREADS', X_THNUM)
 os.putenv('MKL_NUM_THREADS', X_THNUM)
 
-USE_GPU = False
-if len(sys.argv)>1: USE_GPU = True  # Append any argument to command line to toggle GPU mode
+USE_GPU = True if len(sys.argv)>1 else False # Append any argument to command line to toggle GPU mode
 
 import torch as th
 import torch.nn.functional as F
@@ -27,10 +26,13 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 print('-> Using TH', th.__version__)
 
+torch.manual_seed(1)
 if not USE_GPU:
     th.set_default_tensor_type('torch.DoubleTensor')
 else:
     th.set_default_tensor_type('torch.cuda.DoubleTensor')
+    torch.cuda.manual_seed(1)
+
 
 from dataloader import DataLoader
 dataloader = DataLoader()
@@ -63,8 +65,7 @@ class Net(th.nn.Module):
             num_features *= s
         return num_features
 
-net = Net()
-if USE_GPU: net = net.cuda()
+net = Net() if not USE_GPU else Net().cuda()
 print(net)
 crit = th.nn.CrossEntropyLoss()
 optimizer = th.optim.Adam(net.parameters(), lr=1e-2)
@@ -158,6 +159,10 @@ time:
      + 2687W CPU: 4-Threads: ? s
 
     -> GPU is 3.9x faster than CPU.
+
+cuda:
+
+    1. pytorch pin_memory?
 
 further:
 
