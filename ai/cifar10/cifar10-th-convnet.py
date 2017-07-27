@@ -7,6 +7,7 @@ from torch.autograd import Variable
 import numpy as np
 from dataloader import DataLoader
 from collections import OrderedDict
+import random
 
 perf_tm = {}
 perf_getdiff = lambda d: d['end'] - d['start']
@@ -17,7 +18,7 @@ os.putenv('OMP_NUM_THREADS', X_THNUM)
 os.putenv('MKL_NUM_THREADS', X_THNUM)
 
 USE_GPU = False if len(sys.argv)>1 else True
-X_MAXITER = 5000
+X_MAXITER = 6400
 
 print('-> Using TH', th.__version__)
 print('-> USE_GPU: {}'.format(USE_GPU))
@@ -70,6 +71,8 @@ optimizer = th.optim.Adam(net.parameters(), lr=1e-3)
 ### Train
 def transform(images, labels):
     images = images.reshape(-1, 3, 32, 32) / 255.
+    if random.choice((True,False)):
+        images = np.flip(images, 3) # 77%->79%
     images = Variable(th.from_numpy(images.astype(np.double)), requires_grad=False)
     labels = Variable(th.from_numpy(labels.reshape(-1).astype(np.long)), requires_grad=False)
     if USE_GPU: images, labels = images.cuda(), labels.cuda() 
@@ -81,8 +84,8 @@ for i in range(X_MAXITER+1):
     images, labels = dataloader.getBatch('trainval', 100)
     images, labels = transform(images, labels)
 
-    # half the learning rate @ iter 500
-    if i!=0 and i%1000==0:
+    # decay the learning rate
+    if i!=0 and i%1000==0 and i<5000:
         print('-> *0.7 the learning rate')
         for param_group in optimizer.param_groups:
             param_group['lr'] *= 0.7
@@ -123,6 +126,7 @@ for i in range(X_MAXITER+1):
         print('-> TEST @ {} |'.format(i),
                 'Loss {:7.3f} |'.format(lossaccum),
                 'Accu {:.5f}|'.format(correct / total))
+
 
 perf_tm['end'] = time.time()
 print('-> done, time elapsed', perf_getdiff(perf_tm))

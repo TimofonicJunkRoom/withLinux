@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import h5py
 import pickle
+import random
 from sklearn.model_selection import train_test_split
 
 class DataLoader(object):
@@ -90,6 +91,7 @@ class DataLoader(object):
             batchids.append(self.cur[split])
             self.inc(split)
         if split=='trainval':
+            batchids = [ random.choice(range(50000)) for _ in range(batchsize) ] # 75%->77%
             batchim[:,:] = self.trainval_images[batchids, :]
             batchlb[:,:] = self.trainval_labels[batchids, :]
         elif split=='test':
