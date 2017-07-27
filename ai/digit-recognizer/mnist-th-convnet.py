@@ -5,6 +5,7 @@
 import sys
 import os
 import time
+
 perf_tm = {}
 perf_getdiff = lambda d: d['end'] - d['start']
 
@@ -17,22 +18,20 @@ os.putenv('OMP_NUM_THREADS', X_THNUM)
 os.putenv('MKL_NUM_THREADS', X_THNUM)
 
 USE_GPU = True if len(sys.argv)>1 else False # Append any argument to command line to toggle GPU mode
+print('-> USE_GPU: {}'.format(USE_GPU))
 
 import torch as th
 import torch.nn.functional as F
 from torch.autograd import Variable
 import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split
 print('-> Using TH', th.__version__)
 
-torch.manual_seed(1)
+th.manual_seed(1)
 if not USE_GPU:
     th.set_default_tensor_type('torch.DoubleTensor')
 else:
     th.set_default_tensor_type('torch.cuda.DoubleTensor')
-    torch.cuda.manual_seed(1)
-
+    th.cuda.manual_seed(1)
 
 from dataloader import DataLoader
 dataloader = DataLoader()
@@ -162,7 +161,8 @@ time:
 
 cuda:
 
-    1. pytorch pin_memory?
+    1. pytorch pin_memory: http://pytorch.org/docs/master/notes/cuda.html
+       see how DataLoader "pin" the memory. (page-locked memory)
 
 further:
 
