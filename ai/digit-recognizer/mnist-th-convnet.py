@@ -4,6 +4,9 @@
 
 import sys
 import os
+import time
+perf_tm = {}
+perf_getdiff = lambda d: d['end'] - d['start']
 
 ### Setting up *_NUM_THREADS env variable ###
 # https://discuss.pytorch.org/t/how-long-does-it-take-to-train-the-network-in-the-cifar-10-tutorial/1929/8
@@ -13,6 +16,9 @@ os.putenv('OPENBLAS_NUM_THREADS', X_THNUM)
 os.putenv('OMP_NUM_THREADS', X_THNUM)
 os.putenv('MKL_NUM_THREADS', X_THNUM)
 
+USE_GPU = False
+if len(sys.argv)>1: USE_GPU = True  # Append any argument to command line to toggle GPU mode
+
 import torch as th
 import torch.nn.functional as F
 from torch.autograd import Variable
@@ -20,7 +26,11 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 print('-> Using TH', th.__version__)
-th.set_default_tensor_type('torch.DoubleTensor')
+
+if not USE_GPU:
+    th.set_default_tensor_type('torch.DoubleTensor')
+else:
+    th.set_default_tensor_type('torch.cuda.DoubleTensor')
 
 from dataloader import DataLoader
 dataloader = DataLoader()
@@ -54,6 +64,7 @@ class Net(th.nn.Module):
         return num_features
 
 net = Net()
+if USE_GPU: net = net.cuda()
 print(net)
 crit = th.nn.CrossEntropyLoss()
 optimizer = th.optim.Adam(net.parameters(), lr=1e-2)
@@ -63,9 +74,11 @@ def transform(images, labels):
     images = images.reshape(-1, 1, 28, 28) / 255.
     images = Variable(th.from_numpy(images.astype(np.double)), requires_grad=False)
     labels = Variable(th.from_numpy(labels.reshape(-1).astype(np.long)), requires_grad=False)
+    if USE_GPU: images, labels = images.cuda(), labels.cuda() 
     return images, labels
 
 #for i in range(100+1):
+perf_tm['start'] = time.time()
 for i in range(2500+1):
     # read data
     images, labels = dataloader.getBatch('train', 64)
@@ -133,9 +146,19 @@ for i,l in enumerate(predictions):
 with open('mnist-th-convnet.pred.csv', 'w+') as f:
     for line in csvcontent:
         f.write(','.join(line)+'\n')
-print('-> done')
+perf_tm['end'] = time.time()
+print('-> done, time elapsed', perf_getdiff(perf_tm))
 
 '''
+time:
+
+    2500 iters
+     + 6900K CPU: 4-Threads: 53.69774103164673 s
+     + 6900K + TitanX Pascal / CUDA 8.0 GPU: 13.732074737548828 s
+     + 2687W CPU: 4-Threads: ? s
+
+    -> GPU is 3.9x faster than CPU.
+
 further:
 
     https://www.kaggle.com/c/digit-recognizer/discussion/4045
