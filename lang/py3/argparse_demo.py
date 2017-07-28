@@ -6,7 +6,7 @@ Argparse note
 import argparse
 
 def main(args):
-    print(vars(args)) # https://stackoverflow.com/questions/16878315/what-is-the-right-way-to-treat-python-argparse-namespace-as-a-dictionary
+  print(vars(args)) # https://stackoverflow.com/questions/16878315/what-is-the-right-way-to-treat-python-argparse-namespace-as-a-dictionary
   print('verbose: ', args.verbose)
   print('number : ', args.number)
   print('power  : ', args.power)
