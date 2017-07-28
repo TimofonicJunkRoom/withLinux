@@ -74,7 +74,11 @@ class Perf_ML(dict):
             self[name] = []
         self[name].append((it, value))
     def dump(self, name=None):
-        print(json.dumps(self, indent=2))
+        #print(json.dumps(self, indent=2)) # Useless
+        for k,v in self['test/loss']:
+            barR(v, self['test/loss'][0][1], 100)
+        for k,v in self['test/acc']:
+            barC(v, 1, 100)
 perf_ml = Perf_ML()
 
 ### TORCH SETUP ###
@@ -211,7 +215,7 @@ print('-> Complete. Time elapsed', perf_tm.d['all'])
 
 print('=> Dump Summaries')
 perf_tm.dump()
-#perf_ml.dump()
+perf_ml.dump()
 
 '''
 time:
