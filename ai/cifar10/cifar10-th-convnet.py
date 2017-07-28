@@ -46,8 +46,8 @@ os.putenv('MKL_NUM_THREADS', str(args.numthreads))
 ### Misc
 def barX(colorcode):
     return lambda x,xmax,width: print('{:>4.0%}'.format(x/xmax)+\
-        '|'+'\x1b[{};1m'.format(colorcode)+'*'*int(width*x/xmax)+\
-        ' '*int(width-width*x/xmax)+'\x1b[;m'+'|')
+        '|'+'\x1b[{};1m'.format(colorcode)+'*'*round(width*x/xmax)+\
+        ' '*round(width-width*x/xmax)+'\x1b[;m'+'|')
 barG = barX('32') # Green for train Acc
 barY = barX('33') # Yellow for train loss
 barC = barX('36') # Cyan for test Acc
