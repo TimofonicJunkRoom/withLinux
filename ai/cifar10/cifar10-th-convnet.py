@@ -1,35 +1,57 @@
+#!/usr/bin/env python3
 import sys
 import os
 import time
+from collections import OrderedDict
+import random
+import argparse
+import json
+
+import numpy as np
 import torch as th
 import torch.nn.functional as F
 from torch.autograd import Variable
-import numpy as np
-from dataloader import DataLoader
-from collections import OrderedDict
-import random
 
+from dataloader import DataLoader
+
+### CONFIGURE ###
+argparser = argparse.ArgumentParser()
+argparser.add_argument('-g', '--gpu', help='USE_GPU',
+                   type=bool, default=True)
+argparser.add_argument('-d', '--double', help='USE_DOUBLE',
+                   type=bool, default=False)
+argparser.add_argument('-m', '--maxiter', help='USE_MAXITER',
+                   type=int, default=6400)
+argparser.add_argument('-s', '--seed', help='USE_SEED',
+                   type=int, default=1)
+argparser.add_argument('-n', '--numthreads',
+                   help='USE_NUM_THREADS', type=int, default=4)
+args = argparser.parse_args()
+print('=> Dump configuration')
+print(json.dumps(vars(args), indent=2))
+
+### ENVIRONMENT ###
+os.putenv('OPENBLAS_NUM_THREADS', str(args.numthreads))
+os.putenv('OMP_NUM_THREADS', str(args.numthreads))
+os.putenv('MKL_NUM_THREADS', str(args.numthreads))
+
+### TIMER SETUP ###
 perf_tm = {}
 perf_getdiff = lambda d: d['end'] - d['start']
 
-X_THNUM = '4'
-os.putenv('OPENBLAS_NUM_THREADS', X_THNUM)
-os.putenv('OMP_NUM_THREADS', X_THNUM)
-os.putenv('MKL_NUM_THREADS', X_THNUM)
-
-USE_GPU = False if len(sys.argv)>1 else True
-X_MAXITER = 6400
-
-print('-> Using TH', th.__version__)
-print('-> USE_GPU: {}'.format(USE_GPU))
-
-th.manual_seed(1)
-if not USE_GPU:
-    th.set_default_tensor_type('torch.DoubleTensor')
+### TORCH SETUP ###
+print('-> Using PyTorch', th.__version__)
+th.manual_seed(args.seed)
+if args.gpu: th.cuda.manual_seed(args.seed)
+X_TENSOR = ''
+if not args.gpu:
+    X_TENSOR = 'torch.DoubleTensor' if args.double else 'torch.FloatTensor'
 else:
-    th.set_default_tensor_type('torch.cuda.DoubleTensor')
-    th.cuda.manual_seed(1)
+    X_TENSOR = 'torch.cuda.DoubleTensor' if args.double else 'torch.cuda.FloatTensor'
+    #th.set_default_tensor_type('torch.cuda.HalfTensor') # Bad Stability
+th.set_default_tensor_type(X_TENSOR)
 
+### DataLoader ###
 dataloader = DataLoader()
 
 ### Model ###
@@ -63,23 +85,27 @@ class QuickNet(th.nn.Module):
         x = self.SEQ2(x)
         return x
 
-net = QuickNet() if not USE_GPU else QuickNet().cuda()
+### Create Instances
+net = QuickNet() if not args.gpu else QuickNet().cuda()
+if not args.double: net = net.float()
 print(net)
 crit = th.nn.CrossEntropyLoss()
 optimizer = th.optim.Adam(net.parameters(), lr=1e-3)
 
-### Train
+### Data Transformation
 def transform(images, labels):
     images = images.reshape(-1, 3, 32, 32) / 255.
     if random.choice((True,False)):
         images = np.flip(images, 3) # 77%->79%
     images = Variable(th.from_numpy(images.astype(np.double)), requires_grad=False)
     labels = Variable(th.from_numpy(labels.reshape(-1).astype(np.long)), requires_grad=False)
-    if USE_GPU: images, labels = images.cuda(), labels.cuda() 
+    if args.gpu: images, labels = images.cuda(), labels.cuda()
+    if not args.double: images = images.float()
     return images, labels
 
+### Training
 perf_tm['start'] = time.time()
-for i in range(X_MAXITER+1):
+for i in range(args.maxiter+1):
     # read data
     images, labels = dataloader.getBatch('trainval', 100)
     images, labels = transform(images, labels)
@@ -126,7 +152,6 @@ for i in range(X_MAXITER+1):
         print('-> TEST @ {} |'.format(i),
                 'Loss {:7.3f} |'.format(lossaccum),
                 'Accu {:.5f}|'.format(correct / total))
-
 
 perf_tm['end'] = time.time()
 print('-> done, time elapsed', perf_getdiff(perf_tm))
