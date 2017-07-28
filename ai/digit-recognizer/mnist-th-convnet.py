@@ -156,8 +156,10 @@ time:
      + 6900K CPU: 4-Threads: 53.69774103164673 s
      + 6900K + TitanX Pascal / CUDA 8.0 GPU: 13.732074737548828 s
      + 2687W CPU: 4-Threads: ? s
+     + 2520M CPU: 4-Threads: 99.17602920532227 s
 
-    -> GPU is 3.9x faster than CPU.
+    -> GPU is 3.9x faster than 6900K CPU.
+    -> 6900K is 1.86x faster than 2520M.
 
 cuda:
 
