@@ -34,6 +34,10 @@ argparser.add_argument('-T', '--decayperiod', type=int, default=2000,
                        help='set the learning rate decay period')
 argparser.add_argument('-e', '--lr', type=float, default=1e-3,
                        help='set the initial learning rate')
+argparser.add_argument('-b', '--batchsize', type=int, default=100,
+                       help='set batch size for training')
+argparser.add_argument('--testbatchsize', type=int, default=100,
+                       help='set batch size for test')
 args = argparser.parse_args()
 print('=> Dump configuration')
 print(json.dumps(vars(args), indent=2))
@@ -157,8 +161,8 @@ def evaluate(i, net, dataloader):
     total = 0
     lossaccum = 0
     dataloader.reset('test')
-    for j in range(dataloader.itersInEpoch('test', 100)):
-        images, labels = dataloader.getBatch('test', 100)
+    for j in range(dataloader.itersInEpoch('test', args.testbatchsize)):
+        images, labels = dataloader.getBatch('test', args.testbatchsize)
         images, labels = transform(images, labels)
         out = net(images)
         loss = crit(out, labels)
@@ -181,7 +185,7 @@ perf_tm.go('all')
 for i in range(args.maxiter+1):
     # read data
     perf_tm.go('data/fetch')
-    images, labels = dataloader.getBatch('trainval', 100)
+    images, labels = dataloader.getBatch('trainval', args.batchsize)
     images, labels = transform(images, labels)
     perf_tm.halt('data/fetch')
 
