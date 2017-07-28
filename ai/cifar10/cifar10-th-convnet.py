@@ -103,6 +103,29 @@ def transform(images, labels):
     if not args.double: images = images.float()
     return images, labels
 
+### Evaluation on Validation set
+def evaluate(i, net, dataloader):
+    print('-> EVAL @ {} |'.format(i), end='')
+    net.eval()
+    correct = 0
+    total = 0
+    lossaccum = 0
+    dataloader.reset('test')
+    for j in range(dataloader.itersInEpoch('test', 100)):
+        images, labels = dataloader.getBatch('test', 100)
+        images, labels = transform(images, labels)
+        out = net(images)
+        loss = crit(out, labels)
+        pred = out.data.max(1)[1]
+        correct += pred.eq(labels.data).cpu().sum()
+        total += 100
+        lossaccum += loss.data[0]
+        print('.', end=''); sys.stdout.flush()
+    print('|')
+    print('-> TEST @ {} |'.format(i),
+            'Loss {:7.3f} |'.format(lossaccum),
+            'Accu {:.5f}|'.format(correct / total))
+
 ### Training
 perf_tm['start'] = time.time()
 for i in range(args.maxiter+1):
@@ -130,28 +153,8 @@ for i in range(args.maxiter+1):
     print('-> Iter {:5d} |'.format(i), 'loss {:7.3f} |'.format(loss.data[0]),
             'Bch Train Accu {:.2f}'.format(correct / out.size()[0]))
 
-    # val
-    if i%100==0:
-        print('-> TEST @ {} |'.format(i), end='')
-        net.eval()
-        correct = 0
-        total = 0
-        lossaccum = 0
-        dataloader.reset('val')
-        for j in range(dataloader.itersInEpoch('test', 100)):
-            images, labels = dataloader.getBatch('test', 100)
-            images, labels = transform(images, labels)
-            out = net(images)
-            loss = crit(out, labels)
-            pred = out.data.max(1)[1]
-            correct += pred.eq(labels.data).cpu().sum()
-            total += 100
-            lossaccum += loss.data[0]
-            print('.', end=''); sys.stdout.flush()
-        print('|')
-        print('-> TEST @ {} |'.format(i),
-                'Loss {:7.3f} |'.format(lossaccum),
-                'Accu {:.5f}|'.format(correct / total))
+    # test
+    if i%100==0: evaluate(i, net, dataloader)
 
 perf_tm['end'] = time.time()
 print('-> done, time elapsed', perf_getdiff(perf_tm))
