@@ -16,10 +16,10 @@ from dataloader import DataLoader
 
 ### CONFIGURE ###
 argparser = argparse.ArgumentParser()
-argparser.add_argument('-g', '--gpu', help='USE_GPU',
-                   type=bool, default=True)
-argparser.add_argument('-d', '--double', help='USE_DOUBLE',
-                   type=bool, default=False)
+argparser.add_argument('-g', '--gpu', help='toggle gpu mode',
+                   action='store_true')
+argparser.add_argument('-d', '--double', help='toggle double mode',
+                   action='store_true')
 argparser.add_argument('-m', '--maxiter', help='USE_MAXITER',
                    type=int, default=6400)
 argparser.add_argument('-s', '--seed', help='USE_SEED',
