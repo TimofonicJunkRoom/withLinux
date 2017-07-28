@@ -3,7 +3,7 @@
 
    Count Byte/Char freqency, using Serial/Parallel Approaches.
 
-   C.D.Luminate <cdluminate AT 163 DOT com> 
+   C.D.Luminate <cdluminate AT gmail DOT com> 
    MIT Licence, 2014
  */
 

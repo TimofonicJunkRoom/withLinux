@@ -2,7 +2,7 @@
 
    this is the client to lserver.c
 
-   C.D.Luminate <cdluminate@163.com>
+   C.D.Luminate <cdluminate@gmail.com>
    2014/09/28
    */
 #include <stdio.h>

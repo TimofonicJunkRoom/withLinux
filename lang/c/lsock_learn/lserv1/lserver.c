@@ -4,7 +4,7 @@
    this is the server end, it listens on 127.0.0.1:2333,
    and send a banner to clients.
 
-   C.D.Luminate <cdluminate@163.com>
+   C.D.Luminate <cdluminate@gmail.com>
    2014/09/28
    */
 

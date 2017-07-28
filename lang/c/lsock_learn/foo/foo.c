@@ -1,4 +1,4 @@
-/* C.D.Luminate <cdluminate@163.com> */
+/* C.D.Luminate <cdluminate@gmail.com> */
 /* MIT LICENCE */
 
 /* you can use ./md5bin to generate this file,

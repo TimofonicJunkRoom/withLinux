@@ -5,7 +5,7 @@
    This is a test code, the author is reading
    <<UNIX Network Programming : Socket API>>
 
-   C.D.Luminate <cdluminate@163.com>
+   C.D.Luminate <cdluminate@gmail.com>
    2014/10/{03,04} */
 /* TODO : some times it behaves strangely,
    e.g. if I type PASS pass first, then USER user,

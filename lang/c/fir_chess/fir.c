@@ -3,7 +3,7 @@
    A five-in-a-row chess game, 
    which is text-based.
 
-   C.D.Luminate <cdluminate@163.com>
+   C.D.Luminate <cdluminate@gmail.com>
    2014/04/18
 
 	Licence : MIT

@@ -1,7 +1,7 @@
 Source: bytefreq
 Section: utils
 Priority: optional
-Maintainer: C.D.Luminate <cdluminate@163.com>
+Maintainer: C.D.Luminate <cdluminate@gmail.com>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.5
 Homepage: https://github.com/cdluminate/bytefreq.git

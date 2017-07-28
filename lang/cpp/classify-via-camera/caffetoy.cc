@@ -1,5 +1,5 @@
 // CaffeToy
-// (C) 2015 lumin <cdluminate@163.com>
+// (C) 2015 lumin <cdluminate@gmail.com>
 // BSD-2-Clause
 #include <iostream>
 

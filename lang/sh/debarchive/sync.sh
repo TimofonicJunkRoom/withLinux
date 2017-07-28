@@ -1,6 +1,6 @@
 #!/bin/sh
 # Simple Debian Source Syncer
-# Lumin <cdluminate@163.com>
+# Lumin <cdluminate@gmail.com>
 # BSD-2-Clause
 set -e
 

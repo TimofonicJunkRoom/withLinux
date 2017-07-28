@@ -1,5 +1,5 @@
 /* md5bin.c
-   <cdluminate@163.com> / MIT licence
+   <cdluminate@gmail.com> / MIT licence
  */
 
 #include <unistd.h>

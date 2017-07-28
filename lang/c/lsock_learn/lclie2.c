@@ -1,5 +1,5 @@
 /* the client of lserv2.c
-   C.D.Luminate <cdluminate@163.com>
+   C.D.Luminate <cdluminate@gmail.com>
    2014/10/{03,04} */
 // TODO : add comment
 
