@@ -35,6 +35,20 @@ os.putenv('OPENBLAS_NUM_THREADS', str(args.numthreads))
 os.putenv('OMP_NUM_THREADS', str(args.numthreads))
 os.putenv('MKL_NUM_THREADS', str(args.numthreads))
 
+### Misc
+barG = lambda x,xmax,width: print('{:3.0%}'.format(x/xmax)+\
+        '|'+'\x1b[32;1m'+'*'*int(width*x/xmax)+\
+        ' '*int(width*(1-x/xmax-0.000001))+'\x1b[;m'+'|') # Green for train Acc
+barY = lambda x,xmax,width: print('{:3.0%}'.format(x/xmax)+\
+        '|'+'\x1b[33;1m'+'*'*int(width*x/xmax)+\
+        ' '*int(width*(1-x/xmax-0.000001))+'\x1b[;m'+'|') # Yellow for train loss
+barC = lambda x,xmax,width: print('{:3.0%}'.format(x/xmax)+\
+        '|'+'\x1b[36;1m'+'*'*int(width*x/xmax)+\
+        ' '*int(width*(1-x/xmax-0.000001))+'\x1b[;m'+'|') # Cyan for test Acc
+barR = lambda x,xmax,width: print('{:3.0%}'.format(x/xmax)+\
+        '|'+'\x1b[31;1m'+'*'*int(width*x/xmax)+\
+        ' '*int(width*(1-x/xmax-0.000001))+'\x1b[;m'+'|') # Red for test loss
+
 ### TIMER SETUP ###
 class Perf_TM(object):
     def __init__(self):
@@ -151,6 +165,8 @@ def evaluate(i, net, dataloader):
             'Accu {:.5f}|'.format(correct / total))
     perf_ml.go('test/acc', i, correct/total)
     perf_ml.go('test/loss', i, lossaccum)
+    barC(correct, total, 80)
+    barR(lossaccum, perf_ml['test/loss'][0][1], 80)
 
 ### Training
 perf_tm.go('all')
@@ -184,6 +200,8 @@ for i in range(args.maxiter+1):
             'Bch Train Accu {:.2f}'.format(correct / out.size()[0]))
     perf_ml.go('train/loss', i, loss.data[0])
     perf_ml.go('train/acc', i, correct / out.size()[0])
+    barG(correct, out.size()[0], 80)
+    barY(loss.data[0], perf_ml['train/loss'][0][1], 80)
 
     # test
     if i%100==0: evaluate(i, net, dataloader)
@@ -193,7 +211,7 @@ print('-> Complete. Time elapsed', perf_tm.d['all'])
 
 print('=> Dump Summaries')
 perf_tm.dump()
-perf_ml.dump()
+#perf_ml.dump()
 
 '''
 time:
