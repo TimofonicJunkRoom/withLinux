@@ -155,6 +155,7 @@ time:
     2500 iters
      + 6900K CPU: 4-Threads: 53.69774103164673 s
      + 6900K + TitanX Pascal / CUDA 8.0 GPU: 13.732074737548828 s
+     + TitanX Pascal / fp32 : 9.233038902282715 s
      + 2687W CPU: 4-Threads: ? s
      + 2520M CPU: 4-Threads: 99.17602920532227 s
 
