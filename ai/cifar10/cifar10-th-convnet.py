@@ -16,16 +16,16 @@ from dataloader import DataLoader
 
 ### CONFIGURE ###
 argparser = argparse.ArgumentParser()
-argparser.add_argument('-g', '--gpu', help='toggle gpu mode',
-                   action='store_true')
-argparser.add_argument('-d', '--double', help='toggle double mode',
-                   action='store_true')
-argparser.add_argument('-m', '--maxiter', help='USE_MAXITER',
-                   type=int, default=6400)
-argparser.add_argument('-s', '--seed', help='USE_SEED',
-                   type=int, default=1)
-argparser.add_argument('-n', '--numthreads',
-                   help='USE_NUM_THREADS', type=int, default=4)
+argparser.add_argument('-g', '--gpu', action='store_true',
+                       help='use GPU/CUDA insteaf of CPU')
+argparser.add_argument('-d', '--double', action='store_true',
+                       help='use fp64 instead of fp32')
+argparser.add_argument('-m', '--maxiter', type=int, default=6400,
+                       help='set maximum iterations of training',)
+argparser.add_argument('-s', '--seed', type=int, default=1,
+                       help='set manual seed')
+argparser.add_argument('-n', '--numthreads', type=int, default=4,
+                       help='set *_NUM_THREADS environment variable')
 args = argparser.parse_args()
 print('=> Dump configuration')
 print(json.dumps(vars(args), indent=2))
