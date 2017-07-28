@@ -36,8 +36,32 @@ os.putenv('OMP_NUM_THREADS', str(args.numthreads))
 os.putenv('MKL_NUM_THREADS', str(args.numthreads))
 
 ### TIMER SETUP ###
-perf_tm = {}
-perf_getdiff = lambda d: d['end'] - d['start']
+class Perf_TM(object):
+    def __init__(self):
+        self.d = {} # dict{'key': list[float]}
+    def go(self, key):
+        if key not in self.d.keys(): self.d[key] = []
+        self.d[key].append(-time.time())
+    def halt(self, key):
+        self.d[key][-1] += time.time()
+    def dump(self):
+        s = dict(self.d)
+        for key in s.keys():
+            if len(s[key])>1:
+                num_rec = len(s[key])
+                s[key] = [sum(s[key])/num_rec, 'Average of the '+str(num_rec)+' records']
+        print(json.dumps(s, indent=2))
+perf_tm = Perf_TM()
+
+### SETUP Recorder, for loss curve and etc.
+class Perf_ML(dict):
+    def go(self, name, it, value):
+        if name not in self.keys():
+            self[name] = []
+        self[name].append((it, value))
+    def dump(self, name=None):
+        print(json.dumps(self, indent=2))
+perf_ml = Perf_ML()
 
 ### TORCH SETUP ###
 print('-> Using PyTorch', th.__version__)
@@ -125,13 +149,17 @@ def evaluate(i, net, dataloader):
     print('-> TEST @ {} |'.format(i),
             'Loss {:7.3f} |'.format(lossaccum),
             'Accu {:.5f}|'.format(correct / total))
+    perf_ml.go('test/acc', i, correct/total)
+    perf_ml.go('test/loss', i, lossaccum)
 
 ### Training
-perf_tm['start'] = time.time()
+perf_tm.go('all')
 for i in range(args.maxiter+1):
     # read data
+    perf_tm.go('data/fetch')
     images, labels = dataloader.getBatch('trainval', 100)
     images, labels = transform(images, labels)
+    perf_tm.halt('data/fetch')
 
     # decay the learning rate
     if i!=0 and i%1000==0 and i<5000:
@@ -141,23 +169,31 @@ for i in range(args.maxiter+1):
             print(param_group['lr'])
 
     # train
+    perf_tm.go('train/flbu')
     net.train()
     out = net(images)
     loss = crit(out, labels)
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
+    perf_tm.halt('train/flbu')
 
     pred = out.data.max(1)[1]
     correct = pred.eq(labels.data).cpu().sum()
     print('-> Iter {:5d} |'.format(i), 'loss {:7.3f} |'.format(loss.data[0]),
             'Bch Train Accu {:.2f}'.format(correct / out.size()[0]))
+    perf_ml.go('train/loss', i, loss.data[0])
+    perf_ml.go('train/acc', i, correct / out.size()[0])
 
     # test
     if i%100==0: evaluate(i, net, dataloader)
 
-perf_tm['end'] = time.time()
-print('-> done, time elapsed', perf_getdiff(perf_tm))
+perf_tm.halt('all')
+print('-> Complete. Time elapsed', perf_tm.d['all'])
+
+print('=> Dump Summaries')
+perf_tm.dump()
+perf_ml.dump()
 
 '''
 time:
