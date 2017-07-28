@@ -44,18 +44,14 @@ os.putenv('OMP_NUM_THREADS', str(args.numthreads))
 os.putenv('MKL_NUM_THREADS', str(args.numthreads))
 
 ### Misc
-barG = lambda x,xmax,width: print('{:3.0%}'.format(x/xmax)+\
-        '|'+'\x1b[32;1m'+'*'*int(width*x/xmax)+\
-        ' '*int(width*(1-x/xmax-0.000001))+'\x1b[;m'+'|') # Green for train Acc
-barY = lambda x,xmax,width: print('{:3.0%}'.format(x/xmax)+\
-        '|'+'\x1b[33;1m'+'*'*int(width*x/xmax)+\
-        ' '*int(width*(1-x/xmax-0.000001))+'\x1b[;m'+'|') # Yellow for train loss
-barC = lambda x,xmax,width: print('{:3.0%}'.format(x/xmax)+\
-        '|'+'\x1b[36;1m'+'*'*int(width*x/xmax)+\
-        ' '*int(width*(1-x/xmax-0.000001))+'\x1b[;m'+'|') # Cyan for test Acc
-barR = lambda x,xmax,width: print('{:3.0%}'.format(x/xmax)+\
-        '|'+'\x1b[31;1m'+'*'*int(width*x/xmax)+\
-        ' '*int(width*(1-x/xmax-0.000001))+'\x1b[;m'+'|') # Red for test loss
+def barX(colorcode):
+    return lambda x,xmax,width: print('{:>4.0%}'.format(x/xmax)+\
+        '|'+'\x1b[{};1m'.format(colorcode)+'*'*int(width*x/xmax)+\
+        ' '*int(width-width*x/xmax)+'\x1b[;m'+'|')
+barG = barX('32') # Green for train Acc
+barY = barX('33') # Yellow for train loss
+barC = barX('36') # Cyan for test Acc
+barR = barX('31') # Red for test loss
 
 ### TIMER SETUP ###
 class Perf_TM(object):
