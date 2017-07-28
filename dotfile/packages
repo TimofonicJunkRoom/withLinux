@@ -79,6 +79,7 @@ mawk
 mtr
 mupdf
 octave
+oh-my-zsh
 openconnect
 pandoc
 parallel
@@ -137,6 +138,7 @@ xbindkeys
 xrandr
 zfsnap
 zfsutils-linux
+zsh
 "
 
 # start scanning
