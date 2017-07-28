@@ -20,12 +20,20 @@ argparser.add_argument('-g', '--gpu', action='store_true',
                        help='use GPU/CUDA insteaf of CPU')
 argparser.add_argument('-d', '--double', action='store_true',
                        help='use fp64 instead of fp32')
-argparser.add_argument('-m', '--maxiter', type=int, default=6400,
+argparser.add_argument('-m', '--maxiter', type=int, default=7500,
                        help='set maximum iterations of training',)
 argparser.add_argument('-s', '--seed', type=int, default=1,
                        help='set manual seed')
 argparser.add_argument('-n', '--numthreads', type=int, default=4,
                        help='set *_NUM_THREADS environment variable')
+argparser.add_argument('-t', '--testevery', type=int, default=200,
+                       help='set model evaluation interval')
+argparser.add_argument('-o', '--decay0', type=int, default=500,
+                       help='set the first iteration where the learning rate starts to decay')
+argparser.add_argument('-T', '--decayperiod', type=int, default=2000,
+                       help='set the learning rate decay period')
+argparser.add_argument('-e', '--lr', type=float, default=1e-3,
+                       help='set the initial learning rate')
 args = argparser.parse_args()
 print('=> Dump configuration')
 print(json.dumps(vars(args), indent=2))
@@ -132,7 +140,7 @@ net = QuickNet() if not args.gpu else QuickNet().cuda()
 if not args.double: net = net.float()
 print(net)
 crit = th.nn.CrossEntropyLoss()
-optimizer = th.optim.Adam(net.parameters(), lr=1e-3)
+optimizer = th.optim.Adam(net.parameters(), lr=args.lr)
 
 ### Data Transformation
 def transform(images, labels):
@@ -182,10 +190,11 @@ for i in range(args.maxiter+1):
     perf_tm.halt('data/fetch')
 
     # decay the learning rate
-    if i!=0 and i%1000==0 and i<5000:
-        print('-> *0.7 the learning rate')
+    if i>args.decay0:
+        # $\eta = \eta_0 * 0.5 ^{ (i - i_0) / i_period }$
+        curlr = args.lr * (0.5 ** ((i-args.decay0)/args.decayperiod))
         for param_group in optimizer.param_groups:
-            param_group['lr'] *= 0.7
+            param_group['lr'] = curlr
             print(param_group['lr'])
 
     # train
@@ -208,7 +217,7 @@ for i in range(args.maxiter+1):
     barY(loss.data[0], perf_ml['train/loss'][0][1], 80)
 
     # test
-    if i%100==0: evaluate(i, net, dataloader)
+    if i%args.testevery==0: evaluate(i, net, dataloader)
 
 perf_tm.halt('all')
 print('-> Complete. Time elapsed', perf_tm.d['all'])
