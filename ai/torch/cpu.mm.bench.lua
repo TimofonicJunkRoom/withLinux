@@ -38,4 +38,10 @@ begin double	2520M
   real : 3.8089778423309
 begin float	
   real : 2.7467200756073
+
+begin double	6900K threads=4
+real : 2.0488569736481
+begin float	    6900K
+real : 1.3556079864502
+
 --]]
