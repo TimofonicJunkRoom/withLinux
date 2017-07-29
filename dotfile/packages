@@ -41,6 +41,7 @@ ffmpeg
 filezilla
 fish
 fonts-inconsolata
+fonts-consolas
 gdb
 git
 git-buildpackage
