@@ -7,6 +7,7 @@ import pandas as pd
 import h5py
 import pickle
 import random
+from multiprocessing import Process, Queue
 from sklearn.model_selection import train_test_split
 
 class DataLoader(object):
@@ -100,6 +101,24 @@ class DataLoader(object):
         else:
             raise Exception('Unexpected split')
         return batchim, batchlb
+    def satellite(self, qbufsize, split, batchsize):
+        '''
+        Fork a worker and prefetch data,
+        qbuf is a Queue used as data prefetching buffer
+        '''
+        self.Q = Queue(qbufsize)
+        def _background(dataloader, split, batchsize):
+            while True:
+                print(' *> {} : satellite putting data in qbuf'.format(os.getpid()))
+                dataloader.Q.put(dataloader.getBatch(split, batchsize))
+        self.worker = Process(target=_background,
+                              args=(self, split, batchsize))
+        self.worker.start()
+    def landing(self):
+        ''' the satellite is landing '''
+        self.worker.join(timeout=0.5)
+        print(' *> {} : pulling satellite to ground ...'.format(os.getpid()))
+        self.worker.terminate()
 
 if __name__=='__main__':
     # test
@@ -107,7 +126,15 @@ if __name__=='__main__':
     images, labels = dataloader.getBatch('trainval', 1)
     print(type(images), type(labels))
     print(images, labels)
-    for i in range(10000):
-        print('get batch iter', i)
-        images, labels = dataloader.getBatch('trainval', 64)
-    print('test ok')
+    #for i in range(10000):
+    #    print('get batch iter', i)
+    #    images, labels = dataloader.getBatch('trainval', 64)
+    #print('test ok')
+    print('mp test')
+    dataloader.satellite(3, 'trainval', 100)
+    for i in range(100):
+        print('iter', i, 'getting data')
+        images, labels = dataloader.Q.get()
+        print(images.mean(), labels.mean())
+    dataloader.landing()
+    print('mp test ok')
