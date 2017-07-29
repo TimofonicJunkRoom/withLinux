@@ -1,8 +1,8 @@
-## With Linux - Quite Messy Collection of Personal Notes
+## With Linux - Quite Messy Collection of Personal Snippets
 
 > KISS: Keep It Simple, Stupid
 
-This personal notes collection contains not only hints, tricks and
+This personal snippets collection contains not only hints, tricks and
 hacks about Linux. However many files may be not useful to you.
 
 To search among these notes, lookup keywords in this repo with the
