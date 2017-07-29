@@ -231,4 +231,10 @@ time:
     6400 Iterations
     TitanX Pascal / fp32 : 55.483641624450684 s, 621MiB
     TitanX Pascal / fp64 : 351.21968483924866 s, 749MiB
+
+dataloader Queue:
+    none: 57 sec
+    Queue(1): 65 sec
+    Queue(2): 66 sec
+    Queue(10): 66 sec
 '''
