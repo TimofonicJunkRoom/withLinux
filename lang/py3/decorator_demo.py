@@ -23,3 +23,7 @@ def hello():
 
 hello()
 
+def foo():
+    print('asdf')
+foo = ftrace(foo)
+foo()

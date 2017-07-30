@@ -4,6 +4,7 @@
 https://www.zhihu.com/question/48755767#answer-47628816
 https://www.zhihu.com/question/23760468#answer-5661732
 https://stackoverflow.com/questions/101268/hidden-features-of-python#101276
+https://www.zhihu.com/question/57470958#answer-56901848
 '''
 
                                                             # problem example 1
@@ -156,3 +157,44 @@ class Foo(object):
         self.id = id
         self.caption = caption
         self.url = url
+
+                                                                     # misc
+a = 1
+b = 4
+c = [b,a][a>b]
+
+import random
+a = [random.randint(0,9) for _ in range(10)]
+a.sort(key=lambda x:x)
+a = [(random.randint(0,9), random.random()) for _ in range(20)]
+a.sort(key=lambda x: (x[0], x[1]))
+
+class Test:
+    def __init__(self):
+        for i in range(10):
+            exec("self.p{} = lambda: print({})".format(i, i))
+        for i in range(10): exec("self.p{}".format(i))
+x = Test()
+x.p0()
+x.p9()
+
+list_1 = [[1, 2], [3, 4, 5], [6, 7], [8], [9]]
+list_2 = []
+for x in list_1: list_2 += x
+list_2 = [elem for group in list_1 for elem in group]
+sum(list_1, [])
+
+from functools import reduce
+reduce(lambda x,y: x+y, list_1)
+
+for i in [1,1,2]:
+    if i == 0: break
+else:
+    print('i \\neq 0 \\forall i')
+for i in [1,1,0]:
+    if i == 0: break
+else:
+    print('i \\neq 0 \\forall i')
+
+4<6<8
+4<6<1
