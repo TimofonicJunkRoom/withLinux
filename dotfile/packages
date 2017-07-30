@@ -42,6 +42,7 @@ filezilla
 fish
 fonts-inconsolata
 fonts-consolas
+fzf
 gdb
 git
 git-buildpackage
