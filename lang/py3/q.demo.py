@@ -15,3 +15,5 @@ def func(arg):
 func(1)
 
 q(2+3)
+
+q.d()
