@@ -5,6 +5,7 @@ https://www.zhihu.com/question/48755767#answer-47628816
 https://www.zhihu.com/question/23760468#answer-5661732
 https://stackoverflow.com/questions/101268/hidden-features-of-python#101276
 https://www.zhihu.com/question/57470958#answer-56901848
+https://zhuanlan.zhihu.com/p/28008875
 '''
 
                                                             # problem example 1
@@ -198,3 +199,64 @@ else:
 
 4<6<8
 4<6<1
+
+import copy
+list_x = copy.copy(list_1)
+
+def genlist(x=[], e=None):
+    x.append(e)
+    return x
+l1 = genlist(e=1)
+print(l1)
+l2 = genlist(e=2) # not expected
+print(l1, l2)
+
+# optimizing loops: get avoid of many point operations
+l = []
+append = l.append
+for i in range(10): append(i)
+
+
+a = [1,2,3]
+b = [4,5,6]
+z = list(zip(a, b)) # [(1, 4), (2, 5), (3, 6)]
+z = list(zip(*z)) # [(1, 2, 3), (4, 5, 6)]
+
+from itertools import islice
+  # grouping adjacent list items
+list(zip(*([iter(range(6))]*1))) #[(0,), (1,), (2,), (3,), (4,), (5,)]
+list(zip(*([iter(range(6))]*2))) #[(0, 1), (2, 3), (4, 5)]
+list(zip(*([iter(range(6))]*3))) #[(0, 1, 2), (3, 4, 5)]
+
+list(zip(*(islice(list(range(6)), i, None, 3) for i in range(3))))
+#[(0, 1, 2), (3, 4, 5)]
+list(zip(*(islice(list(range(6)), i, None, 2) for i in range(2))))
+#[(0, 1), (2, 3), (4, 5)]
+list(zip(*(islice(list(range(6)), i, None, 1) for i in range(1))))
+#[(0,), (1,), (2,), (3,), (4,), (5,)]
+
+
+  # sliding windows (n-grams)
+list(zip(*(islice(range(6), i, None) for i in range(1))))
+#[(0,), (1,), (2,), (3,), (4,), (5,)]
+list(zip(*(islice(range(6), i, None) for i in range(2))))
+#[(0, 1), (1, 2), (2, 3), (3, 4), (4, 5)]
+list(zip(*(islice(range(6), i, None) for i in range(3))))
+#[(0, 1, 2), (1, 2, 3), (2, 3, 4), (3, 4, 5)]
+list(zip(*(islice(range(6), i, None) for i in range(4))))
+#[(0, 1, 2, 3), (1, 2, 3, 4), (2, 3, 4, 5)]
+
+  # invert a dict
+d = {i: i**2 for i in range(10)}
+#{0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25, 6: 36, 7: 49, 8: 64, 9: 81}
+di = dict(zip(d.values(), d.keys()))
+#{0: 0, 1: 1, 4: 2, 9: 3, 16: 4, 25: 5, 36: 6, 49: 7, 64: 8, 81: 9}
+
+  # flatten a list
+flat = lambda f: [e for l in f for e in flat(l)] if type(f) is list else [f]
+flat([1,[2], [3, [4]]]) #[1, 2, 3, 4]
+flat([1,[2], [3, [4, [5,6,7]]], [[8,9]]]) #[1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+  # LEGB rule: local, enclosing, global, built-in
+
+
