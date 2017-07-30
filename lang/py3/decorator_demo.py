@@ -27,3 +27,7 @@ def foo():
     print('asdf')
 foo = ftrace(foo)
 foo()
+
+'''
+http://mingxinglai.com/cn/2015/08/python-decorator/
+'''
