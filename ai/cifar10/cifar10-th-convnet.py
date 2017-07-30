@@ -112,23 +112,23 @@ class QuickNet(th.nn.Module):
     def __init__(self):
         super(QuickNet, self).__init__()
         self.SEQ1 = th.nn.Sequential(OrderedDict([
-('conv1', th.nn.Conv2d(3, 32, 5, stride=1, padding=2)), #64,32,32
-('relu1', th.nn.ReLU()),
-('pool1', th.nn.MaxPool2d(3, stride=2, padding=1)), #64,16,16
-('bn1',   th.nn.BatchNorm2d(32)),
-('conv2', th.nn.Conv2d(32, 64, 5, stride=1, padding=2)), #64,16,16
-('relu2', th.nn.ReLU()),
-('bn2',   th.nn.BatchNorm2d(64)),
-('pool2', th.nn.MaxPool2d(3, stride=2, padding=1)), #64,8,8
-]))
+          ('conv1', th.nn.Conv2d(3, 32, 5, stride=1, padding=2)),
+          ('relu1', th.nn.ReLU()),
+          ('pool1', th.nn.MaxPool2d(3, stride=2, padding=1)),
+          ('bn1',   th.nn.BatchNorm2d(32)),
+          ('conv2', th.nn.Conv2d(32, 64, 5, stride=1, padding=2)),
+          ('relu2', th.nn.ReLU()),
+          ('bn2',   th.nn.BatchNorm2d(64)),
+          ('pool2', th.nn.MaxPool2d(3, stride=2, padding=1)),
+        ]))
         self.SEQ2 = th.nn.Sequential(OrderedDict([
-('fc4',   th.nn.Linear(4096, 384)),
-('relu4', th.nn.ReLU()),
-('bn4',   th.nn.BatchNorm1d(384)),
-('fc5',   th.nn.Linear(384, 192)),
-('bn6',   th.nn.BatchNorm1d(192)),
-('fc6',   th.nn.Linear(192, 10)),
-]))
+          ('fc4',   th.nn.Linear(4096, 384)),
+          ('relu4', th.nn.ReLU()),
+          ('bn4',   th.nn.BatchNorm1d(384)),
+          ('fc5',   th.nn.Linear(384, 192)),
+          ('bn6',   th.nn.BatchNorm1d(192)),
+          ('fc6',   th.nn.Linear(192, 10)),
+        ]))
     def forward(self, x):
         x = self.SEQ1(x)
         x = x.view(-1, 4096)
