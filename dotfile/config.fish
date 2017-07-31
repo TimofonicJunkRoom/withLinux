@@ -21,6 +21,7 @@ abbr -a sv sudo supervisorctl
 abbr -a bt bluetoothctl
 abbr -a nb jupyter notebook --no-browser
 abbr -a px ps -ux
+abbr -a p python3
 
 # Julia 0.6 Official Binary Tarball
 function jl
