@@ -124,6 +124,7 @@ main () {
     deploy ) cd dotfile; shift; ./deploy $@;;
     xdb    ) ./maintain.d/cxdb.py ;;
 	md     ) ./maintain.d/genreadme.py ;;
+    pyc    ) find . -type d -name '__pycache__' -exec rm -rf {} + ;;
     #search ) ./search $@ ;;
     *      ) echo "E: invalid action" ;;
   esac
