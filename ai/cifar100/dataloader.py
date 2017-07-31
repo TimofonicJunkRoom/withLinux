@@ -98,7 +98,17 @@ if __name__=='__main__':
     images, labels = dataloader.getBatch('trainval', 1)
     print(type(images), type(labels))
     print(images, labels)
-    for i in range(10000):
-        print('get batch iter', i)
-        images, labels = dataloader.getBatch('trainval', 64)
+    #for i in range(10000):
+    #    print('get batch iter', i)
+    #    images, labels = dataloader.getBatch('trainval', 64)
     print('test ok')
+    print('report dataset statictics')
+    print('trainval_images')
+    p = lambda x,a: print(' -> {}: {}'.format(a, getattr(x,a)()))
+    p(dataloader.trainval_images, 'min')
+    p(dataloader.trainval_images, 'max')
+    p(dataloader.trainval_images, 'mean')
+    p(dataloader.trainval_images, 'std')
+    print('trainval_labels (fine)')
+    p(dataloader.trainval_labels, 'min') # 0
+    p(dataloader.trainval_labels, 'max') # 99
