@@ -27,6 +27,10 @@ abbr -a p python3
 function jl
 	/home/lumin/Downloads/julia-903644385b/bin/julia $argv
 end
+# Pypy3
+function pypy3
+	/home/lumin/Downloads/pypy3-v5.8.0-linux64/bin/pypy3 $argv
+end
 
 function ips
 	ip -s -c -h a
