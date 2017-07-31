@@ -6,9 +6,11 @@ from collections import OrderedDict
 import random
 import argparse
 import json
+import math
 
 import numpy as np
 import torch as th
+import torch.nn.init
 import torch.nn.functional as F
 from torch.autograd import Variable
 
@@ -129,6 +131,8 @@ class QuickNet(th.nn.Module):
           ('bn6',   th.nn.BatchNorm1d(192)),
           ('fc6',   th.nn.Linear(192, 10)),
         ]))
+        th.nn.init.xavier_uniform(self.SEQ1.conv1.weight, gain=1.414)
+        th.nn.init.constant(self.SEQ1.conv1.bias, 0.1)
     def forward(self, x):
         x = self.SEQ1(x)
         x = x.view(-1, 4096)
@@ -140,7 +144,7 @@ net = QuickNet() if not args.gpu else QuickNet().cuda()
 if not args.double: net = net.float()
 print(net)
 crit = th.nn.CrossEntropyLoss()
-optimizer = th.optim.Adam(net.parameters(), lr=args.lr)
+optimizer = th.optim.Adam(net.parameters(), lr=args.lr, weight_decay=1e-7)
 
 ### Data Transformation
 def transform(images, labels):
@@ -195,7 +199,7 @@ for i in range(args.maxiter+1):
         curlr = args.lr * (0.5 ** ((i-args.decay0)/args.decayperiod))
         for param_group in optimizer.param_groups:
             param_group['lr'] = curlr
-            print(param_group['lr'])
+            #print(param_group['lr'])
 
     # train
     perf_tm.go('train/flbu')
