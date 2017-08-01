@@ -68,12 +68,13 @@ for i, line in enumerate(imagelist, 1):
     path, label = line
     if i < 10: print(repr(path), repr(label))
     image = Image.open(path).resize((args.pixels, args.pixels), Image.BILINEAR).convert('RGB')
-    if i < 10: print(image)
+    if i < 10: print('\t', image)
     # image -> [0,255], H,W,C
     image = np.asarray(image) # Image -> Numpy
     # HWC -> CHW
     image = image.swapaxes(0,2) # or image.transpose((1,2,0))
     h5['train/images'][i-1,:,:,:] = image
+    h5['train/labels'][i-1,:] = int(label)
 print(' *> processed {} images in total'.format(len(imagelist)))
 
 # Write to disk
