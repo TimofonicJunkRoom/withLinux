@@ -53,6 +53,8 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+	// use octave --force-gui in dmenu
+	{ "Octave",   NULL,       NULL,       0,            1,           -1 },
 	{ "Iceweasel",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
