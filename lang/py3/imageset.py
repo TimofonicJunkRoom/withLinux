@@ -21,9 +21,11 @@ http://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 # Parse command line
 parser = argparse.ArgumentParser()
 parser.add_argument('-i', type=str, action='store', dest='input',
-                    required=True, help='image-label list file')
+                    required=True, help='image-label list file (train)')
 parser.add_argument('--vali', type=str, action='store',
                     dest='vinput', help='validation set list file')
+parser.add_argument('--test', type=str, action='store', dest='test',
+                    help='test set list file')
 parser.add_argument('-o', type=str, action='store', dest='output',
                     default=__file__+'.h5', help='output hdf5 path')
 parser.add_argument('-p', type=int, action='store', dest='pixels',
@@ -32,6 +34,8 @@ parser.add_argument('-s', action='store_true', dest='s',
                     default=False, help='shuffle the list?')
 parser.add_argument('-c', action='store_true', dest='c',
                     default=False, help='compression?')
+parser.add_argument('-f', action='store_true', dest='force',
+                    default=False, help='force overwrite output hdf5')
 args = parser.parse_args()
 
 # Read image list
@@ -42,7 +46,7 @@ print('-> Found {} images'.format(len(imagelist)))
 
 # Create output file
 if os.path.exists(args.output):
-    raise SystemExit('HDF5 file {} already exists!'.format(args.output))
+    if not args.force: raise SystemExit('HDF5 file {} already exists!'.format(args.output))
 h5 = h5py.File(args.output, 'w')
 if args.c:
     h5.create_dataset('train/images',
@@ -63,14 +67,14 @@ for i, line in enumerate(imagelist, 1):
     if i%1000==0: print(' *> processed {} images'.format(i))
     path, label = line
     if i < 10: print(repr(path), repr(label))
-    image = Image.open(path).resize((args.pixels, args.pixels), Image.BILINEAR)
+    image = Image.open(path).resize((args.pixels, args.pixels), Image.BILINEAR).convert('RGB')
+    if i < 10: print(image)
     # image -> [0,255], H,W,C
     image = np.asarray(image) # Image -> Numpy
     # HWC -> CHW
     image = image.swapaxes(0,2) # or image.transpose((1,2,0))
     h5['train/images'][i-1,:,:,:] = image
-    if i >= 10:
-        break
+print(' *> processed {} images in total'.format(len(imagelist)))
 
 # Write to disk
 h5.close()
