@@ -54,6 +54,7 @@ def barX(colorcode):
     return lambda x,xmax,width: print('{:>4.0%}'.format(x/xmax)+\
         '|'+'\x1b[{};1m'.format(colorcode)+'*'*round(width*x/xmax)+\
         ' '*round(width-width*x/xmax)+'\x1b[;m'+'|')
+# Tips : get terminal width like this -- os.get_terminal_size().columns-6
 barG = barX('32') # Green for train Acc
 barY = barX('33') # Yellow for train loss
 barC = barX('36') # Cyan for test Acc
