@@ -36,6 +36,8 @@ parser.add_argument('-c', action='store_true', dest='c',
                     default=False, help='compression?')
 parser.add_argument('-f', action='store_true', dest='force',
                     default=False, help='force overwrite output hdf5')
+parser.add_argument('-v', action='store_true', dest='view',
+                    default=False, help='view example image')
 args = parser.parse_args()
 
 ## Configure
@@ -53,6 +55,7 @@ def fillhdf5(_h5, _list, _group):
         if i < 10: print(repr(path), repr(label))
         image = Image.open(path).resize((args.pixels, args.pixels), Image.BILINEAR)
         image = image.convert('RGB') # RGBA/... -> RGB
+        if i == 1 and args.view: image.show()
         if i < 10: print('\t', image)
         # image -> [0,255], H,W,C
         image = np.asarray(image) # Image -> Numpy
@@ -60,11 +63,13 @@ def fillhdf5(_h5, _list, _group):
         image = image.swapaxes(0,2) # or image.transpose((1,2,0))
         _h5[_group+'/images'][i-1,:,:,:] = image
         _h5[_group+'/labels'][i-1,:] = int(label)
+        if i == 1 and args.view:
+            Image.fromarray(_h5[_group+'/images'][i-1,:,:,:].swapaxes(2,0), mode='RGB').show()
 
 def createdsets(_h5, _list, _impath, _lbpath):
-    h5.create_dataset(_impath, # N x C x H x W
-        (len(_list), 3, args.pixels, args.pixels), dtype=np.byte, **compargs)
-    h5.create_dataset(_lbpath, # N x 1
+    h5.create_dataset(_impath, # N x C x H x W, np.ubyte (not np.byte! that will cause problem)
+        (len(_list), 3, args.pixels, args.pixels), dtype=np.ubyte, **compargs)
+    h5.create_dataset(_lbpath, # N x 1, int
         (len(_list), 1), dtype=np.int, **compargs)
 
 # Read list files
