@@ -41,7 +41,7 @@ parser.add_argument('-v', action='store_true', dest='view',
 args = parser.parse_args()
 
 ## Configure
-compargs = {'compression':'gzip', 'compression_opts':1} if args.c else {}
+compargs = {'compression':'gzip', 'compression_opts':6} if args.c else {}
 
 ## Helpers
 def readlist(_fpath):
@@ -50,7 +50,7 @@ def readlist(_fpath):
 
 def fillhdf5(_h5, _list, _group):
     for i, line in enumerate(_list, 1):
-        if i%1000==0: print(' *> processed {} images'.format(i))
+        if i%100==0: print(' *> processed {} images'.format(i))
         path, label = line
         if i < 10: print(repr(path), repr(label))
         image = Image.open(path).resize((args.pixels, args.pixels), Image.BILINEAR)
@@ -67,10 +67,15 @@ def fillhdf5(_h5, _list, _group):
             Image.fromarray(_h5[_group+'/images'][i-1,:,:,:].swapaxes(2,0), mode='RGB').show()
 
 def createdsets(_h5, _list, _impath, _lbpath):
+    # Chunks is crucial to compression performance
+    # https://stackoverflow.com/questions/41771992/hdf5-adding-numpy-arrays-slow
+    # https://stackoverflow.com/questions/16786428/compression-performance-related-to-chunk-size-in-hdf5-files
+    # https://support.hdfgroup.org/HDF5/doc/Advanced/Chunking/Chunking_Tutorial_EOS13_2009.pdf
     h5.create_dataset(_impath, # N x C x H x W, np.ubyte (not np.byte! that will cause problem)
-        (len(_list), 3, args.pixels, args.pixels), dtype=np.ubyte, **compargs)
+        (len(_list), 3, args.pixels, args.pixels), dtype=np.ubyte,
+        chunks=(1, 3, args.pixels, args.pixels), **compargs)
     h5.create_dataset(_lbpath, # N x 1, int
-        (len(_list), 1), dtype=np.int, **compargs)
+        (len(_list), 1), dtype=np.int, chunks=(1,1), **compargs)
 
 # Read list files
 imagelist = readlist(args.input)
