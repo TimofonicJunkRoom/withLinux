@@ -24,7 +24,7 @@ parser.add_argument('-i', type=str, action='store', dest='input',
                     required=True, help='image-label list file (train)')
 parser.add_argument('--vali', type=str, action='store',
                     dest='vinput', help='validation set list file')
-parser.add_argument('--test', type=str, action='store', dest='test',
+parser.add_argument('--test', type=str, action='store', dest='tinput',
                     help='test set list file')
 parser.add_argument('-o', type=str, action='store', dest='output',
                     default=__file__+'.h5', help='output hdf5 path')
@@ -61,10 +61,22 @@ def fillhdf5(_h5, _list, _group):
         _h5[_group+'/images'][i-1,:,:,:] = image
         _h5[_group+'/labels'][i-1,:] = int(label)
 
+def createdsets(_h5, _list, _impath, _lbpath):
+    h5.create_dataset(_impath, # N x C x H x W
+        (len(_list), 3, args.pixels, args.pixels), dtype=np.byte, **compargs)
+    h5.create_dataset(_lbpath, # N x 1
+        (len(_list), 1), dtype=np.int, **compargs)
+
 # Read list files
 imagelist = readlist(args.input)
 if args.s: random.shuffle(imagelist)
 print('-> Found {} images for training'.format(len(imagelist)))
+if args.vinput:
+    imagelist_vali = readlist(args.vinput)
+    print('-> Found {} images for validation'.format(len(imagelist_vali)))
+if args.tinput:
+    imagelist_test = readlist(args.tinput)
+    print('-> Found {} images for test'.format(len(imagelist_test)))
 
 # Create output file
 if os.path.exists(args.output):
@@ -72,12 +84,17 @@ if os.path.exists(args.output):
 h5 = h5py.File(args.output, 'w')
 
 # Fill HDF5
-h5.create_dataset('train/images', # N x C x H x W
-    (len(imagelist), 3, args.pixels, args.pixels), dtype=np.byte, **compargs)
-h5.create_dataset('train/labels', # N x 1
-    (len(imagelist), 1), dtype=np.int, **compargs)
+createdsets(h5, imagelist, 'train/images', 'train/labels')
 fillhdf5(h5, imagelist, 'train')
-print(' *> processed {} images'.format(len(imagelist)))
+print(' *> processed {} images for training'.format(len(imagelist)))
+if args.vinput:
+    createdsets(h5, imagelist_vali, 'val/images', 'val/labels')
+    fillhdf5(h5, imagelist_vali, 'val')
+    print(' *> processed {} images for validation'.format(len(imagelist_vali)))
+if args.tinput:
+    createdsets(h5, imagelist_test, 'test/images', 'test/labels')
+    fillhdf5(h5, imagelist_test, 'test')
+    print(' *> processed {} images for validation'.format(len(imagelist_test)))
 
 # Write to disk
 h5.close()
