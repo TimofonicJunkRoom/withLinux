@@ -28,7 +28,7 @@ parser.add_argument('--test', type=str, action='store', dest='tinput',
                     help='test set list file')
 parser.add_argument('-o', type=str, action='store', dest='output',
                     default=__file__+'.h5', help='output hdf5 path')
-parser.add_argument('-p', type=int, action='store', dest='pixels',
+parser.add_argument('-p', type=int, action='store', dest='pixels', # i.e. Scale
                     required=True, help='output image size')
 parser.add_argument('-s', action='store_true', dest='s',
                     default=False, help='shuffle the list?')
@@ -38,6 +38,12 @@ parser.add_argument('-f', action='store_true', dest='force',
                     default=False, help='force overwrite output hdf5')
 parser.add_argument('-v', action='store_true', dest='view',
                     default=False, help='view example image')
+parser.add_argument('--div', action='store_true', dest='t_div', #TODO
+                    default=False, help='transform: [0,255]->[0,1]?')
+parser.add_argument('--normalize', action='store_true', dest='t_norm', # TODO
+                    default=False, help='transform: chan = (chan - mean) / std)')
+parser.add_argument('--centercrop', action='store_true', dest='t_ccrop', #TODO
+                    default=False, help='transform: center crop')
 args = parser.parse_args()
 
 ## Configure
@@ -109,4 +115,5 @@ if args.tinput:
 # Write to disk
 h5.close()
 print('-> Dataset saved as {}'.format(args.output))
+call(['sleep', '0.1'])
 call(['h5ls', '-rv', args.output ])
