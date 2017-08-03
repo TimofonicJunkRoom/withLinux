@@ -83,6 +83,7 @@ mupdf
 octave
 oh-my-zsh
 openconnect
+p7zip
 pandoc
 parallel
 pep8
@@ -94,6 +95,7 @@ progress
 python3-ipdb
 python3-pip
 python3-xapian
+pv
 qemu
 qtqr
 quilt
@@ -119,6 +121,7 @@ swig
 taskwarrior
 teeworlds
 terminology
+testdisk
 texlive-full
 tpp
 ttf-ubuntu-font-family
