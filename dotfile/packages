@@ -7,6 +7,7 @@ packages="
 ack
 apt-xapian-index
 arandr
+atom
 axel
 bbswitch-dkms
 bmon
