@@ -52,6 +52,7 @@ glances
 gnome-builder
 gogs
 gpm
+gprof2dot
 grc
 gsmartcontrol
 guake
@@ -64,6 +65,7 @@ inxi
 ipython3
 julia
 jupyter-notebook
+jupyter-qtconsole
 latexila
 less
 lftp
