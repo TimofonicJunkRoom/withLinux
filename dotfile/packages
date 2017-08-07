@@ -73,6 +73,7 @@ libblas-dev
 libgoogle-glog-dev
 libhdf5-dev
 libopenblas-dev
+linux-perf
 lm-sensors
 lshw
 lsof
@@ -130,9 +131,11 @@ texlive-full
 tpp
 ttf-ubuntu-font-family
 ubuntu-dev-tools
+uftrace
 ufw
 unar
 vainfo
+valgrind
 vim
 vim-pathogen
 vim-youcompleteme
