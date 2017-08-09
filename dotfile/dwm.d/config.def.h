@@ -31,8 +31,8 @@ static const char dmenufont[]       = "Inconsolata:size=12";
 static const char normbordercolor[] = "#444444";
 static const char normbgcolor[]     = "#222222";
 static const char normfgcolor[]     = "#bbbbbb";
-static const char selbordercolor[]  = "#cc0066";
-static const char selbgcolor[]      = "#cc0066";
+static const char selbordercolor[]  = "#cc0066"; // d70a53
+static const char selbgcolor[]      = "#cc0066"; // d70a53
 static const char selfgcolor[]      = "#eeeeee";
 static const unsigned int baralpha  = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
