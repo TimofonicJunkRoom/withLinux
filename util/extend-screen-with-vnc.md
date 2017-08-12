@@ -13,7 +13,7 @@ Extending Screen with VNC Server
 
 ## Install required packages
 
-`x11vnc` `tightvncserver` `xtightvncviewer` `xrandr`
+`x11vnc` `tightvncserver` `xtightvncviewer` `xrandr` `arandr`
 
 ## Extending
 
@@ -55,3 +55,8 @@ xrandr --output DP-1 --off
 * Press F8 to pop up a menu in vncclient
 
 * use `xrandr --output DVI-0 --primary` to move your pannel.
+
+* You can use any device to extend your screen as long as it has vnc client, and
+is able to connect your computer and x11vnc server. For example, Another linux
+laptop is applicable, when it has any vnc viewer. An Android phone is applicable
+too, all that you need is to install an vnc viewer on your phone.
