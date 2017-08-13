@@ -2,6 +2,30 @@
 # translate argv with bing
 # 2015 Lumin Zhou
 
+'''
+# bingtrans
+[py3] bing translation shortcut in terminal  
+  
+It translates the argv you'd given, that's all.
+
+### example  
+```
+$ python3.4 t.py python
+```
+
+### hint
+add this into bashrc:
+```
+t () {
+  python3.4 some/dir/t.py $@
+}
+```
+then you can just call the script with
+```
+$ t <your keyword or sentense>
+```
+'''
+
 import sys
 import requests
 from html.parser import HTMLParser
@@ -31,4 +55,4 @@ for item in sys.argv[1:]:
 
 response = requests.get (quiry)
 parser.feed (response.text)
-# EOF
+
