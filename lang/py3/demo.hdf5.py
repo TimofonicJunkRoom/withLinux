@@ -78,3 +78,68 @@ f.visit(lambda x: print(x))
 f.close()
 
 log.info('demo end')
+
+# _____________________________________________________________________________
+
+log.info('generate src hdf5 file')
+f = h5py.File ('junk.hdf5', 'w')
+
+log.info('create data')
+t_cnn   = np.random.random((16,1024))
+t_lstm  = np.random.random((16,1024))
+t_tree  = np.random.random((16,100))
+t_label = np.random.random((16,100))
+
+log.info('write data')
+for i in range(1,2):
+  f['/'+str(i)+'/cnn_embed'] = t_cnn
+  f['/'+str(i)+'/lstm_embed'] = t_lstm
+  f['/'+str(i)+'/tree_idx'] = t_tree
+  f['/'+str(i)+'/label_idx'] = t_label
+
+log.info('write string')
+f['/strings/1'] = bytes('write a string to hdf5'.encode("utf8"))
+f['/strings/2'] = 'another string into hdf5'
+
+f.close()
+log.info('done')
+
+# _____________________________________________________________________________
+
+f = h5py.File('junk.h5', 'w')
+f.create_dataset('/string', (1,50), dtype='a25')
+f.create_dataset('/u8', (1,50), dtype=np.int32)
+
+f['/test'] = np.arange(10)
+f['test2'] = np.ones(10, dtype=np.uint8)
+
+f['/string'][0,0] = bytes('asdf'.encode('utf8'))
+print(f['/string'])
+
+f['/u8'][:] = np.ones((1,50), dtype=np.int32)
+f['u8'][0,:4] = np.zeros((1,4), dtype=np.int32)
+print(f['/u8'])
+
+f['zhs'] = '你好' # simply works, implicitly using utf8
+f['zhs2'] = '你好'.encode('utf8')
+print( f['zhs2'][...].all().decode() )
+
+f.close()
+
+# ____________________________________________________________________________
+'''
+Inspecting the resulting hdf5, and repack hdf5 into compressed format.
+
+    h5ls -r junk.h5
+    h5ls -rfv junk.h5
+    h5dump -g /strings junk.h5
+    h5dump -d /strings/1 junk.h5
+    h5stat junk.h5
+    h5repack -i junk.hdf5 -o junk.repack.h5 -f GZIP=9 -v
+
+Further reading:
+
+    http://cyrille.rossant.net/moving-away-hdf5/
+    http://cyrille.rossant.net/should-you-use-hdf5/
+'''
+
