@@ -78,6 +78,9 @@
 "chromium"
   Shift+Alt + w
 
+"vivaldi"
+  Shift+Alt + d
+
 ##################################
 # End of xbindkeys configuration #
 ##################################
