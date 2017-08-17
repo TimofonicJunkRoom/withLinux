@@ -214,7 +214,11 @@ for i in range(args.maxiter+1):
 
     pred = out.data.max(1)[1]
     correct = pred.eq(labels.data).cpu().sum()
-    print('-> Iter {:5d} |'.format(i), 'loss {:7.3f} |'.format(loss.data[0]),
+    print('-> Iter {:5d} ({:<5d}/{:5d} Eph {:>3d} ) |'.format(i,
+            (i+1)*args.batchsize % dataloader.max['trainval'],
+            dataloader.max['trainval'],
+            int((i+1)*args.batchsize / dataloader.max['trainval'])),
+            'loss {:7.3f} |'.format(loss.data[0]),
             'Bch Train Accu {:.2f}'.format(correct / out.size()[0]))
     perf_ml.go('train/loss', i, loss.data[0])
     perf_ml.go('train/acc', i, correct / out.size()[0])
