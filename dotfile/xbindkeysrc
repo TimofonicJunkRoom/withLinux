@@ -81,6 +81,9 @@
 "vivaldi"
   Shift+Alt + d
 
+"jupyter-qtconsole"
+  Shift+Alt + i
+
 ##################################
 # End of xbindkeys configuration #
 ##################################
