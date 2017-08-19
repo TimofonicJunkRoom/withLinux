@@ -77,6 +77,7 @@ export QUILT_PATCHES=debian/patches
 # https://github.com/fish-shell/fish-shell/issues/3473#issuecomment-254599357
 # https://superuser.com/questions/679498/specifying-an-alternate-shell-with-rsync
 if status --is-interactive
+   cat ~/withlinux/dotfile/rose_ascii.co.uk
    fortune-zh
    #cowsay -f stegosaurus "苦海无边，回头是岸"
    # 不忘初心，方得始终 -- L.J.R.
