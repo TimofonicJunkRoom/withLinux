@@ -1,4 +1,4 @@
-local log = require '../lumin_log'
+local log = require 'lumin_log'
 
 require 'torch'
 require 'nn'
