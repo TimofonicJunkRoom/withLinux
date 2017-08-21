@@ -1,4 +1,4 @@
-# PA = LU factorization, Julia 0.5
+# PA = LU factorization, Julia 0.6
 # L, U, P <- mylup( A )
 # L, U, p <- lu( A )
 
@@ -27,7 +27,7 @@ function mylup(A, debug=true)
 	end
 
 	# select the best pivot for the first row
-	cursor = indmax(abs(U[1:end,1]))
+	cursor = indmax(abs.(U[1:end,1]))
 	P[[1,cursor],:] = P[[cursor,1],:]
 	U[[1,cursor],:] = U[[cursor,1],:]
 	if U[1,1] == 0
@@ -43,7 +43,7 @@ function mylup(A, debug=true)
 	for i in 2:size(A,1)
 
 		# select pivot for row i, i > 1
-		cursor = indmax(abs(U[i:end,i])) +i-1
+		cursor = indmax(abs.(U[i:end,i])) +i-1
 		P[[i,cursor],:] = P[[cursor,i],:]
 		U[[i,cursor],:] = U[[cursor,i],:]
 		if U[i,i] == 0
