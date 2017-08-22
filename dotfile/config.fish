@@ -1,6 +1,7 @@
                                                                 # - Variables -
 export GIT_EDITOR=vim
 #export _JAVA_AWT_WM_NONREPARENTING=1
+set PATH $PATH $HOME/.local/bin $HOME/bin
 
                                                                   # - Helpers -
 function aup
