@@ -16,3 +16,5 @@ dwm:
 
 	-pkill -u $$USER xcompmgr;
 	xcompmgr & # transparent bar patch
+
+	sct 2500 # set screen color temperature to 2500
