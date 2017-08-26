@@ -37,6 +37,8 @@ wifi_connect () {
 		sudo nmcli -a dev wifi con $@
 	# first try to find a matching connection in profile.
 	# then try to connect the wifi specified by given information.
+	# If you are about to connect to a hidden wifi, try this:
+	# nmcli dev wifi con HIDDEN_NAME password PASSWORD hidden yes
 }
 wifi_disconnect () {
 	sudo nmcli device wifi disconnect
