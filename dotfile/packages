@@ -15,6 +15,7 @@ bpython3
 blender
 build-essential
 busybox-static
+catimg
 cmus
 codespell
 command-not-found
