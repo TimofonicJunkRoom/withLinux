@@ -14,12 +14,15 @@ from caffe.proto import caffe_pb2
 import numpy as np
 import pandas as pd
 import h5py
+import sys
 from sklearn.model_selection import train_test_split
 print('-> Using CAFFE', caffe.__version__)
 
-caffe.set_mode_cpu()
-#caffe.set_device(0)
-#caffe.set_mode_gpu()
+if len(sys.argv)>1:
+       caffe.set_device(0)
+       caffe.set_mode_gpu()
+else:
+       caffe.set_mode_cpu()
 
 ### Read Train-Val data and split ###
 trainval = pd.read_csv("train.csv")
