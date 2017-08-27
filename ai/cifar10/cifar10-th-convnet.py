@@ -106,6 +106,7 @@ th.set_default_tensor_type(X_TENSOR)
 
 ### DataLoader ###
 dataloader = DataLoader()
+#dataloader.satellite(64, 'trainval', 100)
 
 ### Model ###
 class QuickNet(th.nn.Module):
@@ -199,6 +200,7 @@ for i in range(args.maxiter+1):
     # read data
     perf_tm.go('data/fetch')
     images, labels = dataloader.getBatch('trainval', args.batchsize)
+    #images, labels = dataloader.Q.get()
     images, labels = transform(images, labels)
     perf_tm.halt('data/fetch')
 
@@ -242,6 +244,8 @@ print('-> Complete. Time elapsed', perf_tm.d['all'])
 print('=> Dump Summaries')
 perf_tm.dump()
 perf_ml.dump()
+
+#dataloader.landing()
 
 '''
 time:

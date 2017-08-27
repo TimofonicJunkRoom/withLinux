@@ -91,6 +91,20 @@ class DataLoader(object):
                 self.reset(split)
             batchids.append(self.cur[split])
             self.inc(split)
+        #fancy = False
+        #if not fancy:
+        #    if split not in ('trainval', 'test'):
+        #        raise Exception("Unexpected split")
+        #    if split=='trainval':
+        #        batchids = [random.choice(range(50000)) for _ in range(batchsize)]
+        #    # perform the not that fancy fetching.
+        #    #print(' :low performance fetching.')
+        #    for i,idx in enumerate(batchids):
+        #        batchim[i,:] = self.trainval_images[idx,:]
+        #        #batchim[i,:] = getattr(self, '{}_images'.format(split))[idx,:]
+        #        #batchlb[i,:] = getattr(self, '{}_labels'.format(split))[idx,:]
+        #    return batchim, batchlb
+        # Fancy fetching with numpy. HDF5 doesn't support this.
         if split=='trainval':
             batchids = [ random.choice(range(50000)) for _ in range(batchsize) ] # 75%->77%
             batchim[:,:] = self.trainval_images[batchids, :]
@@ -109,14 +123,14 @@ class DataLoader(object):
         self.Q = Queue(qbufsize)
         def _background(dataloader, split, batchsize):
             while True:
-                print(' *> {} : satellite putting data in qbuf'.format(os.getpid()))
+                #print(' *> {} : satellite putting data in qbuf'.format(os.getpid()))
                 dataloader.Q.put(dataloader.getBatch(split, batchsize))
         self.worker = Process(target=_background,
                               args=(self, split, batchsize))
         self.worker.start()
     def landing(self):
         ''' the satellite is landing '''
-        self.worker.join(timeout=0.5)
+        self.worker.join(timeout=0.1)
         print(' *> {} : pulling satellite to ground ...'.format(os.getpid()))
         self.worker.terminate()
 
