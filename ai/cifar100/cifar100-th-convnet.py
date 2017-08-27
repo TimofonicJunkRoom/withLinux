@@ -137,7 +137,7 @@ class QuickNet(th.nn.Module):
           ('bn5',   th.nn.BatchNorm1d(192)),
           ('relu5', th.nn.ReLU()),
 
-          ('fc6',   th.nn.Linear(192, 10)),
+          ('fc6',   th.nn.Linear(192, 100)),
 
         ]))
         th.nn.init.xavier_uniform(self.SEQ1.conv1.weight, gain=1.414)
