@@ -32,7 +32,7 @@ argparser.add_argument('-t', '--testevery', type=int, default=200,
                        help='set model evaluation interval')
 argparser.add_argument('-o', '--decay0', type=int, default=500,
                        help='set the first iteration where the learning rate starts to decay')
-argparser.add_argument('-T', '--decayperiod', type=int, default=2000,
+argparser.add_argument('-T', '--decayT', type=int, default=2000,
                        help='set the learning rate decay period')
 argparser.add_argument('-e', '--lr', type=float, default=1e-3,
                        help='set the initial learning rate')
@@ -54,6 +54,7 @@ def barX(colorcode):
     return lambda x,xmax,width: print('{:>4.0%}'.format(x/xmax)+\
         '|'+'\x1b[{};1m'.format(colorcode)+'*'*round(width*x/xmax)+\
         ' '*round(width-width*x/xmax)+'\x1b[;m'+'|')
+# Tips : get terminal width like this -- os.get_terminal_size().columns-6
 barG = barX('32') # Green for train Acc
 barY = barX('33') # Yellow for train loss
 barC = barX('36') # Cyan for test Acc
@@ -114,22 +115,30 @@ class QuickNet(th.nn.Module):
     def __init__(self):
         super(QuickNet, self).__init__()
         self.SEQ1 = th.nn.Sequential(OrderedDict([
+
           ('conv1', th.nn.Conv2d(3, 32, 5, stride=1, padding=2)),
+          ('bn1',   th.nn.BatchNorm2d(32)),
           ('relu1', th.nn.ReLU()),
           ('pool1', th.nn.MaxPool2d(3, stride=2, padding=1)),
-          ('bn1',   th.nn.BatchNorm2d(32)),
+
           ('conv2', th.nn.Conv2d(32, 64, 5, stride=1, padding=2)),
-          ('relu2', th.nn.ReLU()),
           ('bn2',   th.nn.BatchNorm2d(64)),
+          ('relu2', th.nn.ReLU()),
           ('pool2', th.nn.MaxPool2d(3, stride=2, padding=1)),
+
         ]))
         self.SEQ2 = th.nn.Sequential(OrderedDict([
+
           ('fc4',   th.nn.Linear(4096, 384)),
-          ('relu4', th.nn.ReLU()),
           ('bn4',   th.nn.BatchNorm1d(384)),
+          ('relu4', th.nn.ReLU()),
+
           ('fc5',   th.nn.Linear(384, 192)),
-          ('bn6',   th.nn.BatchNorm1d(192)),
-          ('fc6',   th.nn.Linear(192, 100)),
+          ('bn5',   th.nn.BatchNorm1d(192)),
+          ('relu5', th.nn.ReLU()),
+
+          ('fc6',   th.nn.Linear(192, 10)),
+
         ]))
         th.nn.init.xavier_uniform(self.SEQ1.conv1.weight, gain=1.414)
         th.nn.init.constant(self.SEQ1.conv1.bias, 0.1)
@@ -196,7 +205,7 @@ for i in range(args.maxiter+1):
     # decay the learning rate
     if i>args.decay0:
         # $\eta = \eta_0 * 0.5 ^{ (i - i_0) / i_period }$
-        curlr = args.lr * (0.5 ** ((i-args.decay0)/args.decayperiod))
+        curlr = args.lr * (0.5 ** ((i-args.decay0)/args.decayT))
         for param_group in optimizer.param_groups:
             param_group['lr'] = curlr
             #print(param_group['lr'])
@@ -213,7 +222,11 @@ for i in range(args.maxiter+1):
 
     pred = out.data.max(1)[1]
     correct = pred.eq(labels.data).cpu().sum()
-    print('-> Iter {:5d} |'.format(i), 'loss {:7.3f} |'.format(loss.data[0]),
+    print('-> Iter {:5d} ({:<5d}/{:5d} Eph {:>3d} ) |'.format(i,
+            (i+1)*args.batchsize % dataloader.max['trainval'],
+            dataloader.max['trainval'],
+            int((i+1)*args.batchsize / dataloader.max['trainval'])),
+            'loss {:7.3f} |'.format(loss.data[0]),
             'Bch Train Accu {:.2f}'.format(correct / out.size()[0]))
     perf_ml.go('train/loss', i, loss.data[0])
     perf_ml.go('train/acc', i, correct / out.size()[0])
