@@ -13,3 +13,12 @@ import numpy as np
 t = np.arange(0., 5., 0.2)
 plt.plot(t, t, 'r--', t, t**2, 'bs', t, t**3, 'g^')
 plt.savefig('b.pdf')
+
+'''
+Printing figure to file when there is no display available
+https://stackoverflow.com/questions/2766149/possible-to-use-pyplot-without-display
+
+import matplotlib as mpl
+mpl.use('SVG') # or 'Agg'-png
+from matplotlib import pylab
+'''
