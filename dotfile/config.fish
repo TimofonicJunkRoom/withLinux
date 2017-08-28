@@ -24,6 +24,7 @@ abbr -a px ps -ux
 abbr -a p python3
 abbr -a p3 python3
 abbr -a ip3 ipython3
+abbr -a ipp pypy3 -m IPython
 
 # Julia 0.6 Official Binary Tarball
 function jl
