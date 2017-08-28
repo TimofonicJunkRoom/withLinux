@@ -6,6 +6,12 @@ import sys
 import os
 import time
 
+import torch as th
+import torch.nn.functional as F
+from torch.autograd import Variable
+import numpy as np
+print('-> Using TH', th.__version__)
+
 perf_tm = {}
 perf_getdiff = lambda d: d['end'] - d['start']
 
@@ -18,13 +24,8 @@ os.putenv('OMP_NUM_THREADS', X_THNUM)
 os.putenv('MKL_NUM_THREADS', X_THNUM)
 
 USE_GPU = True if len(sys.argv)>1 else False # Append any argument to command line to toggle GPU mode
+USE_GPU = USE_GPU if th.cuda.is_available() else False
 print('-> USE_GPU: {}'.format(USE_GPU))
-
-import torch as th
-import torch.nn.functional as F
-from torch.autograd import Variable
-import numpy as np
-print('-> Using TH', th.__version__)
 
 th.manual_seed(1)
 if not USE_GPU:
@@ -42,20 +43,19 @@ class Net(th.nn.Module):
         super(Net, self).__init__()
         self.conv1 = th.nn.Conv2d(1, 6, 5) # input channel, 6 out channel, 5x5 conv
         self.conv2 = th.nn.Conv2d(6, 16, 5)
-        self.fc1 = th.nn.Linear(16*4*4, 120) # affine operation
-        self.fc2 = th.nn.Linear(120, 84)
-        self.bn2 = th.nn.BatchNorm1d(84)
-        self.drop2 = th.nn.Dropout(p=0.2)
-        self.fc3 = th.nn.Linear(84, 10)
+        self.fc3 = th.nn.Linear(16*4*4, 120) # affine operation
+        self.fc4 = th.nn.Linear(120, 84)
+        self.bn4 = th.nn.BatchNorm1d(84)
+        self.drop4 = th.nn.Dropout(p=0.2)
+        self.fc5 = th.nn.Linear(84, 10)
     def forward(self, x):
         x = F.max_pool2d(F.relu(self.conv1(x)), (2,2))
         x = F.max_pool2d(F.relu(self.conv2(x)), 2)
         x = x.view(-1, self.num_flat_features(x))
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.bn2(x)
-        x = self.drop2(x)
-        x = self.fc3(x)
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.bn4(self.fc4(x)))
+        x = self.drop4(x)
+        x = self.fc5(x)
         return x
     def num_flat_features(self, x):
         size = x.size()[1:]
@@ -138,7 +138,8 @@ for i in range(dataloader.itersInEpoch('test', 100)):
     images, labels = transform(images, labels)
     out = net(images)
     pred = out.data.max(1)[1]
-    predictions += [ pred[i][0] for i in range(len(pred)) ]
+    #predictions += [ pred[i][0] for i in range(len(pred)) ]
+    predictions += [ pred[i] for i in range(len(pred)) ] # pytorch 0.2.0
     print('.', end=''); sys.stdout.flush()
 print(' -> prediction size ', len(predictions))
 for i,l in enumerate(predictions):
