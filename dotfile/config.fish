@@ -16,13 +16,14 @@ abbr -a aug sudo apt upgrade
 abbr -a gpa "git push; git push --all; git push --tags"
 abbr -a off systemctl poweroff
 abbr -a rg ranger
-abbr -a ip3 ipython3
-abbr -a p3 ptipython3
 abbr -a sv sudo supervisorctl
 abbr -a bt bluetoothctl
 abbr -a nb jupyter notebook --no-browser
 abbr -a px ps -ux
+
 abbr -a p python3
+abbr -a p3 python3
+abbr -a ip3 ipython3
 
 # Julia 0.6 Official Binary Tarball
 function jl
