@@ -16,50 +16,43 @@ Linux并期望在科学计算方面糙快猛，可以考虑`Archlinux`。
 
 部分主要Linux基础命令，以下列出的工具参考了Debian的`important`,`required`和`standard`三种Priority软件包，并不包括管理员工具。
 
+* 自救技能查看帮助 `man`
+
 * 基础文件操作和POSIX权限
 
 ```shell
 列出当前目录内容 `ls -lh`，查看文件详情`stat`
 创建文件 `touch`，编辑文件 `nano` 或 `vim` 或 `emacs`。
-删除文件 `rm` (Danger)，删除文件夹 `rmdir`
-移动文件 `mv` (Danger)
-复制文件 `cp`
-软链接   `ln`
-查看文本文件： `cat`，查看文件头 `head`，查看文件尾 `tail`
+删除文件 `rm` (Danger)，删除文件夹 `rmdir` 移动文件 `mv` (Danger)
+复制文件 `cp` 软链接   `ln`
+打印文本文件： `cat`，查看文件头 `head`，查看文件尾 `tail` 文件查看器： less
 排序： `sort`，去重 `uniq`，文件行数统计 `wc`
 下载 `wget URL`
 POSIX文件权限：`chmod`, `chown`， `chgrp`
 同步磁盘缓存： `sync`
-计算md5哈希： `md5sum`
+判断文件类型： file  计算md5哈希： `md5sum`
 归档，压缩和解压缩： `tar`, `gzip`, `bzip2`, `xz`
-判断文件类型： file
-文件查看器： less
 ```
-
-* 查看帮助手册 `man`
 
 * Shell与进程
 
 ```
 本地终端：`bash`, 远程终端：`ssh`
-查看用户进程 `ps ux`，结束进程 `kill PID`，资源监视 `top`，现代化资源监视 `htop` , 屏蔽SIGHUP：`nohup`
+查看用户进程 `ps ux`，结束进程 `kill PID`，资源监视 `top`
+现代化资源监视 `htop` , 屏蔽SIGHUP：`nohup`
 ```
 
-* 安全保障
-
-```
-版本控制：`git`
-```
 
 * 进阶生产力
 
 ```
+版本控制：`git`
 流编辑器：`sed`
 文件查找工具：`find`
 内容查找工具：`grep`
 ```
 
-* 编译器和解释器们
+* 编译器和解释器们以及编译系统
 
 ```shell
 Awk解释器：awk
@@ -74,9 +67,9 @@ Perl解释器：`perl`
 Ruby解释器：`ruby`
 Rust编译器：`rustc`
 Scala: `scala`
-```
 
-* 编译系统 `make` `cmake`
+编译系统: `make` `cmake` `setup.py`
+```
 
 ### 基本设施
 
