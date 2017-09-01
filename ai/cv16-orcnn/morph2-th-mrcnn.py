@@ -305,3 +305,9 @@ print('-> Complete. Time elapsed', perf_tm.d['all'])
 print('=> Dump Summaries')
 perf_tm.dump()
 perf_ml.dump()
+
+'''
+Ref performance
+  MAE 3.6
+  MAE 3.4 bn4
+'''
