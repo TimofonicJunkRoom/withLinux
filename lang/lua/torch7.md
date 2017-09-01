@@ -1,6 +1,6 @@
 Torch reference
 ===
->Lumin Zhou, Mar 2016
+> Mar 2016
 
 This is a brief note of torch7 documentations.
 
