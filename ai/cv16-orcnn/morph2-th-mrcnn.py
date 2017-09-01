@@ -212,7 +212,7 @@ def transform(images, labels, evaluate=False):
     else:
         xoff, yoff = random.randint(0,4), random.randint(0,4)
     # mean, scale and shift
-    images = (images - image_mean)[:,:,yoff:yoff+59, xoff:xoff+59]/ 255.
+    images = (images - image_mean)[:,:,yoff:yoff+60, xoff:xoff+60]/ 255.
     labels = labels - 16.
     # mirroring while training
     if evaluate==False and random.choice((True,False)):
