@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
-Informal repro of cv16-orcnn: MR-CNN
+Informal repro of CV16 - ORCNN : MR-CNN
+Unofficial and Modified implementation of Ordinal Regression With Multiple Output CNN for Age Estimation (CVPR2016).
 '''
 import sys
 import os
@@ -136,12 +137,12 @@ class Model(th.nn.Module):
           ('norm2', th.nn.CrossMapLRN2d(9, alpha=0.001, beta=0.75)),
           ('pool2', th.nn.MaxPool2d(3, stride=2, padding=1)),
           # 128x40x11x11
-           
+
           ('conv3', th.nn.Conv2d(40, 80, 11, stride=1, padding=0)),
           # 128x80x1x1
 #          ('bn3',   th.nn.BatchNorm2d(80)),
           ('relu3', th.nn.ReLU()),
-          ('norm2', th.nn.CrossMapLRN2d(9, alpha=0.001, beta=0.75)),
+          ('norm3', th.nn.CrossMapLRN2d(9, alpha=0.001, beta=0.75)),
 
         ]))
         th.nn.init.normal(self.SEQ1.conv1.weight, mean=0, std=0.01)
@@ -157,7 +158,7 @@ class Model(th.nn.Module):
           # 128x80
 #          ('bn4',   th.nn.BatchNorm1d(80)),
           ('relu4', th.nn.ReLU()),
-          
+
 #          ('drop5', th.nn.Dropout(0.2)),
           ('fc5',   th.nn.Linear(80, 1)),
           # 128x1
@@ -222,34 +223,6 @@ def transform(images, labels, evaluate=False):
     if args.gpu: images, labels = images.cuda(), labels.cuda()
     if not args.double: images, labels = images.float(), labels.float()
     return images, labels
-
-#    # -1x3x64x64
-#    #images = images - image_mean
-#    images_np = np.zeros((images.shape[0], 3, 60, 60))
-#    if not evaluate:
-#        for i in range(images.shape[0]):
-#            # Do random cropping
-#            im = Image.fromarray(images[i,:,:,:].reshape(3,64,64).swapaxes(0,2), 'RGB')
-#            xoff, yoff = random.randint(0,4), random.randint(0,4)
-#            im = np.asarray(im.crop((xoff, yoff, xoff+60, yoff+60)))
-#            images_np[i,:,:,:] = im.swapaxes(0,2)
-#        if random.choice((True,False)):
-#            images_np = np.flip(images_np, 3)
-#        #print('---------------------', images_np.shape)
-#    else:
-#        for i in range(images.shape[0]):
-#            im = Image.fromarray(images[i,:,:,:].reshape(3,64,64).swapaxes(0,2), 'RGB')
-#            im = np.asarray(im.resize((60,60), Image.BILINEAR))
-#            images_np[i,:,:,:] = im.swapaxes(0,2)
-#        #print('---------------------', images_np.shape)
-#
-#    images = images_np.reshape(-1, 3, 60, 60) #/ 255.
-#    labels = labels - 16.
-#    images = Variable(th.from_numpy(images.astype(np.double)), requires_grad=False)
-#    labels = Variable(th.from_numpy(labels.reshape(-1, 1).astype(np.double)), requires_grad=False)
-#    if args.gpu: images, labels = images.cuda(), labels.cuda()
-#    if not args.double: images, labels = images.float(), labels.float()
-#    return images, labels
 
 ### Evaluation on Validation set
 def evaluate(i, net, dataloader):
