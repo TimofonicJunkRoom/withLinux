@@ -13,6 +13,7 @@ bbswitch-dkms
 bmon
 bpython3
 blender
+btrfs-progs
 build-essential
 busybox-static
 catimg
@@ -21,6 +22,7 @@ codespell
 command-not-found
 cryptsetup
 debhelper
+debian-policy
 debmake
 debmirror
 devscripts
