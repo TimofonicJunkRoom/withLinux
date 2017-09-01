@@ -109,12 +109,12 @@ dataloader = DataLoader()
 #dataloader.satellite(64, 'trainval', 100)
 
 ### Model ###
-class QuickNet(th.nn.Module):
+class Model(th.nn.Module):
     ''' Reference: caffe/examples/cifar10 # 70%
     https://github.com/tensorflow/models/blob/master/tutorials/image/cifar10/cifar10.py
     '''
     def __init__(self):
-        super(QuickNet, self).__init__()
+        super(Model, self).__init__()
         self.SEQ1 = th.nn.Sequential(OrderedDict([
 
           ('conv1', th.nn.Conv2d(3, 32, 5, stride=1, padding=2)),
@@ -150,7 +150,7 @@ class QuickNet(th.nn.Module):
         return x
 
 ### Create Instances
-net = QuickNet() if not args.gpu else QuickNet().cuda()
+net = Model() if not args.gpu else Model().cuda()
 if not args.double: net = net.float()
 print(net)
 crit = th.nn.CrossEntropyLoss()
