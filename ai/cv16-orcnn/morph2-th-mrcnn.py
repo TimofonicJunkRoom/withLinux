@@ -307,6 +307,8 @@ perf_tm.dump()
 perf_ml.dump()
 
 '''
+Ref experiment
+  Adam is not always better than SGD. Here SGD seems to performe much better.
 Ref performance
   MAE 3.6
   MAE 3.4 bn4
