@@ -42,17 +42,20 @@ class Net(th.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.conv1 = th.nn.Conv2d(1, 6, 5) # input channel, 6 out channel, 5x5 conv
+        self.bn1 = th.nn.BatchNorm2d(6)
         self.conv2 = th.nn.Conv2d(6, 16, 5)
+        self.bn2 = th.nn.BatchNorm2d(16)
         self.fc3 = th.nn.Linear(16*4*4, 120) # affine operation
+        self.bn3 = th.nn.BatchNorm2d(120)
         self.fc4 = th.nn.Linear(120, 84)
         self.bn4 = th.nn.BatchNorm1d(84)
         self.drop4 = th.nn.Dropout(p=0.2)
         self.fc5 = th.nn.Linear(84, 10)
     def forward(self, x):
-        x = F.max_pool2d(F.relu(self.conv1(x)), (2,2))
-        x = F.max_pool2d(F.relu(self.conv2(x)), 2)
+        x = F.max_pool2d(F.relu(self.bn1(self.conv1(x))), (2,2))
+        x = F.max_pool2d(F.relu(self.bn2(self.conv2(x))), 2)
         x = x.view(-1, self.num_flat_features(x))
-        x = F.relu(self.fc3(x))
+        x = F.relu(self.bn3(self.fc3(x)))
         x = F.relu(self.bn4(self.fc4(x)))
         x = self.drop4(x)
         x = self.fc5(x)

@@ -22,7 +22,7 @@ mlp = mx.sym.Softmax(data=fc3, name='softmax')
 
 model = mx.mod.Module(symbol=mlp, context=mx.cpu())
 model.fit(train_iter, eval_data=val_iter,
-  optimizer='adam', optimizer_params={'learning_rate':0.1},
+  optimizer='adam', optimizer_params={'learning_rate':0.01},
   eval_metric='acc',
   batch_end_callback = mx.callback.Speedometer(batchsize, 1),
   num_epoch=3)
