@@ -181,10 +181,10 @@ class Model(th.nn.Module):
             def dumpshape(module, x):
                 for name, m in list(module.named_modules())[1:]:
                     print('*> pre ', name.center(16),
-                          'SHAPE', psize(x.size()))
+                          'SHAPE', psize(x.size()).center(32))
                     x = m(x)
                     print('*> post', name.center(16),
-                          'SHAPE', psize(x.size()))
+                          'SHAPE', psize(x.size()).center(32))
                 return x
             x = dumpshape(self.SEQ1, x)
             x = x.view(-1, 80)
