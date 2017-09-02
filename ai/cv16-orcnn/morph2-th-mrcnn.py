@@ -315,3 +315,129 @@ Ref performance
   MAE 3.4 bn4
   MAE best@3.15 bn4, 72000
 '''
+
+''' solver.prototxt e22_wacv
+net: "net.prototxt"
+# train.subset test2 has 10000 images
+test_iter: 104
+test_interval: 200
+base_lr: 0.0001
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+stepsize: 100000
+display: 1
+max_iter: 24000
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 500
+snapshot_prefix: "cnnage"
+solver_mode: CPU # -- Intel Xeon W3690
+#debug_info: true
+'''
+
+''' net.prototxt e22_wacv
+name: "data" mirror: true crop_size: 60 mean_file: "wacv8.mean" batch_size: 128
+name: "data" mirror: false crop_size: 60 mean_file: "wacv2.mean" batch_size: 100
+name: "power" bottom: "label" top: "labelp" power: 1.0 scale: 1.0 shift: -16.0
+
+name: "conv1" num_output: 20 kernel_size: 5 stride: 1 pad: 0 weight_filler { type: "gaussian" std: 0.01 } bias_filler { type: "constant" value: 0.05 }
+name: "relu1"
+name: "norm1" type: "LRN" lrn_param { local_size: 9 alpha: 0.001 beta: 0.75 }
+name: "pool1" type: "Pooling" pooling_param { pool: MAX kernel_size: 3 stride: 2 }
+
+name: "conv2" num_output: 40 kernel_size: 7 stride: 1 pad: 0 weight_filler { type: "gaussian" std: 0.01 } bias_filler { type: "constant" value: 0.05 }
+name: "relu2"
+name: "norm2" type: "LRN" lrn_param { local_size: 9 alpha: 0.001 beta: 0.75 }
+name: "pool2" type: "Pooling" pooling_param { pool: MAX kernel_size: 3 stride: 2 }
+
+name: "conv3" num_output: 80 kernel_size: 11 stride: 1 pad: 0 weight_filler { type: "gaussian" std: 0.01 } bias_filler { type: "constant" value: 0.05 }
+name: "relu3"
+name: "norm3" type: "LRN" lrn_param { local_size: 9 alpha: 0.001 beta: 0.75 }
+
+name: "fc4" type: "InnerProduct" num_output: 80 weight_filler { type: "gaussian" std: 0.005 } bias_filler { type: "constant" value: 0.05 }
+name: "relu4"
+name: "fc5" type: "InnerProduct" num_output: 1 weight_filler { type: "gaussian" std: 0.005 } bias_filler { type: "constant" value: 0.05 }
+
+name: "loss" type: "EuclideanLoss"
+name: "MAE" type: "MAE" bottom: "fc5" bottom: "labelp"
+
+## append 1 Apr. 2016
+layer { name: "dumpprediction" type: "Power" bottom: "fc5" top: "dumpprediction" }
+layer { name: "dumplable" type: "Power" bottom: "labelp" top: "dumplabel" }
+'''
+
+'''
+I0821 15:14:39.903503 26133 net.cpp:380] data -> data
+I0821 15:14:39.903602 26133 net.cpp:129] Top shape: 128 3 60 60 (1382400)
+
+I0821 15:14:39.903750 26133 net.cpp:380] label -> label
+I0821 15:14:39.903837 26133 net.cpp:129] Top shape: 128 1 (128)
+
+I0821 15:14:39.903944 26133 net.cpp:406] power <- label
+I0821 15:14:39.903960 26133 net.cpp:380] power -> labelp
+I0821 15:14:39.904016 26133 net.cpp:129] Top shape: 128 1 (128)
+
+I0821 15:14:39.904075 26133 net.cpp:406] conv1 <- data
+I0821 15:14:39.904093 26133 net.cpp:380] conv1 -> conv1
+I0821 15:14:39.904253 26133 net.cpp:129] Top shape: 128 20 56 56 (8028160)
+
+I0821 15:14:39.904321 26133 net.cpp:406] relu1 <- conv1
+I0821 15:14:39.904336 26133 net.cpp:367] relu1 -> conv1 (in-place)
+I0821 15:14:39.904367 26133 net.cpp:129] Top shape: 128 20 56 56 (8028160)
+
+I0821 15:14:39.904420 26133 net.cpp:406] norm1 <- conv1
+I0821 15:14:39.904435 26133 net.cpp:380] norm1 -> norm1
+I0821 15:14:39.904471 26133 net.cpp:129] Top shape: 128 20 56 56 (8028160)
+
+I0821 15:14:39.904528 26133 net.cpp:406] pool1 <- norm1
+I0821 15:14:39.904544 26133 net.cpp:380] pool1 -> pool1
+I0821 15:14:39.904580 26133 net.cpp:129] Top shape: 128 20 28 28 (2007040)
+
+I0821 15:14:39.904635 26133 net.cpp:406] conv2 <- pool1
+I0821 15:14:39.904651 26133 net.cpp:380] conv2 -> conv2
+I0821 15:14:39.905395 26133 net.cpp:129] Top shape: 128 40 22 22 (2478080)
+
+I0821 15:14:39.905454 26133 net.cpp:406] relu2 <- conv2
+I0821 15:14:39.905469 26133 net.cpp:367] relu2 -> conv2 (in-place)
+I0821 15:14:39.905500 26133 net.cpp:129] Top shape: 128 40 22 22 (2478080)
+
+I0821 15:14:39.905552 26133 net.cpp:406] norm2 <- conv2
+I0821 15:14:39.905567 26133 net.cpp:380] norm2 -> norm2
+I0821 15:14:39.905601 26133 net.cpp:129] Top shape: 128 40 22 22 (2478080)
+
+I0821 15:14:39.905652 26133 net.cpp:406] pool2 <- norm2
+I0821 15:14:39.905668 26133 net.cpp:380] pool2 -> pool2
+I0821 15:14:39.905704 26133 net.cpp:129] Top shape: 128 40 11 11 (619520)
+
+I0821 15:14:39.905758 26133 net.cpp:406] conv3 <- pool2
+I0821 15:14:39.905774 26133 net.cpp:380] conv3 -> conv3
+I0821 15:14:39.914450 26133 net.cpp:129] Top shape: 128 80 1 1 (10240)
+
+I0821 15:14:39.914613 26133 net.cpp:406] relu3 <- conv3
+I0821 15:14:39.914654 26133 net.cpp:367] relu3 -> conv3 (in-place)
+I0821 15:14:39.914734 26133 net.cpp:129] Top shape: 128 80 1 1 (10240)
+
+I0821 15:14:39.914880 26133 net.cpp:406] norm3 <- conv3
+I0821 15:14:39.914921 26133 net.cpp:380] norm3 -> norm3
+I0821 15:14:39.915004 26133 net.cpp:129] Top shape: 128 80 1 1 (10240)
+
+I0821 15:14:39.915148 26133 net.cpp:406] fc4 <- norm3
+I0821 15:14:39.915189 26133 net.cpp:380] fc4 -> fc4
+I0821 15:14:39.915402 26133 net.cpp:129] Top shape: 128 80 (10240)
+
+I0821 15:14:39.915550 26133 net.cpp:406] relu4 <- fc4
+I0821 15:14:39.915588 26133 net.cpp:367] relu4 -> fc4 (in-place)
+I0821 15:14:39.915668 26133 net.cpp:129] Top shape: 128 80 (10240)
+
+I0821 15:14:39.915812 26133 net.cpp:406] fc5 <- fc4
+I0821 15:14:39.915853 26133 net.cpp:380] fc5 -> fc5
+I0821 15:14:39.915946 26133 net.cpp:129] Top shape: 128 1 (128)
+
+I0821 15:14:39.916098 26133 net.cpp:406] loss <- fc5
+I0821 15:14:39.916134 26133 net.cpp:406] loss <- labelp
+I0821 15:14:39.916175 26133 net.cpp:380] loss -> loss
+I0821 15:14:39.916220 26133 net.cpp:122] Setting up loss
+I0821 15:14:39.916259 26133 net.cpp:129] Top shape: (1)
+I0821 15:14:39.916292 26133 net.cpp:132]     with loss weight 1
+'''
