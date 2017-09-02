@@ -308,12 +308,14 @@ perf_ml.dump()
 
 '''
 Ref experiment
-  Adam is not always better than SGD. Here SGD seems to perform much better.
+  Adam is not always better than SGD. Here SGD seems to perform much better. (lr)?
+  The performance gets worse with all the BN layers enabled.
 Ref performance
   MAE 3.6 24000
   MAE 3.26 72000
   MAE 3.4 bn4
   MAE best@3.15 bn4, 72000
+  MAE best@3.13 bn4+drop0.2, 72000
 '''
 
 ''' solver.prototxt e22_wacv
