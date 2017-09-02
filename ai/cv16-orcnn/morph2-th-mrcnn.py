@@ -27,7 +27,7 @@ argparser.add_argument('-g', '--gpu', action='store_true',
                        help='use GPU/CUDA insteaf of CPU')
 argparser.add_argument('-d', '--double', action='store_true',
                        help='use fp64 instead of fp32')
-argparser.add_argument('-m', '--maxiter', type=int, default=24000,
+argparser.add_argument('-m', '--maxiter', type=int, default=72000,
                        help='set maximum iterations of training',)
 argparser.add_argument('-s', '--seed', type=int, default=1,
                        help='set manual seed')
@@ -156,7 +156,7 @@ class Model(th.nn.Module):
           # 128x80
           ('fc4',   th.nn.Linear(80, 80)),
           # 128x80
-#          ('bn4',   th.nn.BatchNorm1d(80)),
+          ('bn4',   th.nn.BatchNorm1d(80)),
           ('relu4', th.nn.ReLU()),
 
 #          ('drop5', th.nn.Dropout(0.2)),
@@ -308,8 +308,10 @@ perf_ml.dump()
 
 '''
 Ref experiment
-  Adam is not always better than SGD. Here SGD seems to performe much better.
+  Adam is not always better than SGD. Here SGD seems to perform much better.
 Ref performance
-  MAE 3.6
+  MAE 3.6 24000
+  MAE 3.26 72000
   MAE 3.4 bn4
+  MAE best@3.15 bn4, 72000
 '''
