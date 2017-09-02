@@ -180,10 +180,10 @@ class Model(th.nn.Module):
                 return msg
             def dumpshape(module, x):
                 for name, m in list(module.named_modules())[1:]:
-                    print('*> pre ', name.ljust(10),
+                    print('*> pre ', name.center(16),
                           'SHAPE', psize(x.size()))
                     x = m(x)
-                    print('*> post', name.ljust(10),
+                    print('*> post', name.center(16),
                           'SHAPE', psize(x.size()))
                 return x
             x = dumpshape(self.SEQ1, x)
