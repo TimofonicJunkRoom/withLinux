@@ -316,6 +316,7 @@ Ref performance
   MAE 3.4 bn4
   MAE best@3.15 bn4, 72000
   MAE best@3.13 bn4+drop0.2, 72000
+  MAE best@3.16 bn4+no_norm, 72000
 '''
 
 ''' solver.prototxt e22_wacv
