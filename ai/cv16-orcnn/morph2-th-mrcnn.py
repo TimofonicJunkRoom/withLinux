@@ -306,6 +306,14 @@ print('=> Dump Summaries')
 perf_tm.dump()
 perf_ml.dump()
 
+# Save the model
+modelpath = '{}.iter{}.pth'.format(__file__, i)
+print('=> Saving model to {}'.format(modelpath))
+th.save(net, modelpath)
+print('=> Reload and test')
+net = th.load(modelpath)
+evaluate('final', net, dataloader)
+
 '''
 Ref experiment
   Adam is not always better than SGD. Here SGD seems to perform much better. (lr)?
