@@ -103,6 +103,7 @@ plank
 pppoeconf
 ppsspp
 progress
+pylama
 python3-ipdb
 python3-pip
 python3-xapian
