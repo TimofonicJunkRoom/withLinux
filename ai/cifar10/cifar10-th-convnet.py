@@ -247,6 +247,15 @@ perf_ml.dump()
 
 #dataloader.landing()
 
+# Save the model
+modelpath = '{}.iter{}.pth'.format(__file__, i)
+print('=> Saving model to {}'.format(modelpath))
+th.save(net.state_dict(), modelpath) #th.save(net, modelpath)
+print('=> Reload and test')
+net = Model() if not args.gpu else Model().cuda() #net = th.load(modelpath)
+net.load_state_dict(th.load(modelpath))
+evaluate('final', net, dataloader)
+
 '''
 time:
     6400 Iterations
