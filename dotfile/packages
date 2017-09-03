@@ -2,6 +2,8 @@
 set -e
 . ../lang/lumin_log.sh
 
+# my base packages : fish git htop pip3 rsync ufw vim
+
 # packages
 packages="
 ack
