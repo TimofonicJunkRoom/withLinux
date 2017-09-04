@@ -51,6 +51,7 @@ cat > $tempfile <<EOF
  ../lang/py3/stig $home/bin/stig
  ../lang/py3/lsjson.py $home/bin/lsjson # pretty json printer
  ./dunstrc $home/.config/dunst/dunstrc
+ compton.conf $home/.compton.conf
 EOF
 sources=( $(cat $tempfile | awk '{print $1}') )
 targets=( $(cat $tempfile | awk '{print $2}') )

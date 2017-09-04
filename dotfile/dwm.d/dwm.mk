@@ -14,7 +14,8 @@ dwm:
 	-pkill -u $$USER clipmenud;
 	clipmenud & # dwm clipboard
 
+	-pkill -u $$USER compton;
 	-pkill -u $$USER xcompmgr;
-	xcompmgr & # transparent bar patch
+	compton || xcompmgr & # transparent bar patch
 
 	sct 2500 # set screen color temperature to 2500
