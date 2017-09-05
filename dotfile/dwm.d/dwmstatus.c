@@ -181,7 +181,7 @@ module_netupdown (void)
 #define threM (1024*1000)
 #define netK (1024)
 #define threK (1000)
-#define netCompat(count, buf, bufsz) ( \
+#define netCompact(count, buf, bufsz) ( \
 		(count >= threG) ? (snprintf(buf, bufsz, "%5.1fGB/s", count/(double)netG)) \
 		: (count >= threM) ? (snprintf(buf, bufsz, "%5.1fMB/s", count/(double)netM)) \
 		: (count >= threK) ? (snprintf(buf, bufsz, "%5.1fKB/s", count/(double)netK)) \
@@ -199,8 +199,8 @@ module_netupdown (void)
 	unsigned long down = nete[0] - nets[0];
 	unsigned long up = nete[1] - nets[1];
 	//printf("%lu %lu\n", down, up);
-	netCompat((double)down, pc_down, sizeof(pc_down));
-	netCompat((double)up,   pc_up,   sizeof(pc_up));
+	netCompact((double)down, pc_down, sizeof(pc_down));
+	netCompact((double)up,   pc_up,   sizeof(pc_up));
 	snprintf(pc_net, sizeof(pc_net), "↑%s ↓%s", pc_up, pc_down);
 	return pc_net;
 }
