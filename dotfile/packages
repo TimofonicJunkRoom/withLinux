@@ -121,6 +121,7 @@ scrot
 sct
 sed
 shorewall
+slim
 smartmontools
 snapper
 snort
@@ -152,7 +153,6 @@ vim-youcompleteme
 vivaldi
 virtualbox
 w3m
-wdm
 wesnoth
 whois
 wine32-development
