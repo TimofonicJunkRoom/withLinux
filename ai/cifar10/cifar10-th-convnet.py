@@ -22,7 +22,7 @@ argparser.add_argument('-g', '--gpu', action='store_true',
                        help='use GPU/CUDA insteaf of CPU')
 argparser.add_argument('-d', '--double', action='store_true',
                        help='use fp64 instead of fp32')
-argparser.add_argument('-m', '--maxiter', type=int, default=7500,
+argparser.add_argument('-m', '--maxiter', type=int, default=12000,
                        help='set maximum iterations of training',)
 argparser.add_argument('-s', '--seed', type=int, default=1,
                        help='set manual seed')
@@ -156,10 +156,19 @@ print(net)
 crit = th.nn.CrossEntropyLoss()
 optimizer = th.optim.Adam(net.parameters(), lr=args.lr, weight_decay=1e-7)
 
+def GCN(image, s, λ, ϵ):
+    '''
+    Apply Global Contrast Normalization
+    '''
+    return s * (image - image.mean()) / np.max((ϵ,
+           np.sqrt(λ + ((image - image.mean())**2).mean())))
+
 ### Data Transformation
 def transform(images, labels):
     images = images.reshape(-1, 3, 32, 32) / 255.
-    if random.choice((True,False)):
+    if True: # Global Contrast Normalization, 80->81.8
+        for i in range(images.shape[0]): images[i] = GCN(images[i], 1, 10, 1e-8)
+    if random.choice((True,False)): # Random Mirroring
         images = np.flip(images, 3) # 77%->79%
     images = Variable(th.from_numpy(images.astype(np.double)), requires_grad=False)
     labels = Variable(th.from_numpy(labels.reshape(-1).astype(np.long)), requires_grad=False)
@@ -208,6 +217,7 @@ for i in range(args.maxiter+1):
     if i>args.decay0:
         # $\eta = \eta_0 * 0.5 ^{ (i - i_0) / i_period }$
         curlr = args.lr * (0.5 ** ((i-args.decay0)/args.decayT))
+        if i>7500: curlr *= 0.1
         for param_group in optimizer.param_groups:
             param_group['lr'] = curlr
             #print(param_group['lr'])
