@@ -277,4 +277,7 @@ dataloader Queue:
     Queue(1): 65 sec
     Queue(2): 66 sec
     Queue(10): 66 sec
+
+ref performance:
+    81.8%
 '''
