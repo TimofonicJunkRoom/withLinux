@@ -20,3 +20,8 @@ https://github.com/BVLC/caffe/wiki/Training-and-Resuming
 https://github.com/BVLC/caffe/wiki/Using-a-Trained-Network:-Deploy
 
 https://github.com/BVLC/caffe/wiki/Working-with-Blobs
+
+* Be careful when training a network with a deploy version of network
+prototxt. The default weight/bias initialization is zero-constant filling.
+The training will fail without proper weight initialization. See `caffe.proto`
+FillerParameter definition for detail.
