@@ -7,6 +7,7 @@ import random
 import argparse
 import json
 import math
+from PIL import Image
 
 import numpy as np
 import torch as th
@@ -163,9 +164,34 @@ def GCN(image, s, λ, ϵ):
     return s * (image - image.mean()) / np.max((ϵ,
            np.sqrt(λ + ((image - image.mean())**2).mean())))
 
+def npImageResize(image, tsz):
+    '''
+    Resize an image (numpy) and return the resized numpy array
+    input: CxHxW output: CxHxW
+    '''
+    if len(image.shape)!=3: raise Exception
+    pim = Image.fromarray(image.swapaxes(0, 2).astype(np.uint8), mode='RGB') \
+               .resize((tsz, tsz), Image.BILINEAR)
+    return np.array(pim).swapaxes(0, 2)
+
 ### Data Transformation
-def transform(images, labels):
-    images = images.reshape(-1, 3, 32, 32) / 255.
+#mean_trainset = dataloader.trainval_images \
+#                          .reshape(-1,3,32,32).mean(0).mean(1).mean(1)
+#mean_trainset = np.repeat(mean_trainset, 32*32).reshape(3, 32, 32)
+def transform(images, labels, training=False):
+    images = images.reshape(-1, 3, 32, 32) #/ 255.
+    #images -= mean_trainset
+    #### Correctness test
+    ####for i in range(images.shape[0]):
+    ####    images[i] = npImageResize(images[i], 32)
+    if True and training: # Random cropping while training
+        # looks not helpful according to the final accuracy
+        if training: xoff, yoff = random.randint(0,4), random.randint(0,4)
+        #else: xoff, yoff = 2, 2
+        images_ = images[:, :, yoff:yoff+28, xoff:xoff+28]
+        for i in range(images.shape[0]):
+            images[i] = npImageResize(images[i], 32)
+    images /= 255.
     if True: # Global Contrast Normalization, 80->81.8
         for i in range(images.shape[0]): images[i] = GCN(images[i], 1, 10, 1e-8)
     if random.choice((True,False)): # Random Mirroring
@@ -210,7 +236,7 @@ for i in range(args.maxiter+1):
     perf_tm.go('data/fetch')
     images, labels = dataloader.getBatch('trainval', args.batchsize)
     #images, labels = dataloader.Q.get()
-    images, labels = transform(images, labels)
+    images, labels = transform(images, labels, training=True)
     perf_tm.halt('data/fetch')
 
     # decay the learning rate
