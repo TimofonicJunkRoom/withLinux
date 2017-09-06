@@ -170,6 +170,7 @@ def npImageResize(image, tsz):
     input: CxHxW output: CxHxW
     '''
     if len(image.shape)!=3: raise Exception
+    # Will get wrong result if not cast the np.array as uint8 type
     pim = Image.fromarray(image.swapaxes(0, 2).astype(np.uint8), mode='RGB') \
                .resize((tsz, tsz), Image.BILINEAR)
     return np.array(pim).swapaxes(0, 2)
