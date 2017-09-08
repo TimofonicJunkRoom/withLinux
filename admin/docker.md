@@ -69,3 +69,12 @@ docker run -d -p 22:22 archlinux:ssh /usr/bin/sshd -D
 OR
 docker run -d -P archlinux:ssh /usr/bin/sshd -D # choose random port mapping
 ```
+
+# Change docker image storage path
+
+```
+sudo vim /etc/docker/daemon.json
+  {
+      "graph": "/my-docker-images"
+  }
+```
