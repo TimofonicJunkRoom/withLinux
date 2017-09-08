@@ -83,3 +83,42 @@ sudo vim /etc/docker/daemon.json
 
 When the storage driver is ZFS, docker will automatically utilize the ZFS
 filesystem functionalities, such as snapshots.
+
+# Use GPU within containers
+
+The container driver version must be identical to that of the host machine.
+For example, when the host driver version is 375.26, you must install 375.26
+in the container or it will not work.
+
+```
+$ nvidia-smi 
+Failed to initialize NVML: Driver/library version mismatch
+```
+
+We first bind the nvidia devices from the host to the container when running
+an container:
+
+```
+docker run -d -p6666:22 \
+  --device=/dev/nvidia0:/dev/nvidia0 \
+  --device=/dev/nvidiactl:/dev/nvidiactl \
+  --device=/dev/nvidia-modeset:/dev/nvidia-modeset \
+  --device=/dev/nvidia-uvm:/dev/nvidia-uvm \
+  --device=/dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+```
+
+Download and copy the driver into the container and install it without kernel modules.
+
+```
+docker cp NVIDIA-Linux-x86_64-375.26.run ded2cbfcc208:/root/
+(container): sudo sh NVIDIA-Linux-x86_64-375.26.run --no-kernel-module
+```
+
+test wether it works correctly
+
+```
+(container): nvidia-smi
+```
+
+reference: https://github.com/NVIDIA/nvidia-docker/wiki/NVIDIA-driver
+reference: https://stackoverflow.com/questions/25185405/using-gpu-from-a-docker-container
