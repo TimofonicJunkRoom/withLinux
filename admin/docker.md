@@ -49,6 +49,8 @@ docker ps -as                 # show all containers
 docker start -ai 01234567     # container ID
 ```
 
+* save a session as an image `docker commit ID NAME`
+
 # deletion
 ```
 docker ps -as # list containers
@@ -78,3 +80,6 @@ sudo vim /etc/docker/daemon.json
       "graph": "/my-docker-images"
   }
 ```
+
+When the storage driver is ZFS, docker will automatically utilize the ZFS
+filesystem functionalities, such as snapshots.
