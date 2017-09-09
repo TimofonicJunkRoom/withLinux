@@ -42,6 +42,8 @@ argparser.add_argument('-b', '--batchsize', type=int, default=100,
                        help='set batch size for training')
 argparser.add_argument('--testbatchsize', type=int, default=100,
                        help='set batch size for test')
+argparser.add_argument('--rnntype', type=str, default='GRU',
+                       help='set RNN type: RNN, GRU')
 args = argparser.parse_args()
 print('=> Dump configuration')
 print(json.dumps(vars(args), indent=2))
@@ -118,8 +120,9 @@ class Model(th.nn.Module):
     def __init__(self):
         super(Model, self).__init__()
         self.EMB = th.nn.Embedding(num_embeddings=90000, embedding_dim=125)
-        self.GRU = th.nn.GRU(input_size=125, hidden_size=100, num_layers=1,
-                             batch_first=True, bidirectional=False)
+        self.RNN = eval('th.nn.{}'.format(args.rnntype))(
+                        input_size=125, hidden_size=100, num_layers=1,
+                        batch_first=True, bidirectional=False)
         self.OUT = th.nn.Linear(100, 2)
     def forward(self, x):
         h0 = th.autograd.Variable(th.zeros(1, args.batchsize, 100),
@@ -128,7 +131,7 @@ class Model(th.nn.Module):
         #print(' *> x', x.size())
         x = self.EMB(x)
         #print(' *> post emb(x)', x.size())
-        x, h = self.GRU(x, h0)
+        x, h = self.RNN(x, h0)
         #print(' *> post GRU(x,h)', 'x', x.size(), 'h', h.size())
         #x = x[-1,:,:].squeeze()
         #print(' *> post squeeze', x.size())
@@ -250,6 +253,7 @@ net.load_state_dict(th.load(modelpath))
 evaluate('final', net, dataloader)
 
 '''
-ref performance:
-  test acc: 99.8%
+ref performance (test acc):
+  RNN @4500iter 65.5%
+  GRU @4500iter 99.8%
 '''
