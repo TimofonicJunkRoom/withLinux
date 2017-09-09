@@ -10,7 +10,9 @@ import random
 import xmltodict
 import json
 import math
+import time
 from PIL import Image, ImageOps
+from functools import partial
 from multiprocessing import Process, Queue, Pool
 from sklearn.model_selection import train_test_split
 
@@ -81,7 +83,7 @@ class DataLoader(object):
         # Misc
         self.cur = {'train':0, 'val':0, 'test':0}
         self.max = {'train':self.maxtrain, 'val':self.maxval, 'test':self.maxtest}
-        self.P = Pool(8) # thread pool for processing images
+        self.P = Pool(16) # thread pool for processing images
         print('=> Initializing {} DataLoader ... OK'.format(self.name))
     def reset(self, split):
         self.cur[split] = 0
@@ -93,8 +95,10 @@ class DataLoader(object):
         '''
         split: str, {train, val, test}
         batchsize: int
-        return ndarray (bsize, 3, 224, 224)
+        return ndarray (bsize, 3, 224, 224), array(bsize)
         '''
+        batchim = np.zeros((batchsize,3,224,224), dtype=np.uint8)
+        batchlb = np.zeros((batchsize), dtype=np.uint8)
         batchids = []
         for i in range(batchsize):
             if self.cur[split] >= self.max[split]:
@@ -105,7 +109,12 @@ class DataLoader(object):
             # override batchids
             batch = random.sample(self.trainset, batchsize)
             batch_path, batch_lb = list(zip(*batch))
-            return batch_path, batch_lb
+            batchlb[:] = batch_lb
+            batch_images = list(self.P.map(pipeapply_train,
+                                           batch_path))
+            for i,v in enumerate(batch_images):
+                batchim[i] = batch_images[i]
+            return batchim, batchlb
         elif split=='val':
             raise NotImplementedError
         elif split=='test':
@@ -134,6 +143,7 @@ class DataLoader(object):
 
 
 # -- START a bunch of image transformation helpers --
+# -- Reference: torchvision:transforms:*
 def imloader(path:str) -> Image.Image:
     ''' load PIL.Image by path string '''
     return Image.open(path).convert('RGB')
@@ -146,37 +156,82 @@ def imexpander(im:Image.Image) -> Image.Image:
         return ImageOps.expand(im,
           math.ceil((224 - min((im.height, im.width)))/2),
           (127,127,127))
+def imresizer(im:Image.Image) -> Image.Image:
+    ''' resize the given image to (224,224) '''
+    return im if all((im.height==224, im.width==224)) else \
+           im.resize((224, 224), Image.BILINEAR)
 def imhorizontalflip(im:Image.Image) -> Image.Image:
-    pass
+    ''' randomly mirror the given image '''
+    return im if random.choice((True,False)) else \
+           im.transpose(Image.FLIP_LEFT_RIGHT)
 def imrandomcropper(im:Image.Image) -> Image.Image:
-    pass
+    ''' randomly crop a region of ratio 1:1 from the given im '''
+    if all((im.height==224, im.width==224)):
+        return im
+    else:
+        yoff = random.randint(0, im.height - 224)
+        xoff = random.randint(0, im.width - 224)
+        # (left, upper, right, lower)
+        return im.crop((xoff, yoff, xoff+224, yoff+224))
 def imcentercropper(im:Image.Image) -> Image.Image:
-    pass
+    ''' crop the center part of the given image '''
+    if all((im.height==224, im.width==224)):
+        return im
+    else:
+        yoff = int(round((im.height - 224)/2.))
+        xoff = int(round((im.width - 224)/2.))
+        return im.crop((xoff, yoff, xoff+224, yoff+224))
 def imrandomsizedcropper(im:Image.Image) -> Image.Image:
     ''' (0.08 to 1.0) of the original area
         ratio of (3/4 to 4/3)
         popular for training inception networks.
     @ref torchvision::transforms::RandomSizedCrop '''
-    pass
-def pipeapply(pipe:List[Callable[[Any], Any]], imgs:Any):
-    pass
+    raise NotImplementedError
+def im2np(im:Image.Image) -> np.ndarray:
+    ''' convert (HxWxC) PIL.Image instance into (CxHxW) numpy
+        ndarray of uint8 in range[0,255] '''
+    return np.array(im, copy=False).swapaxes(0,2)
+def pipeapply(pipe:List[Callable[[Any], Any]], img:Any):
+    for f in pipe:
+        img = f(img)
+    return img
+# pipelines for training and validation image processing
+#trainpipe = [ imloader, imexpander, imhorizontalflip, imrandomcropper, im2np ]
+#valpipe = [ imloader, imexpander, imhorizontalflip, imcentercropper, im2np ]
+trainpipe = [imloader, imresizer, imhorizontalflip, im2np]
+valpipe = [imloader, imresizer, imhorizontalflip, im2np]
+pipeapply_train = partial(pipeapply, trainpipe)
+pipeapply_val   = partial(pipeapply, valpipe)
 # -- END a bunch of image transformation helpers --
 
 
 if __name__=='__main__':
     # test
     dataloader = DataLoader()
+
+    # load 1 sample
     images, labels = dataloader.getBatch('train', 1)
     print(type(images), type(labels))
+    print(images.shape, labels.shape)
     print(images, labels)
-    for i in range(10000):
+
+    # load a batch
+    images, labels = dataloader.getBatch('train', 10)
+    print(type(images), type(labels))
+    print(images.shape, labels.shape)
+    print(images, labels)
+
+    # constantly loading new batches
+    for i in range(20):
         print('get batch iter', i)
         images, labels = dataloader.getBatch('train', 32)
         #print(images, labels)
     print('test ok')
+
+    # FIXME: data prefetching workder does not work
     #print('mp test')
-    #dataloader.satellite(3, 'trainval', 100)
-    #for i in range(100):
+    #dataloader.satellite(64, 'train', 32) # queue64, batch32
+    #for i in range(10):
     #    print('iter', i, 'getting data')
     #    images, labels = dataloader.Q.get()
     #    print(images.mean(), labels.mean())
