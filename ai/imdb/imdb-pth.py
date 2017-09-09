@@ -267,4 +267,5 @@ ref performance (test acc):
   RNN  @4500iter 65.5%
   GRU  @4500iter 99.8%
   LSTM @4500iter 99.2%
+  GRU  @10k iter 100.%
 '''
