@@ -44,6 +44,10 @@ argparser.add_argument('--testbatchsize', type=int, default=100,
                        help='set batch size for test')
 argparser.add_argument('--rnntype', type=str, default='GRU',
                        help='set RNN type: RNN, GRU, LSTM')
+argparser.add_argument('--dimemb', type=int, default=128,
+                       help='set word embedding dim')
+argparser.add_argument('--dimmem', type=int, default=100,
+                       help='set RNN hidden state dim')
 args = argparser.parse_args()
 print('=> Dump configuration')
 print(json.dumps(vars(args), indent=2))
@@ -119,16 +123,16 @@ class Model(th.nn.Module):
     '''
     def __init__(self):
         super(Model, self).__init__()
-        self.EMB = th.nn.Embedding(num_embeddings=90000, embedding_dim=125)
+        self.EMB = th.nn.Embedding(num_embeddings=89527, embedding_dim=args.dimemb)
         self.RNN = eval('th.nn.{}'.format(args.rnntype))(
-                        input_size=125, hidden_size=100, num_layers=1,
+                        input_size=args.dimemb, hidden_size=args.dimmem, num_layers=1,
                         batch_first=True, bidirectional=False)
-        self.OUT = th.nn.Linear(100, 2)
+        self.OUT = th.nn.Linear(args.dimmem, 2)
     def forward(self, x):
-        h0 = th.autograd.Variable(th.zeros(1, args.batchsize, 100),
+        h0 = th.autograd.Variable(th.zeros(1, args.batchsize, args.dimmem),
                                   requires_grad=False)
         if args.rnntype=='LSTM':
-            c0 = th.autograd.Variable(th.zeros(1, args.batchsize, 100),
+            c0 = th.autograd.Variable(th.zeros(1, args.batchsize, args.dimmem),
                                       requires_grad=False)
         #print(' *> h0', h0.size())
         #print(' *> x', x.size())
