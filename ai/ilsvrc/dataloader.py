@@ -9,10 +9,15 @@ import pickle
 import random
 import xmltodict
 import json
-from multiprocessing import Process, Queue
+import math
+from PIL import Image, ImageOps
+from multiprocessing import Process, Queue, Pool
 from sklearn.model_selection import train_test_split
 
 class DataLoader(object):
+    '''
+    ref: torchvision
+    '''
     def createJSON(self, basepath:str='/niuzst/imagenet/ILSVRC2015/') -> None:
         ''' Create a JSON file that used by this dataloader
         JSON: Dict[
@@ -76,6 +81,7 @@ class DataLoader(object):
         # Misc
         self.cur = {'train':0, 'val':0, 'test':0}
         self.max = {'train':self.maxtrain, 'val':self.maxval, 'test':self.maxtest}
+        self.P = Pool(8) # thread pool for processing images
         print('=> Initializing {} DataLoader ... OK'.format(self.name))
     def reset(self, split):
         self.cur[split] = 0
@@ -87,6 +93,7 @@ class DataLoader(object):
         '''
         split: str, {train, val, test}
         batchsize: int
+        return ndarray (bsize, 3, 224, 224)
         '''
         batchids = []
         for i in range(batchsize):
@@ -124,6 +131,37 @@ class DataLoader(object):
         self.worker.join(timeout=0.1)
         print(' *> {} : pulling satellite to ground ...'.format(os.getpid()))
         self.worker.terminate()
+
+
+# -- START a bunch of image transformation helpers --
+def imloader(path:str) -> Image.Image:
+    ''' load PIL.Image by path string '''
+    return Image.open(path).convert('RGB')
+def imexpander(im:Image.Image) -> Image.Image:
+    ''' padding the image so that the shortest side is
+    greater or equal to 224 pixels '''
+    if all((im.height>=224, im.width>=224)):
+        return im
+    else:
+        return ImageOps.expand(im,
+          math.ceil((224 - min((im.height, im.width)))/2),
+          (127,127,127))
+def imhorizontalflip(im:Image.Image) -> Image.Image:
+    pass
+def imrandomcropper(im:Image.Image) -> Image.Image:
+    pass
+def imcentercropper(im:Image.Image) -> Image.Image:
+    pass
+def imrandomsizedcropper(im:Image.Image) -> Image.Image:
+    ''' (0.08 to 1.0) of the original area
+        ratio of (3/4 to 4/3)
+        popular for training inception networks.
+    @ref torchvision::transforms::RandomSizedCrop '''
+    pass
+def pipeapply(pipe:List[Callable[[Any], Any]], imgs:Any):
+    pass
+# -- END a bunch of image transformation helpers --
+
 
 if __name__=='__main__':
     # test
