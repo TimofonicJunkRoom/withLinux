@@ -104,6 +104,7 @@ else:
     X_TENSOR = 'torch.cuda.DoubleTensor' if args.double else 'torch.cuda.FloatTensor'
     #th.set_default_tensor_type('torch.cuda.HalfTensor') # Bad Stability
 th.set_default_tensor_type(X_TENSOR)
+th.backends.cudnn.benchmark=True # enable cuDNN auto-tuner
 
 ### DataLoader ###
 dataloader = DataLoader()
