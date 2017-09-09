@@ -43,7 +43,7 @@ argparser.add_argument('-b', '--batchsize', type=int, default=100,
 argparser.add_argument('--testbatchsize', type=int, default=100,
                        help='set batch size for test')
 argparser.add_argument('--rnntype', type=str, default='GRU',
-                       help='set RNN type: RNN, GRU')
+                       help='set RNN type: RNN, GRU, LSTM')
 args = argparser.parse_args()
 print('=> Dump configuration')
 print(json.dumps(vars(args), indent=2))
@@ -127,15 +127,21 @@ class Model(th.nn.Module):
     def forward(self, x):
         h0 = th.autograd.Variable(th.zeros(1, args.batchsize, 100),
                                   requires_grad=False)
+        if args.rnntype=='LSTM':
+            c0 = th.autograd.Variable(th.zeros(1, args.batchsize, 100),
+                                      requires_grad=False)
         #print(' *> h0', h0.size())
         #print(' *> x', x.size())
         x = self.EMB(x)
         #print(' *> post emb(x)', x.size())
-        x, h = self.RNN(x, h0)
+        if args.rnntype=='LSTM':
+            x, (hn, cn) = self.RNN(x, (h0, c0))
+        else:
+            x, hn = self.RNN(x, h0)
         #print(' *> post GRU(x,h)', 'x', x.size(), 'h', h.size())
         #x = x[-1,:,:].squeeze()
         #print(' *> post squeeze', x.size())
-        x = self.OUT(h.squeeze())
+        x = self.OUT(hn.squeeze())
         #print(' *> post linear', x.size())
         return x
 
@@ -254,6 +260,7 @@ evaluate('final', net, dataloader)
 
 '''
 ref performance (test acc):
-  RNN @4500iter 65.5%
-  GRU @4500iter 99.8%
+  RNN  @4500iter 65.5%
+  GRU  @4500iter 99.8%
+  LSTM @4500iter 99.2%
 '''
