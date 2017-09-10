@@ -109,6 +109,7 @@ progress
 pylama
 python3-ipdb
 python3-pip
+python3-tdqm
 python3-xapian
 pv
 qemu
