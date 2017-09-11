@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+'''
+ref: https://github.com/pytorch/examples/blob/master/imagenet/main.py
+'''
 import sys
 import os
 import time
@@ -24,7 +27,8 @@ argparser.add_argument('-g', '--gpu', action='store_true',
                        help='use GPU/CUDA insteaf of CPU')
 argparser.add_argument('-d', '--double', action='store_true',
                        help='use fp64 instead of fp32')
-argparser.add_argument('-m', '--maxiter', type=int, default=12000,
+argparser.add_argument('-m', '--maxiter', type=int,
+                       default=1281167*90,
                        help='set maximum iterations of training',)
 argparser.add_argument('-s', '--seed', type=int, default=1,
                        help='set manual seed')
@@ -36,12 +40,16 @@ argparser.add_argument('-o', '--decay0', type=int, default=9999999,
                        help='set the first iteration where the learning rate starts to decay')
 argparser.add_argument('-T', '--decayT', type=int, default=2000,
                        help='set the learning rate decay period')
-argparser.add_argument('-e', '--lr', type=float, default=1e-3,
+argparser.add_argument('-e', '--lr', type=float, default=1e-1,
                        help='set the initial learning rate')
-argparser.add_argument('-b', '--batchsize', type=int, default=32,
+argparser.add_argument('-b', '--batchsize', type=int, default=256,
                        help='set batch size for training')
 argparser.add_argument('--testbatchsize', type=int, default=100,
                        help='set batch size for test')
+argparser.add_argument('--arch', type=str, default='resnet18',
+    choices=('alexnet', 'resnet18','resnet34','resnet50'),
+                       help='choose model architecture')
+                       
 args = argparser.parse_args()
 print('=> Dump configuration')
 print(json.dumps(vars(args), indent=2))
@@ -112,12 +120,14 @@ dataloader = DataLoader()
 #dataloader.satellite(64, 'trainval', 100)
 
 ### Model ###
-Model = torchvision.models.alexnet
+Model = eval('torchvision.models.{}'.format(args.arch))
 net = Model() if not args.gpu else Model().cuda()
 if not args.double: net = net.float()
 print(net)
 crit = th.nn.CrossEntropyLoss()
-optimizer = th.optim.Adam(net.parameters(), lr=args.lr, weight_decay=1e-7)
+#optimizer = th.optim.Adam(net.parameters(), lr=args.lr, weight_decay=1e-7)
+optimizer = th.optim.SGD(net.parameters(), lr=args.lr,
+                         momentum=0.9, weight_decay=1e-4)
 
 ### Data Transformation
 def transform(images, labels, training=False):
