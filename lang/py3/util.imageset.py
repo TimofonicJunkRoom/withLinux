@@ -20,11 +20,11 @@ http://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 
 ## Parse command line
 parser = argparse.ArgumentParser()
-parser.add_argument('-i', type=str, action='store', dest='input',
+parser.add_argument('--trainlist', type=str, action='store', dest='trainlist',
                     required=True, help='image-label list file (train)')
-parser.add_argument('--vali', type=str, action='store',
-                    dest='vinput', help='validation set list file')
-parser.add_argument('--test', type=str, action='store', dest='tinput',
+parser.add_argument('--vallist', type=str, action='store', dest='vallist',
+                    help='validation set list file')
+parser.add_argument('--testlist', type=str, action='store', dest='testlist',
                     help='test set list file')
 parser.add_argument('-o', type=str, action='store', dest='output',
                     default=__file__+'.h5', help='output hdf5 path')
@@ -66,11 +66,11 @@ def fillhdf5(_h5, _list, _group):
         # image -> [0,255], H,W,C
         image = np.asarray(image) # Image -> Numpy
         # HWC -> CHW
-        image = image.swapaxes(0,2) # or image.transpose((1,2,0))
+        image = image.transpose((2,0,1)) #image.swapaxes(0,2) roration:left:pi/4
         _h5[_group+'/images'][i-1,:,:,:] = image
         _h5[_group+'/labels'][i-1,:] = int(label)
         if i == 1 and args.view:
-            Image.fromarray(_h5[_group+'/images'][i-1,:,:,:].swapaxes(2,0), mode='RGB').show()
+            Image.fromarray(_h5[_group+'/images'][i-1,:,:,:].transpose((1,2,0)), mode='RGB').show()
 
 def createdsets(_h5, _list, _impath, _lbpath):
     # Chunks is crucial to compression performance
@@ -84,14 +84,14 @@ def createdsets(_h5, _list, _impath, _lbpath):
         (len(_list), 1), dtype=np.int, chunks=(1,1), **compargs)
 
 # Read list files
-imagelist = readlist(args.input)
+imagelist = readlist(args.trainlist)
 if args.s: random.shuffle(imagelist)
 print('-> Found {} images for training'.format(len(imagelist)))
-if args.vinput:
-    imagelist_vali = readlist(args.vinput)
+if args.vallist:
+    imagelist_vali = readlist(args.vallist)
     print('-> Found {} images for validation'.format(len(imagelist_vali)))
-if args.tinput:
-    imagelist_test = readlist(args.tinput)
+if args.testlist:
+    imagelist_test = readlist(args.testlist)
     print('-> Found {} images for test'.format(len(imagelist_test)))
 
 # Create output file
@@ -103,11 +103,11 @@ h5 = h5py.File(args.output, 'w')
 createdsets(h5, imagelist, 'train/images', 'train/labels')
 fillhdf5(h5, imagelist, 'train')
 print(' *> processed {} images for training'.format(len(imagelist)))
-if args.vinput:
+if args.vallist:
     createdsets(h5, imagelist_vali, 'val/images', 'val/labels')
     fillhdf5(h5, imagelist_vali, 'val')
     print(' *> processed {} images for validation'.format(len(imagelist_vali)))
-if args.tinput:
+if args.testlist:
     createdsets(h5, imagelist_test, 'test/images', 'test/labels')
     fillhdf5(h5, imagelist_test, 'test')
     print(' *> processed {} images for validation'.format(len(imagelist_test)))
