@@ -13,7 +13,8 @@ from sklearn.model_selection import train_test_split
 class DataLoader(object):
     def __init__(self):
         self.name = 'MORPH2 8/2'
-        self.h5path = '/niuz/dataset/morph2/morph2.cv16.wacv82.h5'
+        #self.h5path = '/niuz/dataset/morph2/morph2.cv16.wacv82.h5'
+        self.h5path = '/niuz/dataset/morph2/morph2.wacv82.cv16.norotation.h5'
         print('=> Initializing {} DataLoader ...'.format(self.name))
         if not os.path.exists(self.h5path):
             self.create_hdf5()
