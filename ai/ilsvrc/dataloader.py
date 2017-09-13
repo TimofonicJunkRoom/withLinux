@@ -83,7 +83,7 @@ class DataLoader(object):
         # Misc
         self.cur = {'train':0, 'val':0, 'test':0}
         self.max = {'train':self.maxtrain, 'val':self.maxval, 'test':self.maxtest}
-        self.P = Pool(16) # thread pool for processing images
+        self.P = Pool(128) # thread pool for processing images
         print('=> Initializing {} DataLoader ... OK'.format(self.name))
     def reset(self, split):
         self.cur[split] = 0
@@ -91,7 +91,7 @@ class DataLoader(object):
         self.cur[split] += 1
     def itersInEpoch(self, split, batchsize):
         return int(self.max[split] / batchsize)
-    def getBatch(self, split, batchsize):
+    def getBatch(self, split, batchsize, tpool=None):
         '''
         split: str, {train, val, test}
         batchsize: int
@@ -110,8 +110,13 @@ class DataLoader(object):
             batch = random.sample(self.trainset, batchsize)
             batch_path, batch_lb = list(zip(*batch))
             batchlb[:] = batch_lb
-            batch_images = list(self.P.map(pipeapply_train,
-                                           batch_path))
+            # batch_images = list(map(pipeapply_train, batch_path))
+            if not tpool:
+                batch_images = list(self.P.map(pipeapply_train,
+                                               batch_path))
+            else:
+                batch_images = list(tpool.map(pipeapply_train,
+                                              batch_path))
             for i,v in enumerate(batch_images):
                 batchim[i] = batch_images[i]
             return batchim, batchlb
@@ -129,9 +134,14 @@ class DataLoader(object):
         '''
         self.Q = Queue(qbufsize)
         def _background(dataloader, split, batchsize):
-            while True:
-                #print(' *> {} : satellite putting data in qbuf'.format(os.getpid()))
-                dataloader.Q.put(dataloader.getBatch(split, batchsize))
+            with Pool(128) as workerthreadpool:
+                while True:
+                    #print(' *> {} : satellite putting data in qbuf'.format(os.getpid()))
+                    try:
+                        dataloader.Q.put(dataloader.getBatch(split,
+                                 batchsize, workerthreadpool))
+                    except:
+                        workerthreadpool.join()
         self.worker = Process(target=_background,
                               args=(self, split, batchsize))
         self.worker.start()
@@ -208,6 +218,7 @@ pipeapply_val   = partial(pipeapply, valpipe)
 if __name__=='__main__':
     # test
     dataloader = DataLoader()
+    TEST_BATCH = 32
 
     # load 1 sample
     images, labels = dataloader.getBatch('train', 1)
@@ -216,24 +227,42 @@ if __name__=='__main__':
     print(images, labels)
 
     # load a batch
-    images, labels = dataloader.getBatch('train', 10)
+    images, labels = dataloader.getBatch('train', TEST_BATCH)
     print(type(images), type(labels))
     print(images.shape, labels.shape)
     print(images, labels)
 
     # constantly loading new batches
-    for i in range(20):
+    for i in range(10):
         print('get batch iter', i)
-        images, labels = dataloader.getBatch('train', 32)
+        images, labels = dataloader.getBatch('train', TEST_BATCH)
         #print(images, labels)
     print('test ok')
 
-    # FIXME: data prefetching workder does not work
-    #print('mp test')
-    #dataloader.satellite(64, 'train', 32) # queue64, batch32
-    #for i in range(10):
-    #    print('iter', i, 'getting data')
-    #    images, labels = dataloader.Q.get()
-    #    print(images.mean(), labels.mean())
-    #dataloader.landing()
-    #print('mp test ok')
+    # FIXME: BrokenPipeError: [Errno 32] Broken pipe
+    print('mp test')
+    dataloader.satellite(50, 'train', TEST_BATCH) # queue64, batch32
+    for i in range(10):
+        print('iter', i, 'getting data')
+        images, labels = dataloader.Q.get()
+        print(images.mean(), labels.mean())
+    dataloader.landing()
+    print('mp test ok')
+
+    # simulation : serial : 14 seconds.
+    tm_start = time.time()
+    for i in range(10):
+        print(' *> serial iter', i)
+        images, labels = dataloader.getBatch('train', TEST_BATCH)
+        time.sleep(0.5)
+    print('serial time elapsed', time.time() - tm_start)
+    # simulation : background worker : 10 seconds.
+    dataloader.satellite(50, 'train', TEST_BATCH)
+    tm_start = time.time()
+    for i in range(10):
+        print(' *> worker', i)
+        images, labels = dataloader.Q.get()
+        time.sleep(0.5)
+    print('workder time elapsed', time.time() - tm_start)
+    dataloader.landing()
+    print('-> simulation complete')
