@@ -117,7 +117,7 @@ th.backends.cudnn.benchmark=True # enable cuDNN auto-tuner
 
 ### DataLoader ###
 dataloader = DataLoader()
-#dataloader.satellite(64, 'trainval', 100)
+dataloader.satellite(64, 'train', 100)
 
 ### Model ###
 Model = eval('torchvision.models.{}'.format(args.arch))
@@ -170,8 +170,8 @@ perf_tm.go('all')
 for i in range(args.maxiter+1):
     # read data
     perf_tm.go('data/fetch')
-    images, labels = dataloader.getBatch('train', args.batchsize)
-    #images, labels = dataloader.Q.get()
+    #images, labels = dataloader.getBatch('train', args.batchsize)
+    images, labels = dataloader.Q.get()
     images, labels = transform(images, labels, training=True)
     perf_tm.halt('data/fetch')
 
@@ -216,7 +216,7 @@ print('=> Dump Summaries')
 perf_tm.dump()
 perf_ml.dump()
 
-#dataloader.landing()
+dataloader.landing()
 
 # Save the model
 modelpath = '{}.iter{}.pth'.format(__file__, i)
