@@ -28,7 +28,7 @@ argparser.add_argument('-g', '--gpu', action='store_true',
 argparser.add_argument('-d', '--double', action='store_true',
                        help='use fp64 instead of fp32')
 argparser.add_argument('-m', '--maxiter', type=int,
-                       default=1281167*90,
+                       default=1281167*90, # 90 Epoches.
                        help='set maximum iterations of training',)
 argparser.add_argument('-s', '--seed', type=int, default=1,
                        help='set manual seed')
@@ -36,10 +36,6 @@ argparser.add_argument('-n', '--numthreads', type=int, default=4,
                        help='set *_NUM_THREADS environment variable')
 argparser.add_argument('-t', '--testevery', type=int, default=200,
                        help='set model evaluation interval')
-argparser.add_argument('-o', '--decay0', type=int, default=9999999,
-                       help='set the first iteration where the learning rate starts to decay')
-argparser.add_argument('-T', '--decayT', type=int, default=2000,
-                       help='set the learning rate decay period')
 argparser.add_argument('-e', '--lr', type=float, default=1e-1,
                        help='set the initial learning rate')
 argparser.add_argument('-b', '--batchsize', type=int, default=256,
@@ -47,7 +43,7 @@ argparser.add_argument('-b', '--batchsize', type=int, default=256,
 argparser.add_argument('--testbatchsize', type=int, default=100,
                        help='set batch size for test')
 argparser.add_argument('--arch', type=str, default='resnet18',
-    choices=('alexnet', 'resnet18','resnet34','resnet50'),
+choices=('alexnet', 'resnet18','resnet34','resnet50', 'resnet101', 'resnet152'),
                        help='choose model architecture')
                        
 args = argparser.parse_args()
@@ -176,12 +172,9 @@ for i in range(args.maxiter+1):
     perf_tm.halt('data/fetch')
 
     # decay the learning rate
-    if i>args.decay0:
-        # $\eta = \eta_0 * 0.5 ^{ (i - i_0) / i_period }$
-        curlr = args.lr * (0.5 ** ((i-args.decay0)/args.decayT))
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = curlr
-            #print(param_group['lr'])
+    curlr = args.lr * (0.1 ** (epoch // 30))
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = curlr
 
     # train
     perf_tm.go('train/flbu')
@@ -228,7 +221,13 @@ net.load_state_dict(th.load(modelpath))
 evaluate('final', net, dataloader)
 
 '''
+GPU mem usage: @TitanX Pascal *1
+  Resnet18: 3800MiB @batch 256
+  Resnet34: 5000MiB @batch 256
+  Resnet50: 11100MiB @batch 256
+  Resnet101: OOM
+  Resnet152: OOM
+dataloader:
 time:
-dataloader Queue:
 ref performance:
 '''
