@@ -18,3 +18,9 @@ HWC      CHW
 Numpy -> Image : transpose((1,2,0))
 CHW      HWC
 ```
+
+## CUDA Memory is not freed.
+
+That's because the dataloader doesn't stop its workers if you kill the process
+abruptly. Make sure all the related processes get killed.
+See https://github.com/pytorch/pytorch/issues/1085
