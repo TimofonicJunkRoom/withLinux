@@ -172,7 +172,7 @@ for i in range(args.maxiter+1):
     perf_tm.halt('data/fetch')
 
     # decay the learning rate
-    curlr = args.lr * (0.1 ** (epoch // 30))
+    curlr = args.lr * (0.1 ** (i // 30))
     for param_group in optimizer.param_groups:
         param_group['lr'] = curlr
 
