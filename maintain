@@ -25,7 +25,7 @@ echo
 printf "Project withlinux has %s%d%s files currently.\n" "[34;1m" $files "[;0m"
 printf "Project withlinux has %s%d%s lines currently.\n" "[33;1m" $lines "[;0m"
 printf "Project withlinux occupies %s%s%s of disk space.\n" "[36;1m" $sizes "[;0m"
-printf "Project withlinux running on %s%s%s .\n" "[31;1m" $kernelname "[;0m"
+printf "Project withlinux running on %s%s%s .\n" "[31;1m" $(arch)/$kernelname"[;0m"
 }
 
 scan_missing () {
