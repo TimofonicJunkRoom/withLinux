@@ -331,6 +331,7 @@ Ref performance
   [morph2.wacv82.cv16.norotation.h5]
   MAE bn4    -> TEST @ 42000 | Loss   0.166 | MAE 3.06694|
   MAE no-bn4 -> TEST @ 62500 | Loss   0.173 | MAE 3.14324|
+  MAE bn1~bn3+no_affine bn4 adam -> TEST @ 72000 | Loss   0.166 | MAE 3.07891|
 '''
 
 ''' solver.prototxt e22_wacv
