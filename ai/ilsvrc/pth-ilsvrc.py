@@ -221,12 +221,12 @@ net.load_state_dict(th.load(modelpath))
 evaluate('final', net, dataloader)
 
 '''
-GPU mem usage: @TitanX Pascal *1
-  Resnet18: 3800MiB @batch 256
-  Resnet34: 5000MiB @batch 256
-  Resnet50: 11100MiB @batch 256
-  Resnet101: OOM
-  Resnet152: OOM
+GPU mem usage: @TitanX Pascal *1 -- Pytorch 0.2.0_3
+  Resnet18: 8800Mib (batch=256)
+  Resnet34:
+  Resnet50:
+  Resnet101:
+  Resnet152:
 dataloader:
 time:
 ref performance:
