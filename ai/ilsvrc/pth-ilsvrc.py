@@ -113,7 +113,7 @@ th.backends.cudnn.benchmark=True # enable cuDNN auto-tuner
 
 ### DataLoader ###
 dataloader = DataLoader()
-dataloader.satellite(64, 'train', 100)
+dataloader.satellite(64, 'train', args.batchsize)
 
 ### Model ###
 Model = eval('torchvision.models.{}'.format(args.arch))
