@@ -318,6 +318,7 @@ evaluate('final', net, dataloader)
 Ref experiment
   Adam is not always better than SGD. Here SGD seems to perform much better. (lr)?
   The performance gets worse with all the BN layers enabled.
+  BN makes the optimization slightly simpler.
 Ref performance
 
   [morph2.cv16.wacv82.h5] | rotation due to swapaxes(0,2)
@@ -332,6 +333,7 @@ Ref performance
   MAE bn4    -> TEST @ 42000 | Loss   0.166 | MAE 3.06694|
   MAE no-bn4 -> TEST @ 62500 | Loss   0.173 | MAE 3.14324|
   MAE bn1~bn3+no_affine bn4 adam -> TEST @ 72000 | Loss   0.166 | MAE 3.07891|
+  MAE bn1~bn3+no_affine bn4 sgd  -> TEST @ 65000 | Loss   0.169 | MAE 3.08269|
 '''
 
 ''' solver.prototxt e22_wacv
