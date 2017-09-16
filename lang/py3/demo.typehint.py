@@ -44,3 +44,53 @@ p('asdf')
 def abcdef(x:Tuple[Tuple[int, int], int]) -> None:
     return
 abcdef( ((1,2),3) )
+
+# _______________________________________________________________
+
+from typing import *
+
+# -- basic
+
+def greeting(name: str) -> str:
+    return 'Hello ' + name
+
+# -- type aliases
+
+Vector = List[float]
+def scale(scalar: float, vector: Vector) -> Vector:
+    return [scalar * num for num in vector]
+
+# -- NewType
+
+UserID = NewType('UserID', int)
+some_id = UserID(12341234)
+user_a = get_user_name(UserID(123))) # typechecks
+user_b = get_user_name(-1) # int is not a UserID
+
+# -- Callable
+
+def feeder(get_next_item: Callable[[], str]) -> None:
+    pass
+
+def async_query(on_success: Callable[[int], None],
+        on_error: Callable[[int, Exception], None]) -> None:
+    pass
+
+# -- Generics
+
+def notify_by_email(employees: Sequence[Employee],
+        overrides: Mapping[str, str]) -> None:
+    pass
+
+DType = TypeVar('T') # declare type variable
+
+def first(l: Sequence[T]) -> T: # generic function
+    return l[0]
+
+# SKIP user-defined generic types
+
+# -- the Any type
+#    every type is compatible with Any.
+
+def foo(item: Any) -> int:
+    pass
