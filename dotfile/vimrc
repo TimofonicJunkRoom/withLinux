@@ -82,6 +82,7 @@ execute pathogen#infect()
 " vim-colors-solarized
 let g:solarized_termcolors=256
 "colorscheme solarized
+let g:autopep8_disable_show_diff=1
 
 " http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
 " Automatic Parenthesis and Brackets completion
