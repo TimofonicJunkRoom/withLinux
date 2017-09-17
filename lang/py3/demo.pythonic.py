@@ -261,3 +261,6 @@ flat([1,[2], [3, [4, [5,6,7]]], [[8,9]]]) #[1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 a = (i for i in range(10000)) # fast creation, slow traversal
 b = [i for i in range(10000)] # slow creation, fast traversal
+
+
+# https://gist.github.com/JeffPaine/6213790
