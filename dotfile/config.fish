@@ -25,6 +25,7 @@ abbr -a p ipython3
 abbr -a pp pypy3 -m IPython
 abbr -a bp bpython3
 abbr -a jqt jupyter-qtconsole
+abbr -a ap autopep8 -i
 
 # Julia 0.6 Official Binary Tarball
 function jl
