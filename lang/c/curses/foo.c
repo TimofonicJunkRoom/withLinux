@@ -35,15 +35,20 @@ main(int argc, char *argv[])
 	char buf[] = "                            ";
 	for (int i = 0; i < 20; i++) {
 		if (i==10) clear();
+
+		move(i, i);
 		attrset(COLOR_PAIR(1) | A_BOLD);
 		addstr("hello\n");
-		refresh();
-		usleep(1000 * 100);
+		//refresh();
+		//usleep(1000 * 100);
 
 		attrset(COLOR_PAIR(2) | A_BOLD);
 		snprintf(buf, sizeof(buf), "LINES %d COLS %d\n", LINES, COLS);
-		addstr(buf);
-		usleep(1000 * 10);
+		mvaddstr(40-i, i, buf);
+		refresh();
+		usleep(1000 * 100);
+
+		clear();
 	}
 
 	finish(0);
