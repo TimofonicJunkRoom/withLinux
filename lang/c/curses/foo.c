@@ -30,6 +30,7 @@ main(int argc, char *argv[])
 		start_color();
 		init_pair(1, COLOR_GREEN, COLOR_BLACK);
 		init_pair(2, COLOR_RED,   COLOR_BLACK);
+		init_pair(3, COLOR_YELLOW,COLOR_BLACK);
 	}
 
 	char buf[] = "                            ";
@@ -49,6 +50,15 @@ main(int argc, char *argv[])
 		usleep(1000 * 100);
 
 		clear();
+	}
+
+	for (int i = 0; i <=100; i++) {
+		clear();
+		attrset(COLOR_PAIR(3) | A_BOLD);
+		snprintf(buf, sizeof(buf), "-> Progress %.2f%%", i/100.);
+		mvaddstr(20, 5, buf);
+		refresh();
+		usleep(1000*10);
 	}
 
 	finish(0);
