@@ -36,9 +36,18 @@ Math Support
 
 http://www.sphinx-doc.org/en/stable/ext/math.html
 
+Add ``sphinx.ext.mathjax`` to your extension list in ``conf.py``, followed by
+one extra new variable::
+
+    mathjax_path = 'file:///usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+    #mathjax_path = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+
 Example of inline math :math:`a^2+b^2=c^2` (Pythagoras).
 
 Example of displayed math
-.. math::
-    \sin^2 (x) + \cos^2 (x) = 1
 
+.. math::
+
+   \sin^2 (x) + \cos^2 (x) = 1
+
+.. math:: E = mc^2
