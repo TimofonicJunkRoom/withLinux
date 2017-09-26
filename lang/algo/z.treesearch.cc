@@ -14,7 +14,7 @@ main(void)
 }
 
 void treeSearch(std::vector<int>& buf, int cur) {
-	if (cur == buf.size()) {
+	if (cur == (int)buf.size()) {
 		for (auto i: buf) std::cout << ' ' << i;
 		std::cout << std::endl;
 		pcount++;
