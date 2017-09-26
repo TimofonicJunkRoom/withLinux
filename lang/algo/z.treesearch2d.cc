@@ -49,8 +49,8 @@ void treeSearch2D(vector<vector<int>>& mat, int curr, int curc) {
 		dumpMat(mat, true);
 		return;
 	}
-	// row not boundary but col boundary reached
-	if (curr < (int)mat.size() && curc == (int)mat[curr].size()-1) {
+	// row ANY, col boundary reached
+	if (curc == (int)mat[curr].size()-1) {
 		for (int i = 0; i < 2; i++) {
 			mat[curr][curc] = i;
 			treeSearch2D(mat, curr+1, 0);
