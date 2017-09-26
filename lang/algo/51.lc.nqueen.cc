@@ -55,8 +55,10 @@ main(void)
 {
 	auto s = Solution();
 	auto results = s.solveNQueens(4);
+	int count = 0;
 	for (auto sol : results) {
-		cout << "-- Solution --" << endl;
+		count++;
+		cout << "-- Solution -- " << count << endl;
 		for (auto line : sol) {
 			for (char c : line) cout << " " << c;
 			cout << endl;
