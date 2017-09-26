@@ -3,7 +3,8 @@
 #include <cmath>
 using namespace std;
 
-// leetcode 51 N-Queen : DFS
+// leetcode 51 N-Queen
+// DFS, O(n!*n) = O(4x3x2x1x isValid)
 
 class Solution {
 public:
