@@ -104,6 +104,8 @@ hyperlink example Python_
 
 `phrase reference`_
 
+|reST| replacement text
+
 .. [1] A ReStructuredText Primer
 
 .. [2] http://docutils.sourceforge.net/docs/user/rst/quickref.html
@@ -115,3 +117,5 @@ hyperlink example Python_
 .. [cite1] citation 1
 
 .. _Python: https://python.org
+
+.. |reST| replace:: reStructuredText
