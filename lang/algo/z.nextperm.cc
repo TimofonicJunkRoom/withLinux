@@ -73,5 +73,12 @@ main(void)
 	test(c);
 	test(d);
 
+	vector<int> e {1,2,3,4};
+	cout << e << endl;
+	for (int i = 0; i < 30; i++) {
+		e = nextperm(e);
+		cout << e << endl;
+	}
+
 	return 0;
 }
