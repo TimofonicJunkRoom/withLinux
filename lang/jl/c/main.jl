@@ -4,7 +4,7 @@
 println(now())
 
 # --[ ccall ]--
-# you need to compile your library with -shared and -fPIC (or stronger -fPIE) options.
+# you need to compile your library with -shared and -fPIC options.
 
 # check libkernel.so first
 if stat("./libkernel.so").inode == 0 then
