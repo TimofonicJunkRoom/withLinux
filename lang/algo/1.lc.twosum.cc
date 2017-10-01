@@ -28,7 +28,7 @@ public:
         // assume that input is valid
         map<int, int> m;
         map<int, int>::iterator cur;
-        for (int i = 0; i < nums.size(); i++) {
+        for (int i = 0; i < (int)nums.size(); i++) {
             if ((cur = m.find(target-nums[i])) != m.end())
                 return vector<int> {i, cur->second};
 			m.insert(pair<int,int>(nums[i], i));
