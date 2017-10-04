@@ -6,6 +6,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
+#include <math.h>
 
 #include <curses.h> // -lncurses
 
@@ -32,9 +33,13 @@ main(int argc, char *argv[])
 
 	if (has_colors()) {
 		start_color();
-		init_pair(1, COLOR_GREEN, COLOR_BLACK);
-		init_pair(2, COLOR_RED,   COLOR_BLACK);
+		init_pair(1, COLOR_RED,   COLOR_BLACK);
+		init_pair(2, COLOR_GREEN, COLOR_BLACK);
 		init_pair(3, COLOR_YELLOW,COLOR_BLACK);
+		init_pair(4, COLOR_BLUE,  COLOR_BLACK);
+		init_pair(5, COLOR_MAGENTA,COLOR_BLACK);
+		init_pair(6, COLOR_CYAN,  COLOR_BLACK);
+		init_pair(7, COLOR_WHITE, COLOR_BLACK);
 	}
 
 	char buf[] = "                            ";
@@ -88,6 +93,27 @@ main(int argc, char *argv[])
 	}
 	free(banner);
 	clear();
+
+	// sine wave
+	{
+		char buf[] = "                                       ";
+		for (double t = 0.; t < 5*3.14; t+=3.1415926/1000.) {
+			double x = (sin(t)+1.)/2.; // x \in [0., 1.]
+
+			snprintf(buf, sizeof(buf), "t=%lf, x=%lf, row=%d, col=%d", t, x, (int)(.5*LINES), (int)(x*COLS));
+			//mvaddstr(0, 0, buf);
+			//mvaddch((int)(.5*LINES), (int)(x*COLS), '*');
+			for (int i = 0; i < 7; i++) {
+				attrset(COLOR_PAIR(i) | A_BOLD);
+				x = (sin(t + i*(3.14159/4.))+1.)/2.;
+				mvaddch((int)(.5*LINES), (int)(x*COLS), '*');
+			}
+
+			refresh();
+			usleep(2500);
+			clear();
+		}
+	}
 
 	// msg box ?
 #define MSG "To be or not to be, that is a question."
