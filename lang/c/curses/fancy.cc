@@ -1,5 +1,5 @@
 /*
- * http://invisible-island.net/ncurses/ncurses-intro.html
+ * reference: http://invisible-island.net/ncurses/ncurses-intro.html
  */
 
 #include <signal.h>
@@ -8,7 +8,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <cmath>
+#include <cmath> // maybe -lm
 
 #include <iostream>
 #include <string>
@@ -72,14 +72,15 @@ main(int argc, char *argv[])
 		clear();
 		float radius = (LINES < COLS) ? LINES/2. : COLS/2.;
 		std::pair<float, float> centre {LINES/2., COLS/2.}; // origin point
-		for (float theta = 0.; theta < 5*3.14; theta += 3.14/100.) {
-			std::cout << theta;
-			auto p = std::pair<float, float> {
-				radius*cos(theta) + centre.first,
-				2.*radius*sin(theta) + centre.second  // for wide screen
-			}; // (rho,theta) -> (x, y)
-			auto p_Int = std::pair<int, int> {(int)(p.first), (int)(p.second)};
-			mvaddch(p_Int.first, p_Int.second, '*');
+		for (float theta = 0.; theta < 10*3.14; theta += 3.14/100.) {
+			for (int j = 0; j < 3.14*radius/4; j++) {
+				auto p = std::pair<float, float> {
+					radius*cos(-theta - j*3.14/LINES) + centre.first,
+					2.*radius*sin(-theta - j*3.14/LINES) + centre.second  // for wide screen
+				}; // (rho,theta) -> (x, y)
+				auto p_Int = std::pair<int, int> {(int)(p.first), (int)(p.second)};
+				mvaddch(p_Int.first, p_Int.second, '*');
+			}
 			refresh();
 			usleep(1000*10);
 			clear();
