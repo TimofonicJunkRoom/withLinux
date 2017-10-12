@@ -75,11 +75,8 @@
 "todo"
   Alt + n
 
-"chromium"
+"firefox"
   Shift+Alt + w
-
-"vivaldi"
-  Shift+Alt + d
 
 "jupyter-qtconsole"
   Shift+Alt + i
