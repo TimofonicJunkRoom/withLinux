@@ -25,3 +25,21 @@ class Solution:
 s = Solution()
 print(s.twoSum([3,3], 6))
 print(s.twoSum([2,7,11,15], 13))
+
+        #for (i, vi) in enumerate(nums):
+        #    for (j, vj) in enumerate(nums):
+        #        # don't add to itself
+        #        if i == j: continue
+        #        if vi + vj == target: return [i, j]
+        #return [-1, -1]
+        # => Time Limit Exceeded
+
+        #nlen = len(nums)
+        #for (i, vi) in enumerate(nums):
+        #    for (j, vj) in enumerate(reversed(nums)):
+        #        if i == nlen-j-1:
+        #            continue
+        #        elif vi+vj==target:
+        #            return [i, nlen-j-1]
+        #return [-1, -1]
+        # => Time Limit Exceeded
