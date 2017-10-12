@@ -2,6 +2,8 @@
 #include <vector>
 using namespace std;
 
+#include "helper.hpp"
+
 void treeSearch2D(vector<vector<int>>&, int, int);
 int pcount = 0; // print count
 void dumpMat(const vector<vector<int>>&);
@@ -46,7 +48,8 @@ void treeSearch2D(vector<vector<int>>& mat, int curr, int curc) {
 	if ((int)mat.size() == curr) {
 		pcount++;
 		cout << " -- dump -- " << pcount << endl;
-		dumpMat(mat, true);
+		//dumpMat(mat, true);
+		std::cout << mat;
 		return;
 	}
 	// row ANY, col boundary reached

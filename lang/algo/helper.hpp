@@ -7,6 +7,18 @@ std::ostream&
 operator<< (std::ostream& out, const std::vector<T>& v) {
 	out << "[";
 	for (auto i : v) out << i << ", ";
-	out << "\b\b]";
+	out << "\b\b]" << std::endl;
+	return out;
+}
+
+template <typename T>
+std::ostream&
+operator<< (std::ostream& out,
+		const std::vector<std::vector<T>>& m) {
+	out << "[" << std::endl;
+	for (auto v : m) {
+		out << "  " << v;
+	}
+	out << "]" << std::endl;
 	return out;
 }
