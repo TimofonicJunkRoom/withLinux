@@ -4,7 +4,7 @@ class Solution(object):
         :type rowIndex: int
         :rtype: List[int]
         """
-        def xConv(s):
+        def xConv(s): # conv(s, [1,1])
             sp = []
             for i in range(len(s)-1):
                 sp.append(s[i]+s[i+1])
