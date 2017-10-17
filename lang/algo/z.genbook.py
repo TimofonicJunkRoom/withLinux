@@ -5,6 +5,7 @@ import glob
 from pprint import pprint
 import shlex
 from subprocess import call
+from time import ctime
 
 rstbook = []
 rstbook.append("""
@@ -14,13 +15,13 @@ Auto-Generated Code Book
 
 
 :Author: Lumin 
-:Date:   Oct 2017
+:Date:   {}
 
 .. contents::
    :depth: 3
 ..
 
-""")
+""".format(ctime()))
 
 if __name__=='__main__':
 
