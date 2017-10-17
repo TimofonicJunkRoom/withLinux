@@ -39,6 +39,15 @@ if __name__=='__main__':
     pyfiles.sort()
     print(' -> {} py files'.format(len(pyfiles)))
 
+    # write statistics
+    rstbook.append("""
+::
+
+  Statistics
+  * There are {}  C++   source files included in this document.
+  * There are {} Python source files included in this document.
+""".format(len(cppfiles), len(pyfiles)))
+
     # append cpp part
     rstbook.append("""
 C++ Part
