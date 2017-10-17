@@ -8,3 +8,7 @@ main:
 
 clean:
 	$(RM) *.elf
+
+pdf:
+	python3 z.genbook.py
+	evince *.pdf
