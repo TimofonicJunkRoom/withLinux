@@ -13,9 +13,17 @@ rstbook.append("""
 Auto-Generated Code Book
 ========================
 
-
 :Author: Lumin 
 :Date:   {}
+
+This book Contains some of my algorithm *snippets*, some *LeetCode*
+solutions and some *Project Euler* solutions. Programming languages
+used in this book are ``C++``, ``Python``, ``Julia``, and ``Go``.
+
+::
+
+  Copyright (C) 2017 Lumin <cdluminate@gmail.com>
+  MIT LICENSE
 
 .. contents::
    :depth: 3
@@ -23,76 +31,74 @@ Auto-Generated Code Book
 
 """.format(ctime()))
 
-if __name__=='__main__':
+# -- Glob all sources
+files = glob.glob('**')
+# remove myself
+files.pop(files.index(__file__))
+print('=> Found {} files'.format(len(files)))
+#pprint(files)
 
-    files = glob.glob('**')
-    # remove myself
-    files.pop(files.index(__file__))
-    print('=> Found {} files'.format(len(files)))
-    #pprint(files)
+# -- Collect files into categories
+def collectbysuffix(suffix, flist):
+    matches = [ f for f in flist if f.endswith(suffix) ]
+    matches.sort()
+    return matches
 
-    # categories
-    cppfiles = [ f for f in files if f.endswith('.cc') ]
-    cppfiles.sort()
-    print(' -> {} cpp files'.format(len(cppfiles)))
-    pyfiles  = [ f for f in files if f.endswith('.py') ]
-    pyfiles.sort()
-    print(' -> {} py files'.format(len(pyfiles)))
+cppfiles = collectbysuffix('.cc', files) 
+print(' -> {} cpp files'.format(len(cppfiles)))
+pyfiles  = collectbysuffix('.py', files)
+print(' -> {} py files'.format(len(pyfiles)))
+jlfiles  = collectbysuffix('.jl', files)
+print(' -> {} jl files'.format(len(jlfiles)))
+gofiles  = collectbysuffix('.go', files)
+print(' -> {} go files'.format(len(gofiles)))
 
-    # write statistics
-    rstbook.append("""
+# -- write statistics
+rstbook.append("""
 ::
 
   Statistics
-  * There are {}  C++   source files included in this document.
-  * There are {} Python source files included in this document.
-""".format(len(cppfiles), len(pyfiles)))
+  ==========
+  * Number of C++    source files: {}
+  * Number of Python source files: {}
+  * Number of Julia  source files: {}
+  * Number of Go     source files: {}
+""".format( len(cppfiles), len(pyfiles), len(jlfiles), len(gofiles) ))
 
-    # append cpp part
+# -- generate sections
+def genSection(rstbook, title, flist, ftype):
+    # section header
     rstbook.append("""
-C++ Part
-========
-""")
-    for i, f in enumerate(cppfiles, 1):
-        #print (' * adding {} ...'.format(f))
+{}
+{}
+""".format(title, '='*len(title)))
+    # add files
+    for i, f in enumerate(flist, 1):
         rstbook.append("""
 {}. ``{}``
 {}
 
-.. code:: cpp
+.. code:: {}
 
-""".format(i, f, '-'*( len(str(i)) + len(f) + 6 )))
+""".format(i, f, '-'*( len(str(i)) + len(f) + 6 ), ftype))
         fo = open(f, 'r')
         for line in fo.readlines():
             rstbook.append('  ' + line)
         fo.close()
 
-    # append python part
-    rstbook.append("""
-Python Part
-===========
-""")
-    for i, f in enumerate(pyfiles, 1):
-        rstbook.append("""
-{}. ``{}``
-{}
+genSection(rstbook, "C++ Part", cppfiles, "cpp")
+genSection(rstbook, "Python Part", pyfiles, "python")
+genSection(rstbook, "Julia Part", jlfiles, "julia")
+genSection(rstbook, "Go Part", gofiles, "go")
 
-.. code:: python
-
-""".format(i, f, '-'*( len(str(i)) + len(f) + 6 )))
-        fo = open(f, 'r')
-        for line in fo.readlines():
-            rstbook.append('  ' + line)
-        fo.close()
-
-    # save, convert, cleanup
-    with open(__file__ + '.rst', 'w+') as f:
-        f.writelines(rstbook)
-    print('=> Saved. Start to generate pdf ...')
-    cmd_pandoc = 'pandoc -f rst -t latex z.genbook.py.rst -o z.genbook.py.pdf'
-    cmd_cleanup = 'rm z.genbook.py.rst'
-    print(' -> pandoc ...')
-    call(shlex.split(cmd_pandoc))
-    print(' -> clean up ...')
-    call(shlex.split(cmd_cleanup))
-    print('=> Done.')
+# save, convert, cleanup
+with open(__file__ + '.rst', 'w+') as f:
+    f.writelines(rstbook)
+print('=> Saved. Start to generate pdf ...')
+cmd_pandoc = 'pandoc -f rst -t latex z.genbook.py.rst -o z.genbook.py.pdf'
+cmd_cleanup = 'rm z.genbook.py.rst'
+print(' -> pandoc ...')
+call(shlex.split(cmd_pandoc))
+print(' -> clean up ...')
+call(shlex.split(cmd_cleanup))
+print('=> Done.')
