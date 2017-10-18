@@ -60,3 +60,9 @@ xrandr --output DP-1 --off
 is able to connect your computer and x11vnc server. For example, Another linux
 laptop is applicable, when it has any vnc viewer. An Android phone is applicable
 too, all that you need is to install an vnc viewer on your phone.
+
+* `-[no]wf` for wireframe
+
+```
+x11vnc -clip 2048x1536+0+0 -passwd asdf -cursor most -wf -nowcr -viewonly -cursor most -speeds modem
+```
