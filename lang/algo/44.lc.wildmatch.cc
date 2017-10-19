@@ -24,7 +24,7 @@ public:
             return false;
         }
     }
-};
+}; // O(m!*n!) S(n)
 
 int
 main(void)
