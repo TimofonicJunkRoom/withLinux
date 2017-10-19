@@ -16,6 +16,10 @@ Auto-Generated Code Book
 :Author: Lumin 
 :Date:   {}
 
+
+Preface
+=======
+
 This book Contains some of my algorithm *snippets*, some *LeetCode*
 solutions and some *Project Euler* solutions. Programming languages
 used in this book are ``C++``, ``Python``, ``Julia``, and ``Go``.
@@ -24,10 +28,6 @@ used in this book are ``C++``, ``Python``, ``Julia``, and ``Go``.
 
   Copyright (C) 2017 Lumin <cdluminate@gmail.com>
   MIT LICENSE
-
-.. contents::
-   :depth: 3
-..
 
 """.format(ctime()))
 
@@ -55,14 +55,16 @@ print(' -> {} go files'.format(len(gofiles)))
 
 # -- write statistics
 rstbook.append("""
+
+Statistics
+----------
+
 ::
 
-  Statistics
-  ==========
-  * Number of C++    source files: {}
-  * Number of Python source files: {}
-  * Number of Julia  source files: {}
-  * Number of Go     source files: {}
+  * C++    source files: {}
+  * Python source files: {}
+  * Julia  source files: {}
+  * Go     source files: {}
 """.format( len(cppfiles), len(pyfiles), len(jlfiles), len(gofiles) ))
 
 # -- generate sections
@@ -91,12 +93,14 @@ genSection(rstbook, "Python Part", pyfiles, "python")
 genSection(rstbook, "Julia Part", jlfiles, "julia")
 genSection(rstbook, "Go Part", gofiles, "go")
 
-# save, convert, cleanup
+# -- save, convert, cleanup
 with open(__file__ + '.rst', 'w+') as f:
     f.writelines(rstbook)
 print('=> Saved. Start to generate pdf ...')
-cmd_pandoc = 'pandoc -f rst -t latex z.genbook.py.rst -o z.genbook.py.pdf'
-cmd_cleanup = 'rm z.genbook.py.rst'
+cmd_pandoc = 'pandoc -f rst -t latex {}.rst -o {}.pdf'.format(
+        __file__, __file__) + " -V mainfont=times" + \
+        " -V geometry=margin=1in --toc -V toccolor=magenta"
+cmd_cleanup = 'rm {}.rst'.format(__file__)
 print(' -> pandoc ...')
 call(shlex.split(cmd_pandoc))
 print(' -> clean up ...')
