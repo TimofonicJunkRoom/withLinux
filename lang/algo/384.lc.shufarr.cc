@@ -5,6 +5,8 @@
 #include "helper.hpp"
 using namespace std;
 
+// reference: CPython/Lib/random.py :: random.shuffle()
+
 class Solution {
 public:
     vector<int> origin;
