@@ -24,6 +24,20 @@ This book Contains some of my algorithm *snippets*, some *LeetCode*
 solutions and some *Project Euler* solutions. Programming languages
 used in this book are ``C++``, ``Python``, ``Julia``, and ``Go``.
 
+The files named ``z.<name>.<suffix>`` are my snippets.
+Files with name ``<number>.lc.<name>.<suffix>`` are leetcode solutions.
+Similarly, mark ``su`` stands for solution euler.
+
+
+Leetcode solution references
+----------------------------
+
+#. https://github.com/soulmachine/leetcode
+
+#. http://bookshadow.com/leetcode/
+
+#. https://www.gitbook.com/book/siddontang/leetcode-solution/details
+
 ::
 
   Copyright (C) 2017 Lumin <cdluminate@gmail.com>
