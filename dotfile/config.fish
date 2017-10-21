@@ -64,7 +64,7 @@ end
 
 export DPKG_COLORS=always
 export DEBEMAIL="cdluminate@gmail.com"
-export DEBFULLNAME="Zhou Mo"
+export DEBFULLNAME="Mo Zhou"
 export DEB_BUILD_OPTIONS=parallel=4
 export BUILDER=pbuilder
 
