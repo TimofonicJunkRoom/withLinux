@@ -5,6 +5,11 @@ LDFLAGS  += -Wl,-z,relro -Wl,-z,now
 
 main:
 	@parallel 'printf " CXX %s\n" {} ; $(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) {} -o {.}.elf' ::: *.cc
+	# TODO: compile those cc sources without a main function into object files
+	# with an common header.
+
+test:
+	@for TESTBIN in $(shell ls *.elf); do ./$$TESTBIN; done
 
 clean:
 	$(RM) *.elf
@@ -12,3 +17,5 @@ clean:
 pdf:
 	python3 z.genbook.py
 	evince *.pdf
+
+.PHONY: main test clean pdf
