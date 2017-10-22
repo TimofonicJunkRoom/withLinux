@@ -11,10 +11,7 @@ void bsort(vector<int>& v) {
 		for (int j = i; j < (int)v.size(); j++) {
 			idxmin = (v[j] < v[idxmin]) ? j : idxmin;
 		}
-		// swap
-		int tmp = v[i];
-		v[i] = v[idxmin];
-		v[idxmin] = tmp;
+		swap(v[i], v[idxmin]);
 	}
 }
 

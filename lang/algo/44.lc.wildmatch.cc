@@ -10,7 +10,7 @@ public:
     }
     bool isMatch(char* s, char* p) {
         if (*s == '\0' || *p == '\0') {
-            return *s == *p;
+            return (*s == *p) || ((*p == '*') && (*s == '\0'));
         } else if (*p == *s) {
             return isMatch(++s, ++p);
         } else if (*p == '?') {
@@ -25,16 +25,20 @@ public:
         }
     }
 }; // O(m!*n!) S(n)
+// Note, * matches empty here.
 
 int
 main(void)
 {
 	auto s = Solution();
+	cout << s.isMatch("", "?") << false << endl;
+	cout << s.isMatch("", "*") << true << endl;
+	cout << s.isMatch("a", "a*") << true << endl; // note this
+	cout << s.isMatch("aa", "a*") << true << endl;
 	cout << s.isMatch("aa","a") << false << endl;
 	cout << s.isMatch("aa","aa") << true << endl;
 	cout << s.isMatch("aaa","aa") << false << endl;
 	cout << s.isMatch("aa", "*") << true << endl;
-	cout << s.isMatch("aa", "a*") << true << endl;
 	cout << s.isMatch("ab", "?*") << true << endl;
 	cout << s.isMatch("aab", "c*a*b") << false << endl;
 
