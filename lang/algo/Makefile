@@ -9,10 +9,14 @@ main:
 	# with an common header.
 
 compile:
-	sh compile.sh #FIXME
+	sh compile.sh # FIXME
 
 test:
-	@for TESTBIN in $(shell ls *.elf); do ./$$TESTBIN; done
+	@for TESTBIN in $(shell ls *.elf); do \
+		echo --------------- TEST $$TESTBIN --------------------; \
+		./$$TESTBIN < /dev/null; \
+	   	done
+	# TODO: collect return value
 
 clean:
 	$(RM) *.elf
