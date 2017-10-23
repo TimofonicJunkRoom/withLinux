@@ -21,7 +21,7 @@ Preface
 
 This book Contains some of my algorithm *snippets*, some *LeetCode*
 solutions and some *Project Euler* solutions. Programming languages
-used in this book are ``C++``, ``Python``, ``Julia``, and ``Go``.
+used in this book are ``C++``, ``Python``, ``Julia``, ``Lua`` and ``Go``.
 
 The files named ``z.<name>.<suffix>`` are my snippets.
 Files with name ``<number>.lc.<name>.<suffix>`` are leetcode solutions.
@@ -101,6 +101,8 @@ jlfiles  = collectbysuffix('.jl', files)
 print(' -> {} jl files'.format(len(jlfiles)))
 gofiles  = collectbysuffix('.go', files)
 print(' -> {} go files'.format(len(gofiles)))
+luafiles  = collectbysuffix('.lua', files)
+print(' -> {} lua files'.format(len(luafiles)))
 
 # -- write statistics
 rstbook.append("""
@@ -114,7 +116,8 @@ Statistics
   * Python source files: {}
   * Julia  source files: {}
   * Go     source files: {}
-""".format( len(cppfiles), len(pyfiles), len(jlfiles), len(gofiles) ))
+  * Lua    source files: {}
+""".format( len(cppfiles), len(pyfiles), len(jlfiles), len(gofiles), len(luafiles) ))
 
 # -- generate sections
 def genSection(rstbook, title, flist, ftype):
@@ -141,6 +144,7 @@ genSection(rstbook, "C++ Part", cppfiles, "cpp")
 genSection(rstbook, "Python Part", pyfiles, "python")
 genSection(rstbook, "Julia Part", jlfiles, "julia")
 genSection(rstbook, "Go Part", gofiles, "go")
+genSection(rstbook, "Lua Part", luafiles, "lua")
 
 # -- save, convert, cleanup
 with open(__file__ + '.rst', 'w+') as f:
