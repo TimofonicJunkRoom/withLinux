@@ -21,7 +21,20 @@ void dfs(TreeNode* root) {
 	}
 }
 
-// Breadth-Fist-Search
+// Depth-First-Search, Iterative
+void dfs_iter(TreeNode* root) {
+	TreeNode* cursor = root;
+	vector<TreeNode*> st;
+	if (cursor != nullptr) st.push_back(root);
+	while (!st.empty()) {
+		cursor = st.back(); st.pop_back();
+		cout << cursor->val << endl;
+		if (cursor->right) st.push_back(cursor->right);
+		if (cursor->left) st.push_back(cursor->left);
+	}
+}
+
+// Breadth-First-Search
 void bfs(TreeNode* root) {
 	queue<TreeNode*> q;
 	TreeNode* cursor = root;
@@ -49,6 +62,9 @@ main(void) {
 
 	cout << "DFS" << endl;
 	dfs(&a); // 0 1 3 4 2 5 6
+
+	cout << "DFS (iter)" << endl;
+	dfs_iter(&a); // 0 1 3 4 2 5 6
 
 	cout << "BFS" << endl;
 	bfs(&a); // 0 1 2 3 4 5 6
