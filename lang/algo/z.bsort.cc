@@ -3,7 +3,7 @@
 #include "helper.hpp"
 using namespace std;
 
-// Bubble sort. O(n^2), Stable. Ascending i.e. Min -- Max
+// Bubble sort (Selective sort). O(n^2), Stable. Ascending i.e. Min -- Max
 void
 bsort(vector<int>& v) {
     for (int i = 0; i < (int)v.size(); i++) {
@@ -17,6 +17,7 @@ bsort(vector<int>& v) {
     }
 }
 
+// Bubble sort
 void
 bsort_v2(vector<int>& v) {
     for (int i = v.size()-1; i >= 0; i--)
@@ -24,6 +25,7 @@ bsort_v2(vector<int>& v) {
             if (v[j] > v[i]) swap(v[j], v[i]);
 }
 
+// bubble sort
 void bsort_v3(vector<int>& v) {
     for (int i = 0; i < v.size(); i++)
         for (int j = i; j < v.size(); j++)
