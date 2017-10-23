@@ -21,5 +21,6 @@ int
 main(void)
 {
 	frac2decimal(1, 6, 4);
+	frac2decimal(1, 6, 5);
 	return 0;
 }

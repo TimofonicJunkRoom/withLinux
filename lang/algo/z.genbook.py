@@ -16,7 +16,6 @@ Auto-Generated Code Book
 :Author: Lumin 
 :Date:   {}
 
-
 Preface
 =======
 
@@ -28,6 +27,41 @@ The files named ``z.<name>.<suffix>`` are my snippets.
 Files with name ``<number>.lc.<name>.<suffix>`` are leetcode solutions.
 Similarly, mark ``su`` stands for solution euler.
 
+I use ``O()`` notation for time complexity. Sometimes I use ``S()``
+for spatial complexity.
+
+Algorithms
+----------
+
+Reference *Anany Levitin Introduction to the design and analysis of algorighms*
+
+several important types of problems
+
+#. sorting problem
+#. searching problem
+#. string problem
+#. graph and network
+#. combination and permutation
+#. geonetric algorithm
+#. numerical problem
+
+fundamental data structures
+
+#. linear data structures
+  #. array
+  #. string
+  #. linked list
+  #. doubly linked list
+  #. stack
+  #. queue
+#. graph
+  #. undirected graph
+  #. directed graph
+  #. weighted graph
+#. tree
+  #. rooted tree
+  #. ordered tree
+#. set and dictionary
 
 Leetcode solution references
 ----------------------------
@@ -58,7 +92,8 @@ def collectbysuffix(suffix, flist):
     matches.sort()
     return matches
 
-cppfiles = collectbysuffix('.cc', files) 
+cppfiles = collectbysuffix('.cc', files) \
+         + collectbysuffix('.hpp', files)
 print(' -> {} cpp files'.format(len(cppfiles)))
 pyfiles  = collectbysuffix('.py', files)
 print(' -> {} py files'.format(len(pyfiles)))

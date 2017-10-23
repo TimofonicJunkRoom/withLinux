@@ -80,13 +80,14 @@ maxPalindrome2(char *s, size_t sz)
 int
 main(void)
 {
-	//char* buffer = "Confuciuss say: Madam, I'm Adam."; // this will cause failure because the string will be put to .rodata section, generate assembly with gcc -S to inspect.
+	//char* buffer = "Confuciuss say: Madam, I'm Adam.";
+	// this will cause failure because the string will be put to the
+	// .rodata section, generate assembly with gcc -S to inspect this.
 	char buffer[] = "Confuciuss say: Madam, I'm Adam.";
 	strLower(buffer, strlen(buffer));
 
 	maxPalindrome(buffer, strlen(buffer));
 	maxPalindrome2(buffer, strlen(buffer));
-
 
 	return 0;
 }

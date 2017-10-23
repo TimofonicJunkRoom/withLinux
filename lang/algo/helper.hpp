@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <cmath>
 
 //https://stackoverflow.com/questions/10750057/how-o-print-out-the-contents-of-a-vector
 
@@ -73,4 +74,45 @@ xvdot (std::vector<DType> x, std::vector<DType> y)
 	}
 	return ret;
 }
+
+double
+xamean(int *v, size_t sz) {
+	double sum = .0;
+	for (int i = 0; i < sz; i++) {
+		sum += (double)(v[i]);
+	}
+	return sum/sz;
+}
+
+// temperature convertion: F -> C
+float
+tempconv(float f)
+{
+	return 5.*(f-32.)/9.;
+}
+
+long
+sum1ton(int n)
+{
+	long sum = 0;
+	for (int i = 1; i <= n; i++)
+		sum += i;
+	return sum;
+}
+
+#define PI (( 4.*atan(1.0) ))
+float sinfa(float n) { return sinf(n*PI/180.); }
+float cosfa(float n) { return cosf(n*PI/180.); }
+
+// number of digits
+int
+getNumDigits(int n) {
+	int counter = 0;
+	while (n > 0) {
+		n /= 10;
+		counter ++;
+	}
+	return counter;
+}
+
 #endif // HELPER_HPP_

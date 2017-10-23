@@ -41,7 +41,7 @@ main(void)
 {
 	factor(666);
 	factor(factorial(5));
-	factor(factorial(53));
+	factor(factorial(13));
 	return 0;
 }
 

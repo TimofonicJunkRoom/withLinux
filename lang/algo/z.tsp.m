@@ -1,6 +1,5 @@
 %!/usr/bin/octave
-% solve the TSP problem, this is a demo
-% Copyright 2015 Lumin <cdluminate@gmail.com>
+% solve the TSP problem
 % License: MIT
 
 %clear;

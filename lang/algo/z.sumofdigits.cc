@@ -3,7 +3,9 @@
 //t = 100:333;
 //t2 = 2*t;
 //t3 = 3*t;
-//needle = int8(mod(t,1000)/100) + int8(mod(t,100)/10) + int8(mod(t,10)) + int8(mod(t2,1000)/100) + int8(mod(t2,100)/10) + int8(mod(t2,10)) + int8(mod(t3,1000)/100) + int8(mod(t3,100)/10) + int8(mod(t3,10));
+//needle = int8(mod(t,1000)/100) + int8(mod(t,100)/10) +
+// int8(mod(t,10)) + int8(mod(t2,1000)/100) + int8(mod(t2,100)/10) +
+// int8(mod(t2,10)) + int8(mod(t3,1000)/100) + int8(mod(t3,100)/10) + int8(mod(t3,10));
 //needle == 45
 
 int
