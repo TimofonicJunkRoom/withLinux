@@ -40,7 +40,7 @@ template <typename DType> void insSort(vector<DType>&);
 //void shellSort(vector<int>&);
 
 // kind: Merge
-//void mSort(vector<int>&);
+template <typename DType> void mSort(vector<int>&);
 
 // kind: Radix
 //void radixSort(vector<int>&);
@@ -50,6 +50,33 @@ template <typename DType> void insSort(vector<DType>&);
 template <typename DType> void naiveBucketSort(vector<DType>&);
 
 /* ------------------------------------------- END List of Sorting functions */
+
+template <typename DType>
+void
+_mSort(vector<DType>& v, int curl, int curr) {
+	if (curl >= curr) return; // len==0 or len==1
+	else if (curl - curr == -1) { // len==2
+		if (v[curl] > v[curr]) swap(v[curl], v[curr]);
+	} else {
+		_mSort(v, curl, (curl+curr)/2);
+		_mSort(v, (curl+curr)/2+1, curr);
+		// Merge two sorted arrays
+		vector<DType> temp (curr - curl + 1, (DType)0.);
+		int ml = curl, mr = (curl+curr)/2+1, mt = 0;
+		while (ml <= (curl+curr)/2 && mr <= curr) {
+			if (v[ml] < v[mr]) temp[mt++] = v[ml++];
+			else temp[mt++] = v[mr++];
+		}
+		while (ml <= (curl+curr)/2) temp[mt++] = v[ml++];
+		while (mr <= curr) temp[mt++] = v[mr++];
+		//for (int i = 0; i < temp.size(); i++)
+		//    v[curl+i] = temp[i];
+		copy(temp.begin(), temp.end(), v.begin()+curl);
+	}
+}
+template <typename DType>
+void
+mSort(vector<DType>& v) { return _mSort(v, 0, v.size()-1); }
 
 template <typename DType>
 void
@@ -140,20 +167,22 @@ insSort (std::vector<DType>& v)
 
 } // namespace sort
 
+#define _TEST(sortfun, i) do { \
+	std::cout << "  :: Orig " << v##i << " -> Sorted "; \
+	sortfun(v##i); std::cout << v##i << std::endl; \
+} while(0)
 #define TEST(name, sortfun) do { \
 	std::cout << "=> Test " << name << std::endl; \
 	std::vector<int> v1 {34,65,12,43,67,5,78,10,3,3,70}; \
+	_TEST(sortfun, 1); \
 	std::vector<int> v2 {123,12,11,5,7,43,7,4,7,467,1}; \
+	_TEST(sortfun, 2); \
 	std::vector<int> v3 {1,0,0,1,0,1,1,1,1,0,0,1,0}; \
+	_TEST(sortfun, 3); \
 	std::vector<int> v4 {100, 10}; \
-	std::cout << "  :: Orig " << v1 << " -> Sorted "; \
-	sortfun(v1); std::cout << v1 << std::endl; \
-	std::cout << "  :: Orig " << v2 << " -> Sorted "; \
-	sortfun(v2); std::cout << v2 << std::endl; \
-	std::cout << "  :: Orig " << v3 << " -> Sorted "; \
-	sortfun(v3); std::cout << v3 << std::endl; \
-	std::cout << "  :: Orig " << v4 << " -> Sorted "; \
-	sortfun(v4); std::cout << v4 << std::endl; \
+	_TEST(sortfun, 4); \
+	std::vector<int> v5 {}; \
+	_TEST(sortfun, 5); \
 } while(0)
 
 int
@@ -165,5 +194,6 @@ main(void)
 	TEST("Insertion Sort", sort::insSort);
 	TEST("Bubble Sort", sort::bSort);
 	TEST("Naive Bucket Sort", sort::naiveBucketSort);
+	TEST("Merge Sort", sort::mSort);
     return 0;
 }

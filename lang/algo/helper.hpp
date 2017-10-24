@@ -16,9 +16,13 @@
 template <typename T>
 std::ostream&
 operator<< (std::ostream& out, const std::vector<T>& v) {
-	out << "[";
-	for (auto i : v) out << i << ", ";
-	out << "\b\b]";
+	if (v.empty()) {
+		out << "[]";
+	} else {
+		out << "[";
+		for (auto i : v) out << i << ", ";
+		out << "\b\b]";
+	}
 	return out;
 }
 
