@@ -14,30 +14,44 @@ namespace sort {
 
 /* ----------------------------------------------- List of Sorting functions */
 
-template <typename DType>
-void selSort(vector<DType>&);     // kind: Selection
-template <typename DType>
-void naiveSort(vector<DType>&);   // kind: Selection
-//void heapSort(vector<int>&);    // kind: Selection
+// kind: Selection, Selective Sort
+// O(n^2), Unstable. suitable for small arrays.
+template <typename DType> void selSort(vector<DType>&);
 
-template <typename DType>
-void bSort(vector<DType>&);       // kind: Swapping
-template <typename DType>
-void qSort(vector<DType>&);       // kind: Swapping
+// kind: Selection, Naive Sort
+// degradation of Selective sort.
+template <typename DType> void naiveSort(vector<DType>&);
 
-template <typename DType>
-void insSort(vector<DType>&);     // kind: Insertion
-//void shellSort(vector<int>&);   // kind: Insertion
+// kind: Selection
+//void heapSort(vector<int>&);    
 
-//void mSort(vector<int>&);       // kind: Merge
-//void radixSort(vector<int>&);   // kind: Radix
-template <typename DType>
-void naiveBucketSort(vector<DType>&);  // kind: Bucket
+// kind: Swapping, Bubble Sort
+// Stable.
+template <typename DType> void bSort(vector<DType>&);
+
+// kind: Swapping, Quick Sort
+// O(n logn) @best. O(n^2) @worst. 
+template <typename DType> void qSort(vector<DType>&);
+
+// kind: Insertion
+template <typename DType> void insSort(vector<DType>&);
+
+// kind: Insertion
+//void shellSort(vector<int>&);
+
+// kind: Merge
+//void mSort(vector<int>&);
+
+// kind: Radix
+//void radixSort(vector<int>&);
+
+// kind: Bucket, Bucket Sort
+// Stable. Very Fast. Memory Consuming. DType \in {Int, Long}
+template <typename DType> void naiveBucketSort(vector<DType>&);
 
 /* ------------------------------------------- END List of Sorting functions */
 
-// Bucket Sort. Stable. Very Fast. Memory Consuming.
-template <typename DType> // DType \in {Int, Long}
+template <typename DType>
 void
 naiveBucketSort(vector<DType>& v) {
 	if (v.empty()) return;
@@ -50,7 +64,6 @@ naiveBucketSort(vector<DType>& v) {
 		while (bucket[i]-- > 0) v[cursor++] = i + vmin;
 }
 
-// Bubble Sort. Stable.
 template <typename DType>
 void
 bSort(vector<DType>& v) {
@@ -66,8 +79,6 @@ bSort(vector<DType>& v) {
 	}
 }
 
-// Selective Sort. O(n^2), Unstable. Ascending.
-// suitable for small arrays.
 template <typename DType>
 void
 selSort(vector<DType>& v) {
@@ -81,7 +92,6 @@ selSort(vector<DType>& v) {
     }
 }
 
-// naive sort, degradation of Selective sort.
 template <typename DType>
 void
 naiveSort(vector<DType>& v) {
@@ -90,7 +100,6 @@ naiveSort(vector<DType>& v) {
             if (v[j] < v[i]) swap(v[j], v[i]);
 }
 
-// Quick sort. O(n logn) in the best case. O(n^2) in the worst case.
 template <typename DType>
 void
 _qSort(vector<DType>& v, int curl, int curr) {
@@ -111,7 +120,6 @@ _qSort(vector<DType>& v, int curl, int curr) {
 template <typename DType>
 void qSort(vector<DType>& v) { return _qSort(v, 0, v.size()-1); }
 
-// Insertion Sort, inplace
 template <typename DType>
 void
 insSort (std::vector<DType>& v)
