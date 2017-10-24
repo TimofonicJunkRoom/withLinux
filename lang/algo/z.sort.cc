@@ -6,6 +6,7 @@
  */
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "helper.hpp"
 using namespace std;
 
@@ -30,8 +31,24 @@ void insSort(vector<DType>&);     // kind: Insertion
 
 //void mSort(vector<int>&);       // kind: Merge
 //void radixSort(vector<int>&);   // kind: Radix
+template <typename DType>
+void naiveBucketSort(vector<DType>&);  // kind: Bucket
 
 /* ------------------------------------------- END List of Sorting functions */
+
+// Bucket Sort. Stable. Very Fast. Memory Consuming.
+template <typename DType> // DType \in {Int, Long}
+void
+naiveBucketSort(vector<DType>& v) {
+	if (v.empty()) return;
+	DType vmin = v[0], vmax = v[0];
+	for (auto i : v) { vmin = min(vmin, i); vmax = max(vmax, i); }
+	vector<int> bucket (vmax-vmin+1, 0);
+	for (auto i : v) bucket[i-vmin]++;
+	int cursor = 0;
+	for (int i = 0; i < bucket.size(); i++)
+		while (bucket[i]-- > 0) v[cursor++] = i + vmin;
+}
 
 // Bubble Sort. Stable.
 template <typename DType>
@@ -139,5 +156,6 @@ main(void)
 	TEST("Quick Sort", sort::qSort);
 	TEST("Insertion Sort", sort::insSort);
 	TEST("Bubble Sort", sort::bSort);
+	TEST("Naive Bucket Sort", sort::naiveBucketSort);
     return 0;
 }
