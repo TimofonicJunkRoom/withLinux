@@ -24,3 +24,7 @@ CHW      HWC
 That's because the dataloader doesn't stop its workers if you kill the process
 abruptly. Make sure all the related processes get killed.
 See https://github.com/pytorch/pytorch/issues/1085
+
+## Dynamic and Static computation graph
+
+https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#tensorflow-static-graphs
