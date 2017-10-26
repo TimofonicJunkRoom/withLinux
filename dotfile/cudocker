@@ -1,6 +1,21 @@
 #!/bin/sh
 set -e
 
+# PROTOTYPE OF THIS HELPER SCRIPT
+#
+#    docker run -d -p6666:22 \
+#      --device=/dev/nvidia0:/dev/nvidia0 \
+#      --device=/dev/nvidiactl:/dev/nvidiactl \
+#      --device=/dev/nvidia-modeset:/dev/nvidia-modeset \
+#      --device=/dev/nvidia-uvm:/dev/nvidia-uvm \
+#      --device=/dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+#
+# TIPS
+#
+#    1. run a cuda app on the host machine if the *uvm device
+#       is missing. The absence of the *uvm device will trigger
+#       failure of the cuda app in the containers.
+
 DEVICEBIND=""
 for DEVICE in $(ls -1 /dev/nvidia*); do
   DEVICEBIND="$DEVICEBIND --device=$DEVICE:$DEVICE"
@@ -18,10 +33,3 @@ else
   echo docker $@
   exec docker $@
 fi
-
-#docker run -d -p6666:22 \
-#  --device=/dev/nvidia0:/dev/nvidia0 \
-#  --device=/dev/nvidiactl:/dev/nvidiactl \
-#  --device=/dev/nvidia-modeset:/dev/nvidia-modeset \
-#  --device=/dev/nvidia-uvm:/dev/nvidia-uvm \
-#  --device=/dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
