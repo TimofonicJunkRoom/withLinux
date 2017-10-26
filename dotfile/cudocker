@@ -10,9 +10,14 @@ for ITEM in $DEVICEBIND; do
   echo "    " $ITEM
 done
 
-#shift
-echo docker $@ $DEVICEBIND
-exec docker $@ $DEVICEBIND
+if test "$1" = "run"; then
+  shift
+  echo docker run $DEVICEBIND $@
+  exec docker run $DEVICEBIND $@
+else
+  echo docker $@
+  exec docker $@
+fi
 
 #docker run -d -p6666:22 \
 #  --device=/dev/nvidia0:/dev/nvidia0 \
