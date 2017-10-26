@@ -4,10 +4,10 @@ LANGUAGE
 * Most important languages for me (alphabet order)::
 
   C                  **
-  C++                **
+  C++               ***
   CUDA               **
   Julia              **
-  Lua               ***
+  Lua                **
   Python3         *****
   Shell              **
 
@@ -23,7 +23,6 @@ LANGUAGE
   Lisp               **
   Cython             **
   Go                  *
-  Perl                *
 
 TOOL LANGUAGE
 =============
