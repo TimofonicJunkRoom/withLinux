@@ -1,0 +1,22 @@
+#!/bin/sh
+set -e
+
+DEVICEBIND=""
+for DEVICE in $(ls -1 /dev/nvidia*); do
+  DEVICEBIND="$DEVICEBIND --device=$DEVICE:$DEVICE"
+done
+echo Device Bind Options ::
+for ITEM in $DEVICEBIND; do
+  echo "    " $ITEM
+done
+
+#shift
+echo docker $@
+exec docker $@
+
+#docker run -d -p6666:22 \
+#  --device=/dev/nvidia0:/dev/nvidia0 \
+#  --device=/dev/nvidiactl:/dev/nvidiactl \
+#  --device=/dev/nvidia-modeset:/dev/nvidia-modeset \
+#  --device=/dev/nvidia-uvm:/dev/nvidia-uvm \
+#  --device=/dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
