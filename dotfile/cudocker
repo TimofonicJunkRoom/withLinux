@@ -11,8 +11,8 @@ for ITEM in $DEVICEBIND; do
 done
 
 #shift
-echo docker $@
-exec docker $@
+echo docker $@ $DEVICEBIND
+exec docker $@ $DEVICEBIND
 
 #docker run -d -p6666:22 \
 #  --device=/dev/nvidia0:/dev/nvidia0 \
