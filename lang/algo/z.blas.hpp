@@ -5,10 +5,11 @@
 #if ! defined(Z_BLAS_HPP_)
 #define Z_BLAS_HPP_
 
-#include <iostream>
-#include <vector>
+#include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <iostream>
+#include <vector>
 
 /* 1D vector dump */
 template <typename T>
@@ -37,41 +38,171 @@ operator<< (std::ostream& out,
 	return out;
 }
 
-namespace blas {
+namespace tensor { //                                                    TENSOR
+/* vector and matrix generator */
 
-/* x-typed vector absolute sum, b = \sum_i abs(a_i) */
+} // namespace tensor                                                    TENSOR
+
+namespace blas { //                                                        BLAS
+/*
+https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms
+http://www.netlib.org/blas/
+*/
+
+/* LEVEL1: amax : amax = max|x_i| */
 template <typename DType>
 DType
-xvasum (std::vector<DType> v)
+amax(std::vector<DType>& x)
 {
-	DType ret = (DType)0;
-	for (int i = 0; i < (int)v.size(); i++)
-		ret += (v[i]>0) ? v[i] : -v[i];
+	DType absmax = (DType)0.;
+	for (auto xi : x) {
+		DType absxi = (xi > (DType)0.) ? xi : -xi;
+		absmax      = (xi > absmax)    ? xi : absmax;
+	}
+	return absmax;
+}
+
+/* LEVEL1: asum : asum <- ||x||_1 */
+/* vector absolute sum, asum = \sum_i abs(x_i) */
+template <typename DType>
+DType
+asum (std::vector<DType>& v)
+{
+	DType ret = (DType)0.;
+	for (auto vi : v) ret += (vi>0) ? vi : -vi;
 	return ret;
 }
 
-/* x-typed vector dot product, c = \sum_i a_i * b_i */
+/* LEVEL1: axpy : y <- ax + y*/
+template <typename DType>
+void
+axpy(DType alpha,
+     std::vector<DType>& x,
+     std::vector<DType>& y)
+{
+	assert(x.size() == y.size());
+	for (int i = 0; i < x.size(); i++) y[i] += alpha * x[i];
+}
+
+/* LEVEL1 EXTRA: axpby : y <- ax + by */
+template <typename DType>
+void
+abpby(DType alpha,
+      std::vector<DType>& x,
+      DType beta,
+      std::vector<DType>& y)
+{
+	assert(x.size() == y.size());
+	for (int i = 0; i < x.size(); i++) y[i] = alpha * x[i] + beta * y[i];
+}
+
+/* LEVEL1: copy : y <- x */
+template <typename DType>
+void
+copy(std::vector<DType>& x,
+     std::vector<DType>& y)
+{
+	assert(x.size() == y.size());
+	copy(x.begin(), x.end(), y.begin());
+}
+
+/* LEVEL1: dot  : dot <- x^T y */
 template <typename DType>
 DType
-xvdot (std::vector<DType> x, std::vector<DType> y)
+dot(std::vector<DType> x,
+     std::vector<DType> y)
 {
-	DType ret = (DType) 0.;
 	assert(x.size() != y.size());
-	for (int i = 0; i < (int)x.size(); i++)
-		ret += x[i] * y[i];
+	DType ret = (DType) 0.;
+	for (int i = 0; i < (int)x.size(); i++) ret += x[i] * y[i];
 	return ret;
 }
 
-/* mean value of a vector, \sum_i v_i / len(v) */
+/* LEVEL2: nrm2 : nrm2 <- ||x||_2 */
 template <typename DType>
 DType
-xvmean(std::vector<DType>& v) {
-	DType sum = (DType)0.;
-	for (int i = 0; i < (int)v.size(); i++)
-		sum += (DType)(v[i]);
-	return sum/v.size();
+nrm2(std::vector<DType>& x)
+{
+	DType ret = (DType)0.;
+	for (auto xi : x) ret += xi * xi;
+	return sqrt(ret);
 }
 
-} // namespace blas
+/* LEVEL1: scal : x <- ax */
+template <typename DType>
+void
+scal(DType alpha,
+     std::vector<DType>& x)
+{
+	for (int i = 0; i < x.size(); i++) x[i] *= alpha;
+}
+
+/* LEVEL1 EXTRA: sum = sum_i x_i */
+template <typename DType>
+DType
+sum(std::vector<DType>& x)
+{
+	DType sum = (DType)0.;
+	for (auto xi : x) sum += (DType)xi;
+	return sum;
+}
+
+/* LEVEL1 EXTRA: mean = sum(x)/len(x) */
+template <typename DType>
+DType
+mean(std::vector<DType>& v)
+{
+	return sum(v)/v.size();
+}
+
+/* LEVEL1: swap : x <-> y */
+template <typename DType>
+void
+swap(std::vector<DType>& x,
+     std::vector<DType>& y)
+{
+	std::vector<DType> tmp (x);
+	copy(y, x);
+	copy(tmp, y);
+}
+
+/* LEVEL2: gemv : y <- aAx + by */
+template <typename DType>
+void
+gemv(DType alpha,
+     std::vector<std::vector<DType>>& A,
+     std::vector<DType>& x,
+     DType beta,
+     std::vector<DType>& y)
+{
+	// size(A) = (M, N), size(x) = (N, 1), size(y) = (M, 1)
+	int M = A.size(); // N = x.size();
+	for (int m = 0; m < M; m++) {
+		y[m] = alpha * dot(A[m], x) + beta * y[m];
+	}
+}
+
+/* LEVEL3: gemm : C <- aAB + bC */
+template <typename DType>
+void
+gemm(DType alpha,
+     std::vector<std::vector<DType>>& A,
+     std::vector<std::vector<DType>>& B,
+     DType beta,
+     std::vector<std::vector<DType>>& C)
+{
+	// size(A)=(M,K), size(B)=(K,N), size(C)=(M,N)
+	int M = C.size(), N = C.front().size(), K = A.front().size();
+	for (int m = 0; m < M; m++) {
+		for (int n = 0; n < N; n++) {
+			C[m][n] *= beta;
+			for (int k = 0; k < K; k++) {
+				C[m][n] += alpha * A[m][k] * B[k][n];
+			}
+		}
+	}
+}
+
+} // namespace blas                                                        BLAS
 
 #endif // Z_BLAS_HPP_
