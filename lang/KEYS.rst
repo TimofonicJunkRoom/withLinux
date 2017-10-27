@@ -18,7 +18,7 @@ LANGUAGE
 * I want to learn more about::
 
   Python3         *****
-  Julia            ****
+  Julia            **** (LLVM IR)
   CUDA              ***
   Lisp               **
   Cython             **
