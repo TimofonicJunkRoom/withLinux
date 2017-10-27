@@ -1,12 +1,19 @@
 Docker.io
 ===
 
+Reference https://docs.docker.com/get-started
+
 # installation
 
 There is official Debian package for `docker.io`.  
 ```
 apt install docker.io
 adduser $USER docker     # grant the docker group permission to avoid sudo
+```
+
+Test docker installation
+```
+docker run hello-world
 ```
 
 # docker image preparation by oneself
