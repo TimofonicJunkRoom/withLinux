@@ -17,13 +17,17 @@ set -e
 #       failure of the cuda app in the containers.
 
 DEVICEBIND=""
-for DEVICE in $(ls -1 /dev/nvidia*); do
+for DEVICE in $(ls -1 /dev/nvidia* 2>/dev/null); do
   DEVICEBIND="$DEVICEBIND --device=$DEVICE:$DEVICE"
 done
-echo Device Bind Options ::
-for ITEM in $DEVICEBIND; do
-  echo "    " $ITEM
-done
+if test -z "$DEVICEBIND"; then
+  echo Device Bind Options :: [NO CUDA DEVICE]
+else
+  echo Device Bind Options ::
+  for ITEM in $DEVICEBIND; do
+    echo "    " $ITEM
+  done
+fi
 
 if test "$1" = "run"; then
   shift

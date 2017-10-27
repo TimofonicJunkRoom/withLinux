@@ -1,5 +1,5 @@
 dwm:
-	keyrate || xset r rate 150 150 # dwm keyrate
+	keyrate || xset r rate 160 160 # dwm keyrate
 	feh --bg-scale $(BGIMG) --bg-fill || xsetroot -solid gray # dwm background
 
 	-pkill -f -u $$USER '.*/bin/sh.*-c.*while true.*dwmstatus.*done'
