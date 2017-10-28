@@ -1,14 +1,14 @@
 LANGUAGE
 ========
 
-* Most important languages for me (alphabet order)::
+* Most important languages for me::
 
-  C                  **
+  Python3         *****
   C++               ***
+  C                  **
   CUDA               **
   Julia              **
   Lua                **
-  Python3         *****
   Shell              **
 
 * With minor importance::
@@ -21,18 +21,18 @@ LANGUAGE
   Julia            **** (LLVM IR)
   CUDA              ***
   Lisp               **
-  Cython             **
-  Go                  *
+  Go                 **
+  Cython              *
 
 TOOL LANGUAGE
 =============
 
-* Most important tool languages for me (alphabet order)::
+* Most important tool languages for me::
 
+  ReST            *****
+  Tex             *****
+  Markdown          ***
   Awk                **
+  Sed                **
   CMake              **
   Make               **
-  Markdown        *****
-  ReST            *****
-  Sed                **
-  Tex              ****
