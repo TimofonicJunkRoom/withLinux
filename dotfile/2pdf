@@ -1,6 +1,11 @@
 #!/bin/sh
-# my pandoc markdown -> pdf convertion helper
+# my pandoc * -> pdf convertion helper
+# where * can be {markdown, rst, ...}
 set -e
+
+LATEXOPT="-V mainfont=times -V geometry=margin=1in"
+TOC="--toc -V toccolor=magenta"
+#LATEXOPT="$LATEXOPT $TOC"
 
 die () {
 	echo $1
@@ -16,15 +21,15 @@ post () {
 if test "$#" -eq 1; then
 	stat $1 >/dev/null || die 'stat failed'
 	pre
-	pandoc -V fontfamily=times -V geometry=margin=1in -o $1.pdf $1
+	pandoc $LATEXOPT -o $1.pdf $1
 	post
 elif test "$#" -gt 1; then
 	filename=$1
 	stat $filename >/dev/null || die 'stat failed'
 	shift;
 	pre
-	pandoc -V fontfamily=times -V geometry=margin=1in -o $filename.pdf $filename $@
+	pandoc $LATEXOPT -o $filename.pdf $filename $@
 	post
 elif test "$#" -lt 1; then
-	die 'no markdown file specified'
+	die 'No source file specified.'
 fi
