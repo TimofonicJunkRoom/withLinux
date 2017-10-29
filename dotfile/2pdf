@@ -3,7 +3,7 @@
 # where * can be {markdown, rst, ...}
 set -e
 
-LATEXOPT="-V mainfont=times -V geometry=margin=1in"
+LATEXOPT="-V fontfamily=times -V mainfont=times -V geometry=margin=1in"
 TOC="--toc -V toccolor=magenta"
 #LATEXOPT="$LATEXOPT $TOC"
 
