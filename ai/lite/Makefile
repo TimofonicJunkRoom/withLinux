@@ -16,4 +16,4 @@ layer: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o layer_test -DLITE_TEST_LAYER layer.cc 
 	./layer_test
 clean:
-	-$(RM) dataloader_test demo.h5 tensor_test
+	-$(RM) dataloader_test demo.h5 tensor_test layer_test

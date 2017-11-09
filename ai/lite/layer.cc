@@ -38,6 +38,7 @@ public:
 	void forward() {}
 	void backward() {}
 	void update(double lr) {}
+	void report() {}
 };
 
 template <typename Dtype>
@@ -113,10 +114,12 @@ public:
 	void backward(Blob<Dtype> input, Blob<Dtype> output) {
 		// FIXME
 	}
-}
+};
 
 template <typename Dtype>
 class ClassNLLLoss : public Layer<Dtype> {
+	double lossval = 0.;
+
 	void forward(Blob<Dtype> input, Blob<Dtype> output) {
 		// FIXME
 	}
@@ -124,18 +127,24 @@ class ClassNLLLoss : public Layer<Dtype> {
 	void backward(Blob<Dtype> input, Blob<Dtype> output) {
 		// FIXME
 	}
-}
+
+	void report() {
+		std::cout << " * ClassNLLLoss: " << lossval << std::endl;
+	}
+};
 
 template <typename Dtype>
 class ClassAccuracy : public Layer<Dtype> {
+	double accuracy = 0.;
+
 	void forward(Blob<Dtype> input, Blob<Dtype> output) {
 		// FIXME
 	}
 
-	void backward(Blob<Dtype> input, Blob<Dtype> output) {
-		// FIXME
+	void report() {
+		std::cout << " * Accuracy: " << accuracy << std::endl;
 	}
-}
+};
 
 #if defined(LITE_TEST_LAYER)
 #include "dataloader.cc"
