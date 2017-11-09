@@ -83,34 +83,50 @@ public:
 	}
 
 	// common init
-	size_t initMem() {
+	void initMem() {
 		assert(data == nullptr);
 		data = (Dtype*)malloc(sizeof(Dtype)*getSize());
 		memset(data, 0x0, sizeof(Dtype)*getSize());
 	}
 
 	// common resize to 1D
-	void resize(size_t length) {
+	Tensor<Dtype>* resize(size_t length) {
 		shape.clear();
 		if (data != nullptr) free(data);
 		data = nullptr;
 		shape.push_back(length);
 		initMem();
+		return this;
 	}
 
 	// common resize to 2D
-	void resize(size_t row, size_t col) {
+	Tensor<Dtype>* resize(size_t row, size_t col) {
 		shape.clear();
 		if (data != nullptr) free(data);
 		data = nullptr;
 		shape.push_back(row);
 		shape.push_back(col);
 		initMem();
+		return this;
 	}
 
 	// common inplace zero
-	void zero_() {
+	Tensor<Dtype>* zero_() {
 		memset(data, 0x0, sizeof(Dtype)*getSize());
+		return this;
+	}
+
+	// common inplace fill
+	Tensor<Dtype>* fill_(Dtype value) {
+		for (size_t i = 0; i < getSize(); i++)
+			*(data + i) = (Dtype) value;
+		return this;
+	}
+
+	// common rand ~U(0,1)
+	Tensor<Dtype>* rand_(void) {
+		for (size_t i = 0; i < getSize(); i++)
+			*(data + i) = (Dtype)random()/RAND_MAX;
 	}
 
 	// common destructor
@@ -119,20 +135,26 @@ public:
 	}
 };
 
+// LEVEL3 BLAS: GEMM : C <- aAB + bC
 template <typename Dtype>
 void
-GEMM(Dtype alpha, Tensor<Dtype>* A, Dtype beta, Tensor<Dtype>* B,
-		Dtype gamma, Tensor<Dtype>* C)
+GEMM(Dtype alpha, Tensor<Dtype>* A, Tensor<Dtype>* B,
+		Dtype beta, Tensor<Dtype>* C)
 {
+	if (A->shape[1] != B->shape[0] || A->shape[0] != C->shape[0] || B->shape[1] != C->shape[1]) {
+		fprintf(stderr, "GEMM: Illegal Shape! (%d,%d)x(%d,%d)->(%d,%d)",
+				A->shape[0], A->shape[1], B->shape[0], B->shape[1],
+				C->shape[0], C->shape[1]);
+	}
 	// check shape
 	assert(A->shape[1] == B->shape[0]);
 	assert(A->shape[0] == C->shape[0] && B->shape[1] == C->shape[1]);
 	// do gemm
 	for (int i = 0; i < C->shape[0]; i++) {
 		for (int j = 0; j < C->shape[1]; j++) {
+			*C->at(i, j) *= beta;
 			for (int k = 0; k < A->shape[1]; k++) {
-				*C->at(i, j) = gamma * *C->at(i, j) +
-					alpha * *A->at(i, k) + beta * *B->at(k, j);
+				*C->at(i, j) += alpha * *A->at(i, k) * *B->at(k, j);
 			}
 		}
 	}
@@ -156,7 +178,11 @@ main(void)
 	empty.dump();
 	empty.resize(10);
 	empty.dump();
-	empty.resize(10, 4);
+	empty.resize(10, 10);
+	empty.dump();
+	Tensor<double> ones;
+	ones.resize(10, 10)->fill_(1.)->dump();
+	GEMM(1., &ones, &ones, 0., &empty);
 	empty.dump();
 	return 0;
 }
