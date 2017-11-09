@@ -129,11 +129,27 @@ public:
 			*(data + i) = (Dtype)random()/RAND_MAX;
 	}
 
-	// common destructor
-	~Tensor() {
-		free(this->data);
+	// 2D transpose, non-inplace
+	Tensor<Dtype>* transpose(void) {
+		assert(shape.size() == 2);
+		auto xT = new Tensor<Dtype> (shape[1], shape[0]);
+		for (int i = 0; i < shape[0]; i++)
+			for (int j = 0; j < shape[1]; j++)
+				*xT->at(j, i) = *at(i, j);
+		return xT;
 	}
 };
+
+// LEVEL1 BLAS: AXPY : Y <- aX + Y
+template <typename Dtype>
+void
+AXPY(Dtype alpha, Tensor<Dtype>* X, Tensor<Dtype>* Y)
+{
+	// regard tensor as a flattened
+	assert(X->getSize() == Y->getSize());
+	for (size_t i = 0; i < X->getSize(); i++)
+		*Y->at(i) += alpha * *X->at(i);
+}
 
 // LEVEL3 BLAS: GEMM : C <- aAB + bC
 template <typename Dtype>
@@ -183,6 +199,14 @@ main(void)
 	Tensor<double> ones;
 	ones.resize(10, 10)->fill_(1.)->dump();
 	GEMM(1., &ones, &ones, 0., &empty);
+	empty.dump();
+
+	empty.resize(5, 10);
+	empty.rand_();
+	empty.dump();
+	empty.transpose()->dump();
+
+	AXPY(1., &empty, &empty);
 	empty.dump();
 	return 0;
 }
