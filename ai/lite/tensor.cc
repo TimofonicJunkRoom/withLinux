@@ -11,14 +11,18 @@ template <typename Dtype>
 class Tensor {
 public:
 	std::vector<size_t> shape;
-	Dtype* data;
+	Dtype* data = nullptr;
+
+	// Empty tensor constructor
+	Tensor(void) {
+		data = nullptr;
+	}
 
 	// 1D (vector) constructor
 	Tensor(size_t length) {
 		this->shape.push_back(length);
 		this->initMem();
 	}
-
 
 	// 2D (matrix) constructor
 	Tensor(size_t row, size_t col) {
@@ -39,7 +43,9 @@ public:
 
 	// common dump
 	void dump() {
-		if (shape.size() == 1) {
+		if (shape.size() == 0) {
+			std::cout << "[ ]" << std::endl;
+		} else if (shape.size() == 1) {
 			std::cout << "[";
 			for (int i = 0; i < this->getSize(0); i++)
 				printf(" %.3f", *this->at(i));
@@ -78,8 +84,28 @@ public:
 
 	// common init
 	size_t initMem() {
+		assert(data == nullptr);
 		data = (Dtype*)malloc(sizeof(Dtype)*getSize());
 		memset(data, 0x0, sizeof(Dtype)*getSize());
+	}
+
+	// common resize to 1D
+	void resize(size_t length) {
+		shape.clear();
+		if (data != nullptr) free(data);
+		data = nullptr;
+		shape.push_back(length);
+		initMem();
+	}
+
+	// common resize to 2D
+	void resize(size_t row, size_t col) {
+		shape.clear();
+		if (data != nullptr) free(data);
+		data = nullptr;
+		shape.push_back(row);
+		shape.push_back(col);
+		initMem();
 	}
 
 	// common inplace zero
@@ -117,14 +143,21 @@ GEMM(Dtype alpha, Tensor<Dtype>* A, Dtype beta, Tensor<Dtype>* B,
 int
 main(void)
 {
-	Tensor<double> data (8, 17);
+	Tensor<double> data (10, 784);
 	Tensor<double> label (10);
 
-	lite_hdf5_read("demo.h5", "data", 0, 0, 8, 17, data.data);
+	lite_hdf5_read("demo.h5", "data", 0, 0, 10, 784, data.data);
 	data.dump();
 
 	lite_hdf5_read("demo.h5", "label", 0, 10, label.data);
 	label.dump();
+
+	Tensor<double> empty;
+	empty.dump();
+	empty.resize(10);
+	empty.dump();
+	empty.resize(10, 4);
+	empty.dump();
 	return 0;
 }
 #endif

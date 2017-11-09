@@ -69,21 +69,21 @@ lite_hdf5_read(
 	dataset.read(dest, PredType::NATIVE_DOUBLE, memspace, dataspace);
 }
 
-#if defined(LITE_TEST)
+#if defined(LITE_TEST_DATALOADER)
 int
 main()
 {
-	double data_out[8][17];
-	memset(data_out, 0x0, 8*17*sizeof(double));
-	lite_hdf5_read("demo.h5", "data", 0, 0, 8, 17, data_out);
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 17; j++) {
+	double data_out[10][784];
+	memset(data_out, 0x0, 10*784*sizeof(double));
+	lite_hdf5_read("demo.h5", "data", 0, 0, 10, 784, data_out);
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 784; j++) {
 			printf(" %7.4f", data_out[i][j]);
 		}
 		cout << endl;
 	}
-	double data_out2[17];
-	memset(data_out2, 0x0, 17*sizeof(double));
+	double data_out2[10];
+	memset(data_out2, 0x0, 10*sizeof(double));
 	lite_hdf5_read("demo.h5", "label", 0, 10, data_out2);
 	for (int j = 0; j < 10; j++) {
 		printf(" %7.4f", data_out2[j]);
