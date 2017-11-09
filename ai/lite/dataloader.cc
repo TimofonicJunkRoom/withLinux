@@ -11,12 +11,14 @@
 using namespace std;
 using namespace H5;
 
-// read the whole dataset into memory
+// read the whole 2D dataset into memory
 template <typename Dtype>
 void
 lite_hdf5_read(
 		H5std_string name_h5file,
 		H5std_string name_dataset,
+		size_t offset1, size_t offset2,
+		size_t count1,  size_t count2,
 		Dtype* dest)
 {
 	H5File h5file (name_h5file, H5F_ACC_RDONLY);
@@ -24,31 +26,69 @@ lite_hdf5_read(
 	H5T_class_t type_class = dataset.getTypeClass();
 	DataSpace dataspace = dataset.getSpace();
 
-	hsize_t offset[2] = {0, 0};
-	hsize_t count[2] = {8, 17};
+	hsize_t offset[2] = {offset1, offset2};
+	hsize_t count[2] = {count1, count2};
 	dataspace.selectHyperslab(H5S_SELECT_SET, count, offset);
 
-	hsize_t dimsm[2] = {8, 17};
+	hsize_t dimsm[2] = {count1, count2};
 	DataSpace memspace(2, dimsm);
 
-	hsize_t offset_out[2] = {0, 0};
-	hsize_t count_out[2] = {8, 17};
+	hsize_t offset_out[2] = {offset1, offset2};
+	hsize_t count_out[2] = {count1, count2};
 	memspace.selectHyperslab(H5S_SELECT_SET, count_out, offset_out);
 
 	dataset.read(dest, PredType::NATIVE_DOUBLE, memspace, dataspace);
 }
 
+// read the whole 1D dataset into memory
+template <typename Dtype>
+void
+lite_hdf5_read(
+		H5std_string name_h5file,
+		H5std_string name_dataset,
+		size_t offset1,
+		size_t count1,
+		Dtype* dest)
+{
+	H5File h5file (name_h5file, H5F_ACC_RDONLY);
+	DataSet dataset = h5file.openDataSet(name_dataset);
+	H5T_class_t type_class = dataset.getTypeClass();
+	DataSpace dataspace = dataset.getSpace();
+
+	hsize_t offset[1] = {offset1};
+	hsize_t count[1] = {count1};
+	dataspace.selectHyperslab(H5S_SELECT_SET, count, offset);
+
+	hsize_t dimsm[1] = {count1,};
+	DataSpace memspace(1, dimsm);
+
+	hsize_t offset_out[1] = {offset1,};
+	hsize_t count_out[1] = {count1,};
+	memspace.selectHyperslab(H5S_SELECT_SET, count_out, offset_out);
+
+	dataset.read(dest, PredType::NATIVE_DOUBLE, memspace, dataspace);
+}
+
+#if defined(LITE_TEST)
 int
 main()
 {
 	double data_out[8][17];
 	memset(data_out, 0x0, 8*17*sizeof(double));
-	lite_hdf5_read("demo.h5", "data", data_out);
+	lite_hdf5_read("demo.h5", "data", 0, 0, 8, 17, data_out);
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 17; j++) {
 			printf(" %7.4f", data_out[i][j]);
 		}
 		cout << endl;
 	}
+	double data_out2[17];
+	memset(data_out2, 0x0, 17*sizeof(double));
+	lite_hdf5_read("demo.h5", "label", 0, 10, data_out2);
+	for (int j = 0; j < 10; j++) {
+		printf(" %7.4f", data_out2[j]);
+	}
+
 	return 0;
 }
+#endif
