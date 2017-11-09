@@ -110,6 +110,15 @@ public:
 		return this;
 	}
 
+	// common resize As
+	Tensor<Dtype>* resizeAs(Tensor<Dtype>* x) {
+		if (x->getDim() == 1) {
+			this->resize(x->getSize(0));
+		} else if (x->getDim() == 2) {
+			this->resize(x->getSize(0), x->getSize(1));
+		}
+	}
+
 	// common inplace zero
 	Tensor<Dtype>* zero_() {
 		memset(data, 0x0, sizeof(Dtype)*getSize());
@@ -129,6 +138,14 @@ public:
 			*(data + i) = (Dtype)random()/RAND_MAX;
 	}
 
+	// common clone
+	Tensor<Dtype>* clone(void) {
+		auto y = new Tensor<Dtype> ();
+		y->resizeAs(this);
+		memcpy(this->data, y->data, sizeof(Dtype)*this->getSize());
+		return y;
+	}
+
 	// 2D transpose, non-inplace
 	Tensor<Dtype>* transpose(void) {
 		assert(shape.size() == 2);
@@ -137,6 +154,14 @@ public:
 			for (int j = 0; j < shape[1]; j++)
 				*xT->at(j, i) = *at(i, j);
 		return xT;
+	}
+
+	// common exp
+	Tensor<Dtype>* exp(void) {
+		auto y = this->clone();
+		for (size_t i = 0; i < getSize(); i++)
+			*y->data->at(i) = exp(*this->data->at(i));
+		return y;
 	}
 };
 

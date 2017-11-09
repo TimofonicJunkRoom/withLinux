@@ -37,7 +37,7 @@ public:
 	void zeroGrad() {}
 	void forward() {}
 	void backward() {}
-	void update() {}
+	void update(double lr) {}
 };
 
 template <typename Dtype>
@@ -93,6 +93,49 @@ public:
 		AXPY((Dtype)-lr, b.gradient, b.value);
 	}
 };
+
+template <typename Dtype>
+class SoftmaxLayer : public Layer<Dtype> {
+public:
+	void forward(Blob<Dtype> input, Blob<Dtype> output) {
+		// input.exp().sum(0), sum in the first row
+		auto expx = input.value.exp();
+		for (int i = 1; i < expx->getSize(0); i++)
+			for (int j = 0; j < expx->getSize(1); j++)
+				*expx->at(0, j) += *expx->at(i, j);
+		// output
+		for (int i = 0; i < expx->getSize(0); i++)
+			for (int j = 0; j < expx->getSize(1); j++)
+				*output.value->at(i, j) = *input.value->at(i,j) /
+					((Dtype)1e-7 + *expx->at(0, j));
+	}
+
+	void backward(Blob<Dtype> input, Blob<Dtype> output) {
+		// FIXME
+	}
+}
+
+template <typename Dtype>
+class ClassNLLLoss : public Layer<Dtype> {
+	void forward(Blob<Dtype> input, Blob<Dtype> output) {
+		// FIXME
+	}
+
+	void backward(Blob<Dtype> input, Blob<Dtype> output) {
+		// FIXME
+	}
+}
+
+template <typename Dtype>
+class ClassAccuracy : public Layer<Dtype> {
+	void forward(Blob<Dtype> input, Blob<Dtype> output) {
+		// FIXME
+	}
+
+	void backward(Blob<Dtype> input, Blob<Dtype> output) {
+		// FIXME
+	}
+}
 
 #if defined(LITE_TEST_LAYER)
 #include "dataloader.cc"
