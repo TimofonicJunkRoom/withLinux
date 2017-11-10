@@ -59,10 +59,17 @@ public:
 
 	// 2D subTensor, inplace
 	Tensor<Dtype>* subTensor_(size_t rlower, size_t rupper) {
-		assert(rlower >= 0 && rlower < shape[0]);
-		assert(rupper >= 0 && rupper < shape[0]);
-		assert(rlower <= rupper);
-		return new Tensor<Dtype>(data+rlower*shape[1], rupper-rlower, shape[1]);
+		if (getDim() == 2) {
+			assert(rlower >= 0 && rlower < shape[0]);
+			assert(rupper >= 0 && rupper < shape[0]);
+			assert(rlower <= rupper);
+			return new Tensor<Dtype>(data+rlower*shape[1], rupper-rlower, shape[1]);
+		} else if (getDim() == 1) {
+			assert(rlower >= 0 && rlower < getSize());
+			assert(rupper >= 0 && rupper < getSize());
+			assert(rlower <= rupper);
+			return new Tensor<Dtype>(data+rlower, rupper-rlower);
+		} // else: error
 	}
 
 	// common dump
