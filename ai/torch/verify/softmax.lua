@@ -7,6 +7,7 @@ local l = nn.SoftMax()
 
 -- reference result
 local y = l:forward(a)
+print(y)
 
 -- softmax forward
 local yhat = torch.exp(a):cdiv( torch.sum(torch.exp(a),2):expandAs(a) )

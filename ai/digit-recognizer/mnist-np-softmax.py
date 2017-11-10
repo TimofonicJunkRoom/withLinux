@@ -82,7 +82,7 @@ for i in range(1000+1):
         gw += np.matmul(go[:,k].reshape(10,1), images[k].reshape(1,784))
     gw /= batchsize
     #print(' ** gw', gw.shape)  # (10,784)
-    #print(' ** Gradient: W', np.abs(gw).sum(), 'B', np.abs(gb).sum())
+    print(' ** Gradient: W', gw.sum(), np.abs(gw).sum(), 'B', gb.sum(), np.abs(gb).sum())
 
     # -- update --
     '''

@@ -107,6 +107,7 @@ class LinearLayer : public Layer<Dtype> {
 public:
 	Blob<Dtype> W;
 	Blob<Dtype> b;
+	bool use_bias = true;
 
 	LinearLayer(int dim_dest, int dim_src) {
 		W.resize(dim_dest, dim_src);
@@ -198,6 +199,30 @@ public:
 				*input.gradient->at(row, sample) = element;
 			}
 		}
+	}
+};
+
+template <typename Dtype>
+class MSELoss : public Layer<Dtype> {
+public:
+	double lossval = 0.;
+
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
+		lossval = 0;
+		int numsamples = input.getSize(1);
+		int numdim = input.getSize(0);
+		auto square = [](Dtype x) { return x*x; };
+		for (int i = 0; i < numsamples; i++) {
+			for (int j = 0; j < numdim; j++) {
+				lossval += square(*input.value->at(i,j) - *label.value->at(i,j));
+			}
+		}
+		lossval /= numsamples;
+		*output.value->at(0) = lossval;
+	}
+
+	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
+		// FIXME
 	}
 };
 

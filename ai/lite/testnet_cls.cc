@@ -23,8 +23,9 @@ main(void)
 	ClassAccuracy<double> accuracy1;
 
 	cout << "training" << endl;
+	for (int iteration = 0; iteration < 1; iteration++) {
 	//for (int iteration = 0; iteration < 5; iteration++) {
-	for (int iteration = 0; iteration < 100; iteration++) {
+	//for (int iteration = 0; iteration < 100; iteration++) {
 	//for (int iteration = 0; iteration < 1000; iteration++) {
 		cout << ">> Iteration " << iteration << "::" << endl;
 #define DUMP(msg, blob, dgrad) if (true) do { \
@@ -37,13 +38,13 @@ main(void)
 		Blob<double> batchT = *batch.clone();
 		batchT.transpose();
 		// -- forward
-		//DUMP("batchT", batchT, false);
+		DUMP("batchT", batchT, false);
 		fc1.forward(batchT, o);
-		DUMP("o", o, false);
+		DUMP("o", o, true);
 		sm1.forward(o, yhat);
-		DUMP("yhat", yhat, false);
+		DUMP("yhat", yhat, true);
 		loss1.forward(yhat, loss, label);
-		DUMP("loss", loss, false);
+		DUMP("loss", loss, true);
 		accuracy1.forward(yhat, accuracy, label);
 		// -- report
 		loss1.report();
@@ -58,6 +59,8 @@ main(void)
 		fc1.backward(batchT, o);
 
 		fc1.dumpstat();
+		DUMP("W", fc1.W, true);
+		DUMP("b", fc1.b, true);
 
 		//yhat.dump(); // FIXME: Gradient is problematic
 		//o.dump();
