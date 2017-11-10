@@ -57,17 +57,12 @@ public:
 		return this->data + offset;
 	}
 
-	// 1D subTensor, inplace
-	Tensor<Dtype>* subTensor_(size_t offset, size_t length) {
-		assert(offset - data + length < getSize());
-		return new Tensor<Dtype>(data+offset, length);
-	}
-
 	// 2D subTensor, inplace
-	Tensor<Dtype>* subTensor_(size_t offrow, size_t offcol,
-								size_t row, size_t col) {
-		assert(offrow * shape[1] + offcol + row * shape[1] + col < getSize());
-		return new Tensor<Dtype>(data+offrow*shape[1]+offcol, row, col);
+	Tensor<Dtype>* subTensor_(size_t rlower, size_t rupper) {
+		assert(rlower >= 0 && rlower < shape[0]);
+		assert(rupper >= 0 && rupper < shape[0]);
+		assert(rlower <= rupper);
+		return new Tensor<Dtype>(data+rlower*shape[1], rupper-rlower, shape[1]);
 	}
 
 	// common dump
@@ -302,6 +297,9 @@ main(void)
 
 	auto xxx2 = xxx->transpose();
 	xxx2->dump();
+
+	auto xxx2sub = xxx2->subTensor_(2,5);
+	xxx2sub->dump();
 
 	return 0;
 }
