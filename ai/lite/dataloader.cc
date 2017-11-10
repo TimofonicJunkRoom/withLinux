@@ -1,4 +1,6 @@
 /* Dataloader.cc */
+#if !defined(_LITE_DATALOADER_CC)
+#define _LITE_DATALOADER_CC
 
 #include <string>
 #include <cassert>
@@ -68,6 +70,7 @@ lite_hdf5_read(
 
 	dataset.read(dest, PredType::NATIVE_DOUBLE, memspace, dataspace);
 }
+#endif
 
 #if defined(LITE_TEST_DATALOADER)
 int

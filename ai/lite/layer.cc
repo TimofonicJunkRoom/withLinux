@@ -1,5 +1,9 @@
+#if !defined(_LITE_LAYER_CC)
+#define _LITE_LAYER_CC
+
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "tensor.cc"
 
 using namespace std;
@@ -9,11 +13,36 @@ class Blob {
 public:
 	Tensor<Dtype>* value = new Tensor<Dtype>();
 	Tensor<Dtype>* gradient = new Tensor<Dtype>();
+	bool requires_grad = true;
 
 	Blob(){}
 
+	Blob(Tensor<Dtype>* value_, Tensor<Dtype>* gradient_, bool requires_grad_) {
+		this->value = value_;
+		this->gradient = gradient_;
+		this->requires_grad = requires_grad_;
+	}
+
 	Blob(int length) {
 		this->resize(length);
+	}
+
+	Blob(int length, bool requires_grad) {
+		if (requires_grad) {
+			this->resize(length);
+		} else {
+			this->value->resize(length);
+			this->requires_grad = requires_grad;
+		}
+	}
+
+	Blob(int row, int col, bool requires_grad) {
+		if (requires_grad) {
+			this->resize(row, col);
+		} else {
+			this->value->resize(row, col);
+			this->requires_grad = requires_grad;
+		}
 	}
 
 	Blob(int row, int col) {
@@ -22,12 +51,44 @@ public:
 
 	void resize(int length) {
 		value->resize(length);
-		gradient->resize(length);
+		if (requires_grad) gradient->resize(length);
 	}
 
 	void resize(int row, int col) {
 		value->resize(row, col);
-		gradient->resize(row, col);
+		if (requires_grad) gradient->resize(row, col);
+	}
+
+	Blob<Dtype>* transpose() {
+		assert(value->getDim() == 2);
+		auto newx = this->clone();
+		auto oldvalue = value;
+		value = value->transpose();
+		auto oldgradient = gradient;
+		if (requires_grad) gradient = gradient->transpose();
+		return newx;
+	}
+
+	Blob<Dtype>* clone() {
+		auto newvalue = value->clone();
+		auto newgradient = gradient->clone();
+		auto newrequires_grad = requires_grad;
+		auto newblob = new Blob<Dtype>(newvalue, newgradient, newrequires_grad);
+		return newblob;
+	}
+
+	void zeroGrad() {
+		this->gradient->zero_();
+	}
+
+	void dump() {
+		this->value->dump();
+		this->gradient->dump();
+	}
+
+	void dump(bool pv, bool pg) {
+		if (pv) this->value->dump();
+		if (pg) this->gradient->dump();
 	}
 };
 
@@ -50,9 +111,10 @@ public:
 	LinearLayer(int dim_dest, int dim_src) {
 		W.resize(dim_dest, dim_src);
 		b.resize(dim_dest);
-		W.value->zero_();
+		W.value->rand_();
+		W.value->scal_(0.01);
 		W.gradient->zero_();
-		b.value->zero_();
+		b.value->fill_(0.01);
 		b.gradient->zero_();
 	}
 
@@ -75,10 +137,12 @@ public:
 	}
 
 	void backward(Blob<Dtype> input, Blob<Dtype> output) {
+		if (!output.requires_grad) return;
 		// grad of W: g x x^T
 		GEMM(1., output.gradient, input.value->transpose(), 0., W.gradient);
 		// grad of X: W^T x g
-		GEMM(1., W.gradient->transpose(), output.gradient, 0., input.gradient);
+		if (input.requires_grad)
+			GEMM(1., W.gradient->transpose(), output.gradient, 0., input.gradient);
 		// grad of b: unexpand(g)
 		int batchsize = input.value->getSize(1);
 		int outdim = W.value->getSize(0);
@@ -100,32 +164,58 @@ class SoftmaxLayer : public Layer<Dtype> {
 public:
 	void forward(Blob<Dtype> input, Blob<Dtype> output) {
 		// input.exp().sum(0), sum in the first row
-		auto expx = input.value.exp();
+		auto expx = input.value->exp();
 		for (int i = 1; i < expx->getSize(0); i++)
 			for (int j = 0; j < expx->getSize(1); j++)
 				*expx->at(0, j) += *expx->at(i, j);
 		// output
 		for (int i = 0; i < expx->getSize(0); i++)
 			for (int j = 0; j < expx->getSize(1); j++)
-				*output.value->at(i, j) = *input.value->at(i,j) /
+				*output.value->at(i, j) = std::exp(*input.value->at(i,j)) /
 					((Dtype)1e-7 + *expx->at(0, j));
 	}
 
 	void backward(Blob<Dtype> input, Blob<Dtype> output) {
-		// FIXME
+		input.gradient->zero_();
+		for (int sample = 0; sample < input.value->getSize(1); sample++) {
+			for (int row = 0; row < input.value->getSize(0); row++) {
+				for (int k = 0; k < output.gradient->getSize(0); k++) {
+					if (k == row)
+						*input.gradient->at(row, sample) +=
+							(- *output.value->at(row, sample)
+							 * *output.value->at(k, sample)
+							 + *output.value->at(row, sample))
+							* *output.gradient->at(row, sample);
+					else
+						*input.gradient->at(row, sample) +=
+							(- *output.value->at(row, sample)
+							 * *output.value->at(k, sample))
+							* *output.gradient->at(row, sample);
+				}
+			}
+		}
 	}
 };
 
 template <typename Dtype>
 class ClassNLLLoss : public Layer<Dtype> {
+public:
 	double lossval = 0.;
 
-	void forward(Blob<Dtype> input, Blob<Dtype> output) {
-		// FIXME
+	void forward(Blob<Dtype> input, Blob<Dtype> output, Blob<Dtype> label) {
+		lossval = 0.;
+		int samples = input.value->getSize(1);
+		for (int i = 0; i < samples; i++)
+			lossval += - log(1e-7 + *input.value->at((int)*label.value->at(i), i));
+		lossval /= samples;
 	}
 
-	void backward(Blob<Dtype> input, Blob<Dtype> output) {
-		// FIXME
+	void backward(Blob<Dtype> input, Blob<Dtype> output, Blob<Dtype> label) {
+		input.gradient->zero_();
+		int samples = input.value->getSize(0);
+		for (int i = 0; i < samples; i++)
+			*input.gradient->at(*label.value->at(i), i) =
+				- 1. / (1e-7 + *input.value->at((int)*label.value->at(i), i));
 	}
 
 	void report() {
@@ -135,9 +225,10 @@ class ClassNLLLoss : public Layer<Dtype> {
 
 template <typename Dtype>
 class ClassAccuracy : public Layer<Dtype> {
+public:
 	double accuracy = 0.;
 
-	void forward(Blob<Dtype> input, Blob<Dtype> output) {
+	void forward(Blob<Dtype> input, Blob<Dtype> output, Blob<Dtype> label) {
 		// FIXME
 	}
 
@@ -145,6 +236,7 @@ class ClassAccuracy : public Layer<Dtype> {
 		std::cout << " * Accuracy: " << accuracy << std::endl;
 	}
 };
+#endif
 
 #if defined(LITE_TEST_LAYER)
 #include "dataloader.cc"
@@ -165,6 +257,21 @@ main(void)
 	fc1.forward(databatch, out1);
 	out1.value->dump();
 	fc1.backward(databatch, out1);
+
+	cout << "clone" << endl;
+	auto xxx = databatch.clone();
+	xxx->dump();
+	cout << "transpose" << endl;
+	xxx->transpose();
+	xxx->dump();
+	xxx->transpose();
+
+	cout << "softmax" << endl;
+	auto sm1 = SoftmaxLayer<double> ();
+	sm1.forward(databatch, *xxx);
+	databatch.dump();
+	xxx->dump();
+
 	return 0;
 }
 #endif

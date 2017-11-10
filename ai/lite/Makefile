@@ -1,9 +1,10 @@
 CXX ?= clang++
 INCLUDES = -I/usr/include/hdf5/serial
 LIBS = -lhdf5_cpp -lhdf5_hl_cpp -lhdf5_serial
-CXXFLAGS += -Wall -g
+CXXFLAGS += -Wall -g -fno-inline-functions -O0
 
-test: dataloader tensor layer
+test: dataloader tensor layer testnet
+
 demo.h5:
 	python3 gen-demoh5.py
 dataloader: demo.h5
@@ -15,5 +16,8 @@ tensor: demo.h5
 layer: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o layer_test -DLITE_TEST_LAYER layer.cc 
 	./layer_test
+testnet: demo.h5
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_test testnet.cc 
+	./testnet_test
 clean:
-	-$(RM) dataloader_test demo.h5 tensor_test layer_test
+	-$(RM) dataloader_test demo.h5 tensor_test layer_test testnet_test

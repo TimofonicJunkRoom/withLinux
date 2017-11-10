@@ -1,3 +1,6 @@
+#if !defined(_LITE_TENSOR_CC)
+#define _LITE_TENSOR_CC
+
 #include <cmath>
 #include <vector>
 #include <cstdlib>
@@ -24,11 +27,24 @@ public:
 		this->initMem();
 	}
 
+	// 1D (vector) constructor from raw data
+	Tensor(Dtype* mem, size_t length) {
+		shape.push_back(length);
+		data = mem;
+	}
+
 	// 2D (matrix) constructor
 	Tensor(size_t row, size_t col) {
 		this->shape.push_back(row);
 		this->shape.push_back(col);
 		this->initMem();
+	}
+
+	// 2D (matrix) constructor from raw data
+	Tensor(Dtype* mem, size_t row, size_t col) {
+		shape.push_back(row);
+		shape.push_back(col);
+		data = mem;
 	}
 
 	// 1D data pointer
@@ -41,15 +57,29 @@ public:
 		return this->data + offset;
 	}
 
+	// 1D subTensor, inplace
+	Tensor<Dtype>* subTensor_(size_t offset, size_t length) {
+		assert(offset - data + length < getSize());
+		return new Tensor<Dtype>(data+offset, length);
+	}
+
+	// 2D subTensor, inplace
+	Tensor<Dtype>* subTensor_(size_t offrow, size_t offcol,
+								size_t row, size_t col) {
+		assert(offrow * shape[1] + offcol + row * shape[1] + col < getSize());
+		return new Tensor<Dtype>(data+offrow*shape[1]+offcol, row, col);
+	}
+
 	// common dump
 	void dump() {
 		if (shape.size() == 0) {
-			std::cout << "[ ]" << std::endl;
+			std::cout << "[ ]" << std::endl << "Tensor(,)" << std::endl;
 		} else if (shape.size() == 1) {
 			std::cout << "[";
 			for (int i = 0; i < this->getSize(0); i++)
 				printf(" %.3f", *this->at(i));
 			std::cout << " ]" << std::endl;
+			std::cout << "Tensor(" << this->getSize(0) << ",)" << std::endl;
 		} else if (shape.size() == 2) {
 			std::cout << "[" << std::endl;;
 			for (int i = 0; i < this->getSize(0); i++) {
@@ -61,6 +91,7 @@ public:
 
 			}
 			std::cout << "]" << std::endl;
+			std::cout << "Tensor(" << this->getSize(0) <<  "," << this->getSize(1) << ")" << std::endl;
 		}
 	}
 
@@ -132,6 +163,13 @@ public:
 		return this;
 	}
 
+	// common inplace scal
+	Tensor<Dtype>* scal_(Dtype factor) {
+		for (size_t i = 0; i < getSize(); i++)
+			*(data + i) *= factor;
+		return this;
+	}
+
 	// common rand ~U(0,1)
 	Tensor<Dtype>* rand_(void) {
 		for (size_t i = 0; i < getSize(); i++)
@@ -142,14 +180,15 @@ public:
 	Tensor<Dtype>* clone(void) {
 		auto y = new Tensor<Dtype> ();
 		y->resizeAs(this);
-		memcpy(this->data, y->data, sizeof(Dtype)*this->getSize());
+		memcpy(y->data, this->data, sizeof(Dtype)*this->getSize());
 		return y;
 	}
 
 	// 2D transpose, non-inplace
 	Tensor<Dtype>* transpose(void) {
+		if (shape.size() != 2) cout << "transpose(): ERROR: shape.size = " << shape.size() << endl;
 		assert(shape.size() == 2);
-		auto xT = new Tensor<Dtype> (shape[1], shape[0]);
+		auto xT = new Tensor<Dtype> ((size_t)shape[1], (size_t)shape[0]);
 		for (int i = 0; i < shape[0]; i++)
 			for (int j = 0; j < shape[1]; j++)
 				*xT->at(j, i) = *at(i, j);
@@ -160,7 +199,7 @@ public:
 	Tensor<Dtype>* exp(void) {
 		auto y = this->clone();
 		for (size_t i = 0; i < getSize(); i++)
-			*y->data->at(i) = exp(*this->data->at(i));
+			*y->at(i) = std::exp(*this->at(i));
 		return y;
 	}
 };
@@ -200,6 +239,7 @@ GEMM(Dtype alpha, Tensor<Dtype>* A, Tensor<Dtype>* B,
 		}
 	}
 }
+#endif
 
 #if defined(LITE_TEST_TENSOR)
 #include "dataloader.cc"
@@ -233,6 +273,14 @@ main(void)
 
 	AXPY(1., &empty, &empty);
 	empty.dump();
+
+	cout << "clone" << endl;
+	auto xxx = empty.clone();
+	xxx->dump();
+
+	auto xxx2 = xxx->transpose();
+	xxx2->dump();
+
 	return 0;
 }
 #endif
