@@ -25,7 +25,7 @@ lite_hdf5_read(
 {
 	H5File h5file (name_h5file, H5F_ACC_RDONLY);
 	DataSet dataset = h5file.openDataSet(name_dataset);
-	H5T_class_t type_class = dataset.getTypeClass();
+//	H5T_class_t type_class = dataset.getTypeClass();
 	DataSpace dataspace = dataset.getSpace();
 
 	hsize_t offset[2] = {offset1, offset2};
@@ -54,7 +54,7 @@ lite_hdf5_read(
 {
 	H5File h5file (name_h5file, H5F_ACC_RDONLY);
 	DataSet dataset = h5file.openDataSet(name_dataset);
-	H5T_class_t type_class = dataset.getTypeClass();
+//	H5T_class_t type_class = dataset.getTypeClass();
 	DataSpace dataspace = dataset.getSpace();
 
 	hsize_t offset[1] = {offset1};

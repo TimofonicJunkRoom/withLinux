@@ -69,7 +69,10 @@ public:
 			assert(rupper >= 0 && rupper < getSize());
 			assert(rlower <= rupper);
 			return new Tensor<Dtype>(data+rlower, rupper-rlower);
-		} // else: error
+		} else {
+			fprintf(stderr, "subTensor_: Invalid Instance.\n");
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	// common dump
@@ -78,15 +81,15 @@ public:
 			std::cout << "[ ]" << std::endl << "Tensor(,)" << std::endl;
 		} else if (shape.size() == 1) {
 			std::cout << "[";
-			for (int i = 0; i < this->getSize(0); i++)
+			for (size_t i = 0; i < this->getSize(0); i++)
 				printf(" %.3f", *this->at(i));
 			std::cout << " ]" << std::endl;
 			std::cout << "Tensor(" << this->getSize(0) << ",)" << std::endl;
 		} else if (shape.size() == 2) {
 			std::cout << "[" << std::endl;;
-			for (int i = 0; i < this->getSize(0); i++) {
+			for (size_t i = 0; i < this->getSize(0); i++) {
 				std::cout << "  [";
-				for (int j = 0; j < this->getSize(1); j++) {
+				for (size_t j = 0; j < this->getSize(1); j++) {
 					printf(" %.3f", *this->at(i, j));
 				}
 				std::cout << " ]" << std::endl;
@@ -111,7 +114,7 @@ public:
 	}
 
 	// common get size
-	size_t getSize(int i) const {
+	size_t getSize(size_t i) const {
 		return (i >= shape.size()) ? -1 : shape[i];
 	}
 
@@ -150,6 +153,7 @@ public:
 		} else if (x->getDim() == 2) {
 			this->resize(x->getSize(0), x->getSize(1));
 		}
+		return this;
 	}
 
 	// common inplace zero
@@ -176,6 +180,7 @@ public:
 	Tensor<Dtype>* rand_(void) {
 		for (size_t i = 0; i < getSize(); i++)
 			*(data + i) = (Dtype)random()/RAND_MAX;
+		return this;
 	}
 
 	// common element add, inplace
@@ -197,8 +202,8 @@ public:
 		if (shape.size() != 2) cout << "transpose(): ERROR: shape.size = " << shape.size() << endl;
 		assert(shape.size() == 2);
 		auto xT = new Tensor<Dtype> ((size_t)shape[1], (size_t)shape[0]);
-		for (int i = 0; i < shape[0]; i++)
-			for (int j = 0; j < shape[1]; j++)
+		for (size_t i = 0; i < shape[0]; i++)
+			for (size_t j = 0; j < shape[1]; j++)
 				*xT->at(j, i) = *at(i, j);
 		return xT;
 	}
@@ -246,7 +251,7 @@ GEMM(Dtype alpha, Tensor<Dtype>* A, Tensor<Dtype>* B,
 		Dtype beta, Tensor<Dtype>* C)
 {
 	if (A->shape[1] != B->shape[0] || A->shape[0] != C->shape[0] || B->shape[1] != C->shape[1]) {
-		fprintf(stderr, "GEMM: Illegal Shape! (%d,%d)x(%d,%d)->(%d,%d)",
+		fprintf(stderr, "GEMM: Illegal Shape! (%ld,%ld)x(%ld,%ld)->(%ld,%ld)",
 				A->shape[0], A->shape[1], B->shape[0], B->shape[1],
 				C->shape[0], C->shape[1]);
 	}
@@ -254,10 +259,10 @@ GEMM(Dtype alpha, Tensor<Dtype>* A, Tensor<Dtype>* B,
 	assert(A->shape[1] == B->shape[0]);
 	assert(A->shape[0] == C->shape[0] && B->shape[1] == C->shape[1]);
 	// do gemm
-	for (int i = 0; i < C->shape[0]; i++) {
-		for (int j = 0; j < C->shape[1]; j++) {
+	for (size_t i = 0; i < C->shape[0]; i++) {
+		for (size_t j = 0; j < C->shape[1]; j++) {
 			*C->at(i, j) *= beta;
-			for (int k = 0; k < A->shape[1]; k++) {
+			for (size_t k = 0; k < A->shape[1]; k++) {
 				*C->at(i, j) += alpha * *A->at(i, k) * *B->at(k, j);
 			}
 		}

@@ -62,9 +62,9 @@ public:
 	Blob<Dtype>* transpose() {
 		assert(value->getDim() == 2);
 		auto newx = this->clone();
-		auto oldvalue = value;
+//		auto oldvalue = value;
 		value = value->transpose();
-		auto oldgradient = gradient;
+//		auto oldgradient = gradient;
 		if (requires_grad) gradient = gradient->transpose();
 		return newx;
 	}
@@ -129,10 +129,10 @@ public:
 		// output += GEMM(W, X)
 		GEMM(1., W.value, input.value, 0., output.value);
 		// output += b
-		int batchsize = input.value->getSize(1);
-		int outdim = W.value->getSize(0);
-		for (int j = 0; j < batchsize; j++) {
-			for (int i = 0; i < outdim; i++) {
+		size_t batchsize = input.value->getSize(1);
+		size_t outdim = W.value->getSize(0);
+		for (size_t j = 0; j < batchsize; j++) {
+			for (size_t i = 0; i < outdim; i++) {
 				*output.value->at(i, j) += *b.value->at(i);
 			}
 		}
@@ -146,10 +146,10 @@ public:
 		if (input.requires_grad)
 			GEMM(1., W.gradient->transpose(), output.gradient, 0., input.gradient);
 		// grad of b: unexpand(g)
-		int batchsize = input.value->getSize(1);
-		int outdim = W.value->getSize(0);
-		for (int j = 0; j < batchsize; j++) {
-			for (int i = 0; i < outdim; i++) {
+		size_t batchsize = input.value->getSize(1);
+		size_t outdim = W.value->getSize(0);
+		for (size_t j = 0; j < batchsize; j++) {
+			for (size_t i = 0; i < outdim; i++) {
 				*b.gradient->at(i) += *output.gradient->at(i, j);
 			}
 		}
@@ -170,26 +170,46 @@ public:
 };
 
 template <typename Dtype>
+class ReluLayer : public Layer<Dtype> {
+public:
+
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output) {
+		auto relu = [](Dtype x) { return x > (Dtype)0. ? x : (Dtype)0.; };
+		for (size_t i = 0; i < input.value->getSize(); i++)
+			*output.value->at(i) = relu(*input.value->at(i));
+	}
+
+	void backward(Blob<Dtype>& input, Blob<Dtype>& output) {
+		for (size_t i = 0; i < input.grad->getSize(); i++) {
+			if (*input.value->at(i) > (Dtype)0.)
+				*input.gradient->at(i) = *output.gradient->at(i);
+			else
+				*input.gradient->at(i) = (Dtype)0.;
+		}
+	}
+};
+
+template <typename Dtype>
 class SoftmaxLayer : public Layer<Dtype> {
 public:
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output) {
 		// input.exp().sum(0), sum in the first row
 		auto expx = input.value->exp();
-		for (int i = 1; i < expx->getSize(0); i++)
-			for (int j = 0; j < expx->getSize(1); j++)
+		for (size_t i = 1; i < expx->getSize(0); i++)
+			for (size_t j = 0; j < expx->getSize(1); j++)
 				*expx->at(0, j) += *expx->at(i, j);
 		// output
-		for (int i = 0; i < expx->getSize(0); i++)
-			for (int j = 0; j < expx->getSize(1); j++)
+		for (size_t i = 0; i < expx->getSize(0); i++)
+			for (size_t j = 0; j < expx->getSize(1); j++)
 				*output.value->at(i, j) = std::exp(*input.value->at(i,j)) /
 					((Dtype)1e-7 + *expx->at(0, j));
 	}
 
 	void backward(Blob<Dtype>& input, Blob<Dtype>& output) {
-		for (int sample = 0; sample < input.gradient->getSize(1); sample++) {
-			for (int row = 0; row < input.gradient->getSize(0); row++) {
+		for (size_t sample = 0; sample < input.gradient->getSize(1); sample++) {
+			for (size_t row = 0; row < input.gradient->getSize(0); row++) {
 				Dtype element = 0.;
-				for (int k = 0; k < output.value->getSize(0); k++) {
+				for (size_t k = 0; k < output.value->getSize(0); k++) {
 					element -= (*output.gradient->at(k, sample)) *
 						(*output.value->at(k,sample) * *output.value->at(row, sample));
 					if (k == row)
@@ -209,11 +229,11 @@ public:
 
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
 		lossval = 0;
-		int numsamples = input.value->getSize(1);
-		int numdim = input.value->getSize(0);
+		size_t numsamples = input.value->getSize(1);
+		size_t numdim = input.value->getSize(0);
 		auto square = [](Dtype x) { return x*x; };
-		for (int i = 0; i < numsamples; i++) {
-			for (int j = 0; j < numdim; j++) {
+		for (size_t i = 0; i < numsamples; i++) {
+			for (size_t j = 0; j < numdim; j++) {
 				lossval += square(*input.value->at(i,j) - *label.value->at(i,j));
 			}
 		}
@@ -222,7 +242,7 @@ public:
 	}
 
 	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
-		int numsamples = input.value->getSize(1);
+		size_t numsamples = input.value->getSize(1);
 		input.gradient->zero_();
 		AXPY(1., input.value, input.gradient);
 		AXPY(-1., label.value, input.gradient);
@@ -241,19 +261,19 @@ public:
 
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
 		lossval = 0.;
-		int samples = input.value->getSize(1);
-		for (int i = 0; i < samples; i++)
-			lossval += - log(1e-7 + *input.value->at((int)*label.value->at(i), i));
+		size_t samples = input.value->getSize(1);
+		for (size_t i = 0; i < samples; i++)
+			lossval += - log(1e-7 + *input.value->at((size_t)*label.value->at(i), i));
 		lossval /= samples;
 		*output.value->at(0) = (Dtype)lossval;
 	}
 
 	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
 		input.gradient->zero_();
-		int samples = input.value->getSize(0);
-		for (int i = 0; i < samples; i++)
+		size_t samples = input.value->getSize(0);
+		for (size_t i = 0; i < samples; i++)
 			*input.gradient->at(*label.value->at(i), i) =
-				- 1. / (1e-7 + *input.value->at((int)*label.value->at(i), i));
+				- 1. / (1e-7 + *input.value->at((size_t)*label.value->at(i), i));
 	}
 
 	void report() {
@@ -265,19 +285,19 @@ template <typename Dtype>
 class ClassAccuracy : public Layer<Dtype> {
 public:
 	double accuracy = 0.;
-	int numsamples = 0;
-	int numcorrect = 0;
-	int numclass = 0;
+	size_t numsamples = 0;
+	size_t numcorrect = 0;
+	size_t numclass = 0;
 
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
 		numsamples = input.value->getSize(1);
 		numclass   = input.value->getSize(0);
 		numcorrect = 0;
-		for (int j = 0; j < numsamples; j++) {
+		for (size_t j = 0; j < numsamples; j++) {
 			bool dirty = false;
-			for (int i = 0; i < numclass; i++) {
-				if ((int)*label.value->at(j) == i) continue;
-				if (*input.value->at((int)*label.value->at(j), j)
+			for (size_t i = 0; i < numclass; i++) {
+				if ((size_t)*label.value->at(j) == i) continue;
+				if (*input.value->at((size_t)*label.value->at(j), j)
 				  <= *input.value->at(i, j)) {
 					dirty = true;
 					break;
