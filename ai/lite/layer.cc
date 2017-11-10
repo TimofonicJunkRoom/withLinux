@@ -265,13 +265,32 @@ template <typename Dtype>
 class ClassAccuracy : public Layer<Dtype> {
 public:
 	double accuracy = 0.;
+	int numsamples = 0;
+	int numcorrect = 0;
+	int numclass = 0;
 
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
-		// FIXME
+		numsamples = input.value->getSize(1);
+		numclass   = input.value->getSize(0);
+		numcorrect = 0;
+		for (int j = 0; j < numsamples; j++) {
+			bool dirty = false;
+			for (int i = 0; i < numclass; i++) {
+				if ((int)*label.value->at(j) == i) continue;
+				if (*input.value->at((int)*label.value->at(j), j)
+				  <= *input.value->at(i, j)) {
+					dirty = true;
+					break;
+				}
+			}
+			if (!dirty) numcorrect++;
+		}
+		accuracy = (double)numcorrect / numsamples;
+		*output.value->at(0) = accuracy;
 	}
 
 	void report() {
-		std::cout << " * Accuracy: " << accuracy << std::endl;
+		std::cout << " * Accuracy: " << accuracy << " (" << numcorrect << "/" << numsamples << ")" << std::endl;
 	}
 };
 #endif
