@@ -23,35 +23,47 @@ main(void)
 	ClassAccuracy<double> accuracy1;
 
 	cout << "training" << endl;
+	//for (int iteration = 0; iteration < 5; iteration++) {
 	for (int iteration = 0; iteration < 100; iteration++) {
+	//for (int iteration = 0; iteration < 1000; iteration++) {
 		cout << ">> Iteration " << iteration << "::" << endl;
-		// get batch
+#define DUMP(msg, blob, dgrad) if (true) do { \
+	cout << msg; \
+	blob.dump(true, dgrad); \
+} while(0)
+		// -- get batch
 		lite_hdf5_read("demo.h5", "data", 0, 0, 10, 784, batch.value->data);
 		lite_hdf5_read("demo.h5", "label", 0, 10, label.value->data);
 		Blob<double> batchT = *batch.clone();
 		batchT.transpose();
-		// forward
+		// -- forward
+		//DUMP("batchT", batchT, false);
 		fc1.forward(batchT, o);
+		DUMP("o", o, false);
 		sm1.forward(o, yhat);
+		DUMP("yhat", yhat, false);
 		loss1.forward(yhat, loss, label);
+		DUMP("loss", loss, false);
 		accuracy1.forward(yhat, accuracy, label);
-		// report
+		// -- report
 		loss1.report();
-		// zerograd
+		// -- zerograd
 		fc1.zeroGrad();
-		// backward
+		o.zeroGrad();
+		yhat.zeroGrad();
+		loss.zeroGrad();
+		// -- backward
 		loss1.backward(yhat, loss, label);
 		sm1.backward(o, yhat);
 		fc1.backward(batchT, o);
 
+		fc1.dumpstat();
+
 		//yhat.dump(); // FIXME: Gradient is problematic
+		//o.dump();
 
 		// update
-		fc1.update(1e+7);
-		o.zeroGrad();
-		yhat.zeroGrad();
-		loss.zeroGrad();
-
+		fc1.update(1e-2);
 	}
 
 	return 0;

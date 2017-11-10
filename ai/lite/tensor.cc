@@ -176,6 +176,12 @@ public:
 			*(data + i) = (Dtype)random()/RAND_MAX;
 	}
 
+	// common element add, inplace
+	void add_(Dtype constant) {
+		for (size_t i = 0; i < getSize(); i++)
+			*(data + i) += constant;
+	}
+
 	// common clone
 	Tensor<Dtype>* clone(void) {
 		auto y = new Tensor<Dtype> ();
@@ -201,6 +207,22 @@ public:
 		for (size_t i = 0; i < getSize(); i++)
 			*y->at(i) = std::exp(*this->at(i));
 		return y;
+	}
+
+	// common asum
+	Dtype asum(void) {
+		Dtype ret = 0.;
+		for (size_t i = 0; i < getSize(); i++)
+			ret += *at(i) > 0. ? *at(i) : -*at(i);
+		return ret;
+	}
+
+	// common sum
+	Dtype sum(void) {
+		Dtype ret = 0.;
+		for (size_t i = 0; i < getSize(); i++)
+			ret += *at(i);
+		return ret;
 	}
 };
 

@@ -112,9 +112,10 @@ public:
 		W.resize(dim_dest, dim_src);
 		b.resize(dim_dest);
 		W.value->rand_();
-		W.value->scal_(0.01);
+		W.value->add_(-0.5);
+		W.value->scal_(0.02);
 		W.gradient->zero_();
-		b.value->fill_(0.01);
+		b.value->fill_(0.);
 		b.gradient->zero_();
 	}
 
@@ -123,7 +124,7 @@ public:
 		b.gradient->zero_();
 	}
 
-	void forward(Blob<Dtype> input, Blob<Dtype> output) {
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output) {
 		// output += GEMM(W, X)
 		GEMM(1., W.value, input.value, 0., output.value);
 		// output += b
@@ -136,7 +137,7 @@ public:
 		}
 	}
 
-	void backward(Blob<Dtype> input, Blob<Dtype> output) {
+	void backward(Blob<Dtype>& input, Blob<Dtype>& output) {
 		if (!output.requires_grad) return;
 		// grad of W: g x x^T
 		GEMM(1., output.gradient, input.value->transpose(), 0., W.gradient);
@@ -157,12 +158,20 @@ public:
 		AXPY((Dtype)-lr, W.gradient, W.value);
 		AXPY((Dtype)-lr, b.gradient, b.value);
 	}
+
+	void dumpstat() {
+		cout << "> LinearLayer:" << endl;
+		cout << "  > W sum " << W.value->sum() << " asum " << W.value->asum() << endl;
+		cout << "  > b sum " << b.value->sum() << " asum " << b.value->asum() << endl;
+		cout << "  > gradW sum " << W.gradient->sum() << " asum " << W.gradient->asum() << endl;
+		cout << "  > gradb sum " << b.gradient->sum() << " asum " << b.gradient->asum() << endl;
+	}
 };
 
 template <typename Dtype>
 class SoftmaxLayer : public Layer<Dtype> {
 public:
-	void forward(Blob<Dtype> input, Blob<Dtype> output) {
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output) {
 		// input.exp().sum(0), sum in the first row
 		auto expx = input.value->exp();
 		for (int i = 1; i < expx->getSize(0); i++)
@@ -175,23 +184,18 @@ public:
 					((Dtype)1e-7 + *expx->at(0, j));
 	}
 
-	void backward(Blob<Dtype> input, Blob<Dtype> output) {
-		input.gradient->zero_();
-		for (int sample = 0; sample < input.value->getSize(1); sample++) {
-			for (int row = 0; row < input.value->getSize(0); row++) {
-				for (int k = 0; k < output.gradient->getSize(0); k++) {
+	void backward(Blob<Dtype>& input, Blob<Dtype>& output) {
+		for (int sample = 0; sample < input.gradient->getSize(1); sample++) {
+			for (int row = 0; row < input.gradient->getSize(0); row++) {
+				Dtype element = 0.;
+				for (int k = 0; k < output.value->getSize(0); k++) {
+					element -= (*output.gradient->at(k, sample)) *
+						(*output.value->at(k,sample) * *output.value->at(row, sample));
 					if (k == row)
-						*input.gradient->at(row, sample) +=
-							(- *output.value->at(row, sample)
-							 * *output.value->at(k, sample)
-							 + *output.value->at(row, sample))
-							* *output.gradient->at(row, sample);
-					else
-						*input.gradient->at(row, sample) +=
-							(- *output.value->at(row, sample)
-							 * *output.value->at(k, sample))
-							* *output.gradient->at(row, sample);
+						element += (*output.gradient->at(k, sample)) *
+							(*output.value->at(row,sample) * *output.value->at(row, sample));
 				}
+				*input.gradient->at(row, sample) = element;
 			}
 		}
 	}
@@ -202,15 +206,16 @@ class ClassNLLLoss : public Layer<Dtype> {
 public:
 	double lossval = 0.;
 
-	void forward(Blob<Dtype> input, Blob<Dtype> output, Blob<Dtype> label) {
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
 		lossval = 0.;
 		int samples = input.value->getSize(1);
 		for (int i = 0; i < samples; i++)
 			lossval += - log(1e-7 + *input.value->at((int)*label.value->at(i), i));
 		lossval /= samples;
+		*output.value->at(0) = (Dtype)lossval;
 	}
 
-	void backward(Blob<Dtype> input, Blob<Dtype> output, Blob<Dtype> label) {
+	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
 		input.gradient->zero_();
 		int samples = input.value->getSize(0);
 		for (int i = 0; i < samples; i++)
@@ -228,7 +233,7 @@ class ClassAccuracy : public Layer<Dtype> {
 public:
 	double accuracy = 0.;
 
-	void forward(Blob<Dtype> input, Blob<Dtype> output, Blob<Dtype> label) {
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
 		// FIXME
 	}
 
@@ -271,6 +276,13 @@ main(void)
 	sm1.forward(databatch, *xxx);
 	databatch.dump();
 	xxx->dump();
+	cout << "softmax back" << endl;
+	//xxx->gradient->fill_(1.);
+	xxx->gradient->rand_();
+	databatch.zeroGrad();
+	sm1.backward(databatch, *xxx);
+	xxx->dump();
+	databatch.dump();
 
 	return 0;
 }
