@@ -20,7 +20,7 @@ testnet_cls: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_cls_test testnet_cls.cc 
 	./testnet_cls_test
 testnet_reg: demo.h5
-	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_reg_test testnet_reg.cc #FIXME
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_reg_test testnet_reg.cc # seems working
 	./testnet_reg_test
 clean:
-	-$(RM) dataloader_test demo.h5 tensor_test layer_test testnet_test
+	-$(RM) dataloader_test demo.h5 tensor_test layer_test testnet_cls_test testnet_reg_test

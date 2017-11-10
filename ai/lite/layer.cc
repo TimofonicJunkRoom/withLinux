@@ -209,8 +209,8 @@ public:
 
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
 		lossval = 0;
-		int numsamples = input.getSize(1);
-		int numdim = input.getSize(0);
+		int numsamples = input.value->getSize(1);
+		int numdim = input.value->getSize(0);
 		auto square = [](Dtype x) { return x*x; };
 		for (int i = 0; i < numsamples; i++) {
 			for (int j = 0; j < numdim; j++) {
@@ -222,7 +222,15 @@ public:
 	}
 
 	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
-		// FIXME
+		int numsamples = input.value->getSize(1);
+		input.gradient->zero_();
+		AXPY(1., input.value, input.gradient);
+		AXPY(-1., label.value, input.gradient);
+		input.gradient->scal_(2./numsamples);
+	}
+
+	void report() {
+		std::cout << " * MSELoss: " << lossval << std::endl;
 	}
 };
 
