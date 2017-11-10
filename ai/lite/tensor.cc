@@ -8,6 +8,8 @@
 #include <cassert>
 #include <iostream>
 
+#include <omp.h>
+
 using namespace std;
 
 template <typename Dtype>
@@ -219,6 +221,7 @@ public:
 	// common asum
 	Dtype asum(void) {
 		Dtype ret = 0.;
+#pragma omp parallel for reduction (+:ret)
 		for (size_t i = 0; i < getSize(); i++)
 			ret += *at(i) > 0. ? *at(i) : -*at(i);
 		return ret;
@@ -227,6 +230,7 @@ public:
 	// common sum
 	Dtype sum(void) {
 		Dtype ret = 0.;
+#pragma omp parallel for reduction (+:ret)
 		for (size_t i = 0; i < getSize(); i++)
 			ret += *at(i);
 		return ret;
@@ -240,6 +244,7 @@ AXPY(Dtype alpha, Tensor<Dtype>* X, Tensor<Dtype>* Y)
 {
 	// regard tensor as a flattened
 	assert(X->getSize() == Y->getSize());
+#pragma omp parallel for shared(X, Y)
 	for (size_t i = 0; i < X->getSize(); i++)
 		*Y->at(i) += alpha * *X->at(i);
 }
@@ -258,11 +263,12 @@ GEMM(Dtype alpha, Tensor<Dtype>* A, Tensor<Dtype>* B,
 	// check shape
 	assert(A->shape[1] == B->shape[0]);
 	assert(A->shape[0] == C->shape[0] && B->shape[1] == C->shape[1]);
-	// do gemm
-	for (size_t i = 0; i < C->shape[0]; i++) {
-		for (size_t j = 0; j < C->shape[1]; j++) {
+	size_t i = 0, j = 0, k = 0;
+#pragma omp parallel for collapse(2) shared(A, B, C) private(k)
+	for (i = 0; i < C->shape[0]; i++) {
+		for (j = 0; j < C->shape[1]; j++) {
 			*C->at(i, j) *= beta;
-			for (size_t k = 0; k < A->shape[1]; k++) {
+			for (k = 0; k < A->shape[1]; k++) {
 				*C->at(i, j) += alpha * *A->at(i, k) * *B->at(k, j);
 			}
 		}

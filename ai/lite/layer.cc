@@ -114,7 +114,7 @@ public:
 		b.resize(dim_dest);
 		W.value->rand_();
 		W.value->add_(-0.5);
-		W.value->scal_(0.02);
+		W.value->scal_(0.001);
 		W.gradient->zero_();
 		b.value->fill_(0.);
 		b.gradient->zero_();
@@ -180,7 +180,7 @@ public:
 	}
 
 	void backward(Blob<Dtype>& input, Blob<Dtype>& output) {
-		for (size_t i = 0; i < input.grad->getSize(); i++) {
+		for (size_t i = 0; i < input.gradient->getSize(); i++) {
 			if (*input.value->at(i) > (Dtype)0.)
 				*input.gradient->at(i) = *output.gradient->at(i);
 			else
@@ -226,15 +226,19 @@ template <typename Dtype>
 class MSELoss : public Layer<Dtype> {
 public:
 	double lossval = 0.;
+	double MAE = 0.;
 
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
-		lossval = 0;
+		lossval = 0.;
+		MAE = 0.;
 		size_t numsamples = input.value->getSize(1);
 		size_t numdim = input.value->getSize(0);
 		auto square = [](Dtype x) { return x*x; };
+		auto myabs  = [](Dtype x) { return x>0?x:-x; };
 		for (size_t i = 0; i < numsamples; i++) {
 			for (size_t j = 0; j < numdim; j++) {
 				lossval += square(*input.value->at(i,j) - *label.value->at(i,j));
+				MAE     += myabs(*input.value->at(i,j) - *label.value->at(i,j));
 			}
 		}
 		lossval /= numsamples;
@@ -250,7 +254,7 @@ public:
 	}
 
 	void report() {
-		std::cout << " * MSELoss: " << lossval << std::endl;
+		std::cout << " * MSELoss: " << lossval << " (MAE " << MAE << ")" << std::endl;
 	}
 };
 

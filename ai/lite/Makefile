@@ -1,7 +1,7 @@
 CXX ?= clang++
 INCLUDES = -I/usr/include/hdf5/serial
 LIBS = -lhdf5_cpp -lhdf5_hl_cpp -lhdf5_serial
-CXXFLAGS += -Wall -g -fno-inline-functions -O0
+CXXFLAGS += -Wall -g -O2 -fopenmp -march=native #-fno-inline-functions 
 
 test: dataloader tensor layer testnet
 
@@ -25,5 +25,9 @@ testnet_reg: demo.h5
 testnet_mnist:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_mnist_test testnet_mnist.cc
 	./testnet_mnist_test
+testnet_mnist_reg:
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_mnist_reg_test testnet_mnist_reg.cc
+	./testnet_mnist_reg_test
+
 clean:
-	-$(RM) dataloader_test demo.h5 tensor_test layer_test testnet_cls_test testnet_reg_test testnet_mnist_test
+	-$(RM) dataloader_test demo.h5 tensor_test layer_test testnet_cls_test testnet_reg_test testnet_mnist_test testnet_mnist_reg_test
