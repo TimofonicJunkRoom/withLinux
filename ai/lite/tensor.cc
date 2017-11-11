@@ -1,3 +1,7 @@
+/* tensor.cc for LITE
+ * Copyright (C) 2017 Mo Zhou <cdluminate@gmail.com>
+ * MIT License
+ */
 #if !defined(_LITE_TENSOR_H)
 #define _LITE_TENSOR_H
 
@@ -115,7 +119,7 @@ public:
 		} else if (shape.size() == 1) {
 			std::cout << "[";
 			for (size_t i = 0; i < this->getSize(0); i++)
-				printf(" %.3f", *this->at(i));
+				printf(" %.3lf", *this->at(i));
 			std::cout << " ]" << std::endl;
 			std::cout << "Tensor of name \"" << name << "\", shape ("
 			   << this->getSize(0) <<  ",)" << std::endl;
@@ -124,7 +128,7 @@ public:
 			for (size_t i = 0; i < this->getSize(0); i++) {
 				std::cout << "  [";
 				for (size_t j = 0; j < this->getSize(1); j++) {
-					printf(" %.3f", *this->at(i, j));
+					printf(" %.3lf", *this->at(i, j));
 				}
 				std::cout << " ]" << std::endl;
 			}

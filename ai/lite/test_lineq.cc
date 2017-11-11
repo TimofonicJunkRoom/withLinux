@@ -1,3 +1,7 @@
+/* tensor.cc for LITE
+ * Copyright (C) 2017 Mo Zhou <cdluminate@gmail.com>
+ * MIT License
+ */
 #include <iostream>
 //#include "dataloader.cc"
 #include "tensor.cc"

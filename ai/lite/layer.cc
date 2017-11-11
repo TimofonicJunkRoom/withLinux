@@ -1,3 +1,7 @@
+/* layer.cc for LITE
+ * Copyright (C) 2017 Mo Zhou <cdluminate@gmail.com>
+ * MIT License
+ */
 #if !defined(_LITE_LAYER_CC)
 #define _LITE_LAYER_CC
 
@@ -265,18 +269,21 @@ public:
 		numsamples = input.value.getSize(1);
 		numclass   = input.value.getSize(0);
 		numcorrect = 0;
+		Tensor<Dtype> pred; pred.setName("pred");
+		pred.resize(numsamples);
+		Tensor<Dtype> prob; prob.setName("prob");
+		prob.resize(numsamples);
 		for (size_t j = 0; j < numsamples; j++) {
-			bool dirty = false;
 			for (size_t i = 0; i < numclass; i++) {
-				size_t locj = (size_t)*label.value.at(j);
-				if (locj == i) continue;
-				if (*input.value.at(i, j) <= *input.value.at(locj, j)) {
-					dirty = true;
-					break;
+				if (*prob.at(j) < *input.value.at(i, j)) {
+					*prob.at(j) = *input.value.at(i, j);
+					*pred.at(j) = i;
 				}
 			}
-			if (!dirty) numcorrect++;
 		}
+		for (size_t i = 0; i < numsamples; i++)
+			if ((int)*label.value.at(i) == (int)*pred.at(i)) numcorrect++;
+		//pred.dump(); prob.dump();
 		accuracy = (double)numcorrect / numsamples;
 		*output.value.at(0) = accuracy;
 	}
@@ -400,24 +407,24 @@ main(void)
 
 	TS("classaccuracy"); {
 		ClassAccuracy<double> acc1;
-		Blob<double> yhat1 (1, 100);
-		Blob<double> yhat2 (1, 100);
-		Blob<double> y     (1, 100, false);
+		Blob<double> yhat1 (5, 10);
+		Blob<double> yhat2 (5, 10);
+		Blob<double> y     (1, 10, false);
 		y.value.fill_(1.);
-		yhat1.value.fill_(0.);
-		yhat2.value.fill_(1.);
 		y.setName("y");
+		yhat1.value.fill_(0.);
 		yhat1.setName("yhat1");
+		yhat2.value.rand_();
 		yhat2.setName("yhat2");
 		Blob<double> acc (1);
 
 		y.dump(true, false);
-		yhat1.dump();
+		yhat1.dump(true, false);
 		acc1.forward(yhat1, acc, y);
 		acc1.report();
 
 		y.dump(true, false);
-		yhat2.dump();
+		yhat2.dump(true, false);
 		acc1.forward(yhat2, acc, y);
 		acc1.report();
 	}; TE;

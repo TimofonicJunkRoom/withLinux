@@ -1,3 +1,7 @@
+/* tensor.cc for LITE
+ * Copyright (C) 2017 Mo Zhou <cdluminate@gmail.com>
+ * MIT License
+ */
 #include <iostream>
 #include "dataloader.cc"
 #include "tensor.cc"
@@ -39,7 +43,7 @@ main(void)
 
 
 	cout << ">> Start training" << endl;
-	for (int iteration = 0; iteration < 2000; iteration++) {
+	for (int iteration = 0; iteration < 500; iteration++) {
 		cout << ">> Iteration " << iteration << "::" << endl;
 
 		// -- get batch
@@ -68,8 +72,8 @@ main(void)
 		loss1.report();
 		acc1.report();
 		fc1.dumpstat();
-		label.dump(true, false);
-		yhat.dump(true, false);
+		//label.dump(true, false);
+		//yhat.dump(true, false);
 		// update
 		double lr = 1e-3;
 		fc1.update(lr);

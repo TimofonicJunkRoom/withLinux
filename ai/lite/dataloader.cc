@@ -1,4 +1,7 @@
-/* Dataloader.cc */
+/* Dataloader.cc for LITE
+ * Copyright (C) 2017 Mo Zhou <cdluminate@gmail.com>
+ * MIT License
+ */
 #if !defined(_LITE_DATALOADER_H)
 #define _LITE_DATALOADER_H
 
