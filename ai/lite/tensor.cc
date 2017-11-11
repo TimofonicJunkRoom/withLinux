@@ -293,6 +293,14 @@ public:
 			ret += *at(i);
 		return ret;
 	}
+
+	// compares size of two tensors
+	bool sameSize(Tensor<Dtype>* x) {
+		if (x->getDim() != getDim()) return false;
+		for (size_t i = 0; i < shape.size(); i++)
+			if (x->getSize(i) != getSize(i)) return false;
+		return true;
+	}
 };
 
 // common dump by overloading operator
@@ -484,6 +492,15 @@ main(void)
 		Tensor<double> x (10, 10);
 		x.uniform(-10, 10);
 		x.dump();
+	}; TE;
+
+	TS("<int> sameSize"); {
+		Tensor<int> x (10, 10);
+		Tensor<int> y (1);
+		Tensor<int> z (10, 11);
+		assert(x.sameSize(&x) == true);
+		assert(x.sameSize(&y) == false);
+		assert(x.sameSize(&z) == false);
 	}; TE;
 
 	cout << "::         " << _padding_("Tensor Tests OK") << endl;

@@ -29,16 +29,17 @@ public:
 	bool use_bias = true;
 
 	LinearLayer(int dim_dest, int dim_src, bool use_bias=true) {
+		this->use_bias = use_bias;
+		// setup this layer
 		W.resize(dim_dest, dim_src);
-		b.resize(dim_dest);
+		if (use_bias) b.resize(dim_dest);
 		W.setName("LinearLayer/W");
-		b.setName("LinearLayer/b");
+		if (use_bias) b.setName("LinearLayer/b");
 		W.gradient.zero_();
-		b.gradient.zero_();
+		if (use_bias) b.gradient.zero_();
 		// parameter initialization
 		// ref Torch:nn, W,b ~ uniform(-stdv, stdv)
 		//     where stdv = 1. / sqrt(inputSize)
-		this->use_bias = use_bias;
 		double stdv = 1. / std::sqrt(dim_src);
 		W.value.uniform(-stdv, stdv);
 		if (use_bias) b.value.uniform(-stdv, stdv);
@@ -53,11 +54,13 @@ public:
 		// output += GEMM(W, X)
 		GEMM(1., &W.value, &input.value, 0., &output.value);
 		// output += b
-		size_t batchsize = input.value.getSize(1);
-		size_t outdim = W.value.getSize(0);
-		for (size_t j = 0; j < batchsize; j++) {
-			for (size_t i = 0; i < outdim; i++) {
-				*output.value.at(i, j) += *b.value.at(i);
+		if (use_bias) {
+			size_t batchsize = input.value.getSize(1);
+			size_t outdim = W.value.getSize(0);
+			for (size_t j = 0; j < batchsize; j++) {
+				for (size_t i = 0; i < outdim; i++) {
+					*output.value.at(i, j) += *b.value.at(i);
+				}
 			}
 		}
 	}
@@ -73,11 +76,13 @@ public:
 			GEMM(1., wvalueT, &output.gradient, 0., &input.gradient);
 		}
 		// grad of b: unexpand(g)
-		size_t batchsize = input.value.getSize(1);
-		size_t outdim = W.value.getSize(0);
-		for (size_t j = 0; j < batchsize; j++) {
-			for (size_t i = 0; i < outdim; i++) {
-				*b.gradient.at(i) += *output.gradient.at(i, j);
+		if (use_bias) {
+			size_t batchsize = input.value.getSize(1);
+			size_t outdim = W.value.getSize(0);
+			for (size_t j = 0; j < batchsize; j++) {
+				for (size_t i = 0; i < outdim; i++) {
+					*b.gradient.at(i) += *output.gradient.at(i, j);
+				}
 			}
 		}
 		delete inputvalueT;
@@ -104,16 +109,16 @@ public:
 
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output) {
 		auto relu = [](Dtype x) { return x > (Dtype)0. ? x : (Dtype)0.; };
-		for (size_t i = 0; i < input.value->getSize(); i++)
-			*output.value->at(i) = relu(*input.value->at(i));
+		for (size_t i = 0; i < input.value.getSize(); i++)
+			*output.value.at(i) = relu(*input.value.at(i));
 	}
 
 	void backward(Blob<Dtype>& input, Blob<Dtype>& output) {
-		for (size_t i = 0; i < input.gradient->getSize(); i++) {
-			if (*input.value->at(i) > (Dtype)0.)
-				*input.gradient->at(i) = *output.gradient->at(i);
+		for (size_t i = 0; i < input.gradient.getSize(); i++) {
+			if (*input.value.at(i) > (Dtype)0.)
+				*input.gradient.at(i) = *output.gradient.at(i);
 			else
-				*input.gradient->at(i) = (Dtype)0.;
+				*input.gradient.at(i) = (Dtype)0.;
 		}
 	}
 };
@@ -157,30 +162,34 @@ public:
 	double lossval = 0.;
 	double MAE = 0.;
 
-	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype>& label) {
+		if (!label.sameSize(&input)) {
+			fprintf(stderr, "MSELoss: input and GT size differs!\n");
+			exit(EXIT_FAILURE);
+		}
 		lossval = 0.;
 		MAE = 0.;
-		size_t numsamples = input.value->getSize(1);
-		size_t numdim = input.value->getSize(0);
+		size_t numsamples = input.value.getSize(1);
+		size_t numdim = input.value.getSize(0);
 		auto square = [](Dtype x) { return x*x; };
 		auto myabs  = [](Dtype x) { return x>0?x:-x; };
 		for (size_t i = 0; i < numsamples; i++) {
 			for (size_t j = 0; j < numdim; j++) {
-				lossval += square(*input.value->at(i,j) - *label.value->at(i,j));
-				MAE     += myabs(*input.value->at(i,j) - *label.value->at(i,j));
+				lossval += square(*input.value.at(i,j) - *label.value.at(i,j));
+				MAE     += myabs(*input.value.at(i,j) - *label.value.at(i,j));
 			}
 		}
 		lossval /= numsamples;
 		MAE     /= numsamples;
-		*output.value->at(0) = lossval;
+		*output.value.at(0) = lossval;
 	}
 
-	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
-		size_t numsamples = input.value->getSize(1);
-		input.gradient->zero_();
-		AXPY(1., input.value, input.gradient);
-		AXPY(-1., label.value, input.gradient);
-		input.gradient->scal_(2./numsamples);
+	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype>& label) {
+		size_t numsamples = input.value.getSize(1);
+		input.gradient.zero_();
+		AXPY(1., &input.value, &input.gradient);
+		AXPY(-1., &label.value, &input.gradient);
+		input.gradient.scal_(2./numsamples);
 	}
 
 	void report() {
@@ -290,6 +299,38 @@ main(void)
 		X.dump();
 		// update
 		fc1.SGD(1e-3);
+		// without bias
+		LinearLayer<double> fc2 (2, 4, false);
+		fc2.forward(X, yhat);
+		fc2.backward(X, yhat);
+	}; TE;
+
+	TS("relu layer"); {
+		Blob<double> X (5, 10);
+		X.setName("X");
+		X.value.rand_()->add_(-.5);
+		X.gradient.fill_(1.);
+		X.dump();
+		ReluLayer<double> relu1;
+		relu1.forward(X, X);
+		relu1.backward(X, X);
+		X.dump();
+	}; TE;
+
+	TS("MSE layer"); {
+		Blob<double> y (10, 1);
+		y.setName("y");
+		y.value.fill_(0.);
+		Blob<double> yhat(10, 1);
+		yhat.setName("yhat");
+		yhat.value.fill_(1.);
+		Blob<double> loss (1);
+		MSELoss<double> loss1;
+		loss1.forward(yhat, loss, y);
+		loss1.report();
+		loss1.backward(yhat, loss, y);
+		y.dump();
+		yhat.dump();
 	}; TE;
 
 	//auto fc1 = LinearLayer<double>(3, 12);

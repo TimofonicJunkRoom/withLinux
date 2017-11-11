@@ -1,50 +1,47 @@
 #include <iostream>
 //#include "dataloader.cc"
 #include "tensor.cc"
+#include "blob.cc"
 #include "layer.cc"
-
 #include "lumin_log.h"
 
 using namespace std;
-
-#define DUMP(msg, blob, dgrad) if (true) do { \
-	cout << msg; \
-	blob.dump(true, dgrad); \
-} while(0)
 
 int
 main(void)
 {
 	// AB = C, given B and C, find A
-	double a[4] = {-3.65, -1.175, 1.3, 3.775}; // 1x4
-	double b[12] = {1.,5,9,2,6,10,3,7,11,4,8,12}; // 4x3
-	double c[3] = {13.,14,15}; // 1x3
+	double b[16] = {1.,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1}; // 4x4
+	double c[4] = {-4.,-2,2,4}; // 1x4
 
 	cout << "Initialize Test Net" << endl;
 
-	Blob<double> X (4, 3, false);
-	X.value->copy(b, 12);
-	Blob<double> y (1, 3, false);
-	y.value->copy(c, 3);
-	Blob<double> yhat (1, 3);
-	Blob<double> loss (1);
+	Blob<double> X (4, 4, false);
+	X.setName("X");
+	X.value.copy(b, 16);
 
-	LinearLayer<double> fc1 (1, 4);
+	Blob<double> y (1, 4, false);
+	y.setName("y");
+	y.value.copy(c, 4);
+
+	Blob<double> yhat (1, 4);
+	yhat.setName("yhat");
+	Blob<double> loss (1);
+	loss.setName("loss");
+
+	LinearLayer<double> fc1 (1, 4, false);
 	MSELoss<double> loss1;
 
-	DUMP("X", X, false);
-	DUMP("y", y, false);
-	DUMP("W", fc1.W, false);
-	DUMP("b", fc1.b, false);
+	X.dump(true, false);
+	y.dump(true, false);
+	fc1.W.dump(true, false);
+	fc1.b.dump(true, false);
 
-	for (int iteration = 0; iteration < 5; iteration++) {
+	for (int iteration = 0; iteration < 50; iteration++) {
 		LOG_INFOF (">> Iteration :: %d", iteration);
 		// -- forward
 		fc1.forward(X, yhat);
 		loss1.forward(yhat, loss, y);
-		// -- report
-		loss1.report();
-
 		// -- zerograd
 		yhat.zeroGrad();
 		loss.zeroGrad();
@@ -52,12 +49,17 @@ main(void)
 		// -- backward
 		loss1.backward(yhat, loss, y);
 		fc1.backward(X, yhat);
+		// -- report
+		loss1.report();
+		//yhat.dump();
+		//fc1.W.dump(false, true);
+		//fc1.b.dump(false, true);
 
 		// update
-		fc1.update(1e-2);
+		fc1.SGD(5e-1);
 	}
-	DUMP("W", fc1.W, true);
-	DUMP("b", fc1.b, true);
+	fc1.W.dump();
+	fc1.b.dump();
 
 	return 0;
 }

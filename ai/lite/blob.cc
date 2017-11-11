@@ -110,6 +110,11 @@ public:
 		this->value.name = name + ".value";
 		this->gradient.name = name + ".gradient";
 	}
+
+	// compare size of two blobs
+	bool sameSize(Blob<Dtype>* x) {
+		return value.sameSize(&x->value);
+	}
 };
 
 #endif // _LITE_BLOB_H
