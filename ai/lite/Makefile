@@ -22,21 +22,19 @@ layer: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_layer.elf -DLITE_TEST_LAYER layer.cc 
 	valgrind --leak-check=yes ./test_layer.elf #issue
 
-.PHONY: test_lineq test_mnist_reg
+.PHONY: test_lineq test_mnist_reg test_toycls
 test_lineq:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_lineq.elf test_lineq.cc
 	valgrind --leak-check=yes ./test_lineq.elf
 test_mnist_reg:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_mnist_reg.elf test_mnist_reg.cc
 	valgrind --leak-check=yes ./test_mnist_reg.elf
-
-
-testnet_cls: demo.h5
-	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_cls_test testnet_cls.cc 
-	./testnet_cls_test
-testnet_mnist:
-	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_mnist_test testnet_mnist.cc
-	./testnet_mnist_test
+test_toycls:
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_toycls.elf test_toycls.cc 
+	valgrind --leak-check=yes ./test_toycls.elf
+test_mnist_cls:
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_mnist_cls.elf test_mnist_cls.cc
+	valgrind --leak-check=yes ./test_mnist_cls.elf
 
 clean:
-	-$(RM) dataloader_test demo.h5 tensor_test layer_test testnet_cls_test testnet_reg_test testnet_mnist_test testnet_mnist_reg_test *.elf
+	-$(RM) demo.h5 *.elf

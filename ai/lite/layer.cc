@@ -132,29 +132,31 @@ class SoftmaxLayer : public Layer<Dtype> {
 public:
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output) {
 		// input.exp().sum(0), sum in the first row
-		auto expx = input.value->exp();
+		Tensor<Dtype>* expx = input.value.clone();
+		expx->exp_();
 		for (size_t i = 1; i < expx->getSize(0); i++)
 			for (size_t j = 0; j < expx->getSize(1); j++)
 				*expx->at(0, j) += *expx->at(i, j);
 		// output
 		for (size_t i = 0; i < expx->getSize(0); i++)
 			for (size_t j = 0; j < expx->getSize(1); j++)
-				*output.value->at(i, j) = std::exp(*input.value->at(i,j)) /
+				*output.value.at(i, j) = std::exp(*input.value.at(i,j)) /
 					((Dtype)1e-7 + *expx->at(0, j));
+		delete expx;
 	}
 
 	void backward(Blob<Dtype>& input, Blob<Dtype>& output) {
-		for (size_t sample = 0; sample < input.gradient->getSize(1); sample++) {
-			for (size_t row = 0; row < input.gradient->getSize(0); row++) {
+		for (size_t sample = 0; sample < input.gradient.getSize(1); sample++) {
+			for (size_t row = 0; row < input.gradient.getSize(0); row++) {
 				Dtype element = 0.;
-				for (size_t k = 0; k < output.value->getSize(0); k++) {
-					element -= (*output.gradient->at(k, sample)) *
-						(*output.value->at(k,sample) * *output.value->at(row, sample));
+				for (size_t k = 0; k < output.value.getSize(0); k++) {
+					element -= (*output.gradient.at(k, sample)) *
+						(*output.value.at(k,sample) * *output.value.at(row, sample));
 					if (k == row)
-						element += (*output.gradient->at(k, sample)) *
-							(*output.value->at(row,sample) * *output.value->at(row, sample));
+						element += (*output.gradient.at(k, sample)) *
+							(*output.value.at(row,sample) * *output.value.at(row, sample));
 				}
-				*input.gradient->at(row, sample) = element;
+				*input.gradient.at(row, sample) = element;
 			}
 		}
 	}
@@ -206,21 +208,32 @@ class ClassNLLLoss : public Layer<Dtype> {
 public:
 	double lossval = 0.;
 
-	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
-		lossval = 0.;
-		size_t samples = input.value->getSize(1);
-		for (size_t i = 0; i < samples; i++)
-			lossval += - log(1e-7 + *input.value->at((size_t)*label.value->at(i), i));
-		lossval /= samples;
-		*output.value->at(0) = (Dtype)lossval;
+	bool _checksize(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype>& label) {
+		if (label.value.getDim() == 1) {
+			if (input.value.shape[1] != label.value.getSize()) return false;
+		} else if (label.value.getDim() == 2) {
+			if (input.value.shape[1] != label.value.shape[1]) return false;
+		}
+		return true;
 	}
 
-	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
-		input.gradient->zero_();
-		size_t samples = input.value->getSize(0);
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype>& label) {
+		assert(true == _checksize(input, output, label));
+		lossval = 0.;
+		size_t samples = input.value.getSize(1);
 		for (size_t i = 0; i < samples; i++)
-			*input.gradient->at(*label.value->at(i), i) =
-				- 1. / (1e-7 + *input.value->at((size_t)*label.value->at(i), i));
+			lossval += - log(1e-7 + *input.value.at((size_t)*label.value.at(i), i));
+		lossval /= samples;
+		*output.value.at(0) = (Dtype)lossval;
+	}
+
+	void backward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype>& label) {
+		assert(true == _checksize(input, output, label));
+		input.gradient.zero_();
+		size_t samples = input.value.getSize(1);
+		for (size_t i = 0; i < samples; i++)
+			*input.gradient.at(*label.value.at(i), i) =
+				- 1. / (1e-7 + *input.value.at((size_t)*label.value.at(i), i));
 	}
 
 	void report() {
@@ -236,16 +249,16 @@ public:
 	size_t numcorrect = 0;
 	size_t numclass = 0;
 
-	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype> label) {
-		numsamples = input.value->getSize(1);
-		numclass   = input.value->getSize(0);
+	void forward(Blob<Dtype>& input, Blob<Dtype>& output, Blob<Dtype>& label) {
+		numsamples = input.value.getSize(1);
+		numclass   = input.value.getSize(0);
 		numcorrect = 0;
 		for (size_t j = 0; j < numsamples; j++) {
 			bool dirty = false;
 			for (size_t i = 0; i < numclass; i++) {
-				if ((size_t)*label.value->at(j) == i) continue;
-				if (*input.value->at((size_t)*label.value->at(j), j)
-				  <= *input.value->at(i, j)) {
+				size_t locj = (size_t)*label.value.at(j);
+				if (locj == i) continue;
+				if (*input.value.at(i, j) <= *input.value.at(locj, j)) {
 					dirty = true;
 					break;
 				}
@@ -253,7 +266,7 @@ public:
 			if (!dirty) numcorrect++;
 		}
 		accuracy = (double)numcorrect / numsamples;
-		*output.value->at(0) = accuracy;
+		*output.value.at(0) = accuracy;
 	}
 
 	void report() {
@@ -337,35 +350,61 @@ main(void)
 		yhat.dump();
 	}; TE;
 
-	//auto fc1 = LinearLayer<double>(3, 12);
-	//fc1.W.value->fill_(1.);
-	//fc1.b.value->fill_(.1);
-	//cout << "W"; fc1.W.value->dump();
+	TS("softmax layer"); {
+		Blob<double> x (5, 2);
+		x.setName("x");
+		x.value.rand_();
+		Blob<double> y (5, 2);
+		y.setName("y");
+		SoftmaxLayer<double> sm1;
+		sm1.forward(x, y);
+		y.gradient.fill_(1.);
+		sm1.backward(x, y);
+		x.dump();
+		y.dump();
+	}; TE;
 
-	//fc1.forward(databatch, out1);
-	//out1.value->dump();
-	//fc1.backward(databatch, out1);
+	TS("classnllloss layer"); {
+		SoftmaxLayer<double> sm1;
+		Blob<double> yhat (5, 2);
+		yhat.setName("yhat");
+		yhat.value.rand_();
+		sm1.forward(yhat, yhat);
+		Blob<double> y (1, 2, false);
+		y.setName("y");
+		y.value.fill_(1.);
+		Blob<double> loss (1);
+		ClassNLLLoss<double> loss1;
+		loss1.forward(yhat, loss, y);
+		loss1.report();
+		loss1.backward(yhat, loss, y);
+		y.dump();
+		yhat.dump();
+	}; TE;
 
-	//cout << "clone" << endl;
-	//auto xxx = databatch.clone();
-	//xxx->dump();
-	//cout << "transpose" << endl;
-	//xxx->transpose();
-	//xxx->dump();
-	//xxx->transpose();
+	TS("classaccuracy"); {
+		ClassAccuracy<double> acc1;
+		Blob<double> yhat1 (1, 100);
+		Blob<double> yhat2 (1, 100);
+		Blob<double> y     (1, 100, false);
+		y.value.fill_(1.);
+		yhat1.value.fill_(0.);
+		yhat2.value.fill_(1.);
+		y.setName("y");
+		yhat1.setName("yhat1");
+		yhat2.setName("yhat2");
+		Blob<double> acc (1);
 
-	//cout << "softmax" << endl;
-	//auto sm1 = SoftmaxLayer<double> ();
-	//sm1.forward(databatch, *xxx);
-	//databatch.dump();
-	//xxx->dump();
-	//cout << "softmax back" << endl;
-	////xxx->gradient->fill_(1.);
-	//xxx->gradient->rand_();
-	//databatch.zeroGrad();
-	//sm1.backward(databatch, *xxx);
-	//xxx->dump();
-	//databatch.dump();
+		y.dump(true, false);
+		yhat1.dump();
+		acc1.forward(yhat1, acc, y);
+		acc1.report();
+
+		y.dump(true, false);
+		yhat2.dump();
+		acc1.forward(yhat2, acc, y);
+		acc1.report();
+	}; TE;
 
 	return 0;
 }
