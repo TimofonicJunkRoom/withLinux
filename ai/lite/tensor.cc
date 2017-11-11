@@ -76,6 +76,19 @@ public:
 		memcpy(data, mem, sizeof(Dtype)*row*col);
 	}
 
+	// 3D (image) constructor
+	Tensor(size_t channel, size_t height, size_t width) {
+		for (size_t i : {channel, height, width}) this->shape.push_back(i);
+		this->initMem();
+	}
+
+	// 3D (image) constructor from raw data
+	Tensor(Dtype* mem, size_t channel, size_t height, size_t width) {
+		for (size_t i : {channel, height, width}) this->shape.push_back(i);
+		this->initMem();
+		memcpy(data, mem, sizeof(Dtype)*channel*height*width);
+	}
+
 	// 1D data locator
 	Dtype* at(size_t offset) {
 		return this->data + offset;
@@ -84,6 +97,11 @@ public:
 	// 2D data locator
 	Dtype* at(size_t row, size_t col) {
 		return this->data + row*this->shape[1] + col;
+	}
+
+	// 3D data locator
+	Dtype* at(size_t c, size_t h, size_t w) {
+		return this->data + c*shape[1]*shape[2] + h*shape[2] + w;
 	}
 
 	// data copier
@@ -136,6 +154,25 @@ public:
 			std::cout << "Tensor of name \"" << name << "\", shape ("
 			   << this->getSize(0) <<  "," << this->getSize(1) << ")"
 			   << std::endl;
+		} else if (shape.size() == 3) {
+			std::cout << "[" << std::endl;
+			for (size_t chan = 0; chan < shape[0]; chan++) {
+				std::cout << "  [" << std::endl;
+				for (size_t h = 0; h < shape[1]; h++) {
+					std::cout << "    [";
+					for (size_t w = 0; w < shape[2]; w++) {
+						printf(" %.3lf", *at(chan,h,w));
+					}
+					std::cout << " ]" << std::endl;
+				}
+				std::cout << "  ]," << std::endl;
+			}
+			std::cout << "]" << std::endl;
+			std::cout << "Tensor of name \"" << name << "\", shape ("
+			   << this->getSize(0) <<  "," << this->getSize(1) << ","
+			   << getSize(2) << ")" << std::endl;
+		} else {
+			fprintf(stderr, "Tensor<*>::dump() for %ld-D tensor not implemented.\n", getDim());
 		}
 	}
 
@@ -181,6 +218,26 @@ public:
 		data = nullptr;
 		shape.push_back(row);
 		shape.push_back(col);
+		initMem();
+		return this;
+	}
+
+	// common resize to 3D
+	Tensor<Dtype>* resize(size_t c, size_t h, size_t w) {
+		shape.clear();
+		if (data != nullptr) free(data);
+		data = nullptr;
+		for (auto i : {c, h, w}) shape.push_back(i);
+		initMem();
+		return this;
+	}
+
+	// common resize according to vector
+	Tensor<Dtype>* resize(std::vector<size_t>& sz) {
+		shape.clear();
+		if (data != nullptr) free(data);
+		data = nullptr;
+		for (auto i : sz) shape.push_back(i);
 		initMem();
 		return this;
 	}
@@ -309,6 +366,47 @@ public:
 		for (size_t i = 0; i < shape.size(); i++)
 			if (x->getSize(i) != getSize(i)) return false;
 		return true;
+	}
+
+	// common save
+	void save(string fname) {
+		FILE* f = fopen(fname.c_str(), "w+");
+		// first line for version info
+		fprintf(f, "LITE::Tensor, ASCII Save.\n");
+		// second line for shape info
+		fprintf(f, "%lu ", shape.size());
+		for (auto i : shape) fprintf(f, "%ld ", i);
+		fprintf(f, "\n");
+		// third line for the serialized data block
+		for (size_t i = 0; i < getSize(); i++)
+			fprintf(f, "%lf ", *at(i));
+		fprintf(f, "\n");
+		fflush(f);
+		fclose(f);
+	}
+
+	// common load
+	void load(string fname) {
+		FILE* f = fopen(fname.c_str(), "r");
+		char c; size_t dim; size_t s; vector<size_t> sz;
+		// skip the first line
+		while((c = fgetc(f)) != '\n');
+		fseek(f, -1, SEEK_CUR);
+		// read the shape information
+		shape.clear();
+		fscanf(f, "%lu", &dim);
+		for (size_t i = 0; i < dim; i++) {
+			fscanf(f, "%lu", &s);
+			sz.push_back(s);
+		}
+		// resize tensor
+		resize(sz);
+		// read data into tensor
+		for (size_t i = 0; i < getSize(); i++) {
+			Dtype tmp;
+			fscanf(f, "%lf", &tmp);
+			*(data + i) = (Dtype)tmp;
+		}
 	}
 };
 
@@ -510,6 +608,19 @@ main(void)
 		assert(x.sameSize(&x) == true);
 		assert(x.sameSize(&y) == false);
 		assert(x.sameSize(&z) == false);
+	}; TE;
+
+	TS("3D tensor creation and save"); {
+		Tensor<double> x (3, 6, 6);
+		x.rand_();
+		x.dump();
+		x.save("test.lt");
+	}; TE;
+
+	TS("3D tensor load"); {
+		Tensor<double> x;
+		x.load("test.lt");
+		x.dump();
 	}; TE;
 
 	cout << "::         " << _padding_("Tensor Tests OK") << endl;

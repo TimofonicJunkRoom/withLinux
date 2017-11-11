@@ -6,7 +6,6 @@ Torch(lua). It only needs the HDF5 library for data input.
 
 TODO:
 
-* 3D tensor
 * conv2 layer
 * reshape layer
 * container/graph

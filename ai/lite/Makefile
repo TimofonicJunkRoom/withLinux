@@ -1,9 +1,9 @@
 CXX ?= clang++
 INCLUDES = -I/usr/include/hdf5/serial
 LIBS = -lhdf5_cpp -lhdf5_hl_cpp -lhdf5_serial
-CXXFLAGS += -Wall -g -O2 -fopenmp -march=native -DUSE_OPENMP #-fno-inline-functions 
+CXXFLAGS += -std=c++11 -Wall -g -O2 -fopenmp -march=native -DUSE_OPENMP #-fno-inline-functions -Og
 
-test: dataloader tensor layer testnet
+test: dataloader tensor blob layer
 
 demo.h5:
 	python3 gen-demoh5.py
