@@ -1,7 +1,7 @@
 CXX ?= clang++
 INCLUDES = -I/usr/include/hdf5/serial
 LIBS = -lhdf5_cpp -lhdf5_hl_cpp -lhdf5_serial
-CXXFLAGS += -Wall -g -O2 -fopenmp -march=native #-fno-inline-functions 
+CXXFLAGS += -Wall -g -O2 -fopenmp -march=native -DUSE_OPENMP #-fno-inline-functions 
 
 test: dataloader tensor layer testnet
 
@@ -12,7 +12,7 @@ dataloader: demo.h5
 	./dataloader_test
 tensor: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o tensor_test -DLITE_TEST_TENSOR tensor.cc 
-	./tensor_test
+	valgrind --leak-check=yes ./tensor_test
 layer: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o layer_test -DLITE_TEST_LAYER layer.cc 
 	./layer_test

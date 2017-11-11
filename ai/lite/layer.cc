@@ -110,6 +110,7 @@ public:
 	bool use_bias = true;
 
 	LinearLayer(int dim_dest, int dim_src) {
+		// FIXME: proper initialization
 		W.resize(dim_dest, dim_src);
 		b.resize(dim_dest);
 		W.value->rand_();
@@ -161,11 +162,11 @@ public:
 	}
 
 	void dumpstat() {
-		cout << "> LinearLayer:" << endl;
-		cout << "  > W sum " << W.value->sum() << " asum " << W.value->asum() << endl;
-		cout << "  > b sum " << b.value->sum() << " asum " << b.value->asum() << endl;
-		cout << "  > gradW sum " << W.gradient->sum() << " asum " << W.gradient->asum() << endl;
-		cout << "  > gradb sum " << b.gradient->sum() << " asum " << b.gradient->asum() << endl;
+		cout << "  > LinearLayer:" << endl;
+		cout << "    * W sum " << W.value->sum() << "\tasum " << W.value->asum();
+		cout << "\t | gradW sum " << W.gradient->sum() << "\tasum " << W.gradient->asum() << endl;
+		cout << "    * b sum " << b.value->sum() << "\tasum " << b.value->asum();
+		cout << "\t | gradb sum " << b.gradient->sum() << "\tasum " << b.gradient->asum() << endl;
 	}
 };
 
@@ -242,6 +243,7 @@ public:
 			}
 		}
 		lossval /= numsamples;
+		MAE     /= numsamples;
 		*output.value->at(0) = lossval;
 	}
 
@@ -254,7 +256,7 @@ public:
 	}
 
 	void report() {
-		std::cout << " * MSELoss: " << lossval << " (MAE " << MAE << ")" << std::endl;
+		std::cout << " * MSELoss: " << lossval << "\t(MAE " << MAE << ")" << std::endl;
 	}
 };
 
