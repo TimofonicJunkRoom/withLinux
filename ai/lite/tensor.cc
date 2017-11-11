@@ -222,6 +222,16 @@ public:
 		return this;
 	}
 
+	// common uniford ~U(l, u)
+	Tensor<Dtype>* uniform(Dtype l, Dtype u) {
+#if defined(USE_OPENMP)
+#pragma omp parallel for shared(l, u)
+#endif
+		for (size_t i = 0; i < getSize(); i++)
+			*(data + i) = ((Dtype)random() / RAND_MAX) * (u-l) + l;
+		return this;
+	}
+
 	// common element add, inplace
 	void add_(Dtype constant) {
 #if defined(USE_OPENMP)
@@ -468,6 +478,12 @@ main(void)
 		Tensor<double>* y = x.sliceRows(2, 5);
 		y->dump();
 		delete y;
+	}; TE;
+
+	TS("uniform"); {
+		Tensor<double> x (10, 10);
+		x.uniform(-10, 10);
+		x.dump();
 	}; TE;
 
 	cout << "::         " << _padding_("Tensor Tests OK") << endl;
