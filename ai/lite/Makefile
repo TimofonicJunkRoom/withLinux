@@ -9,7 +9,7 @@ demo.h5:
 	python3 gen-demoh5.py
 dataloader: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o dataloader_test -DLITE_TEST_DATALOADER dataloader.cc 
-	./dataloader_test
+	valgrind --leak-check=yes ./dataloader_test
 tensor: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o tensor_test -DLITE_TEST_TENSOR tensor.cc 
 	valgrind --leak-check=yes ./tensor_test

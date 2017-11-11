@@ -1,5 +1,5 @@
-#if !defined(_LITE_TENSOR_CC)
-#define _LITE_TENSOR_CC
+#if !defined(_LITE_TENSOR_H)
+#define _LITE_TENSOR_H
 
 #include <cmath>
 #include <vector>
@@ -326,7 +326,42 @@ GEMM(Dtype alpha, Tensor<Dtype>* A, Tensor<Dtype>* B,
 		}
 	}
 }
+
+// MAE: y <- sum_i ||a_i - b_i||_1
+template <typename Dtype>
+Dtype
+MAE(Tensor<Dtype>* A, Tensor<Dtype>* B) {
+	Dtype ret = 0.;
+	size_t minsize = A->getSize();
+	minsize = (B->getSize() < minsize) ? B->getSize() : minsize;
+#if defined(USE_OPENMP)
+#pragma omp parallel for reduction (+:ret) shared(minsize)
 #endif
+	for (size_t i = 0; i < minsize; i++) {
+		Dtype tmp = *A->at(i) - *B->at(i);
+		ret += (tmp > (Dtype)0.) ? tmp : -tmp;
+	}
+	return ret;
+}
+
+// MSE: y <- sum_i ||a_i - b_i||_2^2
+template <typename Dtype>
+Dtype
+MSE(Tensor<Dtype>* A, Tensor<Dtype>* B) {
+	Dtype ret = 0.;
+	size_t minsize = A->getSize();
+	minsize = (B->getSize() < minsize) ? B->getSize() : minsize;
+#if defined(USE_OPENMP)
+#pragma omp parallel for reduction (+:ret) shared(minsize)
+#endif
+	for (size_t i = 0; i < minsize; i++) {
+		Dtype tmp = *A->at(i) - *B->at(i);
+		ret += tmp * tmp;
+	}
+	return ret;
+}
+
+#endif // defined(_LITE_TENSOR_H)
 
 #if defined(LITE_TEST_TENSOR)
 #include "dataloader.cc"
