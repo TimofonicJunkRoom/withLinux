@@ -34,6 +34,11 @@ public:
 		if (nullptr != data) free(data);
 	}
 
+	// common setName
+	void setName(string name) {
+		this->name = name;
+	}
+
 	// Empty tensor constructor
 	Tensor(void) {
 		data = nullptr;

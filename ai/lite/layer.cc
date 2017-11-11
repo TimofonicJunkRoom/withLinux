@@ -89,6 +89,10 @@ public:
 		delete wvalueT;
 	}
 
+	void update(double lr) {
+		SGD(lr);
+	}
+
 	void SGD(double lr) {
 		AXPY((Dtype)-lr, &W.gradient, &W.value);
 		AXPY((Dtype)-lr, &b.gradient, &b.value);
@@ -96,10 +100,10 @@ public:
 
 	void dumpstat() {
 		cout << "  > LinearLayer:" << endl;
-		cout << "    * W sum " << W.value->sum() << "\tasum " << W.value->asum();
-		cout << "\t | gradW sum " << W.gradient->sum() << "\tasum " << W.gradient->asum() << endl;
-		cout << "    * b sum " << b.value->sum() << "\tasum " << b.value->asum();
-		cout << "\t | gradb sum " << b.gradient->sum() << "\tasum " << b.gradient->asum() << endl;
+		cout << "    * W sum " << W.value.sum() << "\tasum " << W.value.asum();
+		cout << "\t | gradW sum " << W.gradient.sum() << "\tasum " << W.gradient.asum() << endl;
+		cout << "    * b sum " << b.value.sum() << "\tasum " << b.value.asum();
+		cout << "\t | gradb sum " << b.gradient.sum() << "\tasum " << b.gradient.asum() << endl;
 	}
 };
 
