@@ -77,6 +77,12 @@ public:
 		return this->data + row*this->shape[1] + col;
 	}
 
+	// data copier
+	void copy(Dtype* mem, size_t sz) {
+		assert(sz <= getSize());
+		memcpy(data, mem, sizeof(Dtype)*sz);
+	}
+
 	// 2D slice of rows
 	Tensor<Dtype>* sliceRows(size_t rlower, size_t rupper) {
 		if (getDim() == 2) {

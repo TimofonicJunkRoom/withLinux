@@ -7,21 +7,24 @@ test: dataloader tensor layer testnet
 
 demo.h5:
 	python3 gen-demoh5.py
+
 dataloader: demo.h5
-	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o dataloader_test -DLITE_TEST_DATALOADER dataloader.cc 
-	valgrind --leak-check=yes ./dataloader_test
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_dataloader -DLITE_TEST_DATALOADER dataloader.cc 
+	valgrind --leak-check=yes ./test_dataloader
 tensor: demo.h5
-	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o tensor_test -DLITE_TEST_TENSOR tensor.cc 
-	valgrind --leak-check=yes ./tensor_test
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_tensor -DLITE_TEST_TENSOR tensor.cc 
+	valgrind --leak-check=yes ./test_tensor
 layer: demo.h5
-	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o layer_test -DLITE_TEST_LAYER layer.cc 
-	./layer_test
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_layer -DLITE_TEST_LAYER layer.cc 
+	./test_layer
+
+test_lineq:
+	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_lineq.elf test_lineq.cc
+	valgrind --leak-check=yes ./test_lineq.elf
+
 testnet_cls: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_cls_test testnet_cls.cc 
 	./testnet_cls_test
-testnet_reg: demo.h5
-	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_reg_test testnet_reg.cc # seems working
-	./testnet_reg_test
 testnet_mnist:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_mnist_test testnet_mnist.cc
 	./testnet_mnist_test
@@ -29,5 +32,7 @@ testnet_mnist_reg:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o testnet_mnist_reg_test testnet_mnist_reg.cc
 	./testnet_mnist_reg_test
 
+.PHONY: dataloader tensor layer test_lineq
+
 clean:
-	-$(RM) dataloader_test demo.h5 tensor_test layer_test testnet_cls_test testnet_reg_test testnet_mnist_test testnet_mnist_reg_test
+	-$(RM) dataloader_test demo.h5 tensor_test layer_test testnet_cls_test testnet_reg_test testnet_mnist_test testnet_mnist_reg_test *.elf

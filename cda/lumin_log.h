@@ -30,6 +30,10 @@
 #ifndef LUMIN_LOG_H_
 #define LUMIN_LOG_H_
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -142,5 +146,9 @@ _CDA_BACKTRACE (void)
 	return;
 }
 #undef CDA_BT_SIZE
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* LUMIN_LOG_H_ */
