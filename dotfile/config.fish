@@ -27,9 +27,9 @@ abbr -a bp bpython3
 abbr -a jqt jupyter-qtconsole
 abbr -a ap autopep8 -i
 
-# Julia 0.6 Official Binary Tarball
+# Julia 0.6.1 Official Binary Tarball
 function jl
-	/home/lumin/Downloads/julia-903644385b/bin/julia $argv
+	/home/lumin/Downloads/julia-0d7248e2ff/bin/julia $argv
 end
 # Pypy3
 function pypy3
