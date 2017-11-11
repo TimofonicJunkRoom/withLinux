@@ -83,7 +83,7 @@ public:
 		memcpy(data, mem, sizeof(Dtype)*sz);
 	}
 
-	// 2D slice of rows
+	// 2D slice of rows, XXX: don't forget to delete
 	Tensor<Dtype>* sliceRows(size_t rlower, size_t rupper) {
 		if (getDim() == 2) {
 			assert(rlower >= 0 && rlower < shape[0]);
@@ -231,7 +231,7 @@ public:
 			*(data + i) += constant;
 	}
 
-	// common clone
+	// common clone, XXX: don't forget to delete
 	Tensor<Dtype>* clone(void) {
 		Tensor<Dtype>* y = new Tensor<Dtype> ();
 		y->resizeAs(this);
@@ -239,7 +239,7 @@ public:
 		return y;
 	}
 
-	// 2D transpose, non-inplace
+	// 2D transpose, non-inplace, XXX: don't forget to delete
 	Tensor<Dtype>* transpose(void) {
 		if (shape.size() != 2) {
 			fprintf(stderr, "transpose(): ERROR: shape.size = %ld\n", shape.size());
@@ -411,6 +411,8 @@ main(void)
 		empty.resize(10);
 		empty.dump();
 		empty.resize(10, 10);
+		empty.dump();
+		empty.resize(1);
 		empty.dump();
 	}; TE;
 
