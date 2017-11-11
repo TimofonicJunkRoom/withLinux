@@ -20,21 +20,21 @@ blob: demo.h5
 	valgrind --leak-check=yes ./test_blob.elf #OK
 layer: demo.h5
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_layer.elf -DLITE_TEST_LAYER layer.cc 
-	valgrind --leak-check=yes ./test_layer.elf #issue
+	valgrind --leak-check=yes ./test_layer.elf #OK, accuracy layer problematic
 
 .PHONY: test_lineq test_mnist_reg test_toycls
 test_lineq:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_lineq.elf test_lineq.cc
-	valgrind --leak-check=yes ./test_lineq.elf
+	valgrind --leak-check=yes ./test_lineq.elf #OK
 test_mnist_reg:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_mnist_reg.elf test_mnist_reg.cc
-	valgrind --leak-check=yes ./test_mnist_reg.elf
+	valgrind --leak-check=yes ./test_mnist_reg.elf #OK
 test_toycls:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_toycls.elf test_toycls.cc 
-	valgrind --leak-check=yes ./test_toycls.elf
+	valgrind --leak-check=yes ./test_toycls.elf #OK
 test_mnist_cls:
 	$(CXX) $(INCLUDES) $(LIBS) $(CXXFLAGS) -o test_mnist_cls.elf test_mnist_cls.cc
-	valgrind --leak-check=yes ./test_mnist_cls.elf
+	valgrind --leak-check=yes ./test_mnist_cls.elf #OK
 
 clean:
 	-$(RM) demo.h5 *.elf

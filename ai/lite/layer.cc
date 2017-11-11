@@ -133,15 +133,26 @@ public:
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output) {
 		// input.exp().sum(0), sum in the first row
 		Tensor<Dtype>* expx = input.value.clone();
+		for (size_t j = 0; j < expx->getSize(1); j++) {
+			// find maxval of this colomn
+			Dtype maxval = *expx->at(0, j);
+			for (size_t i = 0; i < expx->getSize(0); i++)
+				if (maxval < *expx->at(i,j)) maxval = *expx->at(i,j);
+			// subtract the maxval from this column
+			for (size_t i = 0; i < expx->getSize(0); i++)
+				*expx->at(i,j) -= maxval;
+		}
 		expx->exp_();
+		// save the exp(x_ij) result to output
+		output.value.copy(expx->data, output.value.getSize());
+		// sum up each column
 		for (size_t i = 1; i < expx->getSize(0); i++)
 			for (size_t j = 0; j < expx->getSize(1); j++)
 				*expx->at(0, j) += *expx->at(i, j);
 		// output
 		for (size_t i = 0; i < expx->getSize(0); i++)
 			for (size_t j = 0; j < expx->getSize(1); j++)
-				*output.value.at(i, j) = std::exp(*input.value.at(i,j)) /
-					((Dtype)1e-7 + *expx->at(0, j));
+				*output.value.at(i, j) /= (Dtype)1e-7 + *expx->at(0, j);
 		delete expx;
 	}
 
@@ -149,12 +160,13 @@ public:
 		for (size_t sample = 0; sample < input.gradient.getSize(1); sample++) {
 			for (size_t row = 0; row < input.gradient.getSize(0); row++) {
 				Dtype element = 0.;
-				for (size_t k = 0; k < output.value.getSize(0); k++) {
-					element -= (*output.gradient.at(k, sample)) *
-						(*output.value.at(k,sample) * *output.value.at(row, sample));
+				for (size_t k = 0; k < output.gradient.getSize(0); k++) {
+					element -= (*output.gradient.at(k, sample))
+						* (*output.value.at(row, sample))
+						* (*output.value.at(k,sample));
 					if (k == row)
-						element += (*output.gradient.at(k, sample)) *
-							(*output.value.at(row,sample) * *output.value.at(row, sample));
+						element += (*output.gradient.at(k, sample))
+							* (*output.value.at(row,sample));
 				}
 				*input.gradient.at(row, sample) = element;
 			}
@@ -359,6 +371,10 @@ main(void)
 		SoftmaxLayer<double> sm1;
 		sm1.forward(x, y);
 		y.gradient.fill_(1.);
+		sm1.backward(x, y);
+		x.dump();
+		y.dump();
+		y.gradient.rand_();
 		sm1.backward(x, y);
 		x.dump();
 		y.dump();

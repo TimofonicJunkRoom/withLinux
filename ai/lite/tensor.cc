@@ -270,10 +270,10 @@ public:
 	// common exp, inplace
 	Tensor<Dtype>* exp_(void) {
 #if defined(USE_OPENMP)
-#pragma omp parallel for
+#pragma omp parallel for shared(data)
 #endif
 		for (size_t i = 0; i < getSize(); i++)
-			*at(i) = std::exp(*at(i));
+			*(data + i) = std::exp(*(data + i));
 		return this;
 	}
 

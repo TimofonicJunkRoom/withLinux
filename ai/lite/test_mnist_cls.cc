@@ -23,12 +23,8 @@ main(void)
 	imageT.setName("imageT");
 	Blob<double> label (1, 100, false);
 	label.setName("label");
-	Blob<double> o1 (512, 100);
+	Blob<double> o1 (10, 100);
 	o1.setName("o1");
-	Blob<double> o2 (512, 100);
-	o2.setName("o2");
-	Blob<double> o3 (10, 100);
-	o3.setName("o3");
 	Blob<double> yhat (10, 100);
 	yhat.setName("yhat");
 	Blob<double> loss (1);
@@ -36,11 +32,7 @@ main(void)
 	Blob<double> acc (1);
 	acc.setName("accuracy");
 
-	LinearLayer<double> fc1 (512, 784);
-	ReluLayer<double> relu1;
-	LinearLayer<double> fc2 (512, 512);
-	ReluLayer<double> relu2;
-	LinearLayer<double> fc3 (10, 512);
+	LinearLayer<double> fc1 (10, 784);
 	SoftmaxLayer<double> sm1;
 	ClassNLLLoss<double> loss1;
 	ClassAccuracy<double> acc1;
@@ -60,39 +52,32 @@ main(void)
 		
 		// -- forward
 		fc1.forward(imageT, o1);
-		relu1.forward(o1, o1); // inplace relu
-		fc2.forward(o1, o2);
-		relu2.forward(o2, o2); // inplace relu
-		fc3.forward(o2, o3);
-		sm1.forward(o3, yhat);
+		sm1.forward(o1, yhat);
 		acc1.forward(yhat, loss, label);
 		loss1.forward(yhat, loss, label);
 		// -- zerograd
 		fc1.zeroGrad();
-		fc2.zeroGrad();
-		fc3.zeroGrad();
 		o1.zeroGrad();
-		o2.zeroGrad();
 		yhat.zeroGrad();
 		loss.zeroGrad();
 		// -- backward
 		loss1.backward(yhat, loss, label);
-		sm1.backward(o3, yhat);
-		fc3.backward(o2, o3);
-		relu2.backward(o2, o2);
-		fc2.backward(o1, o2);
-		relu1.backward(o1, o1); // inplace relu
+		sm1.backward(o1, yhat);
 		fc1.backward(imageT, o1);
 		// -- report
 		loss1.report();
 		acc1.report();
 		fc1.dumpstat();
-		//label.dump(true, false);
-		//yhat.dump(true, false);
+		label.dump(true, false);
+		yhat.dump(true, false);
 		// update
-		double lr = 1e-1;
+		double lr = 1e-3;
 		fc1.update(lr);
-		fc2.update(lr);
+
+		// cleanup
+		delete batchIm;
+		delete batchLb;
+		delete batchImT;
 	}
 
 	return 0;
