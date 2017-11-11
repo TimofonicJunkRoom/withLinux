@@ -9,6 +9,7 @@ TODO:
 * 3D tensor
 * conv2 layer
 * reshape layer
+* container/graph
 
 Dependencies:
 

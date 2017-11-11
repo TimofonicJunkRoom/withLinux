@@ -114,7 +114,6 @@ public:
 template <typename Dtype>
 class ReluLayer : public Layer<Dtype> {
 public:
-
 	void forward(Blob<Dtype>& input, Blob<Dtype>& output) {
 		auto relu = [](Dtype x) { return x > (Dtype)0. ? x : (Dtype)0.; };
 		for (size_t i = 0; i < input.value.getSize(); i++)
@@ -122,12 +121,9 @@ public:
 	}
 
 	void backward(Blob<Dtype>& input, Blob<Dtype>& output) {
-		for (size_t i = 0; i < input.gradient.getSize(); i++) {
-			if (*input.value.at(i) > (Dtype)0.)
-				*input.gradient.at(i) = *output.gradient.at(i);
-			else
-				*input.gradient.at(i) = (Dtype)0.;
-		}
+		for (size_t i = 0; i < input.gradient.getSize(); i++)
+			*input.gradient.at(i) = (*input.value.at(i) > (Dtype)0.)
+				? *output.gradient.at(i) : (Dtype)0.;
 	}
 };
 
