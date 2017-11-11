@@ -23,20 +23,24 @@ main(void)
 	imageT.setName("imageT");
 	Blob<double> label (1, 100, false);
 	label.setName("label");
-	Blob<double> o (100, 100);
-	o.setName("o");
+	Blob<double> o1 (512, 100);
+	o1.setName("o1");
+	Blob<double> o2 (512, 100);
+	o2.setName("o2");
 	Blob<double> yhat (1, 100);
 	yhat.setName("yhat");
 	Blob<double> loss (1);
 	loss.setName("loss");
 
-	LinearLayer<double> fc1 (100, 784);
+	LinearLayer<double> fc1 (512, 784);
 	ReluLayer<double> relu1;
-	LinearLayer<double> fc2 (1, 100);
+	LinearLayer<double> fc2 (512, 512);
+	ReluLayer<double> relu2;
+	LinearLayer<double> fc3 (1, 512);
 	MSELoss<double> loss1;
 
 	cout << ">> Start training" << endl;
-	for (int iteration = 0; iteration < 500; iteration++) {
+	for (int iteration = 0; iteration < 2000; iteration++) {
 		cout << ">> Iteration " << iteration << "::" << endl;
 
 		// -- get batch
@@ -48,29 +52,35 @@ main(void)
 		label.value.copy(batchLb->data, 100);
 		
 		// -- forward
-		fc1.forward(imageT, o);
-		relu1.forward(o, o); // inplace relu
-		fc2.forward(o, yhat);
+		fc1.forward(imageT, o1);
+		relu1.forward(o1, o1); // inplace relu
+		fc2.forward(o1, o2);
+		relu2.forward(o2, o2); // inplace relu
+		fc3.forward(o2, yhat);
 		loss1.forward(yhat, loss, label);
 		// -- zerograd
 		fc1.zeroGrad();
 		fc2.zeroGrad();
-		o.zeroGrad();
+		fc3.zeroGrad();
+		o1.zeroGrad();
+		o2.zeroGrad();
 		yhat.zeroGrad();
 		loss.zeroGrad();
 		// -- backward
 		loss1.backward(yhat, loss, label);
-		fc2.backward(o, yhat);
-		relu1.backward(o, o); // inplace relu
-		fc1.backward(imageT, o);
+		fc3.backward(o2, yhat);
+		relu2.backward(o2, o2);
+		fc2.backward(o1, o2);
+		relu1.backward(o1, o1); // inplace relu
+		fc1.backward(imageT, o1);
 		// -- report
 		loss1.report();
-		fc1.dumpstat();
+		//fc1.dumpstat();
 		label.dump(true, false);
 		yhat.dump(true, false);
-		cout << "MAE " << MAE(&label.value, &yhat.value) << endl;
+		cout << "  * MAE " << MAE(&label.value, &yhat.value) << endl;
 		// update
-		double lr = 1e-2;
+		double lr = 1e-1;
 		fc1.update(lr);
 		fc2.update(lr);
 	}
