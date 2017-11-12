@@ -13,8 +13,10 @@
 #include <iostream>
 #include <string>
 
-#if defined(USE_OPENMP)
+#if defined(USE_OPENMP) && !defined(__clang__)
 #include <omp.h>
+#elif defined(USE_OPENMP) && defined(__clang__)
+#include "/usr/lib/gcc/x86_64-linux-gnu/7/include/omp.h"
 #endif
 
 using namespace std;

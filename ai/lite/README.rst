@@ -49,7 +49,8 @@ TODO:
 
 Dependencies:
 
-* HDF5
+* HDF5 (libhdf5-dev)
+* [if clang++] OpenMP (libomp-dev)
 
 See also:
 

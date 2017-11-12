@@ -1,4 +1,4 @@
-CXX ?= clang++
+CXX = clang++-4.0
 INCLUDES = -I/usr/include/hdf5/serial
 LIBS = -lhdf5_cpp -lhdf5_hl_cpp -lhdf5_serial
 CXXFLAGS += -std=c++11 -Wall -g -O2 -fopenmp -march=native -DUSE_OPENMP #-fno-inline-functions -Og
@@ -47,6 +47,13 @@ benchmark:
 	# change the code to use the fake dataset, and change iterations
 	cp test_mnist_cls.cc test_benchmark.cc
 	sed -i -e 's/mnist.h5/mnist.fake/g' test_benchmark.cc
+	@echo
+	# you can use "time" instead of "perf"
+	
+	# warm up and report nothing, the kernel may cache something
+	$(CXX) $(INCLUDES) $(LIBS) $(BASEFLAG) -O0 -o benchmark.elf test_benchmark.cc
+	./benchmark.elf > /dev/null
+	@echo
 
 	# compile with -O0 and test
 	$(CXX) $(INCLUDES) $(LIBS) $(BASEFLAG) -O0 -o benchmark.elf test_benchmark.cc
@@ -79,6 +86,30 @@ benchmark:
 	# compile with -O3 -march=native -flto and test, some times the aggressive optimization may not improve performance.
 	$(CXX) $(INCLUDES) $(LIBS) $(BASEFLAG) -O3 -march=native -flto -o benchmark.elf test_benchmark.cc
 	sudo perf stat ./benchmark.elf > /dev/null
+
+# Here are some results (one-shot, not averaged, unit=second)
+#
+# [ I5-2520M, g++ 7.2.0-14 Debian (Thinkpad T420s) ]
+#
+#  -O0                                = 13.25
+#  -O0 -march=native                  = 13.01
+#  -O0 -march=native -flto            = 13.12
+#  -O2                                = 1.81
+#  -O2 -march=native                  = 1.75
+#  -O2 -flto                          = 1.81
+#  -O2 -march=native -flto            = 1.73      (7.65x to -O0)
+#  -O3 -march=native -flto            = 1.81
+#
+# [ I5-2520M, clang++ 4.0.1-8 Debian (Thinkpad T420s) ]
+#
+#  -O0                                = 14.77
+#  -O0 -march=native                  = 14.97
+#  -O0 -march=native -flto            = 15.31
+#  -O2                                = 1.56
+#  -O2 -march=native                  = 1.47
+#  -O2 -flto                          = 1.50
+#  -O2 -march=native -flto            = 1.52
+#  -O3 -march=native -flto            = 1.44      (10.25x to -O0)
 
 clean:
 	-$(RM) demo.h5 *.elf
