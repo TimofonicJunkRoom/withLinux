@@ -110,6 +110,75 @@ benchmark:
 #  -O2 -flto                          = 1.50
 #  -O2 -march=native -flto            = 1.52
 #  -O3 -march=native -flto            = 1.44      (10.25x to -O0)
+#
+# [ I7-6900K, g++ 6.4.0-3 Debian ]
+#
+#  -O0                                = 5.07
+#  -O0 -march=native                  = 4.70
+#  -O0 -march=native -flto            = 5.02
+#  -O2                                = 1.32
+#  -O2 -march=native                  = 1.31
+#  -O2 -flto                          = 1.35
+#  -O2 -march=native -flto            = 1.29      (3.93x to -O0)
+#  -O3 -march=native -flto            = 1.38
+#
+#  OMP_NUM_THREADS=16 : fastest 1.30, slowest 4.96
+#  OMP_NUM_THREADS=8  : fastest 1.31, slowest 5.10
+#  OMP_NUM_THREADS=4  : fastest 1.21, slowest 5.10 <- Tuning works?
+#  OMP_NUM_THREADS=2  : fastest 1.35, slowest 5.00
+#
+# [ I7-6900K, clang++ 4.0.1-1 Debian ]
+#
+#  -O0                                = 5.17
+#  -O0 -march=native                  = 5.20
+#  -O0 -march=native -flto            = 5.21
+#  -O2                                = 1.17
+#  -O2 -march=native                  = 1.09
+#  -O2 -flto                          = 1.07      (4.83x to -O0)
+#  -O2 -march=native -flto            = 1.13
+#  -O3 -march=native -flto            = 1.11
+#
+#  OMP_NUM_THREADS=16 : fastest 1.08, slowest 5.21
+#  OMP_NUM_THREADS=8  : fastest 1.11, slowest 5.20
+#  OMP_NUM_THREADS=4  : fastest 1.10, slowest 5.23 <- Tuning doesn't work?
+#  OMP_NUM_THREADS=2  : fastest 1.04, slowest 5.16
+#  OMP_NUM_THREADS=1  : fastest 1.09, slowest 5.23
+#
+# [ E5-2687W v4, g++ 6.3.0-16 Debian ]
+#
+#  -O0                                = 5.10
+#  -O0 -march=native                  = 5.06
+#  -O0 -march=native -flto            = 5.46
+#  -O2                                = 1.40
+#  -O2 -march=native                  = 1.46
+#  -O2 -flto                          = 1.48
+#  -O2 -march=native -flto            = 1.61
+#  -O3 -march=native -flto            = 1.49
+#
+#  OMP_NUM_THREADS=12 : fastest 1.44, slowest 5.31
+#  OMP_NUM_THREADS=6  : fastest 1.42, slowest 5.03
+#  OMP_NUM_THREADS=4  : fastest 1.28, slowest 4.84 <- Tuning improves?
+#  OMP_NUM_THREADS=2  : fastest 1.39, slowest 5.99
+#
+# [ E5-2687W v4, clang++ 4.0.1-1 Debian ]
+#
+#  -O0                                = 5.02
+#  -O0 -march=native                  = 5.21
+#  -O0 -march=native -flto            = 5.23
+#  -O2                                = 1.13
+#  -O2 -march=native                  = 1.09
+#  -O2 -flto                          = 1.14
+#  -O2 -march=native -flto            = 1.13
+#  -O3 -march=native -flto            = 1.12
+#
+#  OMP_NUM_THREADS=24 : fastest 1.01, slowest 6.10
+#  OMP_NUM_THREADS=16 : fastest 1.14, slowest 6.39
+#  OMP_NUM_THREADS=12 : fastest 1.12, slowest 4.95
+#  OMP_NUM_THREADS=8  : fastest 1.15, slowest 6.16
+#  OMP_NUM_THREADS=6  : fastest 1.20, slowest 5.12
+#  OMP_NUM_THREADS=4  : fastest 1.18, slowest 5.95 <- Tuning doesn't work?
+#  OMP_NUM_THREADS=2  : fastest 1.25, slowest 5.78
+#  OMP_NUM_THREADS=1  : fastest 1.13, slowest 6.32
 
 clean:
 	-$(RM) demo.h5 *.elf
